@@ -6,3 +6,5 @@ extension
 dev
 .vscode
 web-ext-artifacts
+extension.crx
+extension.pem
