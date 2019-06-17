@@ -1,0 +1,62 @@
+{
+  "Back": {
+    "message": " Back"
+  },
+  "DChat": {
+    "message": " D-Chat"
+  },
+  "Enterchannelname": {
+    "message": " Enter channel name"
+  },
+  "Go": {
+    "message": " Go"
+  },
+  "Join": {
+    "message": " Join"
+  },
+  "LogIn": {
+    "message": " Log In"
+  },
+  "Password": {
+    "message": " Password"
+  },
+  "PopOut": {
+    "message": " Pop Out"
+  },
+  "Register": {
+    "message": " Register"
+  },
+  "Submit": {
+    "message": " Submit"
+  },
+  "SubscribingtoachannelcantakeawhilebutusuallylessthansecondsItdependsonwhichblockyougetinto": {
+    "message": " Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into."
+  },
+  "Subscribing": {
+    "message": " Subscribing..."
+  },
+  "Thedecentralizedchatawaits": {
+    "message": " The decentralized chat awaits."
+  },
+  "TojoinachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
+    "message": " To join a channel, use the button top-right. You will then be subscribed to the channel."
+  },
+  "Username": {
+    "message": " Username"
+  },
+  "WelcomeBack": {
+    "message": " Welcome Back!"
+  },
+  "Youcansendmessagesbeforesubsriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
+    "message": " You can send messages before subsriptions complete, but you will not receive them until your subscription resolves."
+  },
+  "optional": {
+    "message": " optional"
+  },
+  "extensionName": {
+    "message": "D-Chat"
+  },
+  "extensionDescription": {
+    "message": "Decentralized chat on the NKN blockchain."
+  }
+}
