@@ -2,6 +2,10 @@
 
 A decentralized chat on NKN as an extension for Chrome and Firefox.
 
+https://addons.mozilla.org/en-US/firefox/addon/d-chat/
+
+https://chrome.google.com/webstore/detail/glnmkakdjcognfgonjfcklpmjiobijii/
+
 ## Installation
 
 `npm install`
