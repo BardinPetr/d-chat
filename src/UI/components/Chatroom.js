@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './App.css';
+// import './App.css';
 import Message from './Message.js';
-import { __ } from './util';
+import { __ } from '../../misc/util';
 
 export default class Chatroom extends React.Component {
 	componentDidMount() {

@@ -1,7 +1,6 @@
 import React from 'react';
 import './LoginBox.css';
-import configs from '../../Configs';
-import { __ } from './util';
+import { __ } from '../../misc/util';
 
 class LoginBox extends React.Component {
 
@@ -11,15 +10,10 @@ class LoginBox extends React.Component {
 			username: '',
 			password: '',
 			error: '',
-			isNewUser: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
-	}
-
-	componentDidMount() {
-		configs.$loaded.then(() => this.setState({ isNewUser: configs.walletJSON == null }));
 	}
 
 	handleChange(e) {
@@ -28,11 +22,8 @@ class LoginBox extends React.Component {
 
 	handleLoginSubmit(e) {
 		e.preventDefault();
-		// if (!this.state.password) {
-		//   alert('Should put in your password')
-		//   return
-		// }
-		this.props.login({username: this.state.username, password: this.state.password}).then(msg => msg != null && this.setState({ error: msg }));
+		this.props.login({username: this.state.username, password: this.state.password});
+		// .then(msg => msg != null && this.setState({ error: msg }));
 	}
 
 	render() {
@@ -40,7 +31,7 @@ class LoginBox extends React.Component {
 			<div className="box-container">
 				<div className="inner-container">
 					<div className="header">
-						{	__('Welcome Back!')	}
+						{ this.props.username ? __('Welcome!') :  __('Welcome Back!') }
 					</div>
 
 					<p className="description">
@@ -76,7 +67,7 @@ class LoginBox extends React.Component {
 						</div>
 
 						<button className="login-btn">
-							{ this.state.isNewUser ? __('Register') :  __('Log In') }
+							{ this.state.username ? __('Register') :  __('Log In') }
 						</button>
 					</form>
 				</div>

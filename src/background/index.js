@@ -1,11 +1,22 @@
-/* eslint-disable no-undef */
-console.log('Background.js file loaded');
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { wrapStore, alias } from 'webext-redux';
+import rootReducer from '../redux/reducers';
+import aliases from '../redux/aliases';
 
-/* const defaultUninstallURL = () => {
-  return process.env.NODE_ENV === 'production'
-    ? 'https://wwww.github.com/kryptokinght'
-    : '';
-}; */
+const store = createStore(
+	rootReducer,
+	applyMiddleware(
+		alias(aliases),
+		thunkMiddleware
+	)
+);
+
+wrapStore( store );
+
+console.log('bg store', store);
+store.subscribe((...args) => console.log('subscribe args', args));
+
 browser.runtime.onInstalled.addListener(() => browser.tabs.create({
 	url: browser.runtime.getURL('popup.html')
 }));

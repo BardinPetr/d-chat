@@ -1,9 +1,10 @@
 import nkn from	'nkn-client';
 import nknWallet from	'nkn-wallet';
-import configs from '../../Configs';
+import configs from './configs';
+import { genChatID } from './util';
 
 const	BUCKET = 0;
-// textnet - What does this even matter?
+// testnet - What does this even matter?
 const FORBLOCKS = 10000;
 
 /**
@@ -13,8 +14,10 @@ const FORBLOCKS = 10000;
  */
 class	NKN	extends	nkn	{
 
-	constructor({username, password, walletJSON})	{
+	constructor({username, password})	{
 		let wallet;
+		const walletJSON = configs.walletJSON;
+
 		if (walletJSON) {
 			console.log('Loading existing wallet!');
 			wallet = nknWallet.loadJsonWallet(walletJSON, password);
@@ -35,10 +38,10 @@ class	NKN	extends	nkn	{
 		this.password	=	password;
 	}
 
-	subscribe	=	topicID	=> {
-		console.log('Subscribing to', topicID);
+	subscribe	=	topic	=> {
+		console.log('Subscribing to', topic);
 		return this.wallet.subscribe(
-			topicID,
+			genChatID( topic ),
 			BUCKET,
 			FORBLOCKS,
 			this.password,
@@ -48,10 +51,10 @@ class	NKN	extends	nkn	{
 
 	// I don't know	how	to override	functions	in react/babel.	Keeps	throwing errors. Traditional publish(){} doesn't work	either.
 	// publish = (topicID, message)	=> {
-	publishMessage = (topicID, message)	=> {
-		console.log('Publishing message', message,'to', topicID);
+	publishMessage = (topic, message)	=> {
+		console.log('Publishing message', message,'to', topic);
 		this.publish(
-			topicID,
+			genChatID( topic ),
 			BUCKET,
 			JSON.stringify(message)
 		);

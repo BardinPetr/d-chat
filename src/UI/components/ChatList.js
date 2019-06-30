@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getChatName, __ } from './util';
+import { getChatName, __ } from '../../misc/util';
 
 const Info = () => (
 	<div className="text-container description">

@@ -4,8 +4,7 @@ import { IoMdOpen } from 'react-icons/io';
 
 Modal.setAppElement('#root');
 
-import { getChatName } from './util';
-import { __ } from './util';
+import { __, getChatName } from '../../misc/util';
 
 const customStyles = {
 	content: {
@@ -57,7 +56,6 @@ class Header extends React.Component {
 
 		console.log('Entered topic:', topic);
 
-		await this.props.createChatroom(topic);
 		this.props.enterChatroom(topic);
 	};
 

@@ -8,6 +8,7 @@
   "background": {
     "scripts": [
       "lib/js/browser-polyfill.js",
+    	"lib/js/webextensions-lib-configs/Configs.js",
       "background.js"
     ]
   },

@@ -1,6 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
-import App from '../UI/App';
+import renderApp from '../UI';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+console.log('hi');
+renderApp();

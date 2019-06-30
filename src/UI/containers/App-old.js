@@ -9,7 +9,7 @@ import Header	from './Header';
 // import { runtime } from 'webextension-polyfill';
 // import sleep from 'sleep-promise';
 
-import configs from '../../Configs';
+import configs from '../Configs';
 import NKN from	'./nkn';
 import { genChatID } from	'./util';
 
@@ -43,9 +43,9 @@ class	App	extends	Component	{
 							content,
 							contentType: "text"	|| "subscribe",
 						}
-						// Chat	subscription tx	id.
-						subscriptionTxID: null || txid
 					],
+					// Chat	subscription tx	id.
+					subscriptionTxID: null || txid,
 				},
 				[topicID]: {...}
 			}
@@ -86,7 +86,6 @@ class	App	extends	Component	{
 		if ( password != null ) {
 			const blob = await passworder.encrypt(secretPassword, password);
 			localStorage.setItem( 'password', blob );
-
 		} else {
 			const blob = localStorage.getItem( 'password' );
 			password = await passworder.decrypt(secretPassword, blob);
