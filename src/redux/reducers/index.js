@@ -69,11 +69,7 @@ const login = (state = {}, { type, payload }) => {
 			break;
 
 		case 'LOGIN_SUCCESS':
-			newState = {
-				...state,
-				nkn: payload.nkn,
-				addr: payload.addr
-			};
+			newState = payload;
 			break;
 
 		default:
@@ -83,14 +79,11 @@ const login = (state = {}, { type, payload }) => {
 	return newState;
 };
 
-const activeChat = (state = {}, { type, payload }) => {
+const topic = (state = null, { type, payload }) => {
 	let newState;
 	switch (type) {
 		case 'ENTER_CHAT':
-			newState = {
-				...state,
-				topic: payload.topic
-			};
+			newState = payload.topic;
 			break;
 
 		default:
@@ -104,5 +97,5 @@ export default combineReducers({
 	chats,
 	login,
 	subscriptions,
-	activeChat
+	topic
 });

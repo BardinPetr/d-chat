@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './App.css';
+import '../containers/App.css';
 import Message from './Message.js';
 import { __ } from '../../misc/util';
 

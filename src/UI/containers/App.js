@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { login, joinChat, publishMessage } from '../../redux/aliases';
+import { login, joinChat, publishMessage } from '../../redux/actions';
 import Header from '../components/Header';
 import ChatList from '../components/ChatList';
 import Chatroom from '../components/Chatroom';
@@ -24,39 +24,44 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, chats, subscrip
 	return (
 		<div className="app">
 			<div className="app-container">
-				{ isLoggedIn &&
-					<Header
-						topic={topic}
-						enterChatroom={enterChatroom}
-						subscribing={subscribing}
-						popout={popout}
-					/> }
-				{ isLoggedIn ?
-					( topic ?
-						<Chatroom
-							chat={chat}
-							createMessage={createMessage}
-						/>
-						:
-						<ChatList
-							chats={chats}
+				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : ''}>
+					{ isLoggedIn &&
+						<Header
+							topic={topic}
 							enterChatroom={enterChatroom}
-						/>
-					)
-					:
-					<LoginBox login={login} username={addr} />
-				}
+							subscribing={subscribing}
+							popout={popout}
+						/> }
+					{ isLoggedIn ?
+						( topic ?
+							<Chatroom
+								chat={chat}
+								createMessage={createMessage}
+							/>
+							:
+							<ChatList
+								chats={chats}
+								enterChatroom={enterChatroom}
+							/>
+						)
+						:
+						<LoginBox login={login} />
+					}
+				</div>
 			</div>
 		</div>
 	);
 };
-
-const mapStateToProps = state => ({
-	addr: state.addr,
+// TODO : login happens on every message... subscribe still not implemented
+const mapStateToProps = state => {
+	console.log('MAPSTATETOPROPS', state);
+	return {
+	addr: state.login.addr,
 	topic: state.topic,
 	chats: state.chats,
 	subscriptions: state.subscriptions
-});
+	}
+};
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),

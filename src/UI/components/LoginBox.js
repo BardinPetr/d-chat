@@ -31,7 +31,7 @@ class LoginBox extends React.Component {
 			<div className="box-container">
 				<div className="inner-container">
 					<div className="header">
-						{ this.props.username ? __('Welcome!') :  __('Welcome Back!') }
+						{ __('Welcome Back!') }
 					</div>
 
 					<p className="description">
@@ -67,7 +67,7 @@ class LoginBox extends React.Component {
 						</div>
 
 						<button className="login-btn">
-							{ this.state.username ? __('Register') :  __('Log In') }
+							TODOJk:{ this.state.username ? __('Register') :  __('Log In') }
 						</button>
 					</form>
 				</div>

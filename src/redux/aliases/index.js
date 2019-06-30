@@ -1,12 +1,5 @@
 import NKN from '../../misc/nkn';
-import enterChatroom from '../actions';
-
-const subscribeCompleted = topic => ({
-	type: 'SUBSCRIBE_COMPLETED',
-	payload: {
-		topic
-	}
-});
+import { setLoginSuccess, enterChatroom, subscribeCompleted } from '../actions';
 
 const subscribe = (transactionID, topic) => ({
 	type: 'SUBSCRIBE',
@@ -16,20 +9,12 @@ const subscribe = (transactionID, topic) => ({
 	}
 });
 
-const setLoginSuccess = (isSuccess, nkn, addr) => ({
-	type: 'LOGIN_SUCCESS',
-	error: !isSuccess,
-	payload: {
-		addr,
-		nkn
-	}
-});
-
-const joinChat = topic => (dispatch, getState) => {
+const joinChat = originalAction => (dispatch, getState) => {
+	const topic = originalAction.payload.topic;
 	console.log('is anybody out there? Entering moonchat', topic, getState());
 	let out;
 	if ( topic != null ) {
-		out = getState().nkn.subscribe( topic )
+		out = window.nknClient.subscribe( topic )
 			.then(txId => dispatch(subscribe(txId, topic)),
 				() => dispatch(subscribeCompleted(topic))
 			).then(() => dispatch(enterChatroom(topic)));
@@ -39,7 +24,7 @@ const joinChat = topic => (dispatch, getState) => {
 	return out;
 };
 
-const receiveMessage = (src, payload, payloadType)  => {
+const receiveMessage = (src, payload, payloadType) => {
 	console.log('Received a message!', src, 'payload', payload, 'type', payloadType);
 	let message = {};
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
@@ -81,11 +66,11 @@ const login = originalAction => (dispatch, getState) => {
 		});
 
 		console.log(nknClient);
-		return dispatch(setLoginSuccess(true, JSON.parse(JSON.stringify(nknClient)), nknClient.addr))
-			.then(() => dispatch(joinChat(null)));
+		window.nknClient = nknClient;
+		return dispatch(setLoginSuccess(true, nknClient.addr));
 
 	} catch (e) {
-		console.log('Failed login.');
+		console.log('Failed login.', e);
 		return dispatch(setLoginSuccess(false));
 	}
 };
@@ -102,7 +87,6 @@ export default {
 	'RECEIVE_MESSAGE': receiveMessage,
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
-	'LOGIN_SUCCESS': setLoginSuccess,
 	'SUBSCRIBE': subscribe,
-	'SUBSCRIBE_COMPLETED': subscribeCompleted,
+	'JOIN_CHAT': joinChat
 };
