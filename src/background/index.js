@@ -26,11 +26,4 @@ configs.$loaded.then(() => {
 		() => setInterval(() => configs.messages = store.getState().messages, 1000 * 10)
 		, 1000
 	);
-
-	// Does not work in background page.
-	// window.addEventListener('beforeunload', e => {
-	// 	// ??????
-	// 	e.returnValue = '';
-	// 	configs.messages = store.getState().messages;
-	// });
 });
