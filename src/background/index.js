@@ -23,7 +23,7 @@ configs.$loaded.then(() => {
 	// Store state at regular interval, excluding browser startup. Awful workaround.
 	// Should probably just update the state on every message, instead.
 	setTimeout(
-		setInterval(() => configs.messages = store.getState().messages, 1000 * 10)
+		() => setInterval(() => configs.messages = store.getState().messages, 1000 * 10)
 		, 1000
 	);
 
