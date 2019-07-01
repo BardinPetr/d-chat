@@ -11,6 +11,9 @@
   "Go": {
     "message": " Go"
   },
+  "Invalidcredentials": {
+    "message": " Invalid credentials."
+  },
   "Join": {
     "message": " Join"
   },

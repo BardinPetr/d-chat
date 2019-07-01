@@ -5,21 +5,15 @@ export const subscribeCompleted = topic => ({
 	}
 });
 
-// const subscribe = (transactionID, topic) => ({
-// 	type: 'SUBSCRIBE',
-// 	payload: {
-// 		topic,
-// 		transactionID
-// 	}
-// });
-
-export const enterChatroom = topic => ({
-	type: 'ENTER_CHAT',
+export const subscribe = (topic, transactionID) => ({
+	type: 'SUBSCRIBE',
 	payload: {
 		topic,
+		transactionID
 	}
 });
 
+// Handles subscribing (background). An alias.
 export const joinChat = topic => ({
 	type: 'JOIN_CHAT',
 	payload: {
@@ -27,11 +21,19 @@ export const joinChat = topic => ({
 	}
 });
 
-export const setLoginSuccess = (isSuccess, addr) => ({
-	type: 'LOGIN_SUCCESS',
-	error: !isSuccess,
+// Handles UI changes with JOIN_CHAT.
+export const enterChat = topic => ({
+	type: 'ENTER_CHAT',
 	payload: {
-		addr
+		topic
+	}
+});
+
+export const setLoginStatus = status => ({
+	type: 'LOGIN_STATUS',
+	error: status.error,
+	payload: {
+		addr: status.addr
 	}
 });
 
@@ -56,11 +58,18 @@ export const receiveMessage = (src, payload, payloadType)  => {
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
 		message = JSON.parse(payload);
 		message.addr = src;
+		message.username = src.slice(0, src.lastIndexOf('.'));
 	}
+	console.log('Receiving mission:', src, window.nknClient.addr);
+	if ( src === window.nknClient.addr ) {
+		message.isMe = true;
+	}
+	console.log('This is the message', message);
 	return {
 		type: 'RECEIVE_MESSAGE',
 		payload: {
-			message
+			message,
+			topic: message.topic
 		}
 	};
 };

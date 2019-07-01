@@ -15,12 +15,11 @@ const popout = () => {
 	});
 };
 
-const App = ({ addr, topic, login, createMessage, enterChatroom, chats, subscriptions }) => {
+const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions }) => {
 	console.log('Rendering.....................');
-	console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, chats, subscriptions);
+	console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
 	const isLoggedIn = addr != null;
-	const chat = topic ? chats[topic] : null;
-	const subscribing = subscriptions.find(i => i.topic === topic) != null;
+	const isSubscribing = ( topic && subscriptions[topic] );
 	return (
 		<div className="app">
 			<div className="app-container">
@@ -29,18 +28,18 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, chats, subscrip
 						<Header
 							topic={topic}
 							enterChatroom={enterChatroom}
-							subscribing={subscribing}
+							subscribing={isSubscribing}
 							popout={popout}
 						/> }
 					{ isLoggedIn ?
 						( topic ?
 							<Chatroom
-								chat={chat}
-								createMessage={createMessage}
+								messages={messages[topic]}
+								createMessage={message => createMessage({...message, topic})}
 							/>
 							:
 							<ChatList
-								chats={chats}
+								messages={messages}
 								enterChatroom={enterChatroom}
 							/>
 						)
@@ -56,11 +55,11 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, chats, subscrip
 const mapStateToProps = state => {
 	console.log('MAPSTATETOPROPS', state);
 	return {
-	addr: state.login.addr,
-	topic: state.topic,
-	chats: state.chats,
-	subscriptions: state.subscriptions
-	}
+		addr: state.login.addr,
+		topic: state.topic,
+		messages: state.messages,
+		subscriptions: state.subscriptions,
+	};
 };
 
 const mapDispatchToProps = dispatch => ({

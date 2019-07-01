@@ -2,7 +2,7 @@
 
 export default new Configs({
 	walletJSON: null,
-	chats: {}
+	messages: {}
 }, {
 	localKeys: []
 });

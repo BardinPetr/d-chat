@@ -22,8 +22,10 @@ class LoginBox extends React.Component {
 
 	handleLoginSubmit(e) {
 		e.preventDefault();
-		this.props.login({username: this.state.username, password: this.state.password});
-		// .then(msg => msg != null && this.setState({ error: msg }));
+		this.props.login({username: this.state.username, password: this.state.password})
+			// See notes in reducers.
+			.then(msg =>  !msg.addr && this.setState({ error: __('Invalid credentials.') }))
+			.catch(console.warn);
 	}
 
 	render() {

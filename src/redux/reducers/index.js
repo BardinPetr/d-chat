@@ -2,12 +2,17 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
 
-const messages = (state = [], action ) => {
-	// console.log('is anybody out there?');
+const messages = (state = configs.messages, action ) => {
+	console.log('is anybody out there? these messages are killing me', state, action);
 	let newState;
+	let initial;
 	switch (action.type) {
 		case 'RECEIVE_MESSAGE':
-			newState = [ action.payload, ...state ];
+			initial = state[action.payload.topic] || [];
+			newState = {
+				...state,
+				[action.payload.topic]: [ ...initial, action.payload.message ]
+			};
 			break;
 
 		case 'PUBLISH_MESSAGE':
@@ -17,68 +22,56 @@ const messages = (state = [], action ) => {
 	return newState;
 };
 
-const subscriptions = ( state = [], action ) => {
-// 	console.log('is anybody out there?');
+const subscriptions = ( state = {}, action ) => {
+	console.log('is anybody out there?');
 	let newState;
 	switch ( action.type ) {
 		case 'SUBSCRIBE':
-			newState = [{
-				topic: action.payload.topic,
-				id: action.payload.subscriptionTxID
-			}, ...state];
-			break;
-
-		case 'SUBSCRIBE_COMPLETED':
-			newState = state.filter(i => i.topic !== action.payload.topic);
-			break;
-
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
-const chats = ( state = configs.chats, action ) => {
-// 	console.log('is anybody out there?');
-	let newState;
-	switch ( action.type ) {
-		case 'RECEIVE_MESSAGE':
 			newState = {
 				...state,
-				[action.payload.topic]: {
-					// XXX need this line or not?
-					...state[action.payload.topic],
-					messages: messages( state[action.payload.topic], action )
-				}
+				[action.payload.topic]: action.payload.transactionID
 			};
 			break;
 
-		case 'PUBLISH_MESSAGE': // TODO
+		case 'SUBSCRIBE_COMPLETED':
+			newState = { ...state };
+			delete newState[action.payload.topic];
+			break;
+
 		default:
 			newState = state;
 	}
+	console.log('subscribing...', newState, state, action);
 	return newState;
 };
 
-const login = (state = {}, { type, payload }) => {
-	// console.log('is anybody out there?');
+const login = (state = {}, action) => {
+	// console.log('is anybody out there?, login calling', action);
 	let newState;
-	switch (type) {
+	switch (action.type) {
 		case 'LOGIN':
-			newState = payload.credentials;
+			newState = action.payload.credentials;
 			break;
 
-		case 'LOGIN_SUCCESS':
-			newState = payload;
+		// There is something wrong with the .then in loginbox, in webext-redux.
+		// It does not resolve the correct value.
+		// Compare addr to null (in loginbox.js) is my workaround.
+		case 'LOGIN_STATUS':
+			if ( action.error ) {
+				newState = { error: true };
+			} else {
+				newState = action.payload;
+			}
 			break;
 
 		default:
 			newState = state;
 	}
-	console.log('login', newState, state);
+	// console.log('login', newState, state, action);
 	return newState;
 };
 
+// Active topic handler.
 const topic = (state = null, { type, payload }) => {
 	let newState;
 	switch (type) {
@@ -86,6 +79,8 @@ const topic = (state = null, { type, payload }) => {
 			newState = payload.topic;
 			break;
 
+		// This one is an alias with no real use here.
+		case 'JOIN_CHAT':
 		default:
 			newState = state;
 	}
@@ -94,8 +89,8 @@ const topic = (state = null, { type, payload }) => {
 };
 
 export default combineReducers({
-	chats,
 	login,
 	subscriptions,
-	topic
+	topic,
+	messages
 });

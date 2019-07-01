@@ -39,7 +39,7 @@ class	NKN	extends	nkn	{
 	}
 
 	subscribe	=	topic	=> {
-		console.log('Subscribing to', topic);
+		console.log('Subscribing to', topic, 'aka', genChatID(topic));
 		return this.wallet.subscribe(
 			genChatID( topic ),
 			BUCKET,
@@ -52,7 +52,7 @@ class	NKN	extends	nkn	{
 	// I don't know	how	to override	functions	in react/babel.	Keeps	throwing errors. Traditional publish(){} doesn't work	either.
 	// publish = (topicID, message)	=> {
 	publishMessage = (topic, message)	=> {
-		console.log('Publishing message', message,'to', topic);
+		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		this.publish(
 			genChatID( topic ),
 			BUCKET,

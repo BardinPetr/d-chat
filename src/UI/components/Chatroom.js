@@ -27,19 +27,26 @@ export default class Chatroom extends React.Component {
 			return;
 		}
 
-		this.props.createMessage(input.value, 'text');
+		const message = {
+			content: input.value,
+			contentType: 'text',
+			timestamp: new Date().toUTCString(),
+		};
+
+		this.props.createMessage(message);
 
 		input.value = '';
 	}
 
 	render() {
-		const { chat } = this.props;
+		const { messages } = this.props;
+		console.log('MESSAGES', messages);
 
 		return (
 			<div className="chatroom">
 				<ul className="messages" ref="messages">
 					{
-						chat && chat.messages && chat.messages.map((message, index) => (
+						messages && messages.map((message, index) => (
 							<Message message={message} key={index} />
 						))
 					}

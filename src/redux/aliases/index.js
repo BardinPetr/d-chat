@@ -1,50 +1,30 @@
 import NKN from '../../misc/nkn';
-import { setLoginSuccess, enterChatroom, subscribeCompleted } from '../actions';
-
-const subscribe = (transactionID, topic) => ({
-	type: 'SUBSCRIBE',
-	payload: {
-		topic,
-		transactionID
-	}
-});
+import { enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 
 const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
 	console.log('is anybody out there? Entering moonchat', topic, getState());
-	let out;
 	if ( topic != null ) {
-		out = window.nknClient.subscribe( topic )
-			.then(txId => dispatch(subscribe(txId, topic)),
+		window.nknClient.subscribe( topic )
+			.then(txId => dispatch(subscribe(topic, txId)),
 				() => dispatch(subscribeCompleted(topic))
-			).then(() => dispatch(enterChatroom(topic)));
-	} else {
-		out = dispatch(enterChatroom(topic));
+			);
 	}
-	return out;
+	return dispatch( enterChat(topic) );
 };
 
-const receiveMessage = (src, payload, payloadType) => {
-	console.log('Received a message!', src, 'payload', payload, 'type', payloadType);
-	let message = {};
-	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
-		message = JSON.parse(payload);
-		message.addr = src;
-	}
-	return {
-		type: 'RECEIVE_MESSAGE',
-		payload: {
-			message
-		}
-	};
-};
-
+/**
+ * Logs in and adds nkn listeners. Dispatches chat updates like "new message".
+ *
+ * XXX how about moving the listeners into NKN file? And making singleton pattern?
+ */
 const login = originalAction => (dispatch, getState) => {
 	let credentials = originalAction.payload.credentials;
 	console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
 	// if ( !credentials ) {
 	// 	return Promise.reject();
 	// }
+	let status;
 	try {
 		const nknClient = new NKN(credentials);
 
@@ -52,41 +32,45 @@ const login = originalAction => (dispatch, getState) => {
 			console.log( 'connected' );
 		});
 
-		nknClient.on('message', (...args) => dispatch(receiveMessage(...args)));
+		nknClient.on('message', (...args) => {
+			console.log('Received message:', ...args);
+			dispatch(receiveMessage(...args));
+		});
 
 		nknClient.on('block', block => {
 			console.log('New block!!!',	block);
 			let subs = getState().subscriptions;
-			for	( let item in subs ) {
+			console.log('these are the subs I found:', subs,
+				'and heres stuff:', block.transactions.map(i => i.hash));
+			for	( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
-				if ( block.transactions.find(tx	=> item.id === tx.hash ) ) {
-					dispatch(subscribeCompleted(item.topic));
+				if ( block.transactions.find(tx	=> subs[topic] === tx.hash ) ) {
+					dispatch(subscribeCompleted(topic));
 				}
 			}
 		});
 
 		console.log(nknClient);
+		// Can't be cloned but we want to keep this.
 		window.nknClient = nknClient;
-		return dispatch(setLoginSuccess(true, nknClient.addr));
-
+		status = { addr: nknClient.addr };
 	} catch (e) {
 		console.log('Failed login.', e);
-		return dispatch(setLoginSuccess(false));
+		status = { error: true };
 	}
+	return dispatch( setLoginStatus(status) );
 };
 
-const publishMessage = message => ({
-	type: 'PUBLISH_MESSAGE',
-	payload: {
-		message,
-		topic: message.topic
-	}
-});
+const publishMessage = originalAction => () => {
+	console.log('PUBLISHING MESSAGE', originalAction);
+	const message = originalAction.payload.message;
+	const topic = originalAction.payload.message.topic;
+	window.nknClient.publishMessage(topic, message);
+	return originalAction;
+};
 
 export default {
-	'RECEIVE_MESSAGE': receiveMessage,
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
-	'SUBSCRIBE': subscribe,
 	'JOIN_CHAT': joinChat
 };
