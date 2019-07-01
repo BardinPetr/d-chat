@@ -21,7 +21,7 @@ stages:
 build_zip:
   stage: build
   script:
-	  - git submodule init
+    - git submodule init
     - npm install --silent
     - npm run build:pack
   artifacts:
