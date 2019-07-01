@@ -4,6 +4,8 @@ A decentralized chat on NKN as an extension for Chrome and Firefox.
 
 ## Installation
 
+`git submodule init --recursive`
+
 `npm install`
 
 `npm run dev`
