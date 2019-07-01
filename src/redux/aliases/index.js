@@ -11,7 +11,10 @@ const joinChat = originalAction => (dispatch, getState) => {
 				dispatch(createChat(topic));
 				dispatch(subscribe(topic, txId));
 			},
-			() => dispatch(subscribeCompleted(topic))
+			err => {
+				console.log('Errored at subscribe. Already subscribed?', err);
+				dispatch(subscribeCompleted(topic));
+			}
 			);
 	}
 	return dispatch( enterChat(topic) );

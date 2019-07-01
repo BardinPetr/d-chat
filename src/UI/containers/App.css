@@ -37,8 +37,8 @@
 }
 
 .chatlist-container {
-  width: 100%;
-  height: 100%;
+	height: 100%;
+	width: 100%;
   border-radius: 5pt;
   display: flex;
   flex-direction: column;
@@ -103,6 +103,7 @@
 .chatlist-container .chatlist .chat .chat-info .chat-name {
   text-align: left;
   font-size: 16pt;
+  word-break: break-word;
 }
 
 .chatlist-container .chatlist .chat .chat-info .chat-info-fill {

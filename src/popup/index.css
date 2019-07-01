@@ -5,3 +5,12 @@ body {
   min-height: 400px;
   font-family: sans-serif;
 }
+
+/* Fix the popup bugs forcibly. */
+.chatroom {
+	min-height: calc(400px - 40pt) !important;
+}
+
+.chatlist-container {
+	min-height: calc(400px - 40pt) !important;
+}

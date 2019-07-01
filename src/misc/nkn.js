@@ -5,7 +5,7 @@ import { genChatID } from './util';
 
 const	BUCKET = 0;
 // testnet - What does this even matter?
-const FORBLOCKS = 10000;
+const FORBLOCKS = 50000;
 
 /**
  * Couple of helpers for nkn module.

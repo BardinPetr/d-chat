@@ -49,7 +49,7 @@ const subscriptions = ( state = {}, action ) => {
 		default:
 			newState = state;
 	}
-	// console.log('subscribing...', newState, state, action);
+	console.log('subscribing...', newState, state, action);
 	return newState;
 };
 

@@ -1,15 +1,19 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
-import ReactTooltip from 'react-tooltip';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap.css';
+
+const timeago = timestamp => <span><TimeAgo date={timestamp} /> at {new Date(timestamp).toLocaleTimeString()}.</span>;
 
 const Nickname = ({timestamp, username}) => (
 	<span>
-		<span className="avatar" data-tip data-for="timeago">
-			{username}
-		</span><span aria-hidden="true">: </span>
-		<ReactTooltip id="timeago" effect="solid">
-			<TimeAgo date={timestamp} /> at {new Date(timestamp).toLocaleTimeString()}.
-		</ReactTooltip>
+		<Tooltip placement="top" overlay={timeago(timestamp)}>
+			<span>
+				<span className="avatar" data-tip data-for={timestamp}>
+					{username}
+				</span><span aria-hidden="true">: </span>
+			</span>
+		</Tooltip>
 	</span>
 );
 

@@ -53,7 +53,6 @@ const Chat = ({ messages, topic, onClick }) => {
 export default class ChatList extends React.Component {
 	render() {
 		const { messages = {}, enterChatroom } = this.props;
-		console.log('MESSAGES', messages);
 
 		let chatList = [];
 		for (let topic of Object.keys(messages) ) {

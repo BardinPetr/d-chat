@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { IoMdOpen } from 'react-icons/io';
+import { IS_FIREFOX } from '../../misc/util';
 
 Modal.setAppElement('#root');
 
@@ -8,8 +9,10 @@ import { __, getChatName } from '../../misc/util';
 
 const customStyles = {
 	content: {
-		position: 'relative',
 		inset: 0,
+		position: IS_FIREFOX ? 'relative' : 'absolute',
+		margin: 'auto',
+		height: 'min-content'
 	},
 	overlay: {
 		display: 'flex',

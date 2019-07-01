@@ -1,5 +1,5 @@
 import shasum	from 'shasum';
-import { i18n } from 'webextension-polyfill';
+import { i18n, runtime } from 'webextension-polyfill';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/,	'');
@@ -31,3 +31,5 @@ export function __(str, placeholders) {
 	// Chrome doesn't want things in the keys.
 	return i18n.getMessage(str.replace(/[^a-zA-Z_]/g, ''), placeholders).trim();
 }
+
+export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
