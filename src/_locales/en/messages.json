@@ -41,14 +41,17 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "TojoinachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
-    "message": " To join a channel, use the button top-right. You will then be subscribed to the channel."
+  "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
+    "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
   },
   "Username": {
     "message": " Username"
   },
   "WelcomeBack": {
     "message": " Welcome Back!"
+  },
+  "Welcome": {
+    "message": " Welcome!"
   },
   "Youcansendmessagesbeforesubsriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subsriptions complete, but you will not receive them until your subscription resolves."

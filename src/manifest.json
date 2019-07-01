@@ -23,7 +23,7 @@
   ],
   "sidebar_action": {
   	"default_title": "__MSG_extensionName__",
-  	"default_panel": "./popup.html",
+  	"default_panel": "./sidebar.html",
   	"open_at_install": false,
   	"default_icon": "img/icon.svg"
   },

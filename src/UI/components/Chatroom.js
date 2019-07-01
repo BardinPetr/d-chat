@@ -40,7 +40,6 @@ export default class Chatroom extends React.Component {
 
 	render() {
 		const { messages } = this.props;
-		console.log('MESSAGES', messages);
 
 		return (
 			<div className="chatroom">

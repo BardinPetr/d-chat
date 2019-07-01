@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs';
 
 const messages = (state = configs.messages, action ) => {
-	console.log('is anybody out there? these messages are killing me', state, action);
+	// console.log('is anybody out there? these messages are killing me', state, action);
 	let newState;
 	let initial;
 	switch (action.type) {
@@ -15,6 +15,14 @@ const messages = (state = configs.messages, action ) => {
 			};
 			break;
 
+		// This one is for displaying all rooms in the chatlist.
+		case 'CREATE_CHAT':
+			newState = {
+				...state,
+				[action.payload.topic]: []
+			};
+			break;
+
 		case 'PUBLISH_MESSAGE':
 		default:
 			newState = state;
@@ -23,7 +31,7 @@ const messages = (state = configs.messages, action ) => {
 };
 
 const subscriptions = ( state = {}, action ) => {
-	console.log('is anybody out there?');
+	// console.log('is anybody out there?');
 	let newState;
 	switch ( action.type ) {
 		case 'SUBSCRIBE':
@@ -41,7 +49,7 @@ const subscriptions = ( state = {}, action ) => {
 		default:
 			newState = state;
 	}
-	console.log('subscribing...', newState, state, action);
+	// console.log('subscribing...', newState, state, action);
 	return newState;
 };
 
@@ -79,12 +87,12 @@ const topic = (state = null, { type, payload }) => {
 			newState = payload.topic;
 			break;
 
-		// This one is an alias with no real use here.
+		// An alias, this one.
 		case 'JOIN_CHAT':
 		default:
 			newState = state;
 	}
-	console.log('is anybody out there? this is enter chat calling', newState, state, payload);
+	// console.log('is anybody out there? this is enter chat calling', newState, state, payload);
 	return newState;
 };
 

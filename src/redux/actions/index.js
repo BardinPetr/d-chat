@@ -1,3 +1,5 @@
+import { browserAction } from 'webextension-polyfill';
+
 export const subscribeCompleted = topic => ({
 	type: 'SUBSCRIBE_COMPLETED',
 	payload: {
@@ -29,6 +31,13 @@ export const enterChat = topic => ({
 	}
 });
 
+export const createChat = topic => ({
+	type: 'CREATE_CHAT',
+	payload: {
+		topic
+	}
+});
+
 export const setLoginStatus = status => ({
 	type: 'LOGIN_STATUS',
 	error: status.error,
@@ -53,18 +62,22 @@ export const publishMessage = message => ({
 });
 
 export const receiveMessage = (src, payload, payloadType)  => {
-	console.log('Received a message!', src, 'payload', payload, 'type', payloadType);
 	let message = {};
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
 		message = JSON.parse(payload);
 		message.addr = src;
 		message.username = src.slice(0, src.lastIndexOf('.'));
 	}
-	console.log('Receiving mission:', src, window.nknClient.addr);
 	if ( src === window.nknClient.addr ) {
 		message.isMe = true;
+	} else {
+		browserAction.getBadgeText({})
+			.then(text => browserAction.setBadgeText({
+				text: String(+text+1)
+			}));
 	}
-	console.log('This is the message', message);
+	console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'This is the message', message);
+
 	return {
 		type: 'RECEIVE_MESSAGE',
 		payload: {

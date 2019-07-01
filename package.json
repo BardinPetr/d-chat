@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -109,6 +109,8 @@
     "react-dom": "^16.8.6",
     "react-modal": "^3.8.1",
     "react-redux": "^7.1.0",
+    "react-timeago": "^4.4.0",
+    "react-tooltip": "^3.10.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2",

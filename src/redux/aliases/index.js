@@ -1,13 +1,17 @@
 import NKN from '../../misc/nkn';
-import { enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 
 const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
 	console.log('is anybody out there? Entering moonchat', topic, getState());
 	if ( topic != null ) {
 		window.nknClient.subscribe( topic )
-			.then(txId => dispatch(subscribe(topic, txId)),
-				() => dispatch(subscribeCompleted(topic))
+			.then(txId => {
+				// There will be a bunch of work when "hide chat" is implemented.
+				dispatch(createChat(topic));
+				dispatch(subscribe(topic, txId));
+			},
+			() => dispatch(subscribeCompleted(topic))
 			);
 	}
 	return dispatch( enterChat(topic) );
@@ -40,8 +44,6 @@ const login = originalAction => (dispatch, getState) => {
 		nknClient.on('block', block => {
 			console.log('New block!!!',	block);
 			let subs = getState().subscriptions;
-			console.log('these are the subs I found:', subs,
-				'and heres stuff:', block.transactions.map(i => i.hash));
 			for	( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
 				if ( block.transactions.find(tx	=> subs[topic] === tx.hash ) ) {
@@ -50,7 +52,6 @@ const login = originalAction => (dispatch, getState) => {
 			}
 		});
 
-		console.log(nknClient);
 		// Can't be cloned but we want to keep this.
 		window.nknClient = nknClient;
 		status = { addr: nknClient.addr };
@@ -62,7 +63,7 @@ const login = originalAction => (dispatch, getState) => {
 };
 
 const publishMessage = originalAction => () => {
-	console.log('PUBLISHING MESSAGE', originalAction);
+	console.log('Publishing message', originalAction);
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
 	window.nknClient.publishMessage(topic, message);

@@ -54,8 +54,6 @@ class Header extends React.Component {
 			return;
 		}
 
-		console.log('Entered topic:', topic);
-
 		this.props.enterChatroom(topic);
 	};
 

@@ -1,5 +1,7 @@
 import './index.css';
 import renderApp from '../UI';
+import { browserAction } from 'webextension-polyfill';
 
-console.log('hi');
+// Reset badge text on popup open
+browserAction.setBadgeText({ text: '' });
 renderApp();

@@ -5,7 +5,7 @@ import { getChatName, __ } from '../../misc/util';
 const Info = () => (
 	<div className="text-container description">
 		<p>
-			{ __('To join a channel, use the button top-right. You will then be subscribed to the channel.') }
+			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
 		</p>
 		<p>
 			{ __('Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into.') }

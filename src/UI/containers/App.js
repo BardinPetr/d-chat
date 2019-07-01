@@ -8,7 +8,7 @@ import LoginBox from '../components/LoginBox';
 
 const popout = () => {
 	browser.windows.create({
-		url: browser.runtime.getURL('popup.html'),
+		url: browser.runtime.getURL('sidebar.html'),
 		type: 'panel',
 		height: 600,
 		width: 450,
@@ -16,14 +16,14 @@ const popout = () => {
 };
 
 const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions }) => {
-	console.log('Rendering.....................');
-	console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
+	// console.log('Rendering.....................');
+	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
 	const isLoggedIn = addr != null;
 	const isSubscribing = ( topic && subscriptions[topic] );
 	return (
 		<div className="app">
 			<div className="app-container">
-				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : ''}>
+				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>
 					{ isLoggedIn &&
 						<Header
 							topic={topic}
@@ -51,16 +51,13 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 		</div>
 	);
 };
-// TODO : login happens on every message... subscribe still not implemented
-const mapStateToProps = state => {
-	console.log('MAPSTATETOPROPS', state);
-	return {
-		addr: state.login.addr,
-		topic: state.topic,
-		messages: state.messages,
-		subscriptions: state.subscriptions,
-	};
-};
+
+const mapStateToProps = state => ({
+	addr: state.login.addr,
+	topic: state.topic,
+	messages: state.messages,
+	subscriptions: state.subscriptions,
+});
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),
