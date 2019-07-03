@@ -53,7 +53,7 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 };
 
 const mapStateToProps = state => ({
-	addr: state.login.addr,
+	addr: state.login ? state.login.addr : {},
 	topic: state.topic,
 	messages: state.messages,
 	subscriptions: state.subscriptions,

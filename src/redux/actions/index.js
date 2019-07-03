@@ -61,8 +61,9 @@ export const publishMessage = message => ({
 	}
 });
 
-export const receiveMessage = (src, payload, payloadType)  => {
+export const receiveMessage = (src, payload, payloadType, encrypt)  => {
 	let message = {};
+	console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
 		message = JSON.parse(payload);
 		message.addr = src;
@@ -76,7 +77,6 @@ export const receiveMessage = (src, payload, payloadType)  => {
 				text: String(+text+1)
 			}));
 	}
-	console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'This is the message', message);
 
 	return {
 		type: 'RECEIVE_MESSAGE',

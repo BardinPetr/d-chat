@@ -55,6 +55,7 @@ const login = originalAction => (dispatch, getState) => {
 			}
 		});
 
+		console.log(nknClient);
 		// Can't be cloned but we want to keep this.
 		window.nknClient = nknClient;
 		status = { addr: nknClient.addr };

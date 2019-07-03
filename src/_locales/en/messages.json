@@ -2,11 +2,17 @@
   "Back": {
     "message": " Back"
   },
+  "Cleared": {
+    "message": " Cleared"
+  },
   "DChat": {
     "message": " D-Chat"
   },
   "Enterchannelname": {
     "message": " Enter channel name"
+  },
+  "Forgotpassword": {
+    "message": " Forgot password?"
   },
   "Go": {
     "message": " Go"
@@ -28,6 +34,9 @@
   },
   "Register": {
     "message": " Register"
+  },
+  "Reset": {
+    "message": " Reset"
   },
   "Submit": {
     "message": " Submit"

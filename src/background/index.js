@@ -16,9 +16,6 @@ configs.$loaded.then(() => {
 
 	wrapStore( store );
 
-	browser.runtime.onInstalled.addListener(() => browser.tabs.create({
-		url: browser.runtime.getURL('popup.html?register')
-	}));
 
 	// Store state at regular interval, excluding browser startup. Awful workaround.
 	// Should probably just update the state on every message, instead.
@@ -27,3 +24,7 @@ configs.$loaded.then(() => {
 		, 1000
 	);
 });
+
+browser.runtime.onInstalled.addListener(() => browser.tabs.create({
+	url: browser.runtime.getURL('popup.html?register')
+}));

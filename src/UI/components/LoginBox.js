@@ -1,6 +1,7 @@
 import React from 'react';
 import './LoginBox.css';
 import { __ } from '../../misc/util';
+import configs from '../../misc/configs';
 
 class LoginBox extends React.Component {
 
@@ -10,22 +11,31 @@ class LoginBox extends React.Component {
 			username: '',
 			password: '',
 			error: '',
+			cleared: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+		this.clear = this.clear.bind(this);
 	}
 
 	handleChange(e) {
-		this.setState({[e.target.name]: e.target.value});
+		this.setState({ [e.target.name]: e.target.value, error: '' });
 	}
 
 	handleLoginSubmit(e) {
 		e.preventDefault();
 		this.props.login({username: this.state.username, password: this.state.password})
 			// See notes in reducers.
-			.then(msg =>  !msg.addr && this.setState({ error: __('Invalid credentials.') }))
+			.then(msg => !msg.addr && this.setState({ error: __('Invalid credentials.') }))
 			.catch(console.warn);
+	}
+
+	clear (e) {
+		e.preventDefault();
+		configs.walletJSON = configs.$default.walletJSON;
+		configs.messages = configs.$default.messages;
+		this.setState({ cleared: true });
 	}
 
 	render() {
@@ -72,6 +82,17 @@ class LoginBox extends React.Component {
 							{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
 						</button>
 					</form>
+					<div style={{marginTop: '1em'}}>
+						{__('Forgot password?') + ' '}
+						<a style={
+							this.state.cleared ?
+								{ color: 'gray', cursor: 'auto' } :
+								{ color: 'blue', cursor: 'pointer' }
+						} onClick={this.clear}>
+							{/* TODO clear chats as well. */}
+							{this.state.cleared ? __('Cleared') : __('Reset')}
+						</a>
+					</div>
 				</div>
 			</div>
 		);
