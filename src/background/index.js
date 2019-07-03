@@ -25,6 +25,8 @@ configs.$loaded.then(() => {
 	);
 });
 
-browser.runtime.onInstalled.addListener(() => browser.tabs.create({
-	url: browser.runtime.getURL('popup.html?register')
-}));
+browser.runtime.onInstalled.addListener(details => (
+	details.reason === 'install' && browser.tabs.create({
+		url: browser.runtime.getURL('popup.html?register')
+	})
+));
