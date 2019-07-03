@@ -15,7 +15,7 @@ const popout = () => {
 	});
 };
 
-const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions }) => {
+const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions, connected }) => {
 	// console.log('Rendering.....................');
 	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
 	const isLoggedIn = addr != null;
@@ -30,6 +30,7 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 							enterChatroom={enterChatroom}
 							subscribing={isSubscribing}
 							popout={popout}
+							connected={connected}
 						/> }
 					{ isLoggedIn ?
 						( topic ?
@@ -57,6 +58,7 @@ const mapStateToProps = state => ({
 	topic: state.topic,
 	messages: state.messages,
 	subscriptions: state.subscriptions,
+	connected: state.login && state.login.connected
 });
 
 const mapDispatchToProps = dispatch => ({

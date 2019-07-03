@@ -34,6 +34,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.disabled {
+	color: gray !important;
+	cursor: not-allowed !important;
 }
 
 .chatlist-container {

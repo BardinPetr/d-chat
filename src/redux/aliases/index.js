@@ -1,5 +1,5 @@
 import NKN from '../../misc/nkn';
-import { createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { connected, createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 
 const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
@@ -27,7 +27,7 @@ const joinChat = originalAction => (dispatch, getState) => {
  */
 const login = originalAction => (dispatch, getState) => {
 	let credentials = originalAction.payload.credentials;
-	console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
+	// console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
 
 	let status;
 	try {
@@ -35,6 +35,7 @@ const login = originalAction => (dispatch, getState) => {
 
 		nknClient.on('connect', () => {
 			console.log( 'connected' );
+			dispatch(connected());
 		});
 
 		nknClient.on('message', (...args) => {

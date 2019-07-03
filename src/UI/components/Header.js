@@ -65,7 +65,7 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { subscribing, topic, enterChatroom } = this.props;
+		const { subscribing, topic, enterChatroom, connected } = this.props;
 		return (
 			<div>
 				<Modal
@@ -93,7 +93,7 @@ class Header extends React.Component {
 							<IoMdOpen title={ __('Pop Out') } />
 						</span>
 						<span className="title">{ __('D-Chat') }</span>
-						<span className="new" onClick={this.openModal}>{ __('Join') }</span>
+						<span className={`new ${!connected && 'disabled'}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
 					</span>
 				)
 				}

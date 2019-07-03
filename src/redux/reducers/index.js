@@ -72,6 +72,13 @@ const login = (state = {}, action) => {
 			}
 			break;
 
+		case 'CONNECTED':
+			newState = {
+				...state,
+				connected: true
+			};
+			break;
+
 		default:
 			newState = state;
 	}

@@ -1,5 +1,9 @@
 import { browserAction } from 'webextension-polyfill';
 
+export const connected = () => ({
+	type: 'CONNECTED'
+});
+
 export const subscribeCompleted = topic => ({
 	type: 'SUBSCRIBE_COMPLETED',
 	payload: {

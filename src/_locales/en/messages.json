@@ -5,6 +5,9 @@
   "Cleared": {
     "message": " Cleared"
   },
+  "Connecting": {
+    "message": " Connecting..."
+  },
   "DChat": {
     "message": " D-Chat"
   },
@@ -16,6 +19,9 @@
   },
   "Go": {
     "message": " Go"
+  },
+  "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
+    "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
   },
   "Invalidcredentials": {
     "message": " Invalid credentials."
