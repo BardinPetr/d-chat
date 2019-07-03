@@ -70,7 +70,7 @@ class	NKN	extends	nkn	{
 			wallet = nknWallet.loadJsonWallet(walletJSON, password);
 
 			if ( !wallet || !wallet.getPrivateKey ) {
-				throw 'Invalid credentials';
+				throw 'Invalid credentials.';
 			}
 		} else {
 			console.log('Creating new wallet.');
@@ -78,16 +78,19 @@ class	NKN	extends	nkn	{
 			configs.walletJSON = wallet.toJSON();
 		}
 		console.log('Rpc seed address:', seed);
+
+		// TODO : connection fail here will majorly break things.
 		super({
 			identifier:	username.trim() || 'Pseudonymous',
 			seed:	wallet.getSeed(),
 			seedRpcServerAddr: seed,
 		});
+
 		this.wallet	=	wallet;
 	}
 
 	subscribe	=	topic	=> {
-		console.log('Subscribing to', topic, 'aka', genChatID(topic), 'and this', this);
+		console.log('Subscribing to', topic, 'aka', genChatID(topic));
 		return this.wallet.subscribe(
 			genChatID( topic ),
 			BUCKET,

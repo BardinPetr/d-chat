@@ -28,9 +28,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 const login = originalAction => (dispatch, getState) => {
 	let credentials = originalAction.payload.credentials;
 	console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
-	// if ( !credentials ) {
-	// 	return Promise.reject();
-	// }
+
 	let status;
 	try {
 		const nknClient = new NKN(credentials);
@@ -55,7 +53,6 @@ const login = originalAction => (dispatch, getState) => {
 			}
 		});
 
-		console.log(nknClient);
 		// Can't be cloned but we want to keep this.
 		window.nknClient = nknClient;
 		status = { addr: nknClient.addr };
