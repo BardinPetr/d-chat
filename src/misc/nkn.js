@@ -108,8 +108,7 @@ class	NKN	extends	nkn	{
 		this.publish(
 			genChatID( topic ),
 			BUCKET,
-			JSON.stringify(message),
-			{ encrypt: false }
+			JSON.stringify(message)
 		);
 	}
 
