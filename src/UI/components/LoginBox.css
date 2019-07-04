@@ -168,3 +168,12 @@ body,
 .error {
 	color: red;
 }
+
+.forgetmenot {
+	flex-direction: row;
+	align-items: center;
+}
+
+input[type="checkbox"] {
+	margin: -1px 0.5em 0 0;
+}

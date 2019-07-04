@@ -65,6 +65,7 @@ export const publishMessage = message => ({
 	}
 });
 
+let counter = 0;
 export const receiveMessage = (src, payload, payloadType, encrypt)  => {
 	let message = {};
 	console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
@@ -76,10 +77,20 @@ export const receiveMessage = (src, payload, payloadType, encrypt)  => {
 	if ( src === window.nknClient.addr ) {
 		message.isMe = true;
 	} else {
+		counter++;
 		browserAction.getBadgeText({})
-			.then(text => browserAction.setBadgeText({
-				text: String(+text+1)
-			}));
+			.then(text => {
+				let count;
+				if ( !text ){
+					count = counter;
+				} else {
+					counter = 0;
+					count = +text + 1;
+				}
+				browserAction.setBadgeText({
+					text: String(count)
+				});
+			});
 	}
 
 	return {

@@ -1,5 +1,9 @@
 import NKN from '../../misc/nkn';
 import { connected, createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import passworder from 'browser-passworder';
+
+// TODO move to own file
+const password = 'd-chat!!!';
 
 const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
@@ -26,7 +30,8 @@ const joinChat = originalAction => (dispatch, getState) => {
  * XXX how about moving the listeners into NKN file? And making singleton pattern?
  */
 const login = originalAction => (dispatch, getState) => {
-	let credentials = originalAction.payload.credentials;
+	const credentials = originalAction.payload.credentials;
+	const rememberMe = credentials && credentials.rememberMe;
 	// console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
 
 	let status;
@@ -56,6 +61,14 @@ const login = originalAction => (dispatch, getState) => {
 
 		// Can't be cloned but we want to keep this.
 		window.nknClient = nknClient;
+
+		if ( rememberMe ) {
+			passworder.encrypt(password, credentials)
+				.then(blob =>
+					localStorage.setItem('credentials', JSON.stringify(blob))
+				);
+		}
+
 		status = { addr: nknClient.addr };
 	} catch (e) {
 		console.log('Failed login.', e);

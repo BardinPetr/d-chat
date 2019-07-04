@@ -12,9 +12,11 @@ class LoginBox extends React.Component {
 			password: '',
 			error: '',
 			cleared: false,
+			rememberMe: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.clear = this.clear.bind(this);
 	}
@@ -23,10 +25,18 @@ class LoginBox extends React.Component {
 		this.setState({ [e.target.name]: e.target.value, error: '' });
 	}
 
+	handleCheckboxChange(e) {
+		this.setState({ [e.target.name]: e.target.checked, error: '' });
+	}
+
 	handleLoginSubmit(e) {
 		e.preventDefault();
-		this.props.login({username: this.state.username, password: this.state.password})
-			// See notes in reducers.
+		// See notes in reducer.
+		this.props.login({
+			username: this.state.username,
+			password: this.state.password,
+			rememberMe: this.state.rememberMe,
+		})
 			.then(msg => !msg.addr && this.setState({ error: __('Invalid credentials.') }))
 			.catch(console.warn);
 	}
@@ -77,7 +87,16 @@ class LoginBox extends React.Component {
 								autoComplete="current-user"
 								required />
 						</div>
-
+						<div className="input-group forgetmenot">
+							<input
+								type="checkbox"
+								checked={this.state.rememberMe}
+								onChange={this.handleCheckboxChange}
+								value="rememberMe"
+								name="rememberMe"
+								id="rememberMe" />
+							<label htmlFor="rememberMe">{ __('Remember me?') }</label>
+						</div>
 						<button className="login-btn">
 							{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
 						</button>

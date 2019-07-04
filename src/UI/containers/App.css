@@ -1,3 +1,31 @@
+body {
+	font-family: sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.hidden {
+	display: none;
+}
+
+.loading {
+	background-color: gray;
+	opacity: 0.7;
+	z-index: 1;
+}
+
+.loading .absolute {
+	position: absolute;
+}
+
+.loading-description {
+	max-width: 30%;
+	background-color: black;
+	text-align: center;
+	color: white;
+	padding: 1em;
+}
+
 .login {
 	max-width: 100%;
 }
@@ -29,8 +57,6 @@
 .app-container {
   width: 100%;
   height: 100%;
-  max-width: 350pt;
-  max-height: 600pt;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -202,7 +228,7 @@
 }
 
 .me {
-  background-color: #79c4ff !important;
+  background-color: #48aeff !important;
 }
 
 .chatroom .messages .message a {

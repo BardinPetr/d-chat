@@ -20,6 +20,9 @@
   "Go": {
     "message": " Go"
   },
+  "Ifitseemsstuckrestartyourbrowser": {
+    "message": " If it seems stuck, restart your browser."
+  },
   "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
     "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
   },
@@ -40,6 +43,9 @@
   },
   "Register": {
     "message": " Register"
+  },
+  "Rememberme": {
+    "message": " Remember me?"
   },
   "Reset": {
     "message": " Reset"
