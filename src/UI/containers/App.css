@@ -163,7 +163,6 @@ body {
 
 .chatroom {
   width: 100%;
-  height: 100%;
   border-radius: 5pt;
   overflow: hidden;
   box-shadow: 0 0 8pt 0 rgba(0, 0, 0, 0.3);
