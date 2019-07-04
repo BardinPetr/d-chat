@@ -84,12 +84,12 @@ export const receiveMessage = (src, payload, payloadType, encrypt)  => {
 				if ( !text ){
 					count = counter;
 				} else {
-					counter = 0;
 					count = +text + 1;
 				}
 				browserAction.setBadgeText({
 					text: String(count)
 				});
+				counter = 0;
 			});
 	}
 
