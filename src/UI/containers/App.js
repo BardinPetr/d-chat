@@ -31,7 +31,7 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 						{ __('Connecting...') }
 					</p>
 					<p className="description">
-						{ __('If it seems stuck, restart your browser.') }
+						{ __('If it seems stuck, restart your browser or disable/enable the extension.') }
 					</p>
 				</div>
 				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>

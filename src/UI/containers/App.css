@@ -70,7 +70,6 @@ body {
 .chatlist-container {
 	height: 100%;
 	width: 100%;
-  border-radius: 5pt;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -163,7 +162,7 @@ body {
 
 .chatroom {
   width: 100%;
-  border-radius: 5pt;
+  height: 100%;
   overflow: hidden;
   box-shadow: 0 0 8pt 0 rgba(0, 0, 0, 0.3);
   display: flex;
@@ -179,6 +178,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  width: 100%;
 }
 
 .chatroom .chatroom-header .chatname {
