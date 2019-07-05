@@ -1,4 +1,4 @@
-import { browserAction, notifications } from 'webextension-polyfill';
+import { extension, browserAction, notifications } from 'webextension-polyfill';
 import configs from '../../misc/configs';
 
 export const connected = () => ({
@@ -97,7 +97,8 @@ export const receiveMessage = (src, payload, payloadType)  => {
 						{
 							type: 'basic',
 							message: message.content,
-							title: '#' + message.topic + ', ' + message.username + ':',
+							title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
+							iconUrl: extension.getURL('/img/icon2.png'),
 						}
 					);
 				}

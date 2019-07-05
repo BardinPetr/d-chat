@@ -26,7 +26,7 @@
   	"default_title": "__MSG_extensionName__",
   	"default_panel": "./sidebar.html",
   	"open_at_install": false,
-  	"default_icon": "img/icon.svg"
+  	"default_icon": "img/icon2.png"
   },
   "icons": {
     "64": "img/icon2.png"
