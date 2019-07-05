@@ -75,7 +75,7 @@ class Header extends React.Component {
 					onAfterOpen={() => this.refs.topicInput.focus()}
 				>
 					<h2 className="title">{ __('Enter channel name') }</h2>
-					<form className="input" onSubmit={this.handleAccept}>
+					<form className="input narrow" onSubmit={this.handleAccept}>
 						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
 						<button type="submit" className="input submit">{ __('Go') }</button>
 					</form>

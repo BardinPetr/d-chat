@@ -17,7 +17,7 @@ const timeago = ({timestamp, addr}) => (
 
 const Nickname = ({addr, timestamp, username}) => (
 	<span>
-		<Tooltip id={timestamp + addr} placement="right" overlay={timeago({timestamp, addr})}>
+		<Tooltip id={timestamp + addr} placement="right" overlay={timeago({timestamp, addr})} mouseEnterDelay={0.2}>
 			<span>
 				<span className="avatar" data-tip data-for={timestamp} aria-describedby={timestamp + addr}>
 					{username}
