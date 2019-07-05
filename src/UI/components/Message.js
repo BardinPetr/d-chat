@@ -2,6 +2,8 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
+import Markdown from 'react-markdown';
+import CodeBlock from './CodeBlock';
 
 const timeago = ({timestamp, addr}) => (
 	<span>
@@ -28,7 +30,13 @@ const Nickname = ({addr, timestamp, username}) => (
 const Message = ({ message }) => (
 	<li className={message.isMe ? 'me message' : 'message'}>
 		<Nickname addr={message.addr} username={message.username} timestamp={message.timestamp} />
-		<p>{message.content}</p>
+		<div>
+			<Markdown
+				source={message.content}
+				escapeHtml={true}
+				renderers={{code: CodeBlock}}
+			/>
+		</div>
 	</li>
 );
 

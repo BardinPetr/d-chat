@@ -13,6 +13,7 @@ const messages = (state = configs.messages, action ) => {
 				...state,
 				[action.payload.topic]: [ ...initial, action.payload.message ]
 			};
+			configs.messages = newState;
 			break;
 
 		// This one is for displaying all rooms in the chatlist.
@@ -21,6 +22,7 @@ const messages = (state = configs.messages, action ) => {
 				...state,
 				[action.payload.topic]: []
 			};
+			configs.messages = newState;
 			break;
 
 		case 'PUBLISH_MESSAGE':

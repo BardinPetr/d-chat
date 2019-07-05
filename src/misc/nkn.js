@@ -4,9 +4,7 @@ import configs from './configs';
 import { genChatID } from './util';
 
 const	BUCKET = 0;
-// testnet - What does this even matter?
 const FORBLOCKS = 50000;
-const TIMEOUT = 30;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -85,7 +83,6 @@ class	NKN	extends	nkn	{
 			identifier:	username.trim() || 'Pseudonymous',
 			seed:	wallet.getSeed(),
 			seedRpcServerAddr: seed,
-			responseTimeout: TIMEOUT,
 		});
 
 		this.wallet	=	wallet;

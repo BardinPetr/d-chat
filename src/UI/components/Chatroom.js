@@ -38,6 +38,20 @@ export default class Chatroom extends React.Component {
 		input.value = '';
 	}
 
+	/**
+	 * Makes enter submit, shift/ctrl enter insert newline.
+	 */
+	onEnterPress = e => {
+		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
+			e.preventDefault();
+			this.submitText(e);
+		}
+		if ( e.keyCode === 13 && e.ctrlKey ) {
+			e.preventDefault();
+			this.refs.msg.value += '\n';
+		}
+	}
+
 	render() {
 		const { messages } = this.props;
 
@@ -51,7 +65,7 @@ export default class Chatroom extends React.Component {
 					}
 				</ul>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<input type="text" ref="msg" />
+					<textarea ref="msg" onKeyDown={e => this.onEnterPress(e)} />
 					<input type="submit" value={ __('Submit') } />
 				</form>
 			</div>

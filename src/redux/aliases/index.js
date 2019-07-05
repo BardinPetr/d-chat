@@ -11,6 +11,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 	if ( topic != null ) {
 		window.nknClient.subscribe( topic )
 			.then(txId => {
+				console.log('Subscription transaction:', txId);
 				// There will be a bunch of work when "hide chat" is implemented.
 				dispatch(createChat(topic));
 				dispatch(subscribe(topic, txId));

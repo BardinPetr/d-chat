@@ -19,7 +19,8 @@
   "permissions": [
     "<all_urls>",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "notifications"
   ],
   "sidebar_action": {
   	"default_title": "__MSG_extensionName__",
@@ -29,6 +30,9 @@
   },
   "icons": {
     "64": "img/icon2.png"
+  },
+  "options_ui": {
+  	"page": "./options.html"
   },
   "browser_specific_settings": {
   	"gecko": {

@@ -10,9 +10,11 @@ import passworder from 'browser-passworder';
 
 const password = 'd-chat!!!';
 
-let credentials = localStorage.getItem('credentials');
+let credentials;
+console.log('Credentials?', credentials);
 if (credentials) {
 	try {
+		credentials = localStorage.getItem('credentials');
 		credentials = JSON.parse(credentials);
 	} catch(e) {
 		credentials = undefined;
@@ -31,16 +33,11 @@ configs.$loaded.then(() => {
 	wrapStore( store );
 
 	if ( credentials ) {
+		console.log('Using existing credentials');
 		passworder.decrypt(password, credentials)
 			.then(creds => store.dispatch(login(creds)));
 	}
 
-	// Store state at regular interval, excluding browser startup. Awful workaround.
-	// Should probably just update the state on every message, instead.
-	setTimeout(
-		() => setInterval(() => configs.messages = store.getState().messages, 1000 * 10)
-		, 1000
-	);
 });
 
 browser.runtime.onInstalled.addListener(details => (

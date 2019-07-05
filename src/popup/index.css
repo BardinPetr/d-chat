@@ -1,6 +1,6 @@
 .chatroom, .chatlist-container {
 	--minwidth: 450px;
-	--minheight: 500px;
+	--minheight: 600px;
   min-width: var(--minwidth);
   min-height: var(--minheight);
 }

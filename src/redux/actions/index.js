@@ -1,4 +1,5 @@
-import { browserAction } from 'webextension-polyfill';
+import { browserAction, notifications } from 'webextension-polyfill';
+import configs from '../../misc/configs';
 
 export const connected = () => ({
 	type: 'CONNECTED'
@@ -66,9 +67,9 @@ export const publishMessage = message => ({
 });
 
 let counter = 0;
-export const receiveMessage = (src, payload, payloadType, encrypt)  => {
+export const receiveMessage = (src, payload, payloadType)  => {
 	let message = {};
-	console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
+	// console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
 		message = JSON.parse(payload);
 		message.addr = src;
@@ -90,6 +91,16 @@ export const receiveMessage = (src, payload, payloadType, encrypt)  => {
 					text: String(count)
 				});
 				counter = 0;
+				if ( configs.showNotifications ) {
+					notifications.create(
+						'',
+						{
+							type: 'basic',
+							message: message.content,
+							title: '#' + message.topic + ', ' + message.username + ':',
+						}
+					);
+				}
 			});
 	}
 

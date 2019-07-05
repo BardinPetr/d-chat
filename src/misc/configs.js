@@ -2,7 +2,8 @@
 
 export default new Configs({
 	walletJSON: null,
-	messages: {}
+	messages: {},
+	showNotifications: true
 }, {
-	localKeys: []
+	localKeys: [ 'showNotifications' ]
 });
