@@ -20,7 +20,7 @@ const messages = (state = configs.messages, action ) => {
 		case 'CREATE_CHAT':
 			newState = {
 				...state,
-				[action.payload.topic]: []
+				[action.payload.topic]: state[action.payload.topic] || []
 			};
 			configs.messages = newState;
 			break;

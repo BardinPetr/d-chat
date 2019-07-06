@@ -12,6 +12,14 @@ export const subscribeCompleted = topic => ({
 	}
 });
 
+// TODO
+// export const subscribeErrored = error => ({
+// 	type: 'SUBSCRIBE_ERRORED',
+// 	payload: {
+// 		error
+// 	}
+// });
+
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
@@ -67,6 +75,7 @@ export const publishMessage = message => ({
 });
 
 let counter = 0;
+let timeout;
 export const receiveMessage = (src, payload, payloadType)  => {
 	let message = {};
 	// console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
@@ -90,7 +99,14 @@ export const receiveMessage = (src, payload, payloadType)  => {
 				browserAction.setBadgeText({
 					text: String(count)
 				});
-				counter = 0;
+
+				// On startup, the numbers go all wrong. Attempted fix.
+				if ( timeout ) {
+					clearTimeout(timeout);
+				}
+				// Otherwise it will be zero.
+				timeout = setTimeout(() => counter = 0, 100);
+
 				if ( configs.showNotifications ) {
 					notifications.create(
 						'',

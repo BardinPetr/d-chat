@@ -88,14 +88,15 @@ class LoginBox extends React.Component {
 								required />
 						</div>
 						<div className="input-group forgetmenot">
-							<input
-								type="checkbox"
-								checked={this.state.rememberMe}
-								onChange={this.handleCheckboxChange}
-								value="rememberMe"
-								name="rememberMe"
-								id="rememberMe" />
-							<label htmlFor="rememberMe">{ __('Remember me?') }</label>
+							<label htmlFor="rememberMe">
+								<input
+									type="checkbox"
+									checked={this.state.rememberMe}
+									onChange={this.handleCheckboxChange}
+									value="rememberMe"
+									name="rememberMe"
+									id="rememberMe" />
+								{ __('Remember me?') }</label>
 						</div>
 						<button className="login-btn">
 							{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
@@ -119,3 +120,4 @@ class LoginBox extends React.Component {
 }
 
 export default LoginBox;
+

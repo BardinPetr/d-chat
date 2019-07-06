@@ -42,6 +42,6 @@ configs.$loaded.then(() => {
 
 browser.runtime.onInstalled.addListener(details => (
 	setTimeout(() => details.reason === 'install' && browser.tabs.create({
-		url: browser.runtime.getURL('popup.html?register')
+		url: browser.runtime.getURL('sidebar.html?register')
 	}), 250) // Sometimes the register screen would bug out.
 ));

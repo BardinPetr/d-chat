@@ -122,14 +122,12 @@ body,
   color: rgba(15, 15, 15, 0.4); }
 
 .login-btn {
-  padding: 2pt 30pt;
-  /* background-color: #417cef; */
   border: 0;
   font-size: 18pt;
   border-radius: 3pt;
   font-family: Oxygen, sans-serif;
   background-color: rgba(15, 15, 15, 0.03);
-  margin-top: 20pt;
+  margin-top: 1rem;
   box-shadow: 0 8pt 50pt -6pt rgba(84, 84, 120, 0.26);
   transition: background-color 0.3s ease-out;
   cursor: pointer; }
@@ -175,5 +173,6 @@ body,
 }
 
 input[type="checkbox"] {
-	margin: -1px 0.5em 0 0;
+	margin: 0 0.5em 0 0;
+	vertical-align: bottom;
 }

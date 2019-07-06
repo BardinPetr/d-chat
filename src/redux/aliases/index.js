@@ -18,7 +18,14 @@ const joinChat = originalAction => (dispatch, getState) => {
 			},
 			err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
+				// Would do this, but it's not consistent. The error messages don't reflect reality.
+				// if ( err.data && err.data.includes('already subscribed') ) {
 				dispatch(subscribeCompleted(topic));
+				// }
+				// TODO reducer too.
+				// else {
+				// 	dispatch(subscribeErrored(err));
+				// }
 			}
 			);
 	}
@@ -33,7 +40,6 @@ const joinChat = originalAction => (dispatch, getState) => {
 const login = originalAction => (dispatch, getState) => {
 	const credentials = originalAction.payload.credentials;
 	const rememberMe = credentials && credentials.rememberMe;
-	// console.log('is anybody out there? this is moon base.', originalAction, credentials, dispatch, getState);
 
 	let status;
 	try {
@@ -70,6 +76,7 @@ const login = originalAction => (dispatch, getState) => {
 				);
 		}
 
+		console.log('logged in');
 		status = { addr: nknClient.addr };
 	} catch (e) {
 		console.log('Failed login.', e);
