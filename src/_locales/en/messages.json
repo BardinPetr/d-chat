@@ -20,8 +20,8 @@
   "Go": {
     "message": " Go"
   },
-  "Ifitseemsstuckrestartyourbrowserordisableenabletheextension": {
-    "message": " If it seems stuck, restart your browser or disable/enable the extension."
+  "Ifitseemsstuckforalonglongtimethenitprobablyis": {
+    "message": " If it seems stuck for a long, long time, then it probably is."
   },
   "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
     "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
@@ -43,6 +43,9 @@
   },
   "Register": {
     "message": " Register"
+  },
+  "Reload": {
+    "message": " Reload"
   },
   "Rememberme": {
     "message": " Remember me?"

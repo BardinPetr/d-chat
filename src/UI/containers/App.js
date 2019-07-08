@@ -6,6 +6,7 @@ import ChatList from '../components/ChatList';
 import Chatroom from '../components/Chatroom';
 import LoginBox from '../components/LoginBox';
 import { __ } from '../../misc/util';
+import { runtime } from 'webextension-polyfill';
 
 const popout = () => {
 	browser.windows.create({
@@ -31,8 +32,11 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 						{ __('Connecting...') }
 					</p>
 					<p className="description">
-						{ __('If it seems stuck, restart your browser or disable/enable the extension.') }
+						{ __('If it seems stuck for a long, long time, then it probably is.') }
 					</p>
+					<button type="button" onClick={() => runtime.reload()}>
+						{__('Reload')}
+					</button>
 				</div>
 				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>
 					{ isLoggedIn &&
