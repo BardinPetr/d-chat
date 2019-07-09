@@ -237,7 +237,20 @@ body {
 }
 
 .me {
-  border-left: 3px dashed hsla(0, 48%, 41%, 0.8);
+  border-left: 3px dashed hsla(0, 88.9%, 45.9%, 0.8);
+}
+
+.ping {
+	margin: 0 0.3em;
+}
+.ping.nice {
+	color: #4e770e;
+}
+.ping.ok {
+	color: #a05800;
+}
+.ping.bad {
+	color: darkred;
 }
 
 .chatroom .messages .message a {

@@ -18,7 +18,6 @@ export default class Chatroom extends React.Component {
 
 	componentDidMount() {
 		this.scrollToBot();
-		console.log(this.msg, this.textarea);
 		this.textarea.focus();
 	}
 

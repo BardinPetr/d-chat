@@ -98,6 +98,12 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 			message.username = 'Pseudonymous';
 		}
 	}
+	if (message.timestamp) {
+		message.ping = new Date().getTime() - new Date(message.timestamp).getTime();
+		console.log('timestamp exitsted', message);
+	} else {
+		message.ping = 0;
+	}
 	if ( src === window.nknClient.addr ) {
 		message.isMe = true;
 	} else {
