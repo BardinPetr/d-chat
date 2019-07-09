@@ -11,7 +11,7 @@ import passworder from 'browser-passworder';
 const password = 'd-chat!!!';
 
 let credentials = localStorage.getItem('credentials');
-console.log('Credentials?', credentials);
+console.log('Credentials?', credentials != null);
 if (credentials) {
 	try {
 		credentials = JSON.parse(credentials);

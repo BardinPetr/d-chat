@@ -1,5 +1,5 @@
 import NKN from '../../misc/nkn';
-import { connected, createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 import passworder from 'browser-passworder';
 
 // TODO move to own file
@@ -52,7 +52,7 @@ const login = originalAction => (dispatch, getState) => {
 
 		nknClient.on('message', (...args) => {
 			console.log('Received message:', ...args);
-			dispatch(receiveMessage(...args));
+			dispatch(receivingMessage(...args));
 		});
 
 		nknClient.on('block', block => {

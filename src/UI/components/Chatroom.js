@@ -1,13 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+import '@webscopeio/react-textarea-autocomplete/style.css';
+import emoji from '@jukben/emoji-search';
 import '../containers/App.css';
 import Message from './Message.js';
 import { __ } from '../../misc/util';
 
+const AutofillItem = ({ entity: { name, char } }) => (
+	<div>{`${name}: ${char}`}</div>
+);
+
 export default class Chatroom extends React.Component {
+	state = {
+		text: ''
+	};
+
 	componentDidMount() {
 		this.scrollToBot();
-		this.refs.msg.focus();
+		console.log(this.msg, this.textarea);
+		this.textarea.focus();
 	}
 
 	componentDidUpdate() {
@@ -21,7 +33,7 @@ export default class Chatroom extends React.Component {
 	submitText = (e) => {
 		e.preventDefault();
 
-		let input = ReactDOM.findDOMNode(this.refs.msg);
+		let input = this.textarea;
 
 		if (input.value === '') {
 			return;
@@ -35,8 +47,14 @@ export default class Chatroom extends React.Component {
 
 		this.props.createMessage(message);
 
-		input.value = '';
+		this.setState({
+			text: ''
+		});
 	}
+
+	handleTextareaChange = e => this.setState({
+		text: e.target.value
+	})
 
 	/**
 	 * Makes enter submit, shift/ctrl enter insert newline.
@@ -48,9 +66,16 @@ export default class Chatroom extends React.Component {
 		}
 		if ( e.keyCode === 13 && e.ctrlKey ) {
 			e.preventDefault();
-			this.refs.msg.value += '\n';
+			this.msg.value += '\n';
 		}
 	}
+
+	/**
+	 * Stuff for react-textare-autocomplete
+	 */
+	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
+	_outputCaretStart = item => ({ text: item.char, caretPosition: 'start' });
+	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
 		const { messages } = this.props;
@@ -65,7 +90,21 @@ export default class Chatroom extends React.Component {
 					}
 				</ul>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<textarea ref="msg" onKeyDown={e => this.onEnterPress(e)} />
+					<ReactTextareaAutocomplete
+						ref={msg => this.msg = msg}
+						innerRef={ref => this.textarea = ref}
+						onKeyDown={e => this.onEnterPress(e)}
+						value={this.state.text}
+						onChange={this.handleTextareaChange}
+						trigger={{
+							':': {
+								dataProvider: token => emoji(token).slice(0, 5),
+								component: AutofillItem,
+								output: this._outputCaretEnd,
+							}
+						}}
+						loadingComponent={() => <span className="loader" />}
+					/>
 					<input type="submit" value={ __('Submit') } />
 				</form>
 			</div>
