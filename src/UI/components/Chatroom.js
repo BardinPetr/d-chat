@@ -12,10 +12,6 @@ const AutofillItem = ({ entity: { name, char } }) => (
 );
 
 export default class Chatroom extends React.Component {
-	state = {
-		text: ''
-	};
-
 	componentDidMount() {
 		this.scrollToBot();
 		this.textarea.focus();
@@ -41,19 +37,11 @@ export default class Chatroom extends React.Component {
 		const message = {
 			content: input.value,
 			contentType: 'text',
-			timestamp: new Date().toUTCString(),
 		};
 
 		this.props.createMessage(message);
-
-		this.setState({
-			text: ''
-		});
+		this.msg.setState({value: ''});
 	}
-
-	handleTextareaChange = e => this.setState({
-		text: e.target.value
-	})
 
 	/**
 	 * Makes enter submit, shift/ctrl enter insert newline.
@@ -70,7 +58,7 @@ export default class Chatroom extends React.Component {
 	}
 
 	/**
-	 * Stuff for react-textare-autocomplete
+	 * Stuff for react-textarea-autocomplete
 	 */
 	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
 	_outputCaretStart = item => ({ text: item.char, caretPosition: 'start' });
@@ -93,7 +81,6 @@ export default class Chatroom extends React.Component {
 						ref={msg => this.msg = msg}
 						innerRef={ref => this.textarea = ref}
 						onKeyDown={e => this.onEnterPress(e)}
-						value={this.state.text}
 						onChange={this.handleTextareaChange}
 						trigger={{
 							':': {

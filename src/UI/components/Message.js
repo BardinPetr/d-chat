@@ -4,6 +4,8 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
 import Markdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
+import prettyMs from 'pretty-ms';
+import isNumber from 'is-number';
 
 const timeago = ({timestamp, addr}) => (
 	<span>
@@ -16,7 +18,7 @@ const timeago = ({timestamp, addr}) => (
 );
 
 const Ping = ({ping}) => (
-	<span className={ping < 300 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{ping + ' ms'}</span>
+	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
 );
 
 const Nickname = ({addr, timestamp, username, ping}) => (
@@ -30,7 +32,7 @@ const Nickname = ({addr, timestamp, username, ping}) => (
 			</span>
 		</Tooltip>
 		<TimeAgo date={timestamp} minPeriod={5} />
-		<Ping ping={ping} />
+		{ isNumber(ping) && <Ping ping={ping} /> }
 	</span>
 );
 

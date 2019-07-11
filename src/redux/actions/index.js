@@ -85,6 +85,7 @@ const receiveMessage = message => ({
 let counter = 0;
 let timeout;
 export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
+	const now = new Date().getTime();
 	let message = {};
 	// console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
 	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
@@ -99,8 +100,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 		}
 	}
 	if (message.timestamp) {
-		message.ping = new Date().getTime() - new Date(message.timestamp).getTime();
-		console.log('timestamp exitsted', message);
+		message.ping = now - new Date(message.timestamp).getTime();
 	} else {
 		message.ping = 0;
 	}

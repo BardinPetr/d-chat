@@ -8,15 +8,6 @@ import LoginBox from '../components/LoginBox';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const popout = () => {
-	browser.windows.create({
-		url: browser.runtime.getURL('sidebar.html'),
-		type: 'panel',
-		height: 700,
-		width: 550,
-	});
-};
-
 const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions, connected }) => {
 	// console.log('Rendering.....................');
 	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
@@ -44,7 +35,6 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 							topic={topic}
 							enterChatroom={enterChatroom}
 							subscribing={isSubscribing}
-							popout={popout}
 							connected={connected}
 						/> }
 					{ isLoggedIn ?

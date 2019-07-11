@@ -35,6 +35,9 @@
   "LogIn": {
     "message": " Log In"
   },
+  "Panel": {
+    "message": " Panel"
+  },
   "Password": {
     "message": " Password"
   },
@@ -61,6 +64,9 @@
   },
   "Subscribing": {
     "message": " Subscribing..."
+  },
+  "Tab": {
+    "message": " Tab"
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."

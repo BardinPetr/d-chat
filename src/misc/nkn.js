@@ -83,6 +83,7 @@ class	NKN	extends	nkn	{
 			identifier:	username.trim() || 'Pseudonymous',
 			seed:	wallet.getSeed(),
 			seedRpcServerAddr: seed,
+			responseTimeout: 50,
 		});
 
 		this.wallet	=	wallet;

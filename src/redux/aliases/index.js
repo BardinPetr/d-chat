@@ -89,6 +89,7 @@ const publishMessage = originalAction => () => {
 	console.log('Publishing message', originalAction);
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
+	message.timestamp = new Date().toUTCString();
 	window.nknClient.publishMessage(topic, message);
 	return originalAction;
 };
