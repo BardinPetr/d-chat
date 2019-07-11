@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // NOTE: Loader `include` paths are relative to this module
 const paths = require('../paths');
 
-const nknClientJsLibProtocolRegex = /(messages|payloads)_pb\.js/;
+const nknClientJsLibProtocolRegex = /(messages|payloads|transaction|sigchain)_pb\.js/;
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 

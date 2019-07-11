@@ -1,6 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
-import App from './UI/App';
+import renderApp from '../UI';
+import { browserAction } from 'webextension-polyfill';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// Reset badge text on popup open
+browserAction.setBadgeText({ text: '' });
+renderApp();

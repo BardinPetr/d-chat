@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { getChatName, __ } from './util';
+import { getChatName, __ } from '../../misc/util';
 
 const Info = () => (
 	<div className="text-container description">
 		<p>
-			{ __('To join a channel, use the button top-right. You will then be subscribed to the channel.') }
+			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
 		</p>
 		<p>
 			{ __('Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into.') }
+		</p>
+		<p>
+			{ __('If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day.') }
 		</p>
 		<p>
 			<i>{ __('You can send messages before subsriptions complete, but you will not receive them until your subscription resolves.') }</i>
@@ -16,10 +19,10 @@ const Info = () => (
 	</div>
 );
 
-const Chat = ({ chat, onClick }) => {
+const Chat = ({ messages, topic, onClick }) => {
 	let lastMessage, lastActiveTimeText, previewText;
-	if (chat.messages && chat.messages.length) {
-		lastMessage = chat.messages[chat.messages.length-1];
+	if (messages && messages.length) {
+		lastMessage = messages[messages.length-1];
 
 		let lastActiveTime = new Date(lastMessage.timestamp);
 		if (lastActiveTime.toDateString() === new Date().toDateString()) {
@@ -36,7 +39,7 @@ const Chat = ({ chat, onClick }) => {
 		<li className='chat' onClick={onClick}>
 			<div className='chat-info'>
 				<div className='chat-name'>
-					{getChatName(chat.topic)}
+					{getChatName(topic)}
 				</div>
 				<div className='chat-info-fill' />
 				<div className='chat-time'>
@@ -52,26 +55,24 @@ const Chat = ({ chat, onClick }) => {
 
 export default class ChatList extends React.Component {
 	render() {
-		const { chats, enterChatroom } = this.props;
+		const { messages = {}, enterChatroom } = this.props;
 
 		let chatList = [];
-		for (let topic in chats) {
-			if (chats.hasOwnProperty(topic) && chats[topic]) {
-				chatList.push({
-					topic: topic,
-					chat: chats[topic],
-				});
-			}
+		for (let topic of Object.keys(messages) ) {
+			chatList.push({
+				topic: topic,
+				messages: messages[topic],
+			});
 		}
 
 		chatList.sort(function(a, b) {
-			if (!a.chat.messages || a.chat.messages.length === 0) {
+			if (!a.messages || a.messages.length === 0) {
 				return 1;
 			}
-			if (!b.chat.messages || b.chat.messages.length === 0) {
+			if (!b.messages || b.messages.length === 0) {
 				return -1;
 			}
-			return b.chat.messages[b.chat.messages.length-1].timestamp - a.chat.messages[a.chat.messages.length-1].timestamp;
+			return new Date(b.messages[b.messages.length-1].timestamp).getTime() - new Date(a.messages[a.messages.length-1].timestamp).getTime();
 		});
 
 		return (
@@ -82,8 +83,9 @@ export default class ChatList extends React.Component {
 						chatList.map(item => (
 							<Chat
 								key={item.topic}
-								chat={item.chat}
-								onClick={() => enterChatroom(item.chat.topic)}
+								messages={item.messages}
+								topic={item.topic}
+								onClick={() => enterChatroom(item.topic)}
 							/>
 						))
 						:

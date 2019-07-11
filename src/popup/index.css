@@ -1,5 +1,16 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+.chatroom, .chatlist-container {
+	--minwidth: 450px;
+	--minheight: 600px;
+  min-width: var(--minwidth);
+  min-height: var(--minheight);
+}
+
+/* Fix the popup bugs. */
+.chatroom {
+	min-height: calc(var(--minheight) - 40pt) !important;
+}
+
+.chatlist-container {
+	min-height: calc(var(--minheight) - 40pt) !important;
+	max-width: var(--minwidth);
 }

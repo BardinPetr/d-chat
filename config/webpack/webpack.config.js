@@ -112,8 +112,8 @@ module.exports = function (webpackEnv) {
 		plugins: [
 			plugins.friendlyErrorsWebpackPlugin,
 			doesOptionsHtmlExist && plugins.optionsHtmlPlugin,
-			doesPopupHtmlExist && plugins.popupHtmlPlugin,
 			doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
+			doesPopupHtmlExist && plugins.popupHtmlPlugin,
 			plugins.htmlIncAssetsPlugin,
 			plugins.moduleNotFoundPlugin,
 			isEnvDevelopment && plugins.CaseSensitivePathsPlugin,

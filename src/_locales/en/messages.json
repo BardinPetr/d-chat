@@ -2,14 +2,32 @@
   "Back": {
     "message": " Back"
   },
+  "Cleared": {
+    "message": " Cleared"
+  },
+  "Connecting": {
+    "message": " Connecting..."
+  },
   "DChat": {
     "message": " D-Chat"
   },
   "Enterchannelname": {
     "message": " Enter channel name"
   },
+  "Forgotpassword": {
+    "message": " Forgot password?"
+  },
   "Go": {
     "message": " Go"
+  },
+  "Ifitseemsstuckforalonglongtimethenitprobablyis": {
+    "message": " If it seems stuck for a long, long time, then it probably is."
+  },
+  "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
+    "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
+  },
+  "Invalidcredentials": {
+    "message": " Invalid credentials."
   },
   "Join": {
     "message": " Join"
@@ -26,6 +44,15 @@
   "Register": {
     "message": " Register"
   },
+  "Reload": {
+    "message": " Reload"
+  },
+  "Rememberme": {
+    "message": " Remember me?"
+  },
+  "Reset": {
+    "message": " Reset"
+  },
   "Submit": {
     "message": " Submit"
   },
@@ -38,14 +65,17 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "TojoinachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
-    "message": " To join a channel, use the button top-right. You will then be subscribed to the channel."
+  "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
+    "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
   },
   "Username": {
     "message": " Username"
   },
   "WelcomeBack": {
     "message": " Welcome Back!"
+  },
+  "Welcome": {
+    "message": " Welcome!"
   },
   "Youcansendmessagesbeforesubsriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subsriptions complete, but you will not receive them until your subscription resolves."

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './App.css';
+import '../containers/App.css';
 import Message from './Message.js';
-import { __ } from './util';
+import { __ } from '../../misc/util';
 
 export default class Chatroom extends React.Component {
 	componentDidMount() {
@@ -27,25 +27,45 @@ export default class Chatroom extends React.Component {
 			return;
 		}
 
-		this.props.createMessage(input.value, 'text');
+		const message = {
+			content: input.value,
+			contentType: 'text',
+			timestamp: new Date().toUTCString(),
+		};
+
+		this.props.createMessage(message);
 
 		input.value = '';
 	}
 
+	/**
+	 * Makes enter submit, shift/ctrl enter insert newline.
+	 */
+	onEnterPress = e => {
+		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
+			e.preventDefault();
+			this.submitText(e);
+		}
+		if ( e.keyCode === 13 && e.ctrlKey ) {
+			e.preventDefault();
+			this.refs.msg.value += '\n';
+		}
+	}
+
 	render() {
-		const { chat } = this.props;
+		const { messages } = this.props;
 
 		return (
 			<div className="chatroom">
 				<ul className="messages" ref="messages">
 					{
-						chat && chat.messages && chat.messages.map((message, index) => (
+						messages && messages.map((message, index) => (
 							<Message message={message} key={index} />
 						))
 					}
 				</ul>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<input type="text" ref="msg" />
+					<textarea ref="msg" onKeyDown={e => this.onEnterPress(e)} />
 					<input type="submit" value={ __('Submit') } />
 				</form>
 			</div>

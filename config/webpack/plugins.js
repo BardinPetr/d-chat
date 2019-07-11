@@ -83,7 +83,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			output: {
 				// I don't understand what this does? TODO 6, 7, 8, and 5 are the same?
 				ecma: 6,
-				comments: true,
+				comments: false,
 				ascii_only: true,
 			},
 		},
@@ -105,7 +105,11 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 	/* Include these static JS and CSS assets in the generated HTML files */
 	const htmlIncAssetsPlugin = new HtmlIncAssetsPlugin({
 		append: false,
-		assets: staticFiles.htmlAssets,
+		// assets: staticFiles.htmlAssets,
+		// <!-- There is something wrong with the webpack configs.
+		// Things get included twice in either popup or sidebar.
+		// This is workaround. -->
+		assets: [],
 	});
 
 	const moduleScopePlugin = new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]);

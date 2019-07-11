@@ -21,6 +21,7 @@ stages:
 build_zip:
   stage: build
   script:
+    - git submodule init
     - npm install --silent
     - npm run build:pack
   artifacts:
@@ -34,4 +35,4 @@ publish:
   only:
     - tags
   script:
-    - gitlab-release --message 'My release message' web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
+    - gitlab-release --message 'Extension zip:' web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip

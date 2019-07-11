@@ -8,6 +8,7 @@
   "background": {
     "scripts": [
       "lib/js/browser-polyfill.js",
+    	"lib/js/webextensions-lib-configs/Configs.js",
       "background.js"
     ]
   },
@@ -18,16 +19,20 @@
   "permissions": [
     "<all_urls>",
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "notifications"
   ],
   "sidebar_action": {
   	"default_title": "__MSG_extensionName__",
-  	"default_panel": "./popup.html",
+  	"default_panel": "./sidebar.html",
   	"open_at_install": false,
-  	"default_icon": "img/icon.svg"
+  	"default_icon": "img/icon2.png"
   },
   "icons": {
     "64": "img/icon2.png"
+  },
+  "options_ui": {
+  	"page": "./options.html"
   },
   "browser_specific_settings": {
   	"gecko": {

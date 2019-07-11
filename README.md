@@ -8,6 +8,8 @@ https://chrome.google.com/webstore/detail/glnmkakdjcognfgonjfcklpmjiobijii/
 
 ## Installation
 
+`git submodule init --recursive`
+
 `npm install`
 
 `npm run dev`

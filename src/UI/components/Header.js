@@ -1,16 +1,18 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { IoMdOpen } from 'react-icons/io';
+import { IS_FIREFOX } from '../../misc/util';
 
 Modal.setAppElement('#root');
 
-import { getChatName } from './util';
-import { __ } from './util';
+import { __, getChatName } from '../../misc/util';
 
 const customStyles = {
 	content: {
-		position: 'relative',
 		inset: 0,
+		position: IS_FIREFOX ? 'relative' : 'absolute',
+		margin: 'auto',
+		height: 'min-content'
 	},
 	overlay: {
 		display: 'flex',
@@ -55,9 +57,6 @@ class Header extends React.Component {
 			return;
 		}
 
-		console.log('Entered topic:', topic);
-
-		await this.props.createChatroom(topic);
 		this.props.enterChatroom(topic);
 	};
 
@@ -66,7 +65,7 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { subscribing, topic, enterChatroom } = this.props;
+		const { subscribing, topic, enterChatroom, connected } = this.props;
 		return (
 			<div>
 				<Modal
@@ -76,7 +75,7 @@ class Header extends React.Component {
 					onAfterOpen={() => this.refs.topicInput.focus()}
 				>
 					<h2 className="title">{ __('Enter channel name') }</h2>
-					<form className="input" onSubmit={this.handleAccept}>
+					<form className="input narrow" onSubmit={this.handleAccept}>
 						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
 						<button type="submit" className="input submit">{ __('Go') }</button>
 					</form>
@@ -94,7 +93,7 @@ class Header extends React.Component {
 							<IoMdOpen title={ __('Pop Out') } />
 						</span>
 						<span className="title">{ __('D-Chat') }</span>
-						<span className="new" onClick={this.openModal}>{ __('Join') }</span>
+						<span className={`new ${!connected && 'disabled'}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
 					</span>
 				)
 				}
