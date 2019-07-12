@@ -1,5 +1,5 @@
 VERSION := $(shell jq .version -r < package.json)
-TARGET := web-ext-artifacts/sources-$(VERSION)
+TARGET := web-ext-artifacts/sources-$(VERSION).zip
 
 .PHONY: all source
 
