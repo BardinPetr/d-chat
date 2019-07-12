@@ -107,14 +107,15 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	if ( src === window.nknClient.addr ) {
 		message.isMe = true;
 	} else {
-		// So long purity.
 		counter++;
-		let views = extension.getViews();
+		let views = extension.getViews({
+			type: 'popup'
+		});
 		// If chat is open, no notifications.
 		views = views.filter(view => !view.document.hidden);
 		console.log('Active views:', views);
 		// Background is always there.
-		if ( views.length <= 1 || message.topic !== getState().topic ) {
+		if ( views.length === 0 || message.topic !== getState().topic ) {
 			browserAction.getBadgeText({})
 				.then(text => {
 					let count;
