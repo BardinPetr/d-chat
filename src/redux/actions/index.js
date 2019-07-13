@@ -1,5 +1,6 @@
 import { runtime, extension, browserAction, notifications } from 'webextension-polyfill';
 import configs from '../../misc/configs';
+import { getChatName } from '../../misc/util';
 
 export const connected = () => ({
 	type: 'CONNECTED'
@@ -8,14 +9,14 @@ export const connected = () => ({
 export const subscribeCompleted = topic => ({
 	type: 'SUBSCRIBE_COMPLETED',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
-		topic,
+		topic: getChatName( topic ),
 		transactionID
 	}
 });
@@ -23,7 +24,7 @@ export const subscribe = (topic, transactionID) => ({
 export const setSubscribers = (topic, subscribers) => ({
 	type: 'SET_SUBSCRIBERS',
 	payload: {
-		topic,
+		topic: getChatName( topic ),
 		subscribers,
 	}
 });
@@ -32,7 +33,7 @@ export const setSubscribers = (topic, subscribers) => ({
 export const getSubscribers = topic => ({
 	type: 'GET_SUBSCRIBERS',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
@@ -40,7 +41,7 @@ export const getSubscribers = topic => ({
 export const joinChat = topic => ({
 	type: 'JOIN_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
@@ -48,14 +49,14 @@ export const joinChat = topic => ({
 export const enterChat = topic => ({
 	type: 'ENTER_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
 export const createChat = topic => ({
 	type: 'CREATE_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
@@ -78,7 +79,7 @@ export const publishMessage = message => ({
 	type: 'PUBLISH_MESSAGE',
 	payload: {
 		message,
-		topic: message.topic
+		topic: getChatName(message.topic)
 	}
 });
 
@@ -86,7 +87,7 @@ const receiveMessage = message => ({
 	type: 'RECEIVE_MESSAGE',
 	payload: {
 		message,
-		topic: message.topic
+		topic: getChatName(message.topic)
 	}
 });
 
@@ -118,7 +119,7 @@ const notify = (message) => {
 					{
 						type: 'basic',
 						message: message.content,
-						title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
+						title: 'D-Chat ' + message.topic + ', ' + message.username + ':',
 						iconUrl: runtime.getURL('/img/icon2.png'),
 					}
 				);
@@ -140,6 +141,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 		if ( ! message.username ){
 			message.username = 'Pseudonymous';
 		}
+		message.topic = message.topic ? getChatName( message.topic ) : null;
 	}
 	if (message.timestamp) {
 		message.ping = now - new Date(message.timestamp).getTime();

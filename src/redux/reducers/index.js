@@ -1,19 +1,17 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
-import { getChatName } from '../../misc/util';
 
 const messages = (state = configs.messages, action ) => {
 	// console.log('is anybody out there? these messages are killing me', state, action);
 	let newState;
 	let initial;
-	const topic = action.payload && getChatName( action.payload.topic );
 	switch (action.type) {
 		case 'RECEIVE_MESSAGE':
-			initial = state[topic] || [];
+			initial = state[action.payload.topic] || [];
 			newState = {
 				...state,
-				[topic]: [ ...initial, action.payload.message ]
+				[action.payload.topic]: [ ...initial, action.payload.message ]
 			};
 			configs.messages = newState;
 			break;
@@ -22,7 +20,7 @@ const messages = (state = configs.messages, action ) => {
 		case 'CREATE_CHAT':
 			newState = {
 				...state,
-				[topic]: state[topic] || []
+				[action.payload.topic]: state[action.payload.topic] || []
 			};
 			configs.messages = newState;
 			break;

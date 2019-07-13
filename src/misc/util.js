@@ -18,11 +18,21 @@ export function	genChatID(topic) {
 	return 'dchat' + shasum(topic);
 }
 
+export function getChatDisplayName(topic) {
+	if (!topic){
+		return null;
+	}
+	return leadingHashIt(String(topic));
+}
+
 export function	getChatName(topic) {
 	if (!topic)	{
 		return null;
 	}
-	topic	=	leadingHashIt(String(topic));
+	topic	=	unleadingHashIt(String(topic));
+	if (!topic) {
+		return null;
+	}
 	return topic;
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getChatName, __ } from '../../misc/util';
+import { getChatDisplayName, __ } from '../../misc/util';
 
 const Info = () => (
 	<div className="text-container description">
@@ -39,7 +39,7 @@ const Chat = ({ messages, topic, onClick }) => {
 		<li className='chat' onClick={onClick}>
 			<div className='chat-info'>
 				<div className='chat-name'>
-					{getChatName(topic)}
+					{getChatDisplayName(topic)}
 				</div>
 				<div className='chat-info-fill' />
 				<div className='chat-time'>

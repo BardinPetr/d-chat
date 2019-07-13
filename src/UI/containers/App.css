@@ -60,7 +60,7 @@ body {
 
 .subscriber-list-dropdown {
 	width: 25em;
-	height: 16em;
+	max-height: 16em;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
