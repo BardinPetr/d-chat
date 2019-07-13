@@ -12,19 +12,27 @@ export const subscribeCompleted = topic => ({
 	}
 });
 
-// TODO
-// export const subscribeErrored = error => ({
-// 	type: 'SUBSCRIBE_ERRORED',
-// 	payload: {
-// 		error
-// 	}
-// });
-
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
 		topic,
 		transactionID
+	}
+});
+
+export const setSubscribers = (topic, subscribers) => ({
+	type: 'SET_SUBSCRIBERS',
+	payload: {
+		topic,
+		subscribers,
+	}
+});
+
+// An alias.
+export const getSubscribers = topic => ({
+	type: 'GET_SUBSCRIBERS',
+	payload: {
+		topic
 	}
 });
 
@@ -84,6 +92,40 @@ const receiveMessage = message => ({
 
 let counter = 0;
 let timeout;
+const notify = (message) => {
+	browserAction.getBadgeText({})
+		.then(text => {
+			let count;
+			if ( !text ){
+				count = counter;
+			} else {
+				count = +text + 1;
+			}
+			browserAction.setBadgeText({
+				text: String(count)
+			});
+
+			// On startup, the numbers go all wrong. Attempted fix.
+			if ( timeout ) {
+				clearTimeout(timeout);
+			}
+			// Otherwise it will be zero.
+			timeout = setTimeout(() => counter = 0, 100);
+
+			if ( configs.showNotifications ) {
+				notifications.create(
+					'',
+					{
+						type: 'basic',
+						message: message.content,
+						title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
+						iconUrl: runtime.getURL('/img/icon2.png'),
+					}
+				);
+			}
+		});
+};
+
 export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
 	const now = new Date().getTime();
 	let message = {};
@@ -114,39 +156,8 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 		// If chat is open, no notifications.
 		views = views.filter(view => !view.document.hidden);
 		console.log('Active views:', views);
-		// Background is always there.
 		if ( views.length === 0 || message.topic !== getState().topic ) {
-			browserAction.getBadgeText({})
-				.then(text => {
-					let count;
-					if ( !text ){
-						count = counter;
-					} else {
-						count = +text + 1;
-					}
-					browserAction.setBadgeText({
-						text: String(count)
-					});
-
-					// On startup, the numbers go all wrong. Attempted fix.
-					if ( timeout ) {
-						clearTimeout(timeout);
-					}
-					// Otherwise it will be zero.
-					timeout = setTimeout(() => counter = 0, 100);
-
-					if ( configs.showNotifications ) {
-						notifications.create(
-							'',
-							{
-								type: 'basic',
-								message: message.content,
-								title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
-								iconUrl: runtime.getURL('/img/icon2.png'),
-							}
-						);
-					}
-				});
+			notify(message);
 		}
 	}
 

@@ -1,17 +1,19 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
+import { getChatName } from '../../misc/util';
 
 const messages = (state = configs.messages, action ) => {
 	// console.log('is anybody out there? these messages are killing me', state, action);
 	let newState;
 	let initial;
+	const topic = action.payload && getChatName( action.payload.topic );
 	switch (action.type) {
 		case 'RECEIVE_MESSAGE':
-			initial = state[action.payload.topic] || [];
+			initial = state[topic] || [];
 			newState = {
 				...state,
-				[action.payload.topic]: [ ...initial, action.payload.message ]
+				[topic]: [ ...initial, action.payload.message ]
 			};
 			configs.messages = newState;
 			break;
@@ -20,7 +22,7 @@ const messages = (state = configs.messages, action ) => {
 		case 'CREATE_CHAT':
 			newState = {
 				...state,
-				[action.payload.topic]: state[action.payload.topic] || []
+				[topic]: state[topic] || []
 			};
 			configs.messages = newState;
 			break;
@@ -28,6 +30,20 @@ const messages = (state = configs.messages, action ) => {
 		case 'PUBLISH_MESSAGE':
 		default:
 			newState = state;
+	}
+	return newState;
+};
+
+const subscribers = (state = [], action) => {
+	let newState;
+	switch (action.type) {
+		case 'SET_SUBSCRIBERS':
+			newState = [ ...action.payload.subscribers ];
+			break;
+
+		case 'GET_SUBSCRIBERS':
+		default:
+			newState = [ ...state ];
 	}
 	return newState;
 };
@@ -109,5 +125,6 @@ export default combineReducers({
 	login,
 	subscriptions,
 	topic,
-	messages
+	messages,
+	subscribers,
 });

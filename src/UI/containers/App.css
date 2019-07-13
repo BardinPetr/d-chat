@@ -58,6 +58,17 @@ body {
 	text-align: center;
 }
 
+.subscriber-list-dropdown {
+	width: 25em;
+	height: 16em;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.subscriber-list-overlay {
+	max-width: 80%;
+}
+
 .app {
   height: 100%;
   width: 100%;
@@ -107,11 +118,19 @@ body {
 	cursor: pointer;
 }
 
-.chatlist-container .chatlist-header .new {
+.subscriber-list-dropdown .subscriber {
+	user-select: all;
+}
+
+.new {
   margin: 10pt;
   font-size: 14pt;
   flex: 1;
   text-align: right;
+}
+
+.no-flex {
+	flex: unset;
 }
 
 .popout {

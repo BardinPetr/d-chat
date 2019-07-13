@@ -2,6 +2,7 @@ import nkn from	'nkn-client';
 import nknWallet from	'nkn-wallet';
 import configs from './configs';
 import { genChatID } from './util';
+import rpcCall from 'nkn-client/lib/rpc';
 
 const	BUCKET = 0;
 const FORBLOCKS = 50000;
@@ -31,11 +32,11 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0023.nkn.org:30003',
 	'http://mainnet-seed-0024.nkn.org:30003',
 	'http://mainnet-seed-0025.nkn.org:30003',
-	// 'http://mainnet-seed-0026.nkn.org:30003',
+	'http://mainnet-seed-0026.nkn.org:30003',
 	'http://mainnet-seed-0027.nkn.org:30003',
 	'http://mainnet-seed-0028.nkn.org:30003',
 	'http://mainnet-seed-0029.nkn.org:30003',
-	// 'http://mainnet-seed-0030.nkn.org:30003',
+	'http://mainnet-seed-0030.nkn.org:30003',
 	'http://mainnet-seed-0031.nkn.org:30003',
 	'http://mainnet-seed-0032.nkn.org:30003',
 	'http://mainnet-seed-0033.nkn.org:30003',
@@ -108,6 +109,14 @@ class	NKN	extends	nkn	{
 			JSON.stringify(message)
 		);
 	}
+
+	getSubscribers = topic => (
+		rpcCall(
+			this.options.seedRpcServerAddr,
+			'getsubscribers',
+			{ topic: genChatID( topic ), bucket: BUCKET }
+		)
+	);
 
 }
 

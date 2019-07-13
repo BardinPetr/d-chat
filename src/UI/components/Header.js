@@ -6,6 +6,7 @@ import 'rc-dropdown/assets/index.css';
 import { IoMdOpen } from 'react-icons/io';
 import { IS_FIREFOX, __, getChatName } from '../../misc/util';
 import { runtime, tabs, windows } from 'webextension-polyfill';
+import SubscriberList from '../containers/SubscriberList';
 
 Modal.setAppElement('#root');
 
@@ -126,6 +127,7 @@ class Header extends React.Component {
 						<span className="back" onClick={() => enterChatroom(null)}>{'< ' + __('Back')}</span>
 						<span className="chatname" title={getChatName(topic)}>{getChatName(topic)}</span>
 						<span className={subscribing ? 'loader loader-margin' : 'empty'} title={ __('Subscribing...') }></span>
+						<SubscriberList />
 					</span>
 				) : (
 					<span className="chatlist-header">
