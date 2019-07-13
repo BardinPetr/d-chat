@@ -6,5 +6,5 @@ TARGET := web-ext-artifacts/sources-$(VERSION)
 all : source
 
 source:
-	zip -r $(TARGET) src scripts public config package-lock.json package.json README.md .eslintrc.js .env .babelrc .gitmodules
+	zip -r $(TARGET).zip src scripts public config package-lock.json package.json README.md .eslintrc.js .env .babelrc .gitmodules
 	@echo DONE
