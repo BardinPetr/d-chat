@@ -119,7 +119,7 @@ const notify = (message) => {
 					{
 						type: 'basic',
 						message: message.content,
-						title: 'D-Chat ' + message.topic + ', ' + message.username + ':',
+						title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
 						iconUrl: runtime.getURL('/img/icon2.png'),
 					}
 				);
