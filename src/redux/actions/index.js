@@ -1,6 +1,7 @@
-import { runtime, extension, browserAction, notifications } from 'webextension-polyfill';
-import configs from '../../misc/configs';
-import { getChatName } from '../../misc/util';
+import { extension } from 'webextension-polyfill';
+import { getChatName } from 'Approot/misc/util';
+import Message from 'Approot/background/Message';
+import { PayloadType } from 'nkn-client';
 
 export const connected = () => ({
 	type: 'CONNECTED'
@@ -91,75 +92,26 @@ const receiveMessage = message => ({
 	}
 });
 
-let counter = 0;
-let timeout;
-const notify = (message) => {
-	browserAction.getBadgeText({})
-		.then(text => {
-			let count;
-			if ( !text ){
-				count = counter;
-			} else {
-				count = +text + 1;
-			}
-			browserAction.setBadgeText({
-				text: String(count)
-			});
-
-			// On startup, the numbers go all wrong. Attempted fix.
-			if ( timeout ) {
-				clearTimeout(timeout);
-			}
-			// Otherwise it will be zero.
-			timeout = setTimeout(() => counter = 0, 100);
-
-			if ( configs.showNotifications ) {
-				notifications.create(
-					'',
-					{
-						type: 'basic',
-						message: message.content,
-						title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
-						iconUrl: runtime.getURL('/img/icon2.png'),
-					}
-				);
-			}
-		});
-};
-
+/**
+ * Called by .on('message') listener.
+ */
 export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
-	const now = new Date().getTime();
 	let message = {};
-	// console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
-	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
-		message = JSON.parse(payload);
-		message.addr = src;
-		let splitPart = src.lastIndexOf('.');
-		if ( splitPart !== -1 ) {
-			message.username = src.slice(0, splitPart);
-		}
-		if ( ! message.username ){
-			message.username = 'Pseudonymous';
-		}
-		message.topic = message.topic ? getChatName( message.topic ) : null;
-	}
-	if (message.timestamp) {
-		message.ping = now - new Date(message.timestamp).getTime();
+	if ( payloadType === PayloadType.TEXT ) {
+		const data = JSON.parse(payload);
+		message = new Message(data).from(src);
 	} else {
-		message.ping = 0;
+		return;
 	}
-	if ( src === window.nknClient.addr ) {
-		message.isMe = true;
-	} else {
-		counter++;
+
+	// Create notification?
+	if ( !message.isMe ) {
 		let views = extension.getViews({
 			type: 'popup'
 		});
-		// If chat is open, no notifications.
-		views = views.filter(view => !view.document.hidden);
-		console.log('Active views:', views);
-		if ( views.length === 0 || message.topic !== getState().topic ) {
-			notify(message);
+		// If chat is open, no notification.
+		if ( views.length === 0 || ( views.length === 1 && message.topic !== getState().topic ) ) {
+			message.notify();
 		}
 	}
 

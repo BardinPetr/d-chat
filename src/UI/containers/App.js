@@ -29,14 +29,14 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 						{__('Reload')}
 					</button>
 				</div>
+				{ isLoggedIn &&
+					<Header
+						topic={topic}
+						enterChatroom={enterChatroom}
+						subscribing={isSubscribing}
+						connected={connected}
+					/> }
 				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>
-					{ isLoggedIn &&
-						<Header
-							topic={topic}
-							enterChatroom={enterChatroom}
-							subscribing={isSubscribing}
-							connected={connected}
-						/> }
 					{ isLoggedIn ?
 						( topic ?
 							<Chatroom

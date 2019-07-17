@@ -71,6 +71,9 @@ module.exports = function (webpackEnv) {
 			]
 		},
 		resolve: {
+			alias: {
+				Approot: paths.appSrc
+			},
 			modules: ['node_modules'].concat(
 				process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
 			),

@@ -11,7 +11,7 @@ const messages = (state = configs.messages, action ) => {
 			initial = state[action.payload.topic] || [];
 			newState = {
 				...state,
-				[action.payload.topic]: [ ...initial, action.payload.message ]
+				[action.payload.topic]: [ action.payload.message, ...initial ]
 			};
 			configs.messages = newState;
 			break;

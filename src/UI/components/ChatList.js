@@ -11,9 +11,6 @@ const Info = () => (
 			{ __('Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into.') }
 		</p>
 		<p>
-			{ __('If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day.') }
-		</p>
-		<p>
 			<i>{ __('You can send messages before subsriptions complete, but you will not receive them until your subscription resolves.') }</i>
 		</p>
 	</div>
@@ -72,7 +69,7 @@ export default class ChatList extends React.Component {
 			if (!b.messages || b.messages.length === 0) {
 				return -1;
 			}
-			return new Date(b.messages[b.messages.length-1].timestamp).getTime() - new Date(a.messages[a.messages.length-1].timestamp).getTime();
+			return new Date(b.messages[0].timestamp).getTime() - new Date(a.messages[0].timestamp).getTime();
 		});
 
 		return (

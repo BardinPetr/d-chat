@@ -108,7 +108,7 @@ class Header extends React.Component {
 	render() {
 		const { subscribing, topic, enterChatroom, connected } = this.props;
 		return (
-			<div>
+			<div className="chat-header">
 				<Modal
 					isOpen={this.state.modalIsOpen}
 					onRequestClose={this.closeModal}

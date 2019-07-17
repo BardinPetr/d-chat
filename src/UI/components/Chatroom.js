@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import InfiniteScroll from 'react-infinite-scroller';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import emoji from '@jukben/emoji-search';
@@ -11,14 +12,25 @@ const AutofillItem = ({ entity: { name, char } }) => (
 	<div>{`${name}: ${char}`}</div>
 );
 
+/**
+ * Consists of existing messages and the text form.
+ */
 export default class Chatroom extends React.Component {
+	state = {
+		count: 15,
+		// messages: this.props.messages.slice(0, 15),
+	}
+
+	loadMore = () => {
+		this.setState({
+			count: this.state.count + 10,
+			// messages: this.props.messages.slice(0, this.state.messages.length + 10),
+		});
+	}
+
 	componentDidMount() {
 		this.scrollToBot();
 		this.textarea.focus();
-	}
-
-	componentDidUpdate() {
-		this.scrollToBot();
 	}
 
 	scrollToBot() {
@@ -65,17 +77,31 @@ export default class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
-		const { messages } = this.props;
+		const { count } = this.state;
+		const messages = this.props.messages.slice(0, count);
+		const hasMore = (messages.length < this.props.messages.length);
 
 		return (
-			<div className="chatroom">
-				<ul className="messages" ref="messages">
-					{
-						messages && messages.map((message, index) => (
-							<Message message={message} key={index} />
-						))
-					}
-				</ul>
+			<div className="messages-container-outer">
+				<div className="messages-container" ref="messages">
+					<InfiniteScroll
+						pageStart={0}
+						isReverse
+						loadMore={this.loadMore}
+						hasMore={hasMore}
+						loader={<div className="loader" key={0} />}
+						useWindow={false}
+						initialLoad={false}
+					>
+						<ul className="messages">
+							{
+								messages && messages.map((message, index) => (
+									<Message message={message} key={index} />
+								))
+							}
+						</ul>
+					</InfiniteScroll>
+				</div>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
 					<ReactTextareaAutocomplete
 						ref={msg => this.msg = msg}
