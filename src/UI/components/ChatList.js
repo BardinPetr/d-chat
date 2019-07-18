@@ -69,7 +69,7 @@ export default class ChatList extends React.Component {
 			if (!b.messages || b.messages.length === 0) {
 				return -1;
 			}
-			return new Date(b.messages[0].timestamp).getTime() - new Date(a.messages[0].timestamp).getTime();
+			return new Date(b.messages[b.messages.length - 1].timestamp).getTime() - new Date(a.messages[a.messages.length - 1].timestamp).getTime();
 		});
 
 		return (
