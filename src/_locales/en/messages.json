@@ -23,9 +23,6 @@
   "Ifitseemsstuckforalonglongtimethenitprobablyis": {
     "message": " If it seems stuck for a long, long time, then it probably is."
   },
-  "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
-    "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
-  },
   "Invalidcredentials": {
     "message": " Invalid credentials."
   },
@@ -34,6 +31,9 @@
   },
   "LogIn": {
     "message": " Log In"
+  },
+  "Moremessagesbelow": {
+    "message": " More messages below."
   },
   "Panel": {
     "message": " Panel"

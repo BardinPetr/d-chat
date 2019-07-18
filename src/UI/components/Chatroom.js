@@ -14,17 +14,24 @@ const AutofillItem = ({ entity: { name, char } }) => (
 
 /**
  * Consists of existing messages and the text form.
+ *
+ * Man, what a mess.
  */
 export default class Chatroom extends React.Component {
-	state = {
-		count: 15,
-		// messages: this.props.messages.slice(0, 15),
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			count: 15,
+		};
+		// New messages will be "extra".
+		this.extraCount = 0;
+		this.isScrolledToBottom = true;
 	}
 
 	loadMore = () => {
 		this.setState({
 			count: this.state.count + 10,
-			// messages: this.props.messages.slice(0, this.state.messages.length + 10),
 		});
 	}
 
@@ -33,8 +40,23 @@ export default class Chatroom extends React.Component {
 		this.textarea.focus();
 	}
 
+	componentDidUpdate() {
+		if ( this.isScrolledToBottom ) {
+			this.scrollToBot();
+		}
+	}
+
+	componentWillUpdate() {
+		const { messages } = this.refs;
+		const scrollPosition = messages.scrollTop;
+		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
+		this.isScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
+		this.extraCount += 1;
+	}
+
 	scrollToBot() {
 		ReactDOM.findDOMNode(this.refs.messages).scrollTop = ReactDOM.findDOMNode(this.refs.messages).scrollHeight;
+		this.isScrolledToBottom = true;
 	}
 
 	submitText = (e) => {
@@ -77,9 +99,9 @@ export default class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
-		const { count } = this.state;
-		const messages = this.props.messages.slice(0, count);
-		const hasMore = (messages.length < this.props.messages.length);
+		const allMessages = this.props.messages || [];
+		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
+		const hasMore = (messages.length < allMessages.length);
 
 		return (
 			<div className="messages-container-outer">
@@ -95,8 +117,8 @@ export default class Chatroom extends React.Component {
 					>
 						<ul className="messages">
 							{
-								messages && messages.map((message, index) => (
-									<Message message={message} key={index} />
+								messages.map(message => (
+									<Message message={message} key={message.id || ('' + message.ping + message.content) } />
 								))
 							}
 						</ul>

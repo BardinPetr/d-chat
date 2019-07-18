@@ -1,6 +1,7 @@
 import { getChatName } from 'Approot/misc/util';
 import configs from 'Approot/misc/configs';
 import { runtime, browserAction, notifications } from 'webextension-polyfill';
+import uuid from 'uuid';
 
 let counter = 0, timeout;
 
@@ -15,6 +16,7 @@ class Message {
 		} else {
 			this.ping = 0;
 		}
+		this.id = uuid();
 	}
 
 	from(src) {
