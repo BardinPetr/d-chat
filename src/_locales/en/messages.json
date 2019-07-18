@@ -32,9 +32,6 @@
   "LogIn": {
     "message": " Log In"
   },
-  "Moremessagesbelow": {
-    "message": " More messages below."
-  },
   "Panel": {
     "message": " Panel"
   },
@@ -83,8 +80,8 @@
   "Welcome": {
     "message": " Welcome!"
   },
-  "Youcansendmessagesbeforesubsriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
-    "message": " You can send messages before subsriptions complete, but you will not receive them until your subscription resolves."
+  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
+    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
   },
   "optional": {
     "message": " optional"

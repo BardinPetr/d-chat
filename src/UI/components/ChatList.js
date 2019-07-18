@@ -11,7 +11,7 @@ const Info = () => (
 			{ __('Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into.') }
 		</p>
 		<p>
-			<i>{ __('You can send messages before subsriptions complete, but you will not receive them until your subscription resolves.') }</i>
+			<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription resolves.') }</i>
 		</p>
 	</div>
 );
