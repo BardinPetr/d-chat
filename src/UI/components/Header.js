@@ -1,11 +1,34 @@
 import React from 'react';
 import Modal from 'react-modal';
+import Dropdown from 'rc-dropdown';
+import Menu, { Item as MenuItem } from 'rc-menu';
+import 'rc-dropdown/assets/index.css';
 import { IoMdOpen } from 'react-icons/io';
-import { IS_FIREFOX } from '../../misc/util';
+import { IS_FIREFOX, __, getChatDisplayName } from '../../misc/util';
+import { runtime, tabs, windows } from 'webextension-polyfill';
+import SubscriberList from '../containers/SubscriberList';
 
 Modal.setAppElement('#root');
 
-import { __, getChatName } from '../../misc/util';
+const popout = type => {
+	switch (type) {
+		case 'panel':
+			windows.create({
+				url: runtime.getURL('sidebar.html'),
+				type: 'panel',
+				height: 700,
+				width: 550,
+			});
+			break;
+
+		case 'tab':
+			tabs.create({
+				url: runtime.getURL('sidebar.html'),
+			});
+			break;
+	}
+};
+
 
 const customStyles = {
 	content: {
@@ -20,6 +43,24 @@ const customStyles = {
 		alignItems: 'center',
 	}
 };
+
+const MyMenu = (
+	<Menu selectedKeys={[]} className="dropdown">
+		<MenuItem className="dropdown-item" onClick={() => popout('panel')} key="1">{__('Panel')}</MenuItem>
+		<MenuItem className="dropdown-item" onClick={() => popout('tab')} key="2">{__('Tab')}</MenuItem>
+	</Menu>
+);
+
+const Popout = () => (
+	<span className="new popout">
+		<Dropdown
+			trigger={['click']}
+			overlay={MyMenu}
+		>
+			<IoMdOpen title={ __('Pop Out') } />
+		</Dropdown>
+	</span>
+);
 
 class Header extends React.Component {
 
@@ -67,7 +108,7 @@ class Header extends React.Component {
 	render() {
 		const { subscribing, topic, enterChatroom, connected } = this.props;
 		return (
-			<div>
+			<header className="chat-header">
 				<Modal
 					isOpen={this.state.modalIsOpen}
 					onRequestClose={this.closeModal}
@@ -84,20 +125,19 @@ class Header extends React.Component {
 				{ topic ? (
 					<span className="chatroom-header">
 						<span className="back" onClick={() => enterChatroom(null)}>{'< ' + __('Back')}</span>
-						<span className="chatname" title={getChatName(topic)}>{getChatName(topic)}</span>
+						<span className="chatname" title={getChatDisplayName(topic)}>{getChatDisplayName(topic)}</span>
 						<span className={subscribing ? 'loader loader-margin' : 'empty'} title={ __('Subscribing...') }></span>
+						<SubscriberList />
 					</span>
 				) : (
 					<span className="chatlist-header">
-						<span className="new popout" onClick={this.props.popout}>
-							<IoMdOpen title={ __('Pop Out') } />
-						</span>
+						<Popout />
 						<span className="title">{ __('D-Chat') }</span>
-						<span className={`new ${!connected && 'disabled'}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
+						<span className={`join-button new ${!connected ? 'disabled' : ''}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
 					</span>
 				)
 				}
-			</div>
+			</header>
 		);
 	}
 }

@@ -1,5 +1,7 @@
-import { extension, browserAction, notifications } from 'webextension-polyfill';
-import configs from '../../misc/configs';
+import { extension } from 'webextension-polyfill';
+import { getChatName } from 'Approot/misc/util';
+import Message from 'Approot/background/Message';
+import { PayloadType } from 'nkn-client';
 
 export const connected = () => ({
 	type: 'CONNECTED'
@@ -8,23 +10,31 @@ export const connected = () => ({
 export const subscribeCompleted = topic => ({
 	type: 'SUBSCRIBE_COMPLETED',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
-
-// TODO
-// export const subscribeErrored = error => ({
-// 	type: 'SUBSCRIBE_ERRORED',
-// 	payload: {
-// 		error
-// 	}
-// });
 
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
-		topic,
+		topic: getChatName( topic ),
 		transactionID
+	}
+});
+
+export const setSubscribers = (topic, subscribers) => ({
+	type: 'SET_SUBSCRIBERS',
+	payload: {
+		topic: getChatName( topic ),
+		subscribers,
+	}
+});
+
+// An alias.
+export const getSubscribers = topic => ({
+	type: 'GET_SUBSCRIBERS',
+	payload: {
+		topic: getChatName( topic )
 	}
 });
 
@@ -32,7 +42,7 @@ export const subscribe = (topic, transactionID) => ({
 export const joinChat = topic => ({
 	type: 'JOIN_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
@@ -40,14 +50,14 @@ export const joinChat = topic => ({
 export const enterChat = topic => ({
 	type: 'ENTER_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
 export const createChat = topic => ({
 	type: 'CREATE_CHAT',
 	payload: {
-		topic
+		topic: getChatName( topic )
 	}
 });
 
@@ -70,62 +80,40 @@ export const publishMessage = message => ({
 	type: 'PUBLISH_MESSAGE',
 	payload: {
 		message,
-		topic: message.topic
+		topic: getChatName(message.topic)
 	}
 });
 
-let counter = 0;
-let timeout;
-export const receiveMessage = (src, payload, payloadType)  => {
+const receiveMessage = message => ({
+	type: 'RECEIVE_MESSAGE',
+	payload: {
+		message,
+		topic: getChatName(message.topic)
+	}
+});
+
+/**
+ * Called by .on('message') listener.
+ */
+export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
 	let message = {};
-	// console.log('Received a message!', src, 'payload', payload, 'type', payloadType, 'encrypt', encrypt);
-	if ( payloadType === 1 ) { /*	nknClient.PayloadType.TEXT */
-		message = JSON.parse(payload);
-		message.addr = src;
-		message.username = src.slice(0, src.lastIndexOf('.'));
-	}
-	if ( src === window.nknClient.addr ) {
-		message.isMe = true;
+	if ( payloadType === PayloadType.TEXT ) {
+		const data = JSON.parse(payload);
+		message = new Message(data).from(src);
 	} else {
-		counter++;
-		browserAction.getBadgeText({})
-			.then(text => {
-				let count;
-				if ( !text ){
-					count = counter;
-				} else {
-					count = +text + 1;
-				}
-				browserAction.setBadgeText({
-					text: String(count)
-				});
-
-				// On startup, the numbers go all wrong. Attempted fix.
-				if ( timeout ) {
-					clearTimeout(timeout);
-				}
-				// Otherwise it will be zero.
-				timeout = setTimeout(() => counter = 0, 100);
-
-				if ( configs.showNotifications ) {
-					notifications.create(
-						'',
-						{
-							type: 'basic',
-							message: message.content,
-							title: 'D-Chat #' + message.topic + ', ' + message.username + ':',
-							iconUrl: extension.getURL('/img/icon2.png'),
-						}
-					);
-				}
-			});
+		return;
 	}
 
-	return {
-		type: 'RECEIVE_MESSAGE',
-		payload: {
-			message,
-			topic: message.topic
+	// Create notification?
+	if ( !message.isMe ) {
+		let views = extension.getViews({
+			type: 'popup'
+		});
+		// If chat is open, no notification.
+		if ( views.length === 0 || ( views.length === 1 && message.topic !== getState().topic ) ) {
+			message.notify();
 		}
-	};
+	}
+
+	return dispatch(receiveMessage(message));
 };

@@ -1,27 +1,68 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import InfiniteScroll from 'react-infinite-scroller';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+import '@webscopeio/react-textarea-autocomplete/style.css';
+import emoji from '@jukben/emoji-search';
 import '../containers/App.css';
 import Message from './Message.js';
 import { __ } from '../../misc/util';
 
+const AutofillItem = ({ entity: { name, char } }) => (
+	<div>{`${name}: ${char}`}</div>
+);
+
+/**
+ * Consists of existing messages and the text form.
+ *
+ * Man, what a mess.
+ */
 export default class Chatroom extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			count: 15,
+		};
+		// New messages will be "extra".
+		this.extraCount = 0;
+		this.isScrolledToBottom = true;
+	}
+
+	loadMore = () => {
+		this.setState({
+			count: this.state.count + 10,
+		});
+	}
+
 	componentDidMount() {
 		this.scrollToBot();
-		this.refs.msg.focus();
+		this.textarea.focus();
 	}
 
 	componentDidUpdate() {
-		this.scrollToBot();
+		if ( this.isScrolledToBottom ) {
+			this.scrollToBot();
+		}
+	}
+
+	componentWillUpdate() {
+		const { messages } = this.refs;
+		const scrollPosition = messages.scrollTop;
+		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
+		this.isScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
+		this.extraCount += 1;
 	}
 
 	scrollToBot() {
 		ReactDOM.findDOMNode(this.refs.messages).scrollTop = ReactDOM.findDOMNode(this.refs.messages).scrollHeight;
+		this.isScrolledToBottom = true;
 	}
 
 	submitText = (e) => {
 		e.preventDefault();
 
-		let input = ReactDOM.findDOMNode(this.refs.msg);
+		let input = this.textarea;
 
 		if (input.value === '') {
 			return;
@@ -30,12 +71,10 @@ export default class Chatroom extends React.Component {
 		const message = {
 			content: input.value,
 			contentType: 'text',
-			timestamp: new Date().toUTCString(),
 		};
 
 		this.props.createMessage(message);
-
-		input.value = '';
+		this.msg.setState({value: ''});
 	}
 
 	/**
@@ -48,24 +87,58 @@ export default class Chatroom extends React.Component {
 		}
 		if ( e.keyCode === 13 && e.ctrlKey ) {
 			e.preventDefault();
-			this.refs.msg.value += '\n';
+			this.msg.value += '\n';
 		}
 	}
 
+	/**
+	 * Stuff for react-textarea-autocomplete
+	 */
+	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
+	_outputCaretStart = item => ({ text: item.char, caretPosition: 'start' });
+	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
+
 	render() {
-		const { messages } = this.props;
+		const allMessages = this.props.messages || [];
+		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
+		const hasMore = (messages.length < allMessages.length);
 
 		return (
-			<div className="chatroom">
-				<ul className="messages" ref="messages">
-					{
-						messages && messages.map((message, index) => (
-							<Message message={message} key={index} />
-						))
-					}
-				</ul>
+			<div className="messages-container-outer">
+				<div className="messages-container" ref="messages">
+					<InfiniteScroll
+						pageStart={0}
+						isReverse
+						loadMore={this.loadMore}
+						hasMore={hasMore}
+						loader={<div className="loader" key={0} />}
+						useWindow={false}
+						initialLoad={false}
+					>
+						<ul className="messages">
+							{
+								messages.map(message => (
+									<Message message={message} key={message.id || ('' + message.ping + message.content) } />
+								))
+							}
+						</ul>
+					</InfiniteScroll>
+				</div>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<textarea ref="msg" onKeyDown={e => this.onEnterPress(e)} />
+					<ReactTextareaAutocomplete
+						ref={msg => this.msg = msg}
+						innerRef={ref => this.textarea = ref}
+						onKeyDown={e => this.onEnterPress(e)}
+						onChange={this.handleTextareaChange}
+						trigger={{
+							':': {
+								dataProvider: token => emoji(token).slice(0, 5),
+								component: AutofillItem,
+								output: this._outputCaretEnd,
+							}
+						}}
+						loadingComponent={() => <span className="loader" />}
+					/>
 					<input type="submit" value={ __('Submit') } />
 				</form>
 			</div>

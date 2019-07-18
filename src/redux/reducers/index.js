@@ -32,6 +32,20 @@ const messages = (state = configs.messages, action ) => {
 	return newState;
 };
 
+const subscribers = (state = [], action) => {
+	let newState;
+	switch (action.type) {
+		case 'SET_SUBSCRIBERS':
+			newState = [ ...action.payload.subscribers ];
+			break;
+
+		case 'GET_SUBSCRIBERS':
+		default:
+			newState = [ ...state ];
+	}
+	return newState;
+};
+
 const subscriptions = ( state = {}, action ) => {
 	// console.log('is anybody out there?');
 	let newState;
@@ -109,5 +123,6 @@ export default combineReducers({
 	login,
 	subscriptions,
 	topic,
-	messages
+	messages,
+	subscribers,
 });

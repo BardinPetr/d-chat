@@ -1,5 +1,5 @@
 import NKN from '../../misc/nkn';
-import { connected, createChat, enterChat, receiveMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 import passworder from 'browser-passworder';
 
 // TODO move to own file
@@ -21,11 +21,6 @@ const joinChat = originalAction => (dispatch, getState) => {
 				// Would do this, but it's not consistent. The error messages don't reflect reality.
 				// if ( err.data && err.data.includes('already subscribed') ) {
 				dispatch(subscribeCompleted(topic));
-				// }
-				// TODO reducer too.
-				// else {
-				// 	dispatch(subscribeErrored(err));
-				// }
 			}
 			);
 	}
@@ -52,7 +47,7 @@ const login = originalAction => (dispatch, getState) => {
 
 		nknClient.on('message', (...args) => {
 			console.log('Received message:', ...args);
-			dispatch(receiveMessage(...args));
+			dispatch(receivingMessage(...args));
 		});
 
 		nknClient.on('block', block => {
@@ -89,12 +84,20 @@ const publishMessage = originalAction => () => {
 	console.log('Publishing message', originalAction);
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
+	message.timestamp = new Date().toUTCString();
 	window.nknClient.publishMessage(topic, message);
 	return originalAction;
+};
+
+const getSubscribers = originalAction => async dispatch => {
+	const topic = originalAction.payload.topic;
+	const subscribers = await window.nknClient.getSubscribers(topic);
+	return dispatch(setSubscribers(topic, Object.keys(subscribers)));
 };
 
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
-	'JOIN_CHAT': joinChat
+	'JOIN_CHAT': joinChat,
+	'GET_SUBSCRIBERS': getSubscribers,
 };

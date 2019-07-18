@@ -23,9 +23,6 @@
   "Ifitseemsstuckforalonglongtimethenitprobablyis": {
     "message": " If it seems stuck for a long, long time, then it probably is."
   },
-  "IfyouencounterascenariowhereitappearscompletelydisconnectedthenitprobablyisBestcourseofactionistorestartyourbrowserunfortunatelyHopefullyfixedsomeday": {
-    "message": " If you encounter a scenario where it appears completely disconnected, then it probably is. Best course of action is to restart your browser, unfortunately. Hopefully fixed some day."
-  },
   "Invalidcredentials": {
     "message": " Invalid credentials."
   },
@@ -34,6 +31,9 @@
   },
   "LogIn": {
     "message": " Log In"
+  },
+  "Panel": {
+    "message": " Panel"
   },
   "Password": {
     "message": " Password"
@@ -62,6 +62,9 @@
   "Subscribing": {
     "message": " Subscribing..."
   },
+  "Tab": {
+    "message": " Tab"
+  },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
@@ -77,8 +80,8 @@
   "Welcome": {
     "message": " Welcome!"
   },
-  "Youcansendmessagesbeforesubsriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
-    "message": " You can send messages before subsriptions complete, but you will not receive them until your subscription resolves."
+  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
+    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
   },
   "optional": {
     "message": " optional"
