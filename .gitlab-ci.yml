@@ -7,6 +7,8 @@ image: node:latest
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
@@ -21,7 +23,6 @@ stages:
 build_zip:
   stage: build
   script:
-    - git submodule init
     - npm install --silent
     - npm run build:pack
   artifacts:

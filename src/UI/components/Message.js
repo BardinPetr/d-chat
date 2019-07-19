@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import TimeAgo from 'react-timeago';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
@@ -21,14 +22,12 @@ const Ping = ({ping}) => (
 	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
 );
 
-const Nickname = ({addr, timestamp, username, ping}) => (
+const Nickname = ({addr, refer, timestamp, username, ping}) => (
 	<span>
-		<Tooltip id={timestamp + addr} placement="right" overlay={timeago({timestamp, addr})} mouseEnterDelay={0.2}>
-			<span>
-				<span className="avatar" data-tip data-for={timestamp} aria-describedby={timestamp + addr}>
-					{username}
-					{' '}
-				</span>
+		<Tooltip id={timestamp + addr} placement="right" overlay={timeago({timestamp, addr})} mouseEnterDelay={1}>
+			<span onClick={() => refer(addr)} className="avatar" data-tip data-for={timestamp} aria-describedby={timestamp + addr}>
+				{username}
+				{' '}
 			</span>
 		</Tooltip>
 		<TimeAgo date={timestamp} minPeriod={5} />
@@ -36,9 +35,12 @@ const Nickname = ({addr, timestamp, username, ping}) => (
 	</span>
 );
 
-const Message = ({ message }) => (
-	<li className={message.isMe ? 'me message' : 'message'}>
-		<Nickname addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
+const Message = ({ refer, message, refersToMe }) => (
+	<li className={classnames('message', {
+		me: message.isMe,
+		'refers-to-me': refersToMe,
+	})}>
+		<Nickname refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
 		<div>
 			<Markdown
 				source={message.content}

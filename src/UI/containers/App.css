@@ -270,8 +270,8 @@ ul.messages > li {
 	height: calc(100% - 5em);
 }
 
-.chatroom .messages .message {
-  background-color: #a6d0f0;
+.message {
+  background-color: #c0e5f7;
   padding: 0.5em 1em;
   border-radius: 2pt;
   list-style: none;
@@ -291,10 +291,15 @@ ul.messages > li {
 
 .avatar {
   color: #117744;
+  cursor: pointer;
 }
 
 .me {
   border-left: 3px dashed hsla(0, 88.9%, 45.9%, 0.8);
+}
+
+.refers-to-me {
+	background-color: #a6d0f0;
 }
 
 .ping {
