@@ -117,7 +117,7 @@ class Chatroom extends React.Component {
 		const value = [cVal.slice(0, caretPosition), '@' + formatAddr( addr ),  cVal.slice(caretPosition)].join('');
 		this.msg.setState({
 			value
-		});
+		}, () => this.textarea.focus());
 	}
 	/**
 	 * Stuff for react-textarea-autocomplete
