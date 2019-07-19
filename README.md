@@ -11,6 +11,9 @@ A decentralized chat on NKN as an extension for Chrome and Firefox.
 `npm run dev`
 or
 `npm run build`
+or
+`npm start:firefox`
+`npm start:chrome`
 
 ## Info
 
@@ -20,7 +23,7 @@ React broilerplate from https://github.com/kryptokinght/react-extension-boilerpl
 
 ## Contributing
 
-Bunch of TODO's in the code comments. But anything is nice. Just send a merge request.
+Send a merge request if you've got something nice, thanks! And make issues and so forth, basic stuff. Appreciate.
 
 ## License
 

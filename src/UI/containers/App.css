@@ -271,7 +271,7 @@ ul.messages > li {
 }
 
 .message {
-  background-color: #a6d0f0;
+  background-color: #c0e5f7;
   padding: 0.5em 1em;
   border-radius: 2pt;
   list-style: none;
@@ -299,7 +299,7 @@ ul.messages > li {
 }
 
 .refers-to-me {
-	background-color: #8cb2c3;
+	background-color: #a6d0f0;
 }
 
 .ping {
