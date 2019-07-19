@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { login, joinChat, publishMessage } from '../../redux/actions';
+import { login, joinChat  } from '../../redux/actions';
 import Header from '../components/Header';
 import ChatList from '../components/ChatList';
-import Chatroom from '../components/Chatroom';
+import Chatroom from './Chatroom';
 import LoginBox from '../components/LoginBox';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subscriptions, connected }) => {
+const App = ({ addr, topic, login, enterChatroom, messages, subscriptions, connected }) => {
 	// console.log('Rendering.....................');
 	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
 	const isLoggedIn = addr != null;
@@ -39,10 +39,7 @@ const App = ({ addr, topic, login, createMessage, enterChatroom, messages, subsc
 				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>
 					{ isLoggedIn ?
 						( topic ?
-							<Chatroom
-								messages={messages[topic]}
-								createMessage={message => createMessage({...message, topic})}
-							/>
+							<Chatroom />
 							:
 							<ChatList
 								messages={messages}
@@ -68,7 +65,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),
-	createMessage: message => dispatch(publishMessage(message)),
+	// createMessage: message => dispatch(publishMessage(message)),
 	enterChatroom: topic => dispatch(joinChat(topic))
 });
 

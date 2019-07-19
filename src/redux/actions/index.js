@@ -3,6 +3,13 @@ import { getChatName } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 
+export const saveDraft = text => ({
+	type: 'SAVE_DRAFT',
+	payload: {
+		content: text
+	}
+});
+
 export const connected = () => ({
 	type: 'CONNECTED'
 });

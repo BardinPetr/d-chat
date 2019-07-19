@@ -1,12 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import emoji from '@jukben/emoji-search';
 import '../containers/App.css';
-import Message from './Message.js';
+import Message from '../components/Message.js';
 import { __ } from '../../misc/util';
+import { publishMessage, saveDraft } from 'Approot/redux/actions';
 
 const AutofillItem = ({ entity: { name, char } }) => (
 	<div>{`${name}: ${char}`}</div>
@@ -17,7 +19,7 @@ const AutofillItem = ({ entity: { name, char } }) => (
  *
  * Man, what a mess.
  */
-export default class Chatroom extends React.Component {
+class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -38,6 +40,19 @@ export default class Chatroom extends React.Component {
 	componentDidMount() {
 		this.scrollToBot();
 		this.textarea.focus();
+		this.msg.setState({ value: this.props.draft });
+		/*
+		componentWillUnmount doesn't work with the popup. It dies too fast.
+		Workaround: save every change.
+		*/
+		this.textarea.addEventListener('change', this._saveDraft);
+	}
+
+	// Also saved in submit (as empty string).
+	_saveDraft = e => this.props.saveDraft(e.target.value);
+
+	componentWillUnmount() {
+		this.textarea.removeEventListener('change', this._saveDraft);
 	}
 
 	componentDidUpdate() {
@@ -62,7 +77,7 @@ export default class Chatroom extends React.Component {
 	submitText = (e) => {
 		e.preventDefault();
 
-		let input = this.textarea;
+		let input = this.msg.state;
 
 		if (input.value === '') {
 			return;
@@ -73,8 +88,9 @@ export default class Chatroom extends React.Component {
 			contentType: 'text',
 		};
 
-		this.props.createMessage(message);
+		this.props.createMessage({ ...message, topic: this.props.topic });
 		this.msg.setState({value: ''});
+		this.props.saveDraft('');
 	}
 
 	/**
@@ -84,8 +100,7 @@ export default class Chatroom extends React.Component {
 		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
 			e.preventDefault();
 			this.submitText(e);
-		}
-		if ( e.keyCode === 13 && e.ctrlKey ) {
+		} else if ( e.keyCode === 13 && e.ctrlKey ) {
 			e.preventDefault();
 			this.msg.value += '\n';
 		}
@@ -99,7 +114,7 @@ export default class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
-		const allMessages = this.props.messages || [];
+		const allMessages = this.props.messages[this.props.topic] || [];
 		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
 		const hasMore = (messages.length < allMessages.length);
 
@@ -145,3 +160,19 @@ export default class Chatroom extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+	draft: state.draftMessage,
+	messages: state.messages,
+	topic: state.topic,
+});
+
+const mapDispatchToProps = dispatch => ({
+	createMessage: message => dispatch(publishMessage(message)),
+	saveDraft: draft => dispatch(saveDraft(draft)),
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Chatroom);

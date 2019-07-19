@@ -119,10 +119,24 @@ const topic = (state = null, { type, payload }) => {
 	return newState;
 };
 
+const draftMessage = (state = '', action) => {
+	let newState;
+	switch (action.type) {
+		case 'SAVE_DRAFT':
+			newState = action.payload.content;
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 export default combineReducers({
 	login,
 	subscriptions,
 	topic,
 	messages,
 	subscribers,
+	draftMessage,
 });
