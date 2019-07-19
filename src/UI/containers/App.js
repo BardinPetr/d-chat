@@ -65,7 +65,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),
-	// createMessage: message => dispatch(publishMessage(message)),
 	enterChatroom: topic => dispatch(joinChat(topic))
 });
 

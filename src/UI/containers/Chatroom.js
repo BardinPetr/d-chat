@@ -10,10 +10,14 @@ import Message from '../components/Message.js';
 import { __ } from '../../misc/util';
 import { publishMessage, saveDraft } from 'Approot/redux/actions';
 
-const AutofillItem = ({ entity: { name, char } }) => (
+const AutofillEmojiItem = ({ entity: { name, char } }) => (
 	<div>{`${name}: ${char}`}</div>
 );
+const AutofillMentionItem = ({ entity: { char } }) => (
+	<div>{formatAddr(char)}&hellip;</div>
+);
 
+const formatAddr = addr => addr.substring(0, addr.lastIndexOf('.') + 6);
 /**
  * Consists of existing messages and the text form.
  *
@@ -28,7 +32,7 @@ class Chatroom extends React.Component {
 		};
 		// New messages will be "extra".
 		this.extraCount = 0;
-		this.isScrolledToBottom = true;
+		this.wasScrolledToBottom = true;
 	}
 
 	loadMore = () => {
@@ -56,7 +60,7 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if ( this.isScrolledToBottom ) {
+		if ( this.wasScrolledToBottom ) {
 			this.scrollToBot();
 		}
 	}
@@ -65,13 +69,13 @@ class Chatroom extends React.Component {
 		const { messages } = this.refs;
 		const scrollPosition = messages.scrollTop;
 		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
-		this.isScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
+		this.wasScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
 		this.extraCount += 1;
 	}
 
 	scrollToBot() {
 		ReactDOM.findDOMNode(this.refs.messages).scrollTop = ReactDOM.findDOMNode(this.refs.messages).scrollHeight;
-		this.isScrolledToBottom = true;
+		this.wasScrolledToBottom = true;
 	}
 
 	submitText = (e) => {
@@ -100,12 +104,21 @@ class Chatroom extends React.Component {
 		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
 			e.preventDefault();
 			this.submitText(e);
-		} else if ( e.keyCode === 13 && e.ctrlKey ) {
-			e.preventDefault();
-			this.msg.value += '\n';
 		}
 	}
 
+	/**
+	 * Click on name -> add @mention.
+	 */
+	refer = addr => {
+		const caretPosition = this.msg.getCaretPosition();
+		const cVal = this.msg.state.value;
+		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
+		const value = [cVal.slice(0, caretPosition), '@' + formatAddr( addr ),  cVal.slice(caretPosition)].join('');
+		this.msg.setState({
+			value
+		});
+	}
 	/**
 	 * Stuff for react-textarea-autocomplete
 	 */
@@ -114,6 +127,7 @@ class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
+		const { subs, myAddr } = this.props;
 		const allMessages = this.props.messages[this.props.topic] || [];
 		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
 		const hasMore = (messages.length < allMessages.length);
@@ -133,7 +147,7 @@ class Chatroom extends React.Component {
 						<ul className="messages">
 							{
 								messages.map(message => (
-									<Message message={message} key={message.id || ('' + message.ping + message.content) } />
+									<Message refer={this.refer} refersToMe={message.content.includes( '@' + myAddr )} message={message} key={message.id || ('' + message.ping + message.content) } />
 								))
 							}
 						</ul>
@@ -147,10 +161,16 @@ class Chatroom extends React.Component {
 						onChange={this.handleTextareaChange}
 						trigger={{
 							':': {
-								dataProvider: token => emoji(token).slice(0, 5),
-								component: AutofillItem,
+								dataProvider: async token => emoji(token).slice(0, 5),
+								component: AutofillEmojiItem,
 								output: this._outputCaretEnd,
-							}
+							},
+							'@': {
+								dataProvider: async token => subs.filter(sub => sub.startsWith(token)).slice(0, 5)
+									.map(sub => ({ char: '@' + formatAddr(sub) })),
+								component: AutofillMentionItem,
+								output: this._outputCaretEnd,
+							},
 						}}
 						loadingComponent={() => <span className="loader" />}
 					/>
@@ -165,6 +185,8 @@ const mapStateToProps = state => ({
 	draft: state.draftMessage,
 	messages: state.messages,
 	topic: state.topic,
+	subs: state.subscribers,
+	myAddr: state.login ? formatAddr(state.login.addr) : '',
 });
 
 const mapDispatchToProps = dispatch => ({
