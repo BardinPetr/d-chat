@@ -7,6 +7,7 @@ import Markdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
 import prettyMs from 'pretty-ms';
 import isNumber from 'is-number';
+import { __ } from 'Approot/misc/util';
 
 const timeago = ({timestamp, addr}) => (
 	<span>
@@ -22,10 +23,10 @@ const Ping = ({ping}) => (
 	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
 );
 
-const Nickname = ({addr, refer, timestamp, username, ping}) => (
+const Nickname = ({id, addr, refer, timestamp, username, ping}) => (
 	<span>
-		<Tooltip id={timestamp + addr} placement="right" overlay={timeago({timestamp, addr})} mouseEnterDelay={1}>
-			<span onClick={() => refer(addr)} className="avatar" data-tip data-for={timestamp} aria-describedby={timestamp + addr}>
+		<Tooltip id={id} placement="right" overlay={timeago({timestamp, addr})} mouseEnterDelay={0.3} mouseLeaveDelay={0.5}>
+			<span onClick={() => refer(addr)} className="avatar" data-tip data-for={timestamp} aria-describedby={id}>
 				{username}
 				{' '}
 			</span>
@@ -35,12 +36,15 @@ const Nickname = ({addr, refer, timestamp, username, ping}) => (
 	</span>
 );
 
-const Message = ({ refer, message, refersToMe }) => (
+const Message = ({ refer, message, refersToMe, isSubscribed }) => (
 	<li className={classnames('message', {
 		me: message.isMe,
 		'refers-to-me': refersToMe,
 	})}>
-		<Nickname refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
+		<span>
+			{ isSubscribed && <i className="loader loader-margin loader-dark" title={__('This person still subscribing')} /> }
+			<Nickname id={message.id} refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
+		</span>
 		<div>
 			<Markdown
 				source={message.content}

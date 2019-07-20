@@ -42,4 +42,15 @@ export function __(str, placeholders) {
 	return i18n.getMessage(str.replace(/[^a-zA-Z_]/g, ''), placeholders).trim();
 }
 
+export const formatAddr = addr => {
+	const lastDotPosition = addr.lastIndexOf('.');
+	let formattedAddr = '';
+	if (lastDotPosition !== -1) {
+		formattedAddr =  addr.substring(0, lastDotPosition + 7);
+	} else {
+		formattedAddr = addr.substring(0,6);
+	}
+	return formattedAddr;
+};
+
 export const IS_FIREFOX = runtime.id === 'dchat@losnappas';

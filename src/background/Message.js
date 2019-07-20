@@ -1,4 +1,4 @@
-import { getChatName } from 'Approot/misc/util';
+import { getChatName, formatAddr } from 'Approot/misc/util';
 import configs from 'Approot/misc/configs';
 import { runtime, browserAction, notifications } from 'webextension-polyfill';
 import uuid from 'uuid';
@@ -24,11 +24,7 @@ class Message {
 			this.isMe = true;
 		}
 		this.addr = src;
-		let splitPart = src.lastIndexOf('.');
-		if ( splitPart !== -1 ) {
-			this.username = src.slice(0, splitPart);
-		}
-		this.username = this.username || 'Pseudonymous';
+		this.username = formatAddr( src );
 		return this;
 	}
 

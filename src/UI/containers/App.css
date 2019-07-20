@@ -67,6 +67,8 @@ body {
 
 .subscriber-list-overlay {
 	max-width: 80%;
+	/* Has no effect in popup. That thing is forked. */
+	scroll-behavior: smooth;
 }
 
 .app {
@@ -414,6 +416,9 @@ ul.messages > li {
 }
 .loader::after {
   animation-name: spinner-rotation-b;
+}
+.loader-dark::after {
+	border-color: black;
 }
 /***
  * Animations

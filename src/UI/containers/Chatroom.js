@@ -7,8 +7,11 @@ import '@webscopeio/react-textarea-autocomplete/style.css';
 import emoji from '@jukben/emoji-search';
 import '../containers/App.css';
 import Message from '../components/Message.js';
-import { __ } from '../../misc/util';
+import { __, formatAddr } from '../../misc/util';
 import { publishMessage, saveDraft } from 'Approot/redux/actions';
+
+// params: address (full), options: { noSpace: bool (add space after address) }
+const mention = (addr) => ('@' + formatAddr(addr));
 
 const AutofillEmojiItem = ({ entity: { name, char } }) => (
 	<div>{`${name}: ${char}`}</div>
@@ -17,7 +20,6 @@ const AutofillMentionItem = ({ entity: { char } }) => (
 	<div>{formatAddr(char)}&hellip;</div>
 );
 
-const formatAddr = addr => addr.substring(0, addr.lastIndexOf('.') + 6);
 /**
  * Consists of existing messages and the text form.
  *
@@ -114,11 +116,12 @@ class Chatroom extends React.Component {
 		const caretPosition = this.msg.getCaretPosition();
 		const cVal = this.msg.state.value;
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
-		const value = [cVal.slice(0, caretPosition), '@' + formatAddr( addr ),  cVal.slice(caretPosition)].join('');
+		const value = [cVal.slice(0, caretPosition), mention( addr ) + ' ',  cVal.slice(caretPosition)].join('');
 		this.msg.setState({
 			value
 		}, () => this.textarea.focus());
 	}
+
 	/**
 	 * Stuff for react-textarea-autocomplete
 	 */
@@ -127,7 +130,7 @@ class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
-		const { subs, myAddr } = this.props;
+		const { subs, myUsername } = this.props;
 		const allMessages = this.props.messages[this.props.topic] || [];
 		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
 		const hasMore = (messages.length < allMessages.length);
@@ -147,7 +150,13 @@ class Chatroom extends React.Component {
 						<ul className="messages">
 							{
 								messages.map(message => (
-									<Message refer={this.refer} refersToMe={message.content.includes( '@' + myAddr )} message={message} key={message.id || ('' + message.ping + message.content) } />
+									<Message
+										refer={this.refer}
+										refersToMe={message.content.includes( mention(myUsername) )}
+										message={message}
+										key={message.id}
+										isSubscribed={subs.includes(message.addr)}
+									/>
 								))
 							}
 						</ul>
@@ -167,7 +176,7 @@ class Chatroom extends React.Component {
 							},
 							'@': {
 								dataProvider: async token => subs.filter(sub => sub.startsWith(token)).slice(0, 5)
-									.map(sub => ({ char: '@' + formatAddr(sub) })),
+									.map(sub => ({ char: mention(sub) + ' ' })),
 								component: AutofillMentionItem,
 								output: this._outputCaretEnd,
 							},
@@ -186,7 +195,7 @@ const mapStateToProps = state => ({
 	messages: state.messages,
 	topic: state.topic,
 	subs: state.subscribers,
-	myAddr: state.login ? formatAddr(state.login.addr) : '',
+	myUsername: state.login ? formatAddr(state.login.addr) : '',
 });
 
 const mapDispatchToProps = dispatch => ({
