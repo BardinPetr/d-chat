@@ -417,7 +417,7 @@ ul.messages > li {
 .loader::after {
   animation-name: spinner-rotation-b;
 }
-.loader-dark::after {
+.loader.dark::after {
 	border-color: black;
 }
 /***
