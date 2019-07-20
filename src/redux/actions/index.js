@@ -1,3 +1,7 @@
+/**
+ * TODO: sort out the aliases to the end to make some bookkeeping sense.
+ */
+
 import { extension } from 'webextension-polyfill';
 import { getChatName } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
@@ -99,6 +103,22 @@ const receiveMessage = message => ({
 	}
 });
 
+export const markRead = (topic, ids) => ({
+	type: 'chat/MARK_READ',
+	payload: {
+		topic,
+		ids,
+	}
+});
+
+export const markUnread = (topic, ids) => ({
+	type: 'chat/MARK_UNREAD',
+	payload: {
+		topic,
+		ids,
+	}
+});
+
 /**
  * Called by .on('message') listener.
  */
@@ -107,6 +127,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		message = new Message(data).from(src);
+		dispatch( markUnread(message.topic, [message.id]) );
 	} else {
 		return;
 	}

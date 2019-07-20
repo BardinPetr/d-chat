@@ -8,7 +8,7 @@ import LoginBox from '../components/LoginBox';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const App = ({ addr, topic, login, enterChatroom, messages, subscriptions, connected }) => {
+const App = ({ addr, topic, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
 	// console.log('Rendering.....................');
 	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
 	const isLoggedIn = addr != null;
@@ -44,6 +44,7 @@ const App = ({ addr, topic, login, enterChatroom, messages, subscriptions, conne
 							<ChatList
 								messages={messages}
 								enterChatroom={enterChatroom}
+								chatSettings={chatSettings}
 							/>
 						)
 						:
@@ -60,7 +61,8 @@ const mapStateToProps = state => ({
 	topic: state.topic,
 	messages: state.messages,
 	subscriptions: state.subscriptions,
-	connected: state.login && state.login.connected
+	connected: state.login && state.login.connected,
+	chatSettings: state.chatSettings,
 });
 
 const mapDispatchToProps = dispatch => ({

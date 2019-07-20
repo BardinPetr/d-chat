@@ -1,16 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import emoji from '@jukben/emoji-search';
+import VisibilitySensor from 'react-visibility-sensor';
 import '../containers/App.css';
 import Message from '../components/Message.js';
 import { __, formatAddr } from '../../misc/util';
-import { publishMessage, saveDraft } from 'Approot/redux/actions';
+import { markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
 
-// params: address (full), options: { noSpace: bool (add space after address) }
 const mention = (addr) => ('@' + formatAddr(addr));
 
 const AutofillEmojiItem = ({ entity: { name, char } }) => (
@@ -23,18 +24,20 @@ const AutofillMentionItem = ({ entity: { char } }) => (
 /**
  * Consists of existing messages and the text form.
  *
- * Man, what a mess.
+ * Marks messages read as well.
  */
 class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			count: 15,
+			count: 15 + props.unreadMessages.length,
+			unreadCount: props.unreadMessages.length,
 		};
 		// New messages will be "extra".
 		this.extraCount = 0;
 		this.wasScrolledToBottom = true;
+		this.markedRead = [];
 	}
 
 	loadMore = () => {
@@ -44,7 +47,11 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidMount() {
-		this.scrollToBot();
+		if (this.refs.lastRead) {
+			this.refs.lastRead.scrollIntoView({ block: 'center' });
+		} else {
+			this.scrollToBot();
+		}
 		this.textarea.focus();
 		this.msg.setState({ value: this.props.draft });
 		/*
@@ -57,8 +64,16 @@ class Chatroom extends React.Component {
 	// Also saved in submit (as empty string).
 	_saveDraft = e => this.props.saveDraft(e.target.value);
 
+	/**
+	 * Since componentWillUnmount does not "make it" when the popup is closed by clicking elsewhere, listen for mouse to go over the edge.
+	 */
+	onMouseLeave = () => {
+		this.props.markAsRead(this.props.topic, this.markedRead);
+	}
+
 	componentWillUnmount() {
 		this.textarea.removeEventListener('change', this._saveDraft);
+		this.props.markAsRead(this.props.topic, this.markedRead);
 	}
 
 	componentDidUpdate() {
@@ -123,6 +138,13 @@ class Chatroom extends React.Component {
 	}
 
 	/**
+	 * A throttling system for marking messages read.
+	 */
+	queueMarkRead = id => {
+		this.markedRead.push(id);
+	}
+
+	/**
 	 * Stuff for react-textarea-autocomplete
 	 */
 	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
@@ -130,35 +152,55 @@ class Chatroom extends React.Component {
 	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
 	render() {
-		const { subs, myUsername } = this.props;
-		const allMessages = this.props.messages[this.props.topic] || [];
-		const messages = allMessages.slice( -(this.state.count + this.extraCount) );
-		const hasMore = (messages.length < allMessages.length);
+		const { subs, myUsername, unreadMessages, messages } = this.props;
+		// Messages that are being loaded.
+		const visibleMessages = messages.slice( -(this.state.count + this.extraCount) );
+
+		const messageList = visibleMessages.reduce((acc, message, idx) => {
+			if ( visibleMessages.length - this.state.unreadCount === idx ) {
+				acc.push(<hr ref="lastRead" key={idx}/>);
+			}
+			return acc.concat(
+				<li key={message.id} className={classnames('message', {
+					me: message.isMe,
+					'refers-to-me': message.content.includes( mention(myUsername) ),
+				})}>
+					{ ( unreadMessages.some(i => i === message.id) ) ?
+						(
+							<VisibilitySensor
+								onChange={visible => visible && this.queueMarkRead(message.id)}
+							>
+								<Message
+									refer={this.refer}
+									message={message}
+									isSubscribed={subs.includes(message.addr)}
+								/>
+							</VisibilitySensor>
+						) : (
+							<Message
+								refer={this.refer}
+								message={message}
+								isSubscribed={subs.includes(message.addr)}
+							/>
+						) }
+				</li>
+			);
+		}, []);
 
 		return (
-			<div className="messages-container-outer">
+			<div className="messages-container-outer" onMouseLeave={this.onMouseLeave}>
 				<div className="messages-container" ref="messages">
 					<InfiniteScroll
 						pageStart={0}
 						isReverse
 						loadMore={this.loadMore}
-						hasMore={hasMore}
+						hasMore={(visibleMessages.length < messages.length)}
 						loader={<div className="loader" key={0} />}
 						useWindow={false}
 						initialLoad={false}
 					>
 						<ul className="messages">
-							{
-								messages.map(message => (
-									<Message
-										refer={this.refer}
-										refersToMe={message.content.includes( mention(myUsername) )}
-										message={message}
-										key={message.id}
-										isSubscribed={subs.includes(message.addr)}
-									/>
-								))
-							}
+							{ messageList }
 						</ul>
 					</InfiniteScroll>
 				</div>
@@ -192,15 +234,17 @@ class Chatroom extends React.Component {
 
 const mapStateToProps = state => ({
 	draft: state.draftMessage,
-	messages: state.messages,
+	messages: state.messages[state.topic] || [],
 	topic: state.topic,
 	subs: state.subscribers,
 	myUsername: state.login ? formatAddr(state.login.addr) : '',
+	unreadMessages: state.chatSettings[state.topic] ? state.chatSettings[state.topic].unread : 0,
 });
 
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
+	markAsRead: (topic, id) => dispatch(markRead(topic, id)),
 });
 
 export default connect(

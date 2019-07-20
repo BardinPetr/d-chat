@@ -190,6 +190,10 @@ body {
   opacity: 0.4;
 }
 
+.chat-unread {
+	font-size: 14pt;
+	align-self: end;
+}
 .chatlist-container .chatlist .chat .chat-preview {
   white-space: nowrap;
   overflow: hidden;
@@ -384,6 +388,9 @@ ul.messages > li {
 
 .loader-margin {
   margin-right: 1em;
+}
+.margin-left {
+  margin-left: 1em;
 }
 .loader {
   position: relative;
