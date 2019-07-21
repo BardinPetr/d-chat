@@ -57,6 +57,8 @@ const SEED_ADDRESSES = [
  * Couple of helpers for nkn module.
  *
  * Saves walletJSON to sync storage.
+ *
+ * TODO handle multiple connections and then use lowest latency client.
  */
 class	NKN	extends	nkn	{
 
