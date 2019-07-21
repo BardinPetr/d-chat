@@ -1,6 +1,7 @@
 import NKN from '../../misc/nkn';
-import { setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 import passworder from 'browser-passworder';
+import { setBadgeText } from 'Approot/misc/util';
 
 // TODO move to own file
 const password = 'd-chat!!!';
@@ -95,9 +96,22 @@ const getSubscribers = originalAction => async dispatch => {
 	return dispatch(setSubscribers(topic, Object.keys(subscribers)));
 };
 
+const markRead = originalAction => async (dispatch, getState) => {
+	const ids = originalAction.payload.ids.length;
+	if (ids > 0) {
+		getUnreadMessages(getState()).then(count => setBadgeText( count - ids ));
+	}
+
+	return dispatch({
+		type: 'chat/MARK_READ',
+		payload: originalAction.payload,
+	});
+};
+
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
 	'JOIN_CHAT': joinChat,
 	'GET_SUBSCRIBERS': getSubscribers,
+	'chat/MARK_READ_ALIAS': markRead,
 };

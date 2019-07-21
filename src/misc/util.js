@@ -1,5 +1,5 @@
 import shasum	from 'shasum';
-import { i18n, runtime } from 'webextension-polyfill';
+import { i18n, runtime, browserAction } from 'webextension-polyfill';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/,	'');
@@ -51,6 +51,13 @@ export const formatAddr = addr => {
 		formattedAddr = addr.substring(0,6);
 	}
 	return formattedAddr;
+};
+
+export const setBadgeText = txt => {
+	txt = (txt === 0) ? '' : String(txt);
+	browserAction.setBadgeText({
+		text: txt
+	});
 };
 
 export const IS_FIREFOX = runtime.id === 'dchat@losnappas';

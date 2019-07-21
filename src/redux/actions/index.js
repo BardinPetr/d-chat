@@ -3,7 +3,7 @@
  */
 
 import { extension } from 'webextension-polyfill';
-import { getChatName } from 'Approot/misc/util';
+import { getChatName, setBadgeText } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 
@@ -80,6 +80,7 @@ export const setLoginStatus = status => ({
 	}
 });
 
+// Aliased
 export const login = credentials => ({
 	type: 'LOGIN',
 	payload: {
@@ -87,6 +88,7 @@ export const login = credentials => ({
 	}
 });
 
+// Aliased
 export const publishMessage = message => ({
 	type: 'PUBLISH_MESSAGE',
 	payload: {
@@ -103,21 +105,32 @@ const receiveMessage = message => ({
 	}
 });
 
+// Alias.
 export const markRead = (topic, ids) => ({
-	type: 'chat/MARK_READ',
+	type: 'chat/MARK_READ_ALIAS',
 	payload: {
 		topic,
 		ids,
 	}
 });
 
-export const markUnread = (topic, ids) => ({
-	type: 'chat/MARK_UNREAD',
-	payload: {
-		topic,
-		ids,
+export const getUnreadMessages = async state => {
+	const chats = Object.values(state.chatSettings);
+	return chats.reduce((acc, settings) => acc + (settings.unread?.length || 0), 0);
+};
+
+export const markUnread = (topic, ids) => (dispatch, getState) => {
+	if (ids.length > 0) {
+		getUnreadMessages(getState()).then(count => setBadgeText( count + ids.length ));
 	}
-});
+	return dispatch({
+		type: 'chat/MARK_UNREAD',
+		payload: {
+			topic,
+			ids,
+		}
+	});
+};
 
 /**
  * Called by .on('message') listener.
@@ -127,7 +140,6 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		message = new Message(data).from(src);
-		dispatch( markUnread(message.topic, [message.id]) );
 	} else {
 		return;
 	}
@@ -137,9 +149,12 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 		let views = extension.getViews({
 			type: 'popup'
 		});
-		// If chat is open, no notification.
+		// Notify unless chat is open.
 		if ( views.length === 0 || ( views.length === 1 && message.topic !== getState().topic ) ) {
 			message.notify();
+
+			// Make this one work for all types of views.
+			dispatch( markUnread(message.topic, [message.id]) );
 		}
 	}
 

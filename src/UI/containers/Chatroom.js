@@ -1,3 +1,8 @@
+/**
+ * Contains messages list + submit box.
+ *
+ * TODO make VisibilitySensor change badge text instantly.
+ */
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -32,10 +37,8 @@ class Chatroom extends React.Component {
 
 		this.state = {
 			count: 15 + props.unreadMessages.length,
-			unreadCount: props.unreadMessages.length,
 		};
-		// New messages will be "extra".
-		this.extraCount = 0;
+		this.unreadCount = props.unreadMessages.length;
 		this.wasScrolledToBottom = true;
 		this.markedRead = [];
 	}
@@ -68,7 +71,10 @@ class Chatroom extends React.Component {
 	 * Since componentWillUnmount does not "make it" when the popup is closed by clicking elsewhere, listen for mouse to go over the edge.
 	 */
 	onMouseLeave = () => {
-		this.props.markAsRead(this.props.topic, this.markedRead);
+		if (this.markedRead.length > 0) {
+			this.props.markAsRead(this.props.topic, this.markedRead);
+			this.markedRead = [];
+		}
 	}
 
 	componentWillUnmount() {
@@ -87,7 +93,6 @@ class Chatroom extends React.Component {
 		const scrollPosition = messages.scrollTop;
 		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
 		this.wasScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
-		this.extraCount += 1;
 	}
 
 	scrollToBot() {
@@ -112,10 +117,11 @@ class Chatroom extends React.Component {
 		this.props.createMessage({ ...message, topic: this.props.topic });
 		this.msg.setState({value: ''});
 		this.props.saveDraft('');
+		this.textarea.focus();
 	}
 
 	/**
-	 * Makes enter submit, shift/ctrl enter insert newline.
+	 * Makes enter submit, shift enter insert newline.
 	 */
 	onEnterPress = e => {
 		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
@@ -138,7 +144,7 @@ class Chatroom extends React.Component {
 	}
 
 	/**
-	 * A throttling system for marking messages read.
+	 * A queue system for marking messages read.
 	 */
 	queueMarkRead = id => {
 		this.markedRead.push(id);
@@ -148,22 +154,23 @@ class Chatroom extends React.Component {
 	 * Stuff for react-textarea-autocomplete
 	 */
 	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
-	_outputCaretStart = item => ({ text: item.char, caretPosition: 'start' });
-	_outputCaretNext = item => ({ text: item.char, caretPosition: 'next' });
 
+	/**
+	 * TODO Should split this thing up a bit. It's HUGE.
+	 */
 	render() {
-		const { subs, myUsername, unreadMessages, messages } = this.props;
+		const { subs, unreadMessages, messages } = this.props;
 		// Messages that are being loaded.
-		const visibleMessages = messages.slice( -(this.state.count + this.extraCount) );
+		const visibleMessages = messages.slice( -(this.state.count) );
 
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
-			if ( visibleMessages.length - this.state.unreadCount === idx ) {
+			if ( visibleMessages.length - this.unreadCount === idx ) {
 				acc.push(<hr ref="lastRead" key={idx}/>);
 			}
 			return acc.concat(
 				<li key={message.id} className={classnames('message', {
 					me: message.isMe,
-					'refers-to-me': message.content.includes( mention(myUsername) ),
+					'refers-to-me': message.refersToMe,
 				})}>
 					{ ( unreadMessages.some(i => i === message.id) ) ?
 						(
@@ -237,14 +244,13 @@ const mapStateToProps = state => ({
 	messages: state.messages[state.topic] || [],
 	topic: state.topic,
 	subs: state.subscribers,
-	myUsername: state.login ? formatAddr(state.login.addr) : '',
 	unreadMessages: state.chatSettings[state.topic] ? state.chatSettings[state.topic].unread : 0,
 });
 
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
-	markAsRead: (topic, id) => dispatch(markRead(topic, id)),
+	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
 });
 
 export default connect(

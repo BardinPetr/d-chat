@@ -141,7 +141,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			break;
 
 		case 'chat/MARK_UNREAD':
-			initial = state[action.payload.topic] && state[action.payload.topic].unread || [];
+			initial = state[action.payload.topic]?.unread || [];
 			newState = {
 				...state,
 				[action.payload.topic]: {
@@ -153,13 +153,14 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			break;
 
 		case 'chat/MARK_READ':
-			initial = state[action.payload.topic] && state[action.payload.topic].unread || [];
+			// Grab all unread messages.
+			initial = state[action.payload.topic]?.unread || [];
 			newState = {
 				...state,
 				[action.payload.topic]: {
 					...state[action.payload.topic],
-					// Could be optimised.
-					unread: initial.filter(i => action.payload.ids.some(id => i===id)),
+					// Filter out newly read message from unread messages.
+					unread: initial.filter(i => !action.payload.ids.some(id => i === id) ),
 				},
 			};
 			configs.chatSettings = newState;

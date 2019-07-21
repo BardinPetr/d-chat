@@ -1,9 +1,8 @@
 import { getChatName, formatAddr } from 'Approot/misc/util';
 import configs from 'Approot/misc/configs';
-import { runtime, browserAction, notifications } from 'webextension-polyfill';
+import { runtime, notifications } from 'webextension-polyfill';
 import uuid from 'uuid';
-
-let counter = 0, timeout;
+import throttle from 'throttleit';
 
 class Message {
 	constructor(message) {
@@ -25,42 +24,26 @@ class Message {
 		}
 		this.addr = src;
 		this.username = formatAddr( src );
+		this.refersToMe = this.content.includes( this.username );
 		return this;
 	}
 
+	_notify() {
+		notifications.create(
+			'd-chat',
+			{
+				type: 'basic',
+				message: this.content,
+				title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
+				iconUrl: runtime.getURL('/img/icon2.png'),
+			}
+		);
+	}
+
 	notify() {
-		counter++;
-		browserAction.getBadgeText({})
-			.then(text => {
-				let count;
-				if ( !text ){
-					count = counter;
-				} else {
-					count = +text + 1;
-				}
-				browserAction.setBadgeText({
-					text: String(count)
-				});
-
-				// On startup, the numbers go all wrong. Attempted fix.
-				if ( timeout ) {
-					clearTimeout(timeout);
-				}
-				// Otherwise it will be zero.
-				timeout = setTimeout(() => counter = 0, 100);
-
-				if ( configs.showNotifications ) {
-					notifications.create(
-						'd-chat',
-						{
-							type: 'basic',
-							message: this.content,
-							title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
-							iconUrl: runtime.getURL('/img/icon2.png'),
-						}
-					);
-				}
-			});
+		if ( configs.showNotifications ) {
+			throttle(this._notify, 200);
+		}
 	}
 }
 
