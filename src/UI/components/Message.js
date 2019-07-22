@@ -11,6 +11,19 @@ import prettyMs from 'pretty-ms';
 import isNumber from 'is-number';
 import { __ } from 'Approot/misc/util';
 
+const formatTime = (n, unit, ago, _, defaultFormatter) => {
+	if ( unit === 'second' ){
+		if (n < 5 && ago === 'ago') {
+			return 'just now';
+		} else if ( n < 30 ) {
+			return `less than 30 seconds ${ago}`;
+		} else {
+			return `less than 1 min ${ago}`;
+		}
+	}
+	return defaultFormatter();
+};
+
 const Ping = ({ping}) => (
 	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
 );
@@ -21,7 +34,7 @@ const Nickname = ({id, addr, refer, timestamp, username, ping}) => (
 			{username}
 			{' '}
 		</span>
-		<TimeAgo title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={5} />
+		<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={5} />
 		{ isNumber(ping) && <Ping ping={ping} /> }
 	</span>
 );

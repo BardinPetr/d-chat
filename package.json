@@ -71,6 +71,7 @@
     "babel-plugin-named-asset-import": "^0.3.2",
     "babel-preset-react-app": "^7.0.2",
     "bfj": "6.1.1",
+    "bottleneck": "^2.19.4",
     "browser-passworder": "^2.0.3",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",

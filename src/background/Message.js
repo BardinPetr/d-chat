@@ -1,25 +1,23 @@
 import { getChatName, formatAddr } from 'Approot/misc/util';
 import configs from 'Approot/misc/configs';
 import { runtime, notifications } from 'webextension-polyfill';
-import uuid from 'uuid';
-import throttle from 'throttleit';
+import uuidv1 from 'uuid/v1';
+import Bottleneck from 'bottleneck';
 
 /**
  * Notifications are pretty resource intensive. Throttle them to 1 per 2 seconds.
  *
- * TODO maybe bottleneck instead and do "x and 5 messages".
+ * TODO maybe do "x and 5 messages".
  */
-const throttledNotify = throttle(function() {
-	notifications.create(
-		'd-chat',
-		{
-			type: 'basic',
-			message: this.content,
-			title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
-			iconUrl: runtime.getURL('/img/icon2.png'),
-		}
-	);
-}, 2000);
+const limiter = new Bottleneck({
+	strategy: Bottleneck.strategy.LEAK,
+	highWater: 1,
+	reservoir: 1,
+	reservoirRefreshInterval: 2000,
+	reservoirRefreshAmount: 1,
+	maxConcurrent: 1,
+	minTime: 2000,
+});
 
 class Message {
 	constructor(message) {
@@ -32,7 +30,7 @@ class Message {
 		} else {
 			this.ping = 0;
 		}
-		this.id = uuid();
+		this.id = uuidv1();
 	}
 
 	from(src) {
@@ -45,9 +43,21 @@ class Message {
 		return this;
 	}
 
-	notify() {
+	async _notify() {
+		return await notifications.create(
+			'd-chat',
+			{
+				type: 'basic',
+				message: this.content,
+				title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
+				iconUrl: runtime.getURL('/img/icon2.png'),
+			}
+		);
+	}
+	async notify() {
 		if ( configs.showNotifications ) {
-			throttledNotify.call(this);
+			limiter.schedule(() => this._notify.call(this))
+				.catch(() => {});
 		}
 	}
 }

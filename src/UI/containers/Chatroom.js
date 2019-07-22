@@ -177,6 +177,7 @@ class Chatroom extends React.Component {
 						(
 							<VisibilitySensor
 								onChange={visible => visible && this.queueMarkRead(message.id)}
+								scrollCheck={true}
 							>
 								<Message
 									refer={this.refer}
