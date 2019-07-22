@@ -59,10 +59,10 @@ export const setBadgeText = txt => {
 		if (+txt < 0) {
 			console.warn('Badge text was negative:', txt);
 		}
-		txt = (+txt <= 0) ? '' : String(txt);
+		txt = (+txt <= 0) ? '' : txt;
 	}
 	browserAction.setBadgeText({
-		text: txt
+		text: String(txt)
 	});
 };
 

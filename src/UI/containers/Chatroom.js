@@ -1,7 +1,8 @@
 /**
  * Contains messages list + submit box.
  *
- * TODO make VisibilitySensor change badge text instantly.
+ * TODO make VisibilitySensor change badge text instantly, move chatlist & textarea code into their own components.
+ * Maybe drop the whole VisibilitySensor and think of something else.
  */
 import React from 'react';
 import { connect } from 'react-redux';
