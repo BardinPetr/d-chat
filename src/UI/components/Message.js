@@ -56,11 +56,11 @@ class Message extends React.Component {
 		const { refer, message, isSubscribed } = this.props;
 		return (
 			<div>
-				<span>
+				<span className="nickname">
 					<Nickname id={message.id} refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
 					{ this.state.showSubscribedStatus && !isSubscribed && <i className="loader margin-left dark" title={__('This person still subscribing')} /> }
 				</span>
-				<div>
+				<div className="message-content">
 					<Markdown
 						source={message.content}
 						escapeHtml={true}
