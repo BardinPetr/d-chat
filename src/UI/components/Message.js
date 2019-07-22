@@ -13,9 +13,7 @@ import { __ } from 'Approot/misc/util';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if ( unit === 'second' ){
-		if (n < 5 && ago === 'ago') {
-			return 'just now';
-		} else if ( n < 30 ) {
+		if ( n < 30 ) {
 			return `less than 30 seconds ${ago}`;
 		} else {
 			return `less than 1 min ${ago}`;

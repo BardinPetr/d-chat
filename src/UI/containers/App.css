@@ -58,6 +58,15 @@ body {
 	color: gray;
 }
 
+.sensor {
+	visibility: hidden;
+	margin: 0;
+	width: 100%;
+	background: transparent;
+	border: 0;
+	height: 1px;
+}
+
 .sub-title {
 	text-align: center;
 }

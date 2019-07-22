@@ -41,7 +41,7 @@ class Chatroom extends React.Component {
 		};
 		this.unreadCount = props.unreadMessages.length;
 		this.wasScrolledToBottom = true;
-		this.markedRead = [];
+		this.markedRead = new Set;
 	}
 
 	loadMore = () => {
@@ -72,15 +72,28 @@ class Chatroom extends React.Component {
 	 * Since componentWillUnmount does not "make it" when the popup is closed by clicking elsewhere, listen for mouse to go over the edge.
 	 */
 	onMouseLeave = () => {
-		if (this.markedRead.length > 0) {
-			this.props.markAsRead(this.props.topic, this.markedRead);
-			this.markedRead = [];
+		this.markRead();
+	}
+
+	markRead() {
+		if (this.markedRead.size > 0) {
+			if (this.props.unreadMessages.length > 0) {
+				this.props.markAsRead(this.props.topic, Array.from(this.markedRead));
+			}
+			this.markedRead.clear();
 		}
+	}
+
+	markAllRead() {
+		if (this.props.unreadMessages.length > 0) {
+			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
+		}
+		this.markedRead.clear();
 	}
 
 	componentWillUnmount() {
 		this.textarea.removeEventListener('change', this._saveDraft);
-		this.props.markAsRead(this.props.topic, this.markedRead);
+		this.markRead();
 	}
 
 	componentDidUpdate() {
@@ -148,7 +161,7 @@ class Chatroom extends React.Component {
 	 * A queue system for marking messages read.
 	 */
 	queueMarkRead = id => {
-		this.markedRead.push(id);
+		this.markedRead.add(id);
 	}
 
 	/**
@@ -212,6 +225,9 @@ class Chatroom extends React.Component {
 							{ messageList }
 						</ul>
 					</InfiniteScroll>
+					<VisibilitySensor onChange={vis => vis && this.markAllRead()}>
+						<hr className="sensor" />
+					</VisibilitySensor>
 				</div>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
 					<ReactTextareaAutocomplete
