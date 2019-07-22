@@ -4,6 +4,11 @@ import { runtime, notifications } from 'webextension-polyfill';
 import uuid from 'uuid';
 import throttle from 'throttleit';
 
+/**
+ * Notifications are pretty resource intensive. Throttle them to 1 per 2 seconds.
+ *
+ * TODO maybe bottleneck instead and do "x and 5 messages".
+ */
 const throttledNotify = throttle(function() {
 	notifications.create(
 		'd-chat',
@@ -38,18 +43,6 @@ class Message {
 		this.username = formatAddr( src );
 		this.refersToMe = this.content.includes( this.username );
 		return this;
-	}
-
-	_notify() {
-		notifications.create(
-			'd-chat',
-			{
-				type: 'basic',
-				message: this.content,
-				title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
-				iconUrl: runtime.getURL('/img/icon2.png'),
-			}
-		);
 	}
 
 	notify() {

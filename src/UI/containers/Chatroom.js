@@ -104,14 +104,14 @@ class Chatroom extends React.Component {
 	submitText = (e) => {
 		e.preventDefault();
 
-		let input = this.msg.state;
+		let inputValue = this.msg.state.value.trim();
 
-		if (input.value === '') {
+		if (inputValue === '') {
 			return;
 		}
 
 		const message = {
-			content: input.value,
+			content: inputValue,
 			contentType: 'text',
 		};
 
@@ -136,9 +136,9 @@ class Chatroom extends React.Component {
 	 */
 	refer = addr => {
 		const caretPosition = this.msg.getCaretPosition();
-		const cVal = this.msg.state.value;
+		const currentValue = this.msg.state.value;
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
-		const value = [cVal.slice(0, caretPosition), mention( addr ) + ' ',  cVal.slice(caretPosition)].join('');
+		const value = [currentValue.slice(0, caretPosition), mention( addr ) + ' ',  currentValue.slice(caretPosition)].join('');
 		this.msg.setState({
 			value
 		}, () => this.textarea.focus());
