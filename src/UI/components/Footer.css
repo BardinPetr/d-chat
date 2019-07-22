@@ -1,0 +1,23 @@
+footer {
+	display: flex;
+	height: 1.5em;
+	padding: 0 0.5em;
+	align-items: center;
+	bottom: 0;
+	position: fixed;
+	background-color: lightgray;
+	width: 100%;
+}
+.logout {
+	display: flex;
+	align-items: center;
+}
+.logout:hover {
+	color: #3ea5ff;
+}
+.small {
+	font-size: small;
+}
+.button {
+	cursor: pointer;
+}

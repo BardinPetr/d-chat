@@ -108,10 +108,20 @@ const markRead = originalAction => async (dispatch, getState) => {
 	});
 };
 
+const logout = () => {
+	window.nknClient.close();
+	window.nknClient = null;
+	return {
+		type: 'LOGOUT'
+	};
+};
+
+
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
 	'JOIN_CHAT': joinChat,
 	'GET_SUBSCRIBERS': getSubscribers,
 	'chat/MARK_READ_ALIAS': markRead,
+	'LOGOUT_ALIAS': logout,
 };

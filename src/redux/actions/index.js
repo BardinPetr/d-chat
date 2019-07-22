@@ -7,6 +7,11 @@ import { getChatName, setBadgeText } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 
+
+export const logout = () => ({
+		type: 'LOGOUT_ALIAS'
+});
+
 export const saveDraft = text => ({
 	type: 'SAVE_DRAFT',
 	payload: {

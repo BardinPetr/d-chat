@@ -91,6 +91,10 @@ const login = (state = {}, action) => {
 			};
 			break;
 
+		case 'LOGOUT':
+			newState = {};
+			break;
+
 		default:
 			newState = state;
 	}

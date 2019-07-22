@@ -1,5 +1,6 @@
 import shasum	from 'shasum';
 import { i18n, runtime, browserAction } from 'webextension-polyfill';
+import isNumber from 'is-number';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/,	'');
@@ -54,7 +55,12 @@ export const formatAddr = addr => {
 };
 
 export const setBadgeText = txt => {
-	txt = (txt === 0) ? '' : String(txt);
+	if (isNumber(txt)) {
+		if (+txt < 0) {
+			console.warn('Badge text was negative:', txt);
+		}
+		txt = (+txt <= 0) ? '' : String(txt);
+	}
 	browserAction.setBadgeText({
 		text: txt
 	});

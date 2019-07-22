@@ -1,16 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { login, joinChat  } from '../../redux/actions';
+import { logout, login, joinChat  } from '../../redux/actions';
 import Header from '../components/Header';
 import ChatList from '../components/ChatList';
 import Chatroom from './Chatroom';
 import LoginBox from '../components/LoginBox';
+import Footer from '../components/Footer';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const App = ({ addr, topic, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
-	// console.log('Rendering.....................');
-	// console.log('all my arguments:', addr, topic, login, createMessage, enterChatroom, messages);
+const App = ({ addr, topic, logout, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
 	const isLoggedIn = addr != null;
 	const isSubscribing = ( topic && subscriptions[topic] );
 	const loading = ( isLoggedIn && !connected );
@@ -50,6 +49,9 @@ const App = ({ addr, topic, login, chatSettings, enterChatroom, messages, subscr
 						:
 						<LoginBox login={login} />
 					}
+					{ isLoggedIn && !topic &&
+						<Footer logout={logout} />
+					}
 				</div>
 			</div>
 		</div>
@@ -67,6 +69,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),
+	logout: () => dispatch(logout()),
 	enterChatroom: topic => dispatch(joinChat(topic))
 });
 
