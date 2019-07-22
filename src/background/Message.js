@@ -4,6 +4,18 @@ import { runtime, notifications } from 'webextension-polyfill';
 import uuid from 'uuid';
 import throttle from 'throttleit';
 
+const throttledNotify = throttle(function() {
+	notifications.create(
+		'd-chat',
+		{
+			type: 'basic',
+			message: this.content,
+			title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
+			iconUrl: runtime.getURL('/img/icon2.png'),
+		}
+	);
+}, 2000);
+
 class Message {
 	constructor(message) {
 		const now = new Date().getTime();
@@ -42,7 +54,7 @@ class Message {
 
 	notify() {
 		if ( configs.showNotifications ) {
-			throttle(this._notify, 200);
+			throttledNotify.call(this);
 		}
 	}
 }
