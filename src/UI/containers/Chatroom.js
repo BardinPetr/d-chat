@@ -165,7 +165,7 @@ class Chatroom extends React.Component {
 
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if ( visibleMessages.length - this.unreadCount === idx ) {
-				acc.push(<hr ref="lastRead" key={idx}/>);
+				acc.push(<hr ref="lastRead" key={message.id + 'lastRead'}/>);
 			}
 			return acc.concat(
 				<li key={message.id} className={classnames('message', {
@@ -244,7 +244,7 @@ const mapStateToProps = state => ({
 	messages: state.messages[state.topic] || [],
 	topic: state.topic,
 	subs: state.subscribers,
-	unreadMessages: state.chatSettings[state.topic] ? state.chatSettings[state.topic].unread : 0,
+	unreadMessages: state.chatSettings[state.topic]?.unread || [],
 });
 
 const mapDispatchToProps = dispatch => ({
