@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: hsl(226, 28%, 98%);
+	font-family: arial, helvetica, sans-serif;
 }
 
 .dropdown-item, .popout *:first-child {
@@ -22,7 +23,7 @@ body {
 
 .loading {
 	background-color: gray;
-	opacity: 0.7;
+	opacity: 0.8;
 	z-index: 1;
 }
 
@@ -295,7 +296,6 @@ ul.messages > li {
 }
 .message-content {
 	margin-top: 0.4em;
-	font-size: 90%;
 }
 .message * {
 	max-width: 100%;

@@ -5,15 +5,12 @@
 	align-items: center;
 	bottom: 0;
 	position: fixed;
-	background-color: lightgray;
+	background-color: white;
 	width: 100%;
 }
 .logout {
 	display: flex;
 	align-items: center;
-}
-.logout:hover {
-	color: #3ea5ff;
 }
 .small {
 	font-size: small;
