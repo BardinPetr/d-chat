@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
-import 'rc-dropdown/assets/index.css';
+import '../rc-dropdown.css';
 import { IoMdOpen } from 'react-icons/io';
 import { IS_FIREFOX, __, getChatDisplayName } from '../../misc/util';
 import { runtime, tabs, windows } from 'webextension-polyfill';
