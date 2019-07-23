@@ -69,19 +69,17 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			parse: {
 				ecma: 8,
 			},
-			compress: false,
-			mangle: false,
-			// compress: {
-			// 	ecma: 5,
-			// 	warnings: false,
-			// 	comparisons: false,
-			// 	inline: 2,
-			// },
-			// mangle: {
-			// 	safari10: true,
-			// },
+			compress: {
+				ecma: 6,
+				warnings: false,
+				comparisons: false,
+				inline: 2,
+			},
+			mangle: {
+				// huh?
+				safari10: true,
+			},
 			output: {
-				// I don't understand what this does? TODO 6, 7, 8, and 5 are the same?
 				ecma: 6,
 				comments: false,
 				ascii_only: true,

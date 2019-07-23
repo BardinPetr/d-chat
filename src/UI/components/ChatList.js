@@ -1,8 +1,9 @@
 import React from 'react';
+import classnames from 'classnames';
 
 import { getChatDisplayName, __ } from '../../misc/util';
 
-const Info = () => (
+const Info = ({ enterChatroom }) => (
 	<div className="text-container description">
 		<p>
 			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
@@ -13,10 +14,15 @@ const Info = () => (
 		<p>
 			<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription resolves.') }</i>
 		</p>
+		<p>
+			{__('Join channel')}
+			{' '}<a onClick={() => enterChatroom('d-chat')} href="#d-chat">#d-chat</a>!!!{' '}
+			{__('And give feedback, thanks!')}
+		</p>
 	</div>
 );
 
-const Chat = ({ messages, topic, onClick }) => {
+const Chat = ({ messages, topic, onClick, unreadCount }) => {
 	let lastMessage, lastActiveTimeText, previewText;
 	if (messages && messages.length) {
 		lastMessage = messages[messages.length-1];
@@ -43,8 +49,15 @@ const Chat = ({ messages, topic, onClick }) => {
 					{lastActiveTimeText}
 				</div>
 			</div>
-			<div className='chat-preview'>
-				{previewText}
+			<div className='chat-info'>
+				<div className='chat-preview'>
+					{previewText}
+				</div>
+				<div className={classnames('chat-unread', {
+					description: unreadCount === 0,
+				})}>
+					{unreadCount}
+				</div>
 			</div>
 		</li>
 	);
@@ -52,7 +65,7 @@ const Chat = ({ messages, topic, onClick }) => {
 
 export default class ChatList extends React.Component {
 	render() {
-		const { messages = {}, enterChatroom } = this.props;
+		const { messages = {}, enterChatroom, chatSettings } = this.props;
 
 		let chatList = [];
 		for (let topic of Object.keys(messages) ) {
@@ -83,10 +96,11 @@ export default class ChatList extends React.Component {
 								messages={item.messages}
 								topic={item.topic}
 								onClick={() => enterChatroom(item.topic)}
+								unreadCount={chatSettings[item.topic] ? chatSettings[item.topic].unread.length : 0}
 							/>
 						))
 						:
-						<Info />
+						<Info enterChatroom={enterChatroom} />
 					}
 				</ul>
 			</div>

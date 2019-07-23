@@ -8,3 +8,4 @@ dev
 web-ext-artifacts
 extension.crx
 extension.pem
+storybook-static

@@ -7,10 +7,10 @@ import 'rc-dropdown/assets/index.css';
 
 const menu = subscribers => (
 	<Menu selectedKeys={[]} className="subscriber-list-dropdown">
-		{ subscribers.map((sub, i) =>
+		{ subscribers.sort().map(sub =>
 			<MenuItem
 				className="subscriber"
-				key={i}>{String(sub)}</MenuItem>) }
+				key={sub}>{String(sub)}</MenuItem>) }
 	</Menu>
 );
 
@@ -23,6 +23,10 @@ class SubscriberList extends React.Component {
 		this.setState({
 			visible,
 		});
+		const { dispatch, topic } = this.props;
+		if ( visible ) {
+			dispatch(getSubscribers(topic));
+		}
 	}
 
 	componentDidMount() {

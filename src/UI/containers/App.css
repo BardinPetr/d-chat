@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: hsl(226, 28%, 98%);
+	font-family: arial, helvetica, sans-serif;
 }
 
 .dropdown-item, .popout *:first-child {
@@ -22,7 +23,7 @@ body {
 
 .loading {
 	background-color: gray;
-	opacity: 0.7;
+	opacity: 0.8;
 	z-index: 1;
 }
 
@@ -43,7 +44,9 @@ body {
 }
 .message p {
   margin: 0;
-  display: inline;
+}
+.message p:not(:first-child) {
+	margin-top: 1em;
 }
 
 .text-container {
@@ -52,6 +55,15 @@ body {
 
 .description {
 	color: gray;
+}
+
+.sensor {
+	visibility: hidden;
+	margin: 0;
+	width: 100%;
+	background: transparent;
+	border: 0;
+	height: 1px;
 }
 
 .sub-title {
@@ -67,6 +79,8 @@ body {
 
 .subscriber-list-overlay {
 	max-width: 80%;
+	/* Has no effect in popup. That thing is forked. */
+	scroll-behavior: smooth;
 }
 
 .app {
@@ -188,6 +202,10 @@ body {
   opacity: 0.4;
 }
 
+.chat-unread {
+	font-size: 14pt;
+	align-self: end;
+}
 .chatlist-container .chatlist .chat .chat-preview {
   white-space: nowrap;
   overflow: hidden;
@@ -254,11 +272,8 @@ body {
   padding: 0 20pt;
   margin: 0;
   height: 100%;
-  /*scroll-behavior: smooth;*/
 }
 .messages {
-	/*display:flex;*/
-	/*flex-direction: column-reverse;*/
   flex-grow: 1;
   padding: 0;
 }
@@ -278,6 +293,14 @@ ul.messages > li {
   margin: 0.5em 0;
   word-wrap: anywhere;
   white-space: pre-line;
+}
+.message-content {
+	margin-top: 0.4em;
+}
+.message * {
+	max-width: 100%;
+	max-height: 100%;
+	white-space: pre-wrap;
 }
 
 .input.narrow {
@@ -383,6 +406,9 @@ ul.messages > li {
 .loader-margin {
   margin-right: 1em;
 }
+.margin-left {
+  margin-left: 1em;
+}
 .loader {
   position: relative;
   box-sizing: border-box;
@@ -414,6 +440,9 @@ ul.messages > li {
 }
 .loader::after {
   animation-name: spinner-rotation-b;
+}
+.loader.dark::after {
+	border-color: black;
 }
 /***
  * Animations

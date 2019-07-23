@@ -1,4 +1,13 @@
 {
+  "min": {
+    "message": " < 1 min"
+  },
+  "s": {
+    "message": " < 30 s"
+  },
+  "Andgivefeedbackthanks": {
+    "message": " And give feedback, thanks!"
+  },
   "Back": {
     "message": " Back"
   },
@@ -29,6 +38,9 @@
   "Join": {
     "message": " Join"
   },
+  "Joinchannel": {
+    "message": " Join channel"
+  },
   "LogIn": {
     "message": " Log In"
   },
@@ -53,6 +65,9 @@
   "Reset": {
     "message": " Reset"
   },
+  "Signout": {
+    "message": " Sign out"
+  },
   "Submit": {
     "message": " Submit"
   },
@@ -67,6 +82,9 @@
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Thispersonstillsubscribing": {
+    "message": " This person still subscribing"
   },
   "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
     "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."

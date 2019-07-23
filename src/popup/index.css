@@ -14,3 +14,6 @@
 	min-height: calc(var(--minheight) - 40pt) !important;
 	max-width: var(--minwidth);
 }
+body {
+	font-size: 100%;
+}

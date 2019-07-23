@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs';
 
 const messages = (state = configs.messages, action ) => {
-	// console.log('is anybody out there? these messages are killing me', state, action);
 	let newState;
 	let initial;
 	switch (action.type) {
@@ -47,7 +46,6 @@ const subscribers = (state = [], action) => {
 };
 
 const subscriptions = ( state = {}, action ) => {
-	// console.log('is anybody out there?');
 	let newState;
 	switch ( action.type ) {
 		case 'SUBSCRIBE':
@@ -65,12 +63,10 @@ const subscriptions = ( state = {}, action ) => {
 		default:
 			newState = state;
 	}
-	// console.log('subscribing...', newState, state, action);
 	return newState;
 };
 
 const login = (state = {}, action) => {
-	// console.log('is anybody out there?, login calling', action);
 	let newState;
 	switch (action.type) {
 		case 'LOGIN':
@@ -95,10 +91,13 @@ const login = (state = {}, action) => {
 			};
 			break;
 
+		case 'LOGOUT':
+			newState = {};
+			break;
+
 		default:
 			newState = state;
 	}
-	// console.log('login', newState, state, action);
 	return newState;
 };
 
@@ -115,7 +114,6 @@ const topic = (state = null, { type, payload }) => {
 		default:
 			newState = state;
 	}
-	// console.log('is anybody out there? this is enter chat calling', newState, state, payload);
 	return newState;
 };
 
@@ -132,11 +130,70 @@ const draftMessage = (state = '', action) => {
 	return newState;
 };
 
+/**
+ * Handles individual chat (topic) settings.
+ *
+ * Settings include:
+ * - ...
+ *
+ * modify_read_count: Payload: { changes: { add, setTo } }
+ */
+const chatSettings = (state = configs.chatSettings, action) => {
+	let newState, initial;
+	switch (action.type) {
+		case 'chat/TOGGLE_NOTIFICATIONS':
+			break;
+
+		case 'chat/MARK_UNREAD':
+			initial = state[action.payload.topic]?.unread || [];
+			newState = {
+				...state,
+				[action.payload.topic]: {
+					...state[action.payload.topic],
+					unread: [ ...initial, ...action.payload.ids ],
+				},
+			};
+			configs.chatSettings = newState;
+			break;
+
+		case 'chat/MARK_READ':
+			// Grab all unread messages.
+			initial = state[action.payload.topic]?.unread || [];
+			newState = {
+				...state,
+				[action.payload.topic]: {
+					...state[action.payload.topic],
+					// Filter out newly read message from unread messages.
+					unread: initial.filter(i => !action.payload.ids.some(id => i === id) ),
+				},
+			};
+			configs.chatSettings = newState;
+			break;
+
+		case 'CREATE_CHAT':
+			newState = {
+				...state,
+				[action.payload.topic]: {
+					...state[action.payload.topic],
+					unread: [],
+				}
+			};
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 export default combineReducers({
 	login,
+	// Client's ongoing subscriptions, waiting to be resolved.
 	subscriptions,
+	// Active chat.
 	topic,
 	messages,
 	subscribers,
 	draftMessage,
+	chatSettings,
 });
