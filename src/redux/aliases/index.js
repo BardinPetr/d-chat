@@ -111,6 +111,7 @@ const markRead = originalAction => async (dispatch, getState) => {
 const logout = () => {
 	window.nknClient.close();
 	window.nknClient = null;
+	localStorage.clear();
 	return {
 		type: 'LOGOUT'
 	};

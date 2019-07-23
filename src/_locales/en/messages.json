@@ -1,4 +1,13 @@
 {
+  "min": {
+    "message": " < 1 min"
+  },
+  "s": {
+    "message": " < 30 s"
+  },
+  "Andgivefeedbackthanks": {
+    "message": " And give feedback, thanks!"
+  },
   "Back": {
     "message": " Back"
   },
@@ -29,6 +38,9 @@
   "Join": {
     "message": " Join"
   },
+  "Joinchannel": {
+    "message": " Join channel"
+  },
   "LogIn": {
     "message": " Log In"
   },
@@ -52,6 +64,9 @@
   },
   "Reset": {
     "message": " Reset"
+  },
+  "Signout": {
+    "message": " Sign out"
   },
   "Submit": {
     "message": " Submit"

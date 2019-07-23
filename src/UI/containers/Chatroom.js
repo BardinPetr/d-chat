@@ -3,6 +3,7 @@
  *
  * TODO make VisibilitySensor change badge text instantly, move chatlist & textarea code into their own components.
  * Maybe drop the whole VisibilitySensor and think of something else.
+ * Probably do something to improve the chat rendering. It basically renders every time.
  */
 import React from 'react';
 import { connect } from 'react-redux';

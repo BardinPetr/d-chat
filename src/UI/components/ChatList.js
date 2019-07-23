@@ -3,7 +3,7 @@ import classnames from 'classnames';
 
 import { getChatDisplayName, __ } from '../../misc/util';
 
-const Info = () => (
+const Info = ({ enterChatroom }) => (
 	<div className="text-container description">
 		<p>
 			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
@@ -13,6 +13,11 @@ const Info = () => (
 		</p>
 		<p>
 			<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription resolves.') }</i>
+		</p>
+		<p>
+			{__('Join channel')}
+			{' '}<a onClick={() => enterChatroom('d-chat')} href="#d-chat">#d-chat</a>!!!{' '}
+			{__('And give feedback, thanks!')}
 		</p>
 	</div>
 );
@@ -95,7 +100,7 @@ export default class ChatList extends React.Component {
 							/>
 						))
 						:
-						<Info />
+						<Info enterChatroom={enterChatroom} />
 					}
 				</ul>
 			</div>
