@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "2.5.0",
+  "version": "2.5.2",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -134,6 +134,7 @@
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "throttleit": "^1.0.0",
+    "ubuntu-fontface": "^0.1.13",
     "url-loader": "1.1.1",
     "uuid": "^3.3.2",
     "webext-redux": "^2.1.2",

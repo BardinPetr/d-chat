@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getSubscribers } from '../../redux/actions';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
-import 'rc-dropdown/assets/index.css';
+import '../rc-dropdown.css';
 
 const menu = subscribers => (
 	<Menu selectedKeys={[]} className="subscriber-list-dropdown">

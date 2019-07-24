@@ -23,7 +23,7 @@ class Message {
 		}
 		this.addr = src;
 		this.username = formatAddr( src );
-		this.refersToMe = this.content.includes( this.username );
+		this.refersToMe = this.content.includes( formatAddr( window.nknClient.addr ) );
 		return this;
 	}
 
@@ -34,7 +34,7 @@ class Message {
 					type: 'basic',
 					message: this.content,
 					title: 'D-Chat #' + this.topic + ', ' + this.username + ':',
-					iconUrl: runtime.getURL('/img/icon2.png'),
+					iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
 				}
 			);
 		}

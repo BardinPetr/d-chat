@@ -8,6 +8,27 @@
 	This is workaround. -->
 	<script src="lib/js/browser-polyfill.js"></script>
 	<script src="lib/js/webextensions-lib-configs/Configs.js"></script>
+	<style>
+	.chatroom, .chatlist-container {
+		--minwidth: 450px;
+		--minheight: 600px;
+		  min-width: var(--minwidth);
+		  min-height: var(--minheight);
+	}
+
+	/* Fix the popup bugs. */
+	.chatroom {
+		min-height: calc(var(--minheight) - 40pt) !important;
+	}
+
+	.chatlist-container {
+		min-height: calc(var(--minheight) - 40pt) !important;
+		max-width: var(--minwidth);
+	}
+	body {
+		font-size: 100%;
+	}
+	</style>
 </head>
 <body>
 	<div id="root"></div>

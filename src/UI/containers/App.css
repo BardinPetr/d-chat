@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: hsl(226, 28%, 98%);
-	font-family: arial, helvetica, sans-serif;
+	font-family: Ubuntu, sans, sans-serif;
 }
 
 .dropdown-item, .popout *:first-child {
@@ -315,6 +315,12 @@ ul.messages > li {
 .avatar {
   color: #117744;
   cursor: pointer;
+}
+
+.hint {
+	font-weight: 300;
+	font-size: 90%;
+	font-family: Arial;
 }
 
 .me {

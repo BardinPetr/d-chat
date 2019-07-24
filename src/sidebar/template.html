@@ -3,15 +3,27 @@
 <head>
 	<meta charset="UTF-8">
 	<title>D-Chat</title>
-	<link rel="shortcut icon" href="img/icon2.png">
+	<link rel="shortcut icon" href="img/NKN_D-chat_blue-64cropped.png">
 	<!-- There is something wrong with the webpack configs.
 	Things get included twice in either popup or sidebar.
 	This is workaround. -->
 	<script src="../lib/js/browser-polyfill.js"></script>
 	<script src="../lib/js/webextensions-lib-configs/Configs.js"></script>
+	<link rel="stylesheet" href="popup.css">
+	<style>
+	body {
+	  margin: 0;
+	  padding: 0;
+	  user-select: text;
+	}
+	div.chatlist-container, div.chatroom {
+	  --minwidth: 0px;
+	}
+	</style>
 </head>
 <body>
 	<div id="root"></div>
+	<script src="popup.js"></script>
 </body>
 </html>
 

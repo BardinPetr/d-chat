@@ -32,8 +32,10 @@ const Nickname = ({id, addr, refer, timestamp, username, ping}) => (
 			{username}
 			{' '}
 		</span>
-		<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={5} />
-		{ isNumber(ping) && <Ping ping={ping} /> }
+		<span className="hint">
+			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={5} />
+			{ isNumber(ping) && <Ping ping={ping} /> }
+		</span>
 	</span>
 );
 
@@ -58,7 +60,7 @@ class Message extends React.Component {
 			<div>
 				<span className="nickname">
 					<Nickname id={message.id} refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
-					{ this.state.showSubscribedStatus && !isSubscribed && <i className="loader margin-left dark" title={__('This person still subscribing')} /> }
+					{ this.state.showSubscribedStatus && !isSubscribed && <i className="loader margin-left dark" title={__('This person is subscribing')} /> }
 				</span>
 				<div className="message-content">
 					<Markdown
