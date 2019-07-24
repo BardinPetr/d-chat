@@ -13,8 +13,13 @@
     ]
   },
   "browser_action": {
-    "default_icon": "img/icon2.png",
-    "default_popup": "./popup.html"
+    "default_icon": "img/NKN_D-chat_blue-64cropped.png",
+    "default_popup": "./popup.html",
+    "theme_icons": [{
+    	"dark": "img/NKN_D-chat_blue-64cropped.png",
+    	"light": "img/NKN_D-chat_white-64cropped.png",
+    	"size": 32
+    }]
   },
   "permissions": [
     "<all_urls>",
@@ -26,10 +31,10 @@
   	"default_title": "__MSG_extensionName__",
   	"default_panel": "./sidebar.html",
   	"open_at_install": false,
-  	"default_icon": "img/icon2.png"
+  	"default_icon": "img/NKN_D-chat_blue-64cropped.png"
   },
   "icons": {
-    "64": "img/icon2.png"
+    "64": "img/NKN_D-chat_blue-64cropped.png"
   },
   "options_ui": {
   	"page": "./options.html"
