@@ -1,4 +1,4 @@
-import nkn from	'nkn-client';
+import nkn from	'nkn-multiclient';
 import nknWallet from	'nkn-wallet';
 import configs from './configs';
 import { genChatID } from './util';
@@ -83,6 +83,7 @@ class	NKN	extends	nkn	{
 
 		// TODO : connection fail here will majorly break things.
 		super({
+			originalClient: true,
 			identifier:	username.trim() || 'Pseudonymous',
 			seed:	wallet.getSeed(),
 			seedRpcServerAddr: seed,
