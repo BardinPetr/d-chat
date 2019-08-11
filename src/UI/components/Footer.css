@@ -6,14 +6,13 @@
 	bottom: 0;
 	position: fixed;
 	background-color: white;
-	width: 100%;
+	width: calc(100% - 1em);
+	font-size: small;
+	justify-content: space-between;
 }
 .logout {
 	display: flex;
 	align-items: center;
-}
-.small {
-	font-size: small;
 }
 .button {
 	cursor: pointer;

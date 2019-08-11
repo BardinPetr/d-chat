@@ -44,3 +44,9 @@ browser.runtime.onInstalled.addListener(details => (
 		url: browser.runtime.getURL('sidebar.html?register')
 	}), 250) // Sometimes the register screen would bug out.
 ));
+
+browser.runtime.onMessage.addListener((msg, _, sendResponse) => {
+	if ( msg?.action === 'get_address' && window.nknClient ) {
+		sendResponse(window.nknClient.wallet.address);
+	}
+});

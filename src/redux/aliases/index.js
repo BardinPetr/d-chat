@@ -21,7 +21,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 				console.log('Errored at subscribe. Already subscribed?', err);
 				// Would do this, but it's not consistent. The error messages don't reflect reality.
 				// if ( err.data && err.data.includes('already subscribed') ) {
-				dispatch(subscribeCompleted(topic));
+				// dispatch(subscribeCompleted(topic));
 			}
 			);
 	}
@@ -52,11 +52,12 @@ const login = originalAction => (dispatch, getState) => {
 		});
 
 		nknClient.on('block', block => {
-			console.log('New block!!!',	block);
+			console.log('New block!!!', block);
 			let subs = getState().subscriptions;
 			for	( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
-				if ( block.transactions.find(tx	=> subs[topic] === tx.hash ) ) {
+				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
+					console.log('Subscribe completed!');
 					dispatch(subscribeCompleted(topic));
 				}
 			}
@@ -117,6 +118,15 @@ const logout = () => {
 	};
 };
 
+const getBalance = () => async (dispatch) => {
+	const balance = await window.nknClient.wallet.getBalance();
+	return dispatch({
+		type: 'nkn/GET_BALANCE',
+		payload: {
+			balance: balance.toString(),
+		}
+	});
+};
 
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
@@ -125,4 +135,5 @@ export default {
 	'GET_SUBSCRIBERS': getSubscribers,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
+	'GET_BALANCE_ALIAS': getBalance,
 };

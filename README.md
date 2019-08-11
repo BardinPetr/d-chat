@@ -2,9 +2,11 @@
 
 A decentralized chat on NKN as an extension for Chrome and Firefox.
 
+Join *#d-chat* on d-chat!
+
 https://addons.mozilla.org/en-US/firefox/addon/d-chat/
 
-https://chrome.google.com/webstore/detail/glnmkakdjcognfgonjfcklpmjiobijii/
+https://chrome.google.com/webstore/detail/d-chat/glnmkakdjcognfgonjfcklpmjiobijii
 
 ## Installation
 
@@ -23,19 +25,21 @@ or
 
 Forked from https://github.com/web3infra/dchat .
 
-React broilerplate from https://github.com/kryptokinght/react-extension-boilerplate .
+React boilerplate from https://github.com/kryptokinght/react-extension-boilerplate .
 
 ## Contributing
 
 Send a merge request if you've got something nice, thanks! And make issues and so forth, basic stuff. Appreciate.
 
-## Supporting with the monies
+I'll pay NKN for code, so you don't have to feel like you're working for someone else for free. [d-chat developer fund](https://explorer.nknx.org/addresses/NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1) 
 
-Always appreciated.
+https://explorer.nknx.org/addresses/NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
+
+## Supporting
 
 ERC20: 0x87107249Bf26A6c5CA9D55E05b7BF29aD50CD7C8
 
-NKN coin (for mining rewards, for example): NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
+NKN coin dev fund (mining rewards, for example): NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
 
 ## License
 

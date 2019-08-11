@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { logout, login, joinChat  } from '../../redux/actions';
+import { getBalance, logout, login, joinChat } from '../../redux/actions';
 import Header from '../components/Header';
 import ChatList from '../components/ChatList';
 import Chatroom from './Chatroom';
@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const App = ({ addr, topic, logout, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
+const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
 	const isLoggedIn = addr != null;
 	const isSubscribing = ( topic && subscriptions[topic] );
 	const loading = ( isLoggedIn && !connected );
@@ -50,7 +50,7 @@ const App = ({ addr, topic, logout, login, chatSettings, enterChatroom, messages
 						<LoginBox login={login} />
 					}
 					{ isLoggedIn && !topic &&
-						<Footer logout={logout} />
+						<Footer getBalance={getBalance} balance={balance} logout={logout} />
 					}
 				</div>
 			</div>
@@ -65,12 +65,14 @@ const mapStateToProps = state => ({
 	subscriptions: state.subscriptions,
 	connected: state.login && state.login.connected,
 	chatSettings: state.chatSettings,
+	balance: state.nkn?.balance,
 });
 
 const mapDispatchToProps = dispatch => ({
 	login: credentials => dispatch(login(credentials)),
 	logout: () => dispatch(logout()),
-	enterChatroom: topic => dispatch(joinChat(topic))
+	enterChatroom: topic => dispatch(joinChat(topic)),
+	getBalance: () => dispatch(getBalance()),
 });
 
 export default connect(

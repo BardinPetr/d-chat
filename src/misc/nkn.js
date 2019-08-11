@@ -1,10 +1,11 @@
-import nkn from	'nkn-client';
-import nknWallet from	'nkn-wallet';
+import nkn from 'nkn-multiclient';
+import nknWallet from 'nkn-wallet';
 import configs from './configs';
 import { genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 const	BUCKET = 0;
+const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
@@ -83,32 +84,38 @@ class	NKN	extends	nkn	{
 
 		// TODO : connection fail here will majorly break things.
 		super({
-			identifier:	username.trim() || 'Pseudonymous',
-			seed:	wallet.getSeed(),
+			originalClient: true,
+			identifier: username.trim() || 'Pseudonymous',
+			seed: wallet.getSeed(),
 			seedRpcServerAddr: seed,
 		});
 
-		this.wallet	=	wallet;
+		this.wallet = wallet;
 	}
 
-	subscribe	=	topic	=> {
-		console.log('Subscribing to', topic, 'aka', genChatID(topic));
+	subscribe = topic => {
+		console.log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
 		return this.wallet.subscribe(
 			genChatID( topic ),
 			BUCKET,
 			FORBLOCKS,
-			this.identifier
+			this.identifier,
+			'',
+			{
+				fee: FEE
+			}
 		);
 	}
 
-	// I don't know	how	to override	functions	in react/babel.	Keeps	throwing errors. Traditional publish(){} doesn't work	either.
-	// publish = (topicID, message)	=> {
-	publishMessage = (topic, message)	=> {
+	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
+	// publish = (topicID, message) => {
+	publishMessage = (topic, message) => {
 		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		this.publish(
 			genChatID( topic ),
 			BUCKET,
-			JSON.stringify(message)
+			JSON.stringify(message),
+			{ encrypt: false }
 		);
 	}
 

@@ -120,6 +120,13 @@ class Header extends React.Component {
 						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
 						<button type="submit" className="input submit">{ __('Go') }</button>
 					</form>
+					<p className="description">
+						{__('You will need some NKN to join chats.') + ' '}
+					</p>
+					<p className="description">
+						<a href="https://nkn-faucet.herokuapp.com/">{__('Get some for free')}</a>
+						{' (' + __('Have patience during load; it is sleeping.') + ').'}
+					</p>
 				</Modal>
 
 				{ topic ? (
