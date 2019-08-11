@@ -44,6 +44,9 @@
   "LogIn": {
     "message": " Log In"
   },
+  "Logintodchatandthenrefres": {
+    "message": " Log in to d-chat (and then refres"
+  },
   "Panel": {
     "message": " Panel"
   },
@@ -100,6 +103,9 @@
   },
   "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
+  },
+  "Youraddresswasautomaticallyfilledinbydchat": {
+    "message": " Your address was automatically filled in by d-chat."
   },
   "optional": {
     "message": " optional"

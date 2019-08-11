@@ -12,6 +12,12 @@
       "background.js"
     ]
   },
+  "content_scripts": [
+	{
+		"matches": ["https://nkn-faucet.herokuapp.com/*"],
+		"js": ["content.js"]
+	}
+  ],
   "browser_action": {
     "default_icon": "img/NKN_D-chat_blue-64cropped.png",
     "default_popup": "./popup.html",
