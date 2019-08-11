@@ -7,6 +7,9 @@ import { getChatName, setBadgeText } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 
+export const getBalance = () => ({
+	type: 'GET_BALANCE_ALIAS',
+});
 
 export const logout = () => ({
 	type: 'LOGOUT_ALIAS'

@@ -186,6 +186,22 @@ const chatSettings = (state = configs.chatSettings, action) => {
 	return newState;
 };
 
+const nkn = (state = { balance: -1 }, action) => {
+	let newState;
+	switch (action.type) {
+		case 'nkn/GET_BALANCE':
+			newState = {
+				...state,
+				balance: action.payload.balance,
+			};
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 export default combineReducers({
 	login,
 	// Client's ongoing subscriptions, waiting to be resolved.
@@ -196,4 +212,6 @@ export default combineReducers({
 	subscribers,
 	draftMessage,
 	chatSettings,
+	// Information about wallet/client/so forth.
+	nkn,
 });

@@ -23,11 +23,23 @@
   "Enterchannelname": {
     "message": " Enter channel name"
   },
+  "Fetchbalance": {
+    "message": " Fetch balance"
+  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
+  "GetNKN": {
+    "message": " Get NKN"
+  },
+  "Getsomeforfree": {
+    "message": " Get some for free"
+  },
   "Go": {
     "message": " Go"
+  },
+  "Havepatienceduringloaditissleeping": {
+    "message": " Have patience during load; it is sleeping."
   },
   "Ifitseemsstuckforalonglongtimethenitprobablyis": {
     "message": " If it seems stuck for a long, long time, then it probably is."
@@ -86,9 +98,6 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "Thispersonissubscribing": {
-    "message": " This person is subscribing"
-  },
   "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
     "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
   },
@@ -104,11 +113,17 @@
   "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
   },
+  "YouwillneedsomeNKNtojoinchats": {
+    "message": " You will need some NKN to join chats."
+  },
   "Youraddresswasautomaticallyfilledinbydchat": {
     "message": " Your address was automatically filled in by d-chat."
   },
   "optional": {
     "message": " optional"
+  },
+  "unsubscribed": {
+    "message": " unsubscribed"
   },
   "extensionName": {
     "message": "D-Chat"

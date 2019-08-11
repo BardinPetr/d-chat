@@ -39,6 +39,10 @@ body {
 	padding: 1em;
 }
 
+.not-subscribed {
+	background-color: lightgray;
+}
+
 .login {
 	max-width: 100%;
 }

@@ -118,6 +118,15 @@ const logout = () => {
 	};
 };
 
+const getBalance = () => async (dispatch) => {
+	const balance = await window.nknClient.wallet.getBalance();
+	return dispatch({
+		type: 'nkn/GET_BALANCE',
+		payload: {
+			balance: balance.toString(),
+		}
+	});
+};
 
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
@@ -126,4 +135,5 @@ export default {
 	'GET_SUBSCRIBERS': getSubscribers,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
+	'GET_BALANCE_ALIAS': getBalance,
 };

@@ -1,5 +1,5 @@
-import nkn from	'nkn-multiclient';
-import nknWallet from	'nkn-wallet';
+import nkn from 'nkn-multiclient';
+import nknWallet from 'nkn-wallet';
 import configs from './configs';
 import { genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
@@ -85,15 +85,15 @@ class	NKN	extends	nkn	{
 		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
-			identifier:	username.trim() || 'Pseudonymous',
-			seed:	wallet.getSeed(),
+			identifier: username.trim() || 'Pseudonymous',
+			seed: wallet.getSeed(),
 			seedRpcServerAddr: seed,
 		});
 
-		this.wallet	=	wallet;
+		this.wallet = wallet;
 	}
 
-	subscribe	=	topic	=> {
+	subscribe = topic => {
 		console.log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
 		return this.wallet.subscribe(
 			genChatID( topic ),
@@ -107,14 +107,15 @@ class	NKN	extends	nkn	{
 		);
 	}
 
-	// I don't know	how	to override	functions	in react/babel.	Keeps	throwing errors. Traditional publish(){} doesn't work	either.
-	// publish = (topicID, message)	=> {
-	publishMessage = (topic, message)	=> {
+	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
+	// publish = (topicID, message) => {
+	publishMessage = (topic, message) => {
 		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		this.publish(
 			genChatID( topic ),
 			BUCKET,
-			JSON.stringify(message)
+			JSON.stringify(message),
+			{ encrypt: false }
 		);
 	}
 
