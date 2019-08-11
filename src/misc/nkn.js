@@ -1,10 +1,11 @@
-import nkn from	'nkn-client';
+import nkn from	'nkn-multiclient';
 import nknWallet from	'nkn-wallet';
 import configs from './configs';
 import { genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 const	BUCKET = 0;
+const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
@@ -83,6 +84,7 @@ class	NKN	extends	nkn	{
 
 		// TODO : connection fail here will majorly break things.
 		super({
+			originalClient: true,
 			identifier:	username.trim() || 'Pseudonymous',
 			seed:	wallet.getSeed(),
 			seedRpcServerAddr: seed,
@@ -92,12 +94,16 @@ class	NKN	extends	nkn	{
 	}
 
 	subscribe	=	topic	=> {
-		console.log('Subscribing to', topic, 'aka', genChatID(topic));
+		console.log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
 		return this.wallet.subscribe(
 			genChatID( topic ),
 			BUCKET,
 			FORBLOCKS,
-			this.identifier
+			this.identifier,
+			'',
+			{
+				fee: FEE
+			}
 		);
 	}
 

@@ -9,3 +9,4 @@ web-ext-artifacts
 extension.crx
 extension.pem
 storybook-static
+.DS_Store
