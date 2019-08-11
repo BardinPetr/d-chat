@@ -104,7 +104,7 @@
     "mini-css-extract-plugin": "0.4.3",
     "nkn-client": "^0.6.2",
     "nkn-multiclient": "^0.0.2",
-    "nkn-wallet": "^0.4.0",
+    "nkn-wallet": "^0.4.2",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "ora": "^3.4.0",
     "pnp-webpack-plugin": "1.1.0",
