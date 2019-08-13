@@ -311,6 +311,10 @@ ul.messages > li {
 	/* Minus height of text box */
 	height: calc(100% - 5em);
 }
+.message-content img {
+	/* TODO : fix image expansion scroll bug and then remove this */
+	height: 150px;
+}
 
 .message {
   background-color: #c0e5f7;
@@ -334,7 +338,6 @@ ul.messages > li {
 	height: 2.2em;
 	padding: 0.3em;
 }
-
 .narrow input {
 	width: 100%;
 }
@@ -386,6 +389,12 @@ ul.messages > li {
   position: fixed;
   padding: 4px;
 }
+.input-channel-form {
+	width: initial;
+	position: initial;
+	flex-direction: row;
+}
+
 
 .message blockquote {
 	border-left: 0.25em solid hsl(200, 1.3%, 55.1%);
@@ -411,7 +420,8 @@ ul.messages > li {
   padding: 5px;
 }
 
-.input input[type="submit"],
+input[type="submit"],
+button[type="submit"],
 .input.submit {
   background: transparent;
   border: 1pt solid #fff;
@@ -428,7 +438,8 @@ ul.messages > li {
 	margin: 0 !important;
 }
 
-.input input[type="submit"]:hover,
+input[type="submit"]:hover,
+button[type="submit"]:hover,
 .input.submit:hover {
   background: #1ee494;
   color: #fff;

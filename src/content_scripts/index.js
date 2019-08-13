@@ -1,6 +1,7 @@
 import { __ } from 'Approot/misc/util';
+import { runtime } from 'webextension-polyfill';
 
-browser.runtime.sendMessage({
+runtime.sendMessage({
 	action: 'get_address',
 }).then(key => {
 	if ( key ) {
