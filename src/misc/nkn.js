@@ -4,7 +4,7 @@ import configs from './configs';
 import { genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-const	BUCKET = 0;
+const BUCKET = 0;
 const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
@@ -58,10 +58,8 @@ const SEED_ADDRESSES = [
  * Couple of helpers for nkn module.
  *
  * Saves walletJSON to sync storage.
- *
- * TODO handle multiple connections and then use lowest latency client.
  */
-class	NKN	extends	nkn	{
+class NKN extends nkn {
 
 	constructor({username, password})	{
 		let wallet;
@@ -115,7 +113,7 @@ class	NKN	extends	nkn	{
 			genChatID( topic ),
 			BUCKET,
 			JSON.stringify(message),
-			{ encrypt: false }
+			{ encrypt: true }
 		);
 	}
 

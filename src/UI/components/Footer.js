@@ -11,7 +11,7 @@ const Footer = ({ logout }) => (
 			</div>
 		</div>
 		<div className="right">
-			<NknBalance />
+			[<NknBalance />]
 		</div>
 	</div>
 );

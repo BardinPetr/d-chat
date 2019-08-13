@@ -7,6 +7,7 @@ import { IoMdOpen } from 'react-icons/io';
 import { IS_FIREFOX, __, getChatDisplayName } from '../../misc/util';
 import { runtime, tabs, windows } from 'webextension-polyfill';
 import SubscriberList from '../containers/SubscriberList';
+import NknBalance from '../containers/NknBalance';
 
 Modal.setAppElement('#root');
 
@@ -106,7 +107,7 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const { subscribing, topic, enterChatroom, connected } = this.props;
+		const { topic, enterChatroom, connected } = this.props;
 		return (
 			<header className="chat-header">
 				<Modal
@@ -121,11 +122,10 @@ class Header extends React.Component {
 						<button type="submit" className="input submit">{ __('Go') }</button>
 					</form>
 					<p className="description">
-						{__('You will need some NKN to join chats.') + ' '}
+						{__('You will need some NKN to subscribe to chats.') + ' '}
 					</p>
 					<p className="description">
-						<a href="https://nkn-faucet.herokuapp.com/">{__('Get some for free')}</a>
-						{' (' + __('Have patience during load; it is sleeping.') + ').'}
+						{__('Your balance')}: <NknBalance />
 					</p>
 				</Modal>
 
@@ -133,7 +133,6 @@ class Header extends React.Component {
 					<span className="chatroom-header">
 						<span className="back" onClick={() => enterChatroom(null)}>{'< ' + __('Back')}</span>
 						<span className="chatname" title={getChatDisplayName(topic)}>{getChatDisplayName(topic)}</span>
-						<span className={subscribing ? 'loader loader-margin' : 'empty'} title={ __('Subscribing...') }></span>
 						<SubscriberList />
 					</span>
 				) : (

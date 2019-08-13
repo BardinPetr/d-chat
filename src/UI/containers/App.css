@@ -5,6 +5,10 @@ body {
 	font-family: Ubuntu, sans, sans-serif;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 .dropdown-item, .popout *:first-child {
 	cursor: pointer;
 }
@@ -13,8 +17,23 @@ body {
 	font-size: 1.3em !important;
 }
 
+.form-text-area {
+	width: 100%;
+	height: 3.5em;
+}
+
 .dropdown-item:hover {
 	background-color: #afe7ff !important;
+}
+
+.flex-filler {
+	flex-grow: 2;
+}
+
+.form-footer {
+	display: flex;
+	font-size: 15px;
+	width: 100%;
 }
 
 .hidden {
@@ -74,6 +93,10 @@ body {
 	text-align: center;
 }
 
+.subscriber-list-container {
+	display: flex;
+	align-items: center;
+}
 .subscriber-list-dropdown {
 	width: 25em;
 	max-height: 16em;
@@ -354,12 +377,14 @@ ul.messages > li {
 }
 
 .input {
-  height: 5em;
+  height: 6em;
   width: 100%;
   background: rgb(100, 180, 245);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
+  position: fixed;
+  padding: 4px;
 }
 
 .message blockquote {
@@ -377,18 +402,12 @@ ul.messages > li {
 .input textarea {
   outline: 0;
   border: 0;
-  border-top-left-radius: 5pt;
-  border-bottom-left-radius: 5pt;
-  margin-left: 5pt;
-  height: 92%;
-  margin-top: 2.5px;
-  width: 99%;
+  border-radius: 5pt;
+  height: 93%;
   box-sizing: border-box;
-  font-size: 14pt;
   flex: 1;
   min-width: 10%;
   resize: none;
-  overflow: hidden;
   padding: 5px;
 }
 
@@ -398,13 +417,15 @@ ul.messages > li {
   border: 1pt solid #fff;
   height: 95%;
   width: 70pt;
-  font-size: 14pt;
   box-sizing: border-box;
-  border-top-right-radius: 5pt;
-  border-bottom-right-radius: 5pt;
+  border-radius: 5pt;
   margin-right: 5pt;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.form-footer * {
+	margin: 0 !important;
 }
 
 .input input[type="submit"]:hover,

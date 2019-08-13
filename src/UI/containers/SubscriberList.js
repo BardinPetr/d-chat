@@ -4,6 +4,7 @@ import { getSubscribers } from '../../redux/actions';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
 import '../rc-dropdown.css';
+import { __ } from 'Approot/misc/util';
 
 const menu = subscribers => (
 	<Menu selectedKeys={[]} className="subscriber-list-dropdown">
@@ -17,6 +18,7 @@ const menu = subscribers => (
 class SubscriberList extends React.Component {
 	state = {
 		visible: false,
+		showSpinner: false,
 	};
 
 	onVisibleChange = visible => {
@@ -36,6 +38,9 @@ class SubscriberList extends React.Component {
 			, 30 * 1000
 		);
 		dispatch(getSubscribers(topic));
+		setTimeout(() => this.setState({
+			showSpinner: true
+		}), 500);
 	}
 
 	componentWillUnmount() {
@@ -43,19 +48,26 @@ class SubscriberList extends React.Component {
 	}
 
 	render() {
-		const { subscribers } = this.props;
+		const { subscribers, addr } = this.props;
+		const isSubscribed = subscribers.includes(addr);
+		const showSpinner = this.state.showSpinner && !isSubscribed;
 		return (
-			<div className="subscriber-list new no-flex join-button">
-				<Dropdown
-					trigger={['click']}
-					overlay={() => menu(subscribers)}
-					overlayClassName="subscriber-list-overlay"
-					closeOnSelect={false}
-					visible={this.state.visible}
-					onVisibleChange={this.onVisibleChange}
-				>
-					<div className="subscriber-count splash">{subscribers.length}</div>
-				</Dropdown>
+			<div className="subscriber-list-container">
+				<div>
+					<span className={showSpinner ? 'loader loader-margin' : 'empty'} title={ __('Subscribing...') }></span>
+				</div>
+				<div className="subscriber-list new no-flex join-button">
+					<Dropdown
+						trigger={['click']}
+						overlay={() => menu(subscribers)}
+						overlayClassName="subscriber-list-overlay"
+						closeOnSelect={false}
+						visible={this.state.visible}
+						onVisibleChange={this.onVisibleChange}
+					>
+						<div className="subscriber-count splash">{subscribers.length}</div>
+					</Dropdown>
+				</div>
 			</div>
 		);
 	}
@@ -64,6 +76,7 @@ class SubscriberList extends React.Component {
 const mapStateToProps = state => ({
 	subscribers: state.subscribers,
 	topic: state.topic,
+	addr: state.login?.addr || {},
 });
 
 export default connect(
