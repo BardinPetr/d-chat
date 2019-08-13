@@ -23,8 +23,8 @@
   "Enterchannelname": {
     "message": " Enter channel name"
   },
-  "Fetchbalance": {
-    "message": " Fetch balance"
+  "Fetchingbalance": {
+    "message": " Fetching balance..."
   },
   "Forgotpassword": {
     "message": " Forgot password?"
@@ -32,14 +32,8 @@
   "GetNKN": {
     "message": " Get NKN"
   },
-  "Getsomeforfree": {
-    "message": " Get some for free"
-  },
   "Go": {
     "message": " Go"
-  },
-  "Havepatienceduringloaditissleeping": {
-    "message": " Have patience during load; it is sleeping."
   },
   "Ifitseemsstuckforalonglongtimethenitprobablyis": {
     "message": " If it seems stuck for a long, long time, then it probably is."
@@ -113,11 +107,14 @@
   "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
   },
-  "YouwillneedsomeNKNtojoinchats": {
-    "message": " You will need some NKN to join chats."
+  "YouwillneedsomeNKNtosubscribetochats": {
+    "message": " You will need some NKN to subscribe to chats."
   },
   "Youraddresswasautomaticallyfilledinbydchat": {
     "message": " Your address was automatically filled in by d-chat."
+  },
+  "Yourbalance": {
+    "message": " Your balance"
   },
   "optional": {
     "message": " optional"

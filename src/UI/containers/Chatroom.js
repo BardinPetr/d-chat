@@ -231,27 +231,32 @@ class Chatroom extends React.Component {
 					</VisibilitySensor>
 				</div>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<ReactTextareaAutocomplete
-						ref={msg => this.msg = msg}
-						innerRef={ref => this.textarea = ref}
-						onKeyDown={e => this.onEnterPress(e)}
-						onChange={this.handleTextareaChange}
-						trigger={{
-							':': {
-								dataProvider: async token => emoji(token).slice(0, 5),
-								component: AutofillEmojiItem,
-								output: this._outputCaretEnd,
-							},
-							'@': {
-								dataProvider: async token => subs.filter(sub => sub.startsWith(token)).slice(0, 5)
-									.map(sub => ({ char: mention(sub) + ' ' })),
-								component: AutofillMentionItem,
-								output: this._outputCaretEnd,
-							},
-						}}
-						loadingComponent={() => <span className="loader" />}
-					/>
-					<input type="submit" value={ __('Submit') } />
+					<div className="form-text-area">
+						<ReactTextareaAutocomplete
+							ref={msg => this.msg = msg}
+							innerRef={ref => this.textarea = ref}
+							onKeyDown={e => this.onEnterPress(e)}
+							onChange={this.handleTextareaChange}
+							trigger={{
+								':': {
+									dataProvider: async token => emoji(token).slice(0, 5),
+									component: AutofillEmojiItem,
+									output: this._outputCaretEnd,
+								},
+								'@': {
+									dataProvider: async token => subs.filter(sub => sub.startsWith(token)).slice(0, 5)
+										.map(sub => ({ char: mention(sub) + ' ' })),
+									component: AutofillMentionItem,
+									output: this._outputCaretEnd,
+								},
+							}}
+							loadingComponent={() => <span className="loader" />}
+						/>
+					</div>
+					<div className="form-footer">
+						<div className="flex-filler"></div>
+						<input type="submit" value={ __('Submit') } />
+					</div>
 				</form>
 			</div>
 		);

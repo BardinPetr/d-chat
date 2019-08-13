@@ -1,5 +1,5 @@
 import NKN from '../../misc/nkn';
-import { getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { getSubscribers, getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 import passworder from 'browser-passworder';
 import { setBadgeText } from 'Approot/misc/util';
 
@@ -19,9 +19,6 @@ const joinChat = originalAction => (dispatch, getState) => {
 			},
 			err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
-				// Would do this, but it's not consistent. The error messages don't reflect reality.
-				// if ( err.data && err.data.includes('already subscribed') ) {
-				// dispatch(subscribeCompleted(topic));
 			}
 			);
 	}
@@ -59,6 +56,8 @@ const login = originalAction => (dispatch, getState) => {
 				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
 					console.log('Subscribe completed!');
 					dispatch(subscribeCompleted(topic));
+					// Doesn't update correctly without timeout.
+					setTimeout(() => dispatch(getSubscribers(topic)), 500);
 				}
 			}
 		});
@@ -91,7 +90,8 @@ const publishMessage = originalAction => () => {
 	return originalAction;
 };
 
-const getSubscribers = originalAction => async dispatch => {
+const getSubscribersHandler = originalAction => async dispatch => {
+	console.log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
 	const subscribers = await window.nknClient.getSubscribers(topic);
 	return dispatch(setSubscribers(topic, Object.keys(subscribers)));
@@ -132,7 +132,7 @@ export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
 	'JOIN_CHAT': joinChat,
-	'GET_SUBSCRIBERS': getSubscribers,
+	'GET_SUBSCRIBERS': getSubscribersHandler,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
 	'GET_BALANCE_ALIAS': getBalance,

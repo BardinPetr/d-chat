@@ -9,9 +9,8 @@ import Footer from '../components/Footer';
 import { __ } from '../../misc/util';
 import { runtime } from 'webextension-polyfill';
 
-const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, enterChatroom, messages, subscriptions, connected }) => {
+const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, enterChatroom, messages, connected }) => {
 	const isLoggedIn = addr != null;
-	const isSubscribing = ( topic && subscriptions[topic] );
 	const loading = ( isLoggedIn && !connected );
 	return (
 		<div className="app">
@@ -32,7 +31,6 @@ const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, en
 					<Header
 						topic={topic}
 						enterChatroom={enterChatroom}
-						subscribing={isSubscribing}
 						connected={connected}
 					/> }
 				<div className={addr ? ( topic == null ? 'chatlist-container' : 'chatroom'  ) : 'login'}>
@@ -62,7 +60,6 @@ const mapStateToProps = state => ({
 	addr: state.login ? state.login.addr : {},
 	topic: state.topic,
 	messages: state.messages,
-	subscriptions: state.subscriptions,
 	connected: state.login && state.login.connected,
 	chatSettings: state.chatSettings,
 	balance: state.nkn?.balance,
