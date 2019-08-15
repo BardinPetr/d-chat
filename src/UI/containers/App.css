@@ -3,6 +3,7 @@ body {
 	padding: 0;
 	background-color: hsl(226, 28%, 98%);
 	font-family: Ubuntu, sans, sans-serif;
+	background-color: rgb(100, 180, 245);
 }
 
 * {
@@ -19,7 +20,9 @@ body {
 
 .form-text-area {
 	width: 100%;
-	height: 3.5em;
+}
+.form-text-area textarea {
+	width: 100%;
 }
 
 .dropdown-item:hover {
@@ -34,6 +37,7 @@ body {
 	display: flex;
 	font-size: 15px;
 	width: 100%;
+	align-items: end;
 }
 
 .hidden {
@@ -138,6 +142,7 @@ body {
 }
 
 .chatlist-container {
+	background-color: #fff;
 	height: 100%;
 	width: 100%;
   display: flex;
@@ -291,6 +296,7 @@ body {
 }
 
 .messages-container {
+	background-color: #fff;
 	/* Firefox bug with flex-direction and scrolling makes this approach less than desirable. */
 	/*display: flex;*/
 	/*flex-direction: column;*/
@@ -311,9 +317,20 @@ ul.messages > li {
 	/* Minus height of text box */
 	height: calc(100% - 5em);
 }
+.messages-container-outer .input {
+	bottom: 0;
+}
 .message-content img {
 	/* TODO : fix image expansion scroll bug and then remove this */
 	height: 150px;
+}
+.button-group {
+	margin: 0 10px;
+}
+.preview-button {
+	background-color: rgba(255, 255, 255, 0);
+	border: 0;
+	color: rgba(0, 0, 0, 0.5);
 }
 
 .message {
@@ -388,7 +405,6 @@ ul.messages > li {
 }
 
 .input {
-  height: 6em;
   width: 100%;
   background: rgb(100, 180, 245);
   display: flex;
@@ -440,10 +456,6 @@ button[type="submit"],
   margin-right: 5pt;
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.form-footer * {
-	margin: 0 !important;
 }
 
 input[type="submit"]:hover,

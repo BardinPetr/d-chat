@@ -29,7 +29,7 @@ const Ping = ({ping}) => (
 const Nickname = ({id, addr, refer, timestamp, username, ping, unsubscribed}) => (
 	<span>
 		<span
-			title={addr + (unsubscribed ? __('\nThis person is not subscribed and will not receive messages.') : '')}
+			title={addr + (unsubscribed ? '\n' + __('This person is not subscribed and will not receive messages.') : '')}
 			onClick={() => refer(addr)}
 			className={classnames('avatar', {
 				unsubscribed

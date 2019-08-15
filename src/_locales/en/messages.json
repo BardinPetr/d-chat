@@ -62,6 +62,9 @@
   "PopOut": {
     "message": " Pop Out"
   },
+  "Preview": {
+    "message": " Preview"
+  },
   "Register": {
     "message": " Register"
   },
@@ -88,6 +91,9 @@
   },
   "Tab": {
     "message": " Tab"
+  },
+  "Text": {
+    "message": " Text"
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
