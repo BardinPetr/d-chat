@@ -124,7 +124,7 @@ class Chatroom extends React.Component {
 		};
 
 		this.props.createMessage({ ...message, topic: this.props.topic });
-		this.textarea.current.setState({value: ''});
+		this.textarea.current.value = '';
 		this.props.saveDraft('');
 		this.textarea.current.focus();
 	}
@@ -143,13 +143,14 @@ class Chatroom extends React.Component {
 	 * Click on name -> add @mention.
 	 */
 	refer = addr => {
-		// const caretPosition = this.textarea.getCaretPosition();
-		// const currentValue = this.textarea.state.value;
+		const caretPosition = this.textarea.current.selectionEnd;
+		const currentValue = this.textarea.current.value;
+		const referral = mention(addr) + ' ';
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
-		// const value = [currentValue.slice(0, caretPosition), mention( addr ) + ' ',  currentValue.slice(caretPosition)].join('');
-		// this.textarea.setState({
-		// 	value
-		// }, () => this.textarea.focus());
+		const value = [currentValue.slice(0, caretPosition), referral,  currentValue.slice(caretPosition)].join('');
+		this.textarea.current.value = value;
+		this.textarea.current.focus();
+		this.textarea.current.selectionEnd = caretPosition + referral.length;
 	}
 
 	/**
@@ -237,6 +238,7 @@ class Chatroom extends React.Component {
 							className={classnames('', {
 								hidden: this.state.showingPreview
 							})}
+							onKeyDown={this.onEnterPress}
 						/>
 						{ this.state.showingPreview &&
 							<div className={classnames('preview')}>
