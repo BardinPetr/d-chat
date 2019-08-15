@@ -15,6 +15,9 @@ class Message {
 			this.ping = 0;
 		}
 		this.id = uuidv1();
+		if (this.contentType === 'nkn/tip') {
+			this.content = 'Tipped you 10 sats.';
+		}
 	}
 
 	from(src) {

@@ -10,6 +10,7 @@ import prettyMs from 'pretty-ms';
 import isNumber from 'is-number';
 import { __ } from 'Approot/misc/util';
 import classnames from 'classnames';
+import TipJar from '../containers/TipJar';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if ( unit === 'second' ){
@@ -78,6 +79,7 @@ class Message extends React.Component {
 						ping={message.ping}
 						unsubscribed={unsubscribed}
 					/>
+					<TipJar topic={message.topic} addr={message.addr} />
 				</span>
 				<div className="message-content">
 					<Markdown

@@ -140,6 +140,14 @@ export const markUnread = (topic, ids) => (dispatch, getState) => {
 	});
 };
 
+const newTransaction = (id, data) => ({
+	type: 'nkn/NEW_TRANSACTION',
+	payload: {
+		transactionID: id,
+		data,
+	},
+});
+
 /**
  * Called by .on('message') listener.
  */
@@ -148,6 +156,13 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		message = new Message(data).from(src);
+		if (message.contentType === 'nkn/tip') {
+			// Resub to chat (noob friendly tipping).
+			dispatch(newTransaction(message.transactionID, {
+				then: 'subscribe',
+				topic: message.topic,
+			}));
+		}
 	} else {
 		return;
 	}
@@ -167,4 +182,39 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	}
 
 	return dispatch(receiveMessage(message));
+};
+
+export const sendNKN = ({ topic, to, value }) => ({
+	type: 'nkn/SEND_NKN_ALIAS',
+	payload: {
+		value: value * 10 ** -8,
+		to,
+		topic
+	}
+});
+
+const subscribeToChat = topic => ({
+	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
+	payload: {
+		topic,
+	},
+});
+
+export const transactionComplete = transactionID => (dispatch, getState) => {
+	const { unconfirmed } = getState().transactions;
+	const { id, data } = unconfirmed.find(tx => transactionID === tx.id);
+
+	console.log('Now subscribing to...', data);
+	switch (data.then) {
+		case 'subscribe':
+			dispatch(subscribeToChat(data.topic));
+			break;
+	}
+
+	return dispatch({
+		type: 'nkn/TRANSACTION_COMPLETE',
+		payload: {
+			transactionID: id,
+		},
+	});
 };

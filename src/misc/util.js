@@ -1,6 +1,7 @@
 import shasum	from 'shasum';
 import { i18n, runtime, browserAction } from 'webextension-polyfill';
 import isNumber from 'is-number';
+import protocol from 'nkn-wallet/lib/crypto/protocol';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/,	'');
@@ -14,8 +15,8 @@ export function	genChatID(topic) {
 	if (!topic){
 		return null;
 	}
-	topic	=	unleadingHashIt(String(topic));
-	// Api/code	somewhere	does not like	strings	that start with	numbers.
+	topic = unleadingHashIt(String(topic));
+	// Api/code somewhere does not like strings that start with numbers.
 	return 'dchat' + shasum(topic);
 }
 
@@ -52,6 +53,20 @@ export const formatAddr = addr => {
 		formattedAddr = addr.substring(0,6);
 	}
 	return formattedAddr;
+};
+
+export const getAddressFromIdentifier = addr => {
+	const lastDotPosition = addr.lastIndexOf('.');
+	let nknAddress = addr;
+	if (lastDotPosition !== -1) {
+		nknAddress =  addr.slice(lastDotPosition + 1);
+	}
+	nknAddress = protocol.programHashStringToAddress(
+		protocol.hexStringToProgramHash(
+			protocol.publicKeyToSignatureRedeem(nknAddress)
+		)
+	);
+	return nknAddress;
 };
 
 export const setBadgeText = txt => {

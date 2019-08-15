@@ -66,6 +66,36 @@ const subscriptions = ( state = {}, action ) => {
 	return newState;
 };
 
+const transactions = (state = { unconfirmed: [], confirmed: [] }, action) => {
+	let newState, removed;
+	switch (action.type) {
+		case 'nkn/NEW_TRANSACTION':
+			newState = {
+				...state,
+				unconfirmed: [...state.unconfirmed, {
+					id: action.payload.transactionID,
+					data: action.payload.data,
+				}],
+			};
+			break;
+
+		case 'nkn/TRANSACTION_COMPLETE':
+			removed = state.unconfirmed.splice(
+				state.unconfirmed.findIndex(i => i.id === action.payload.transactionID),
+				1
+			);
+			newState = {
+				unconfirmed: [...state.unconfirmed],
+				confirmed: [...state.confirmed.concat(removed)],
+			};
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 const login = (state = {}, action) => {
 	let newState;
 	switch (action.type) {
@@ -214,4 +244,5 @@ export default combineReducers({
 	chatSettings,
 	// Information about wallet/client/so forth.
 	nkn,
+	transactions,
 });

@@ -365,7 +365,7 @@ ul.messages > li {
 }
 
 .avatar:hover {
-	color: #d00;
+	color: #f66;
 }
 
 .unsubscribed {
@@ -463,6 +463,12 @@ button[type="submit"]:hover,
 .input.submit:hover {
   background: #1ee494;
   color: #fff;
+}
+.tip-jar-button {
+	border: 0;
+}
+.tip-jar.tip-button:active {
+	color: red;
 }
 
 .loader-margin {

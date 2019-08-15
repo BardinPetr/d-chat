@@ -165,11 +165,6 @@ class Chatroom extends React.Component {
 	});
 
 	/**
-	 * Stuff for react-textarea-autocomplete
-	 */
-	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
-
-	/**
 	 * TODO Should split this thing up a bit. It's HUGE.
 	 */
 	render() {
