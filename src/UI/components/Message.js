@@ -5,11 +5,12 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import 'rc-tooltip/assets/bootstrap.css';
-import Markdown from 'react-markdown';
-import CodeBlock from './CodeBlock';
+import Markdown from './Markdown';
 import prettyMs from 'pretty-ms';
 import isNumber from 'is-number';
 import { __ } from 'Approot/misc/util';
+import classnames from 'classnames';
+import TipJar from '../containers/TipJar';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if ( unit === 'second' ){
@@ -26,9 +27,18 @@ const Ping = ({ping}) => (
 	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
 );
 
-const Nickname = ({id, addr, refer, timestamp, username, ping}) => (
+const Nickname = ({id, addr, refer, timestamp, username, ping, unsubscribed}) => (
 	<span>
-		<span title={addr} onClick={() => refer(addr)} className="avatar" data-tip data-for={timestamp} aria-describedby={id}>
+		<span
+			title={addr + (unsubscribed ? '\n' + __('This person is not subscribed and will not receive messages.') : '')}
+			onClick={() => refer(addr)}
+			className={classnames('avatar', {
+				unsubscribed
+			})}
+			data-tip
+			data-for={timestamp}
+			aria-describedby={id}
+		>
 			{username}
 			{' '}
 		</span>
@@ -56,18 +66,24 @@ class Message extends React.Component {
 
 	render() {
 		const { refer, message, isSubscribed } = this.props;
-		const notSubscribed = this.state.showSubscribedStatus && !isSubscribed;
+		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
 		return (
 			<div>
 				<span>
-					<Nickname id={message.id} refer={refer} addr={message.addr} username={message.username} timestamp={message.timestamp} ping={message.ping} />
-					{ notSubscribed && <span className="description">{__('unsubscribed')}</span> }
+					<Nickname
+						id={message.id}
+						refer={refer}
+						addr={message.addr}
+						username={message.username}
+						timestamp={message.timestamp}
+						ping={message.ping}
+						unsubscribed={unsubscribed}
+					/>
+					<TipJar topic={message.topic} addr={message.addr} />
 				</span>
 				<div className="message-content">
 					<Markdown
 						source={message.content}
-						escapeHtml={true}
-						renderers={{code: CodeBlock}}
 					/>
 				</div>
 			</div>

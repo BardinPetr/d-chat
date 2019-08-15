@@ -1,10 +1,24 @@
 import NKN from '../../misc/nkn';
-import { getSubscribers, getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import { transactionComplete, getSubscribers, getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
 import passworder from 'browser-passworder';
-import { setBadgeText } from 'Approot/misc/util';
+import { getAddressFromIdentifier, setBadgeText } from 'Approot/misc/util';
 
 // TODO move to own file
 const password = 'd-chat!!!';
+
+const subscribeToChat = originalAction => dispatch => {
+	const topic = originalAction.payload.topic;
+	if ( topic != null ) {
+		window.nknClient.subscribe( topic )
+			.then(txId => {
+				dispatch(subscribe(topic, txId));
+			},
+			err => {
+				console.log('Errored at subscribe. Already subscribed?', err);
+			}
+			);
+	}
+};
 
 const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
@@ -58,6 +72,19 @@ const login = originalAction => (dispatch, getState) => {
 					dispatch(subscribeCompleted(topic));
 					// Doesn't update correctly without timeout.
 					setTimeout(() => dispatch(getSubscribers(topic)), 500);
+				}
+			}
+		});
+
+		nknClient.on('block', block => {
+			const pendingTransactions = getState().transactions.unconfirmed.map(i => i.id);
+
+			console.log('Pending tx', pendingTransactions);
+			for ( let pendingTx of pendingTransactions ) {
+				if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
+					console.log('Transaction complete!');
+					// TODO maybe move this elsewhere????
+					dispatch(transactionComplete(pendingTx));
 				}
 			}
 		});
@@ -128,6 +155,26 @@ const getBalance = () => async (dispatch) => {
 	});
 };
 
+const sendNKN = originalAction => async () => {
+	console.log('Sending NKN', originalAction);
+	const { to, value, topic } = originalAction.payload;
+	window.nknClient.wallet.transferTo(
+		getAddressFromIdentifier(to),
+		value
+	).then(tx => {
+		console.log('NKN was sent. tx:', tx);
+		window.nknClient.send(
+			to,
+			JSON.stringify({
+				topic,
+				contentType: 'nkn/tip',
+				transactionID: tx,
+				timestamp: new Date().toUTCString()
+			})
+		);
+	}).catch(console.error);
+};
+
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
@@ -136,4 +183,6 @@ export default {
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
 	'GET_BALANCE_ALIAS': getBalance,
+	'nkn/SEND_NKN_ALIAS': sendNKN,
+	'SUBSCRIBE_TO_CHAT': subscribeToChat,
 };

@@ -10,23 +10,15 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import InfiniteScroll from 'react-infinite-scroller';
-import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
-import '@webscopeio/react-textarea-autocomplete/style.css';
-import emoji from '@jukben/emoji-search';
 import VisibilitySensor from 'react-visibility-sensor';
+import TextareaAutosize from 'react-autosize-textarea';
 import '../containers/App.css';
-import Message from '../components/Message.js';
+import Message from '../components/Message';
 import { __, formatAddr } from '../../misc/util';
 import { markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
+import Markdown from '../components/Markdown';
 
 const mention = (addr) => ('@' + formatAddr(addr));
-
-const AutofillEmojiItem = ({ entity: { name, char } }) => (
-	<div>{`${name}: ${char}`}</div>
-);
-const AutofillMentionItem = ({ entity: { char } }) => (
-	<div>{formatAddr(char)}&hellip;</div>
-);
 
 /**
  * Consists of existing messages and the text form.
@@ -39,10 +31,12 @@ class Chatroom extends React.Component {
 
 		this.state = {
 			count: 15 + props.unreadMessages.length,
+			showingPreview: false,
 		};
 		this.unreadCount = props.unreadMessages.length;
 		this.wasScrolledToBottom = true;
 		this.markedRead = new Set;
+		this.textarea = React.createRef();
 	}
 
 	loadMore = () => {
@@ -57,13 +51,13 @@ class Chatroom extends React.Component {
 		} else {
 			this.scrollToBot();
 		}
-		this.textarea.focus();
-		this.msg.setState({ value: this.props.draft });
+		this.textarea.current.focus();
+		this.textarea.current.value = this.props.draft;
 		/*
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
 		*/
-		this.textarea.addEventListener('change', this._saveDraft);
+		this.textarea.current.addEventListener('change', this._saveDraft);
 	}
 
 	// Also saved in submit (as empty string).
@@ -93,7 +87,7 @@ class Chatroom extends React.Component {
 	}
 
 	componentWillUnmount() {
-		this.textarea.removeEventListener('change', this._saveDraft);
+		this.textarea.current.removeEventListener('change', this._saveDraft);
 		this.markRead();
 	}
 
@@ -118,7 +112,7 @@ class Chatroom extends React.Component {
 	submitText = (e) => {
 		e.preventDefault();
 
-		let inputValue = this.msg.state.value.trim();
+		let inputValue = this.textarea.current.value.trim();
 
 		if (inputValue === '') {
 			return;
@@ -130,9 +124,9 @@ class Chatroom extends React.Component {
 		};
 
 		this.props.createMessage({ ...message, topic: this.props.topic });
-		this.msg.setState({value: ''});
+		this.textarea.current.value = '';
 		this.props.saveDraft('');
-		this.textarea.focus();
+		this.textarea.current.focus();
 	}
 
 	/**
@@ -149,13 +143,14 @@ class Chatroom extends React.Component {
 	 * Click on name -> add @mention.
 	 */
 	refer = addr => {
-		const caretPosition = this.msg.getCaretPosition();
-		const currentValue = this.msg.state.value;
+		const caretPosition = this.textarea.current.selectionEnd;
+		const currentValue = this.textarea.current.value;
+		const referral = mention(addr) + ' ';
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
-		const value = [currentValue.slice(0, caretPosition), mention( addr ) + ' ',  currentValue.slice(caretPosition)].join('');
-		this.msg.setState({
-			value
-		}, () => this.textarea.focus());
+		const value = [currentValue.slice(0, caretPosition), referral,  currentValue.slice(caretPosition)].join('');
+		this.textarea.current.value = value;
+		this.textarea.current.focus();
+		this.textarea.current.selectionEnd = caretPosition + referral.length;
 	}
 
 	/**
@@ -165,10 +160,9 @@ class Chatroom extends React.Component {
 		this.markedRead.add(id);
 	}
 
-	/**
-	 * Stuff for react-textarea-autocomplete
-	 */
-	_outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
+	togglePreview = () => this.setState({
+		showingPreview: !this.state.showingPreview,
+	});
 
 	/**
 	 * TODO Should split this thing up a bit. It's HUGE.
@@ -232,29 +226,32 @@ class Chatroom extends React.Component {
 				</div>
 				<form className="input" onSubmit={(e) => this.submitText(e)}>
 					<div className="form-text-area">
-						<ReactTextareaAutocomplete
-							ref={msg => this.msg = msg}
-							innerRef={ref => this.textarea = ref}
-							onKeyDown={e => this.onEnterPress(e)}
-							onChange={this.handleTextareaChange}
-							trigger={{
-								':': {
-									dataProvider: async token => emoji(token).slice(0, 5),
-									component: AutofillEmojiItem,
-									output: this._outputCaretEnd,
-								},
-								'@': {
-									dataProvider: async token => subs.filter(sub => sub.startsWith(token)).slice(0, 5)
-										.map(sub => ({ char: mention(sub) + ' ' })),
-									component: AutofillMentionItem,
-									output: this._outputCaretEnd,
-								},
-							}}
-							loadingComponent={() => <span className="loader" />}
+						<TextareaAutosize
+							rows={3}
+							maxRows={15}
+							ref={this.textarea}
+							className={classnames('', {
+								hidden: this.state.showingPreview
+							})}
+							onKeyDown={this.onEnterPress}
 						/>
+						{ this.state.showingPreview &&
+							<div className={classnames('preview')}>
+								<Markdown
+									source={this.textarea.current?.value}
+								/>
+							</div>
+						}
 					</div>
 					<div className="form-footer">
+						<div className="button-group">
+							<button type="button" className="button preview-button" onClick={this.togglePreview}>
+								{this.state.showingPreview ? __('Text') : __('Preview')}
+							</button>
+						</div>
 						<div className="flex-filler"></div>
+						<div className="button-group">
+						</div>
 						<input type="submit" value={ __('Submit') } />
 					</div>
 				</form>

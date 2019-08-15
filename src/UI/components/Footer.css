@@ -6,7 +6,7 @@
 	bottom: 0;
 	position: fixed;
 	background-color: white;
-	width: calc(100% - 1em);
+	width: calc(100% - 1.2em);
 	font-size: small;
 	justify-content: space-between;
 }
