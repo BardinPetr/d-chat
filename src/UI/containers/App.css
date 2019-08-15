@@ -296,7 +296,7 @@ body {
 	/*flex-direction: column;*/
 	overflow-y: scroll;
   box-sizing: border-box;
-  padding: 0 20pt;
+  padding: 0 11pt;
   margin: 0;
   height: 100%;
 }
@@ -345,6 +345,10 @@ ul.messages > li {
 .avatar {
   color: #117744;
   cursor: pointer;
+}
+
+.avatar:hover {
+	color: #d00;
 }
 
 .unsubscribed {
