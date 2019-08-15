@@ -14,6 +14,9 @@
   "Cleared": {
     "message": " Cleared"
   },
+  "Connectingtoblockchain": {
+    "message": " Connecting to blockchain..."
+  },
   "Connecting": {
     "message": " Connecting..."
   },
@@ -34,9 +37,6 @@
   },
   "Go": {
     "message": " Go"
-  },
-  "Ifitseemsstuckforalonglongtimethenitprobablyis": {
-    "message": " If it seems stuck for a long, long time, then it probably is."
   },
   "Invalidcredentials": {
     "message": " Invalid credentials."
@@ -92,11 +92,17 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
+  "Thispersonisnotsubscribedandwillnotreceivemessages": {
+    "message": " This person is not subscribed and will not receive messages."
+  },
   "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
     "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
   },
   "Username": {
     "message": " Username"
+  },
+  "Waitedforlongerthanseconds": {
+    "message": " Waited for longer than 5 seconds?"
   },
   "WelcomeBack": {
     "message": " Welcome Back!"
@@ -118,9 +124,6 @@
   },
   "optional": {
     "message": " optional"
-  },
-  "unsubscribed": {
-    "message": " unsubscribed"
   },
   "extensionName": {
     "message": "D-Chat"

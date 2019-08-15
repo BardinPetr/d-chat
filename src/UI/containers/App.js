@@ -18,10 +18,10 @@ const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, en
 				<div className={loading ? 'absolute loading-description' : 'hidden'}>
 					<i className="loader" />
 					<p>
-						{ __('Connecting...') }
+						{ __('Connecting to blockchain...') }
 					</p>
 					<p className="description">
-						{ __('If it seems stuck for a long, long time, then it probably is.') }
+						{ __('Waited for longer than 5 seconds?') }
 					</p>
 					<button type="button" onClick={() => runtime.reload()}>
 						{__('Reload')}

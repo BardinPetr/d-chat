@@ -347,6 +347,10 @@ ul.messages > li {
   cursor: pointer;
 }
 
+.unsubscribed {
+	color: #8c8c8c;
+}
+
 .hint {
 	font-weight: 300;
 	font-size: 90%;
