@@ -1,9 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { joinChat } from '../../redux/actions';
 import classnames from 'classnames';
+import { Link } from 'react-router-dom';
 
 import { getChatDisplayName, __ } from '../../misc/util';
 
-const Info = () => (
+const Info = ({ enterChatroom }) => (
 	<div className="text-container description">
 		<p>
 			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
@@ -16,7 +19,7 @@ const Info = () => (
 		</p>
 		<p>
 			{__('Join channel')}
-			{' '}#d-chat!!!{' '}
+			{' '}<Link to="/chat/d-chat">#d-chat</Link>!!!{' '}
 			{__('And give feedback, thanks!')}
 		</p>
 	</div>
@@ -63,7 +66,7 @@ const Chat = ({ messages, topic, onClick, unreadCount }) => {
 	);
 };
 
-export default class ChatList extends React.Component {
+class ChatList extends React.Component {
 	render() {
 		const { messages = {}, enterChatroom, chatSettings } = this.props;
 
@@ -100,10 +103,21 @@ export default class ChatList extends React.Component {
 							/>
 						))
 						:
-						<Info />
+						<Info enterChatroom={enterChatroom} />
 					}
 				</ul>
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+	messages: state.messages,
+	chatSettings: state.chatSettings,
+});
+
+const mapDispatchToProps = dispatch => ({
+	enterChatroom: topic => dispatch(joinChat(topic)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

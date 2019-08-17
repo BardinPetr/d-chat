@@ -12,11 +12,11 @@ import ReactDOM from 'react-dom';
 import InfiniteScroll from 'react-infinite-scroller';
 import VisibilitySensor from 'react-visibility-sensor';
 import TextareaAutosize from 'react-autosize-textarea';
-import '../containers/App.css';
-import Message from '../components/Message';
-import { __, formatAddr } from '../../misc/util';
-import { markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
-import Markdown from '../components/Markdown';
+import '../../containers/App.css';
+import Message from '../../components/Message';
+import { __, formatAddr } from 'Approot/misc/util';
+import { joinChat, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
+import Markdown from '../../components/Markdown';
 
 const mention = (addr) => ('@' + formatAddr(addr));
 
@@ -28,6 +28,9 @@ const mention = (addr) => ('@' + formatAddr(addr));
 class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
+		const topic = this.props.topic;
+		console.log('I see topic is:', topic);
+		this.props.joinChat( topic );
 
 		this.state = {
 			count: 15 + props.unreadMessages.length,
@@ -97,7 +100,7 @@ class Chatroom extends React.Component {
 		}
 	}
 
-	componentWillUpdate() {
+	UNSAFE_componentWillUpdate() {
 		const { messages } = this.refs;
 		const scrollPosition = messages.scrollTop;
 		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
@@ -260,18 +263,19 @@ class Chatroom extends React.Component {
 	}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
 	draft: state.draftMessage,
-	messages: state.messages[state.topic] || [],
-	topic: state.topic,
+	messages: state.messages[ownProps.match.params.topic] || [],
 	subs: state.subscribers,
-	unreadMessages: state.chatSettings[state.topic]?.unread || [],
+	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
+	topic: ownProps.match.params.topic,
 });
 
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
 	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
+	joinChat: topic => dispatch(joinChat(topic)),
 });
 
 export default connect(

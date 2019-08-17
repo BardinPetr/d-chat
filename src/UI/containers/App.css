@@ -1,9 +1,17 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: hsl(226, 28%, 98%);
 	font-family: Ubuntu, sans, sans-serif;
 	background-color: rgb(100, 180, 245);
+	overflow: hidden;
+}
+
+#root, body {
+	display: flex;
+}
+
+#root {
+	width: 100%;
 }
 
 * {
@@ -116,24 +124,25 @@ body {
 
 .app {
   height: 100%;
-  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  flex: 1;
 }
 
 .app-container {
-  width: 100%;
-  height: 100%;
   display: flex;
+  flex: 2;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
+}
+
+.sidebar {
+	flex-direction: column;
 }
 
 .chat-header {
-	width: 100%;
-	height: 40pt;
+	flex: 0;
 }
 
 .disabled {
@@ -143,9 +152,10 @@ body {
 
 .chatlist-container {
 	background-color: #fff;
-	height: 100%;
-	width: 100%;
+	/*height: 100%;
+	width: 100%;*/
   display: flex;
+  flex: 2;
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 0 8pt 0 rgba(0, 0, 0, 0.3);
@@ -253,23 +263,19 @@ body {
 }
 
 .chatroom {
-  width: 100%;
-  height: calc(100% - 40pt);
+  /*width: 100%;
+  height: calc(100% - 40pt);*/
   overflow: hidden;
   box-shadow: 0 0 8pt 0 rgba(0, 0, 0, 0.3);
+	background-color: rgb(100, 180, 245);
+	flex: 2;
 }
 
 .chatroom-header {
   background-color: rgb(100, 180, 245);
   color: #fff;
-  margin: 0;
-  height: 40pt;
-  font-size: 20pt;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: fixed;
-  width: 100%;
 }
 
 .chatroom-header .chatname {
@@ -277,12 +283,11 @@ body {
 	text-overflow: ellipsis;
 	flex: 1;
 	text-align: center;
+	font-size: 2em;
 }
 
 .chatroom-header .back {
   margin: 1em;
-  font-size: 0.5em;
-  flex: 0;
   cursor: pointer;
 }
 
@@ -304,7 +309,7 @@ body {
   box-sizing: border-box;
   padding: 0 11pt;
   margin: 0;
-  height: 100%;
+  flex: 2;
 }
 .messages {
   flex-grow: 1;
@@ -314,8 +319,9 @@ ul.messages > li {
 	flex: 1;
 }
 .messages-container-outer {
-	/* Minus height of text box */
-	height: calc(100% - 5em);
+	flex: 2;
+	display: flex;
+	flex-direction: column;
 }
 .messages-container-outer .input {
 	bottom: 0;
@@ -405,13 +411,12 @@ ul.messages > li {
 }
 
 .input {
-  width: 100%;
   background: rgb(100, 180, 245);
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
   padding: 4px;
+  flex: 0;
 }
 .input-channel-form {
 	width: initial;

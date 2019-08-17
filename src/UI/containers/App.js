@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getBalance, logout, login, joinChat } from '../../redux/actions';
 import Header from '../components/Header';
@@ -7,26 +8,10 @@ import Chatroom from './Chatroom';
 import LoginBox from '../components/LoginBox';
 import Footer from '../components/Footer';
 import { __ } from '../../misc/util';
-import { runtime } from 'webextension-polyfill';
 
 const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, enterChatroom, messages, connected }) => {
-	const isLoggedIn = addr != null;
-	const loading = ( isLoggedIn && !connected );
 	return (
 		<div className="app">
-			<div className={`app-container ${loading ? 'loading' : ''}`}>
-				<div className={loading ? 'absolute loading-description' : 'hidden'}>
-					<i className="loader" />
-					<p>
-						{ __('Connecting to blockchain...') }
-					</p>
-					<p className="description">
-						{ __('Waited for longer than 5 seconds?') }
-					</p>
-					<button type="button" onClick={() => runtime.reload()}>
-						{__('Reload')}
-					</button>
-				</div>
 				{ isLoggedIn &&
 					<Header
 						topic={topic}
@@ -51,7 +36,6 @@ const App = ({ addr, balance, getBalance, topic, logout, login, chatSettings, en
 						<Footer getBalance={getBalance} balance={balance} logout={logout} />
 					}
 				</div>
-			</div>
 		</div>
 	);
 };

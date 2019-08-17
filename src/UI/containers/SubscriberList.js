@@ -75,7 +75,6 @@ class SubscriberList extends React.Component {
 
 const mapStateToProps = state => ({
 	subscribers: state.subscribers,
-	topic: state.topic,
 	addr: state.login?.addr || {},
 });
 

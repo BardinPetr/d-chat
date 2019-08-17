@@ -1,13 +1,16 @@
 import React from 'react';
 import Modal from 'react-modal';
+import { matchPath } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
 import '../rc-dropdown.css';
 import { IoMdOpen } from 'react-icons/io';
-import { IS_FIREFOX, __, getChatDisplayName } from '../../misc/util';
+import { IS_FIREFOX, __, getChatNameForURL, getChatDisplayName } from '../../misc/util';
 import { runtime, tabs, windows } from 'webextension-polyfill';
 import SubscriberList from '../containers/SubscriberList';
 import NknBalance from '../containers/NknBalance';
+import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
@@ -79,35 +82,21 @@ class Header extends React.Component {
 	}
 
 	closeModal = () => {
-		this.setState({modalIsOpen: false});
+		this.setState({modalIsOpen: false, topic: ''});
 	}
-
-	handleAccept = (e) => {
-		e.preventDefault();
-		this.closeModal();
-		this.newChat();
-	}
-
-	newChat = async () => {
-		let topic = this.state.topic;
-		if (!topic) {
-			return;
-		}
-
-		topic = topic.trim();
-		if (!topic.length) {
-			return;
-		}
-
-		this.props.enterChatroom(topic);
-	};
 
 	handleTopicChange = (e) => {
 		this.setState({topic: e.target.value});
 	}
 
 	render() {
-		const { topic, enterChatroom, connected } = this.props;
+		const topic = matchPath(
+			this.props.location.pathname,
+			{
+				path: '/chat/:topic'
+			}
+		)?.params.topic || null;
+
 		return (
 			<header className="chat-header">
 				<Modal
@@ -117,12 +106,14 @@ class Header extends React.Component {
 					onAfterOpen={() => this.refs.topicInput.focus()}
 				>
 					<h2 className="title">{ __('Enter channel name') }</h2>
-					<form className="input narrow input-channel-form" onSubmit={this.handleAccept}>
+					<span onClick={this.closeModal}>TODO RM THIS X</span>
+					<form action={`#/chat/${getChatNameForURL(this.state.topic)}`} className="input narrow input-channel-form">
 						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
 						<button type="submit" className="submit">{ __('Go') }</button>
 					</form>
 					<p className="description">
 						{__('You will need some NKN to subscribe to chats.') + ' '}
+						<Link to="/chat/xxxzz">WTF</Link>
 					</p>
 					<p className="description">
 						{__('Your balance')}: <NknBalance />
@@ -131,15 +122,21 @@ class Header extends React.Component {
 
 				{ topic ? (
 					<span className="chatroom-header">
-						<span className="back" onClick={() => enterChatroom(null)}>{'< ' + __('Back')}</span>
+						<span className="back">
+							<Link to="/">{'< ' + __('Back')}</Link>
+						</span>
 						<span className="chatname" title={getChatDisplayName(topic)}>{getChatDisplayName(topic)}</span>
-						<SubscriberList />
+						<SubscriberList topic={topic} />
 					</span>
 				) : (
 					<span className="chatlist-header">
 						<Popout />
 						<span className="title">{ __('D-Chat') }</span>
-						<span className={`join-button new ${!connected ? 'disabled' : ''}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
+						<span
+							className="join-button new"
+							onClick={this.openModal}>
+							{ __('Join') }
+						</span>
 					</span>
 				)
 				}
@@ -147,4 +144,5 @@ class Header extends React.Component {
 		);
 	}
 }
-export default Header;
+
+export default connect()(Header);
