@@ -1,18 +1,14 @@
 import React from 'react';
-import Modal from 'react-modal';
 import { matchPath } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
 import '../rc-dropdown.css';
 import { IoMdOpen } from 'react-icons/io';
-import { IS_FIREFOX, __, getChatNameForURL, getChatDisplayName } from '../../misc/util';
+import { __, getChatDisplayName } from '../../misc/util';
 import { runtime, tabs, windows } from 'webextension-polyfill';
 import SubscriberList from '../containers/SubscriberList';
-import NknBalance from '../containers/NknBalance';
-import { Link } from 'react-router-dom';
-
-Modal.setAppElement('#root');
+import SidebarToggle from '../containers/Sidebar/SidebarToggle';
 
 const popout = type => {
 	switch (type) {
@@ -30,21 +26,6 @@ const popout = type => {
 				url: runtime.getURL('sidebar.html'),
 			});
 			break;
-	}
-};
-
-
-const customStyles = {
-	content: {
-		inset: 0,
-		position: IS_FIREFOX ? 'relative' : 'absolute',
-		margin: 'auto',
-		height: 'min-content'
-	},
-	overlay: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
 	}
 };
 
@@ -72,17 +53,8 @@ class Header extends React.Component {
 		super(props);
 
 		this.state = {
-			modalIsOpen: false,
 			topic: '',
 		};
-	}
-
-	openModal = () => {
-		this.setState({modalIsOpen: true});
-	}
-
-	closeModal = () => {
-		this.setState({modalIsOpen: false, topic: ''});
 	}
 
 	handleTopicChange = (e) => {
@@ -99,44 +71,18 @@ class Header extends React.Component {
 
 		return (
 			<header className="chat-header">
-				<Modal
-					isOpen={this.state.modalIsOpen}
-					onRequestClose={this.closeModal}
-					style={customStyles}
-					onAfterOpen={() => this.refs.topicInput.focus()}
-				>
-					<h2 className="title">{ __('Enter channel name') }</h2>
-					<span onClick={this.closeModal}>TODO RM THIS X</span>
-					<form action={`#/chat/${getChatNameForURL(this.state.topic)}`} className="input narrow input-channel-form">
-						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
-						<button type="submit" className="submit">{ __('Go') }</button>
-					</form>
-					<p className="description">
-						{__('You will need some NKN to subscribe to chats.') + ' '}
-						<Link to="/chat/xxxzz">WTF</Link>
-					</p>
-					<p className="description">
-						{__('Your balance')}: <NknBalance />
-					</p>
-				</Modal>
 
 				{ topic ? (
 					<span className="chatroom-header">
-						<span className="back">
-							<Link to="/">{'< ' + __('Back')}</Link>
-						</span>
+						<SidebarToggle />
 						<span className="chatname" title={getChatDisplayName(topic)}>{getChatDisplayName(topic)}</span>
 						<SubscriberList topic={topic} />
 					</span>
 				) : (
 					<span className="chatlist-header">
+						<SidebarToggle />
+						<span className="chatname">{ __('D-Chat') }</span>
 						<Popout />
-						<span className="title">{ __('D-Chat') }</span>
-						<span
-							className="join-button new"
-							onClick={this.openModal}>
-							{ __('Join') }
-						</span>
 					</span>
 				)
 				}

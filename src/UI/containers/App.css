@@ -172,10 +172,6 @@ body {
   justify-content: center;
 }
 
-.title {
-  font-family: 'Pacifico', cursive;
-}
-
 .join-button {
 	cursor: pointer;
 }

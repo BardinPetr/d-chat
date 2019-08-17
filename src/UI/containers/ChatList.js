@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { joinChat } from '../../redux/actions';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+import TopicLink from 'Approot/UI/components/TopicLink';
 
 import { getChatDisplayName, __ } from '../../misc/util';
 
-const Info = ({ enterChatroom }) => (
+const Info = () => (
 	<div className="text-container description">
 		<p>
 			{ __('To join or create a channel, use the button top-right. You will then be subscribed to the channel.') }
@@ -19,13 +18,13 @@ const Info = ({ enterChatroom }) => (
 		</p>
 		<p>
 			{__('Join channel')}
-			{' '}<Link to="/chat/d-chat">#d-chat</Link>!!!{' '}
+			{' '}<TopicLink topic="d-chat">#d-chat</TopicLink>!!!{' '}
 			{__('And give feedback, thanks!')}
 		</p>
 	</div>
 );
 
-const Chat = ({ messages, topic, onClick, unreadCount }) => {
+const Chat = ({ messages, topic, unreadCount }) => {
 	let lastMessage, lastActiveTimeText, previewText;
 	if (messages && messages.length) {
 		lastMessage = messages[messages.length-1];
@@ -42,33 +41,35 @@ const Chat = ({ messages, topic, onClick, unreadCount }) => {
 	}
 
 	return (
-		<li className='chat' onClick={onClick}>
-			<div className='chat-info'>
-				<div className='chat-name'>
-					{getChatDisplayName(topic)}
+		<li className='chat'>
+			<TopicLink topic={topic}>
+				<div className='chat-info'>
+					<div className='chat-name'>
+						{getChatDisplayName(topic)}
+					</div>
+					<div className='chat-info-fill' />
+					<div className='chat-time'>
+						{lastActiveTimeText}
+					</div>
 				</div>
-				<div className='chat-info-fill' />
-				<div className='chat-time'>
-					{lastActiveTimeText}
+				<div className='chat-info'>
+					<div className='chat-preview'>
+						{previewText}
+					</div>
+					<div className={classnames('chat-unread', {
+						description: unreadCount === 0,
+					})}>
+						{unreadCount}
+					</div>
 				</div>
-			</div>
-			<div className='chat-info'>
-				<div className='chat-preview'>
-					{previewText}
-				</div>
-				<div className={classnames('chat-unread', {
-					description: unreadCount === 0,
-				})}>
-					{unreadCount}
-				</div>
-			</div>
+			</TopicLink>
 		</li>
 	);
 };
 
 class ChatList extends React.Component {
 	render() {
-		const { messages = {}, enterChatroom, chatSettings } = this.props;
+		const { messages = {}, chatSettings } = this.props;
 
 		let chatList = [];
 		for (let topic of Object.keys(messages) ) {
@@ -98,12 +99,11 @@ class ChatList extends React.Component {
 								key={item.topic}
 								messages={item.messages}
 								topic={item.topic}
-								onClick={() => enterChatroom(item.topic)}
 								unreadCount={chatSettings[item.topic] ? chatSettings[item.topic].unread.length : 0}
 							/>
 						))
 						:
-						<Info enterChatroom={enterChatroom} />
+						<Info />
 					}
 				</ul>
 			</div>
@@ -116,8 +116,4 @@ const mapStateToProps = state => ({
 	chatSettings: state.chatSettings,
 });
 
-const mapDispatchToProps = dispatch => ({
-	enterChatroom: topic => dispatch(joinChat(topic)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChatList);
+export default connect(mapStateToProps)(ChatList);
