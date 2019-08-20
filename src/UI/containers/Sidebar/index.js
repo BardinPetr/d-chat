@@ -1,50 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ReactSidebar from 'react-sidebar';
-import { toggleSidebar, dockSidebar } from 'Approot/redux/actions';
-import Content from 'Approot/UI/components/Sidebar/Content';
-
-const mql = window.matchMedia(`(min-width: 800px)`);
-
-class Sidebar extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
-		mql.addListener(this.mediaQueryChanged);
-		this.mediaQueryChanged();
-	}
-
-	componentWillUnmount() {
-		mql.removeListener(this.mediaQueryChanged);
-	}
-
-	mediaQueryChanged() {
-		this.props.setDocked(mql.matches);
-	}
-
-	render() {
-		return (
-			<ReactSidebar
-				open={this.props.open && !this.props.docked}
-				docked={this.props.docked}
-				sidebar={<Content chats={Object.keys(this.props.chats)} />}
-				onSetOpen={this.props.setOpen}>
-				{this.props.children}
-			</ReactSidebar>
-		);
-	}
-}
+import { __, getChatURL } from 'Approot/misc/util';
+import TopicLink from 'Approot/UI/components/TopicLink';
+import history from 'Approot/UI/history';
 
 const mapStateToProps = state => ({
-	open: state.sidebar.open,
-	docked: state.sidebar.docked,
-	chats: state.chatSettings || {},
+	topics: Object.keys(state.chatSettings || {}),
 });
 
-const mapDispatchToProps = dispatch => ({
-	setOpen: open => dispatch(toggleSidebar(open)),
-	setDocked: docked => dispatch(dockSidebar(docked)),
-});
+export const TopicsList = connect(
+	mapStateToProps
+)(({ topics }) => (
+	<ul className="menu-list">
+		{topics.map((topic, key) => (
+			<li key={key}>
+				<TopicLink topic={topic} />
+			</li>
+		))}
+	</ul>
+));
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export const NewTopicForm = () => {
+	const [topic, setTopic] = useState('');
+	const submit = () => {
+		history.push(getChatURL(topic));
+		setTopic('');
+	};
+
+	return (
+		<form className="field" onSubmit={submit}>
+			<div className="control">
+				<input value={topic} className="input is-small is-rounded" onChange={e => setTopic(e.target.value)} />
+			</div>
+		</form>
+	);
+};
+
+const Sidebar = () => (
+	<aside className="menu is-narrow-mobile section is-hidden-mobile">
+		<p className="menu-label is-hidden-tablet">{__('General')}</p>
+		<Link to="/" className="navbar-item">
+			{__('Home')}
+		</Link>
+
+		<p className="menu-label is-hidden-tablet">{__('Channels')}</p>
+		<TopicsList />
+
+		<label className="label menu-label is-hidden-tablet">
+			{__('Add a channel')}
+		</label>
+		<NewTopicForm />
+	</aside>
+);
+
+export default Sidebar;

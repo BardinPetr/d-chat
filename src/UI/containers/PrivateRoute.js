@@ -8,7 +8,7 @@ const PrivateRoute = ({ path, exact, component, authStatus }) => (
 		path={path}
 		exact={exact}
 		component={component}
-		authStatus={authStatus}
+		authStatus={!!authStatus}
 	/>
 );
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { toggleSidebar } from 'Approot/redux/actions';
 
+// TODO has bug with docked state. isdocked && open popup -> undocked forever
+// Create separate redux store for UI?
 const SidebarToggle = ({ toggleSidebar, docked }) => (
 	<div className="sidebar-toggle-button">
 		{ !docked && (

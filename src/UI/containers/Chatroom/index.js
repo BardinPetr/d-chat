@@ -8,15 +8,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import ReactDOM from 'react-dom';
-import InfiniteScroll from 'react-infinite-scroller';
 import VisibilitySensor from 'react-visibility-sensor';
 import TextareaAutosize from 'react-autosize-textarea';
-import '../../containers/App.css';
 import Message from '../../components/Message';
 import { __, formatAddr } from 'Approot/misc/util';
-import { joinChat, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
+import { markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
 import Markdown from '../../components/Markdown';
+import debounce from 'debounce';
+import NknBalance from 'Approot/UI/containers/NknBalance';
 
 const mention = (addr) => ('@' + formatAddr(addr));
 
@@ -28,9 +27,6 @@ const mention = (addr) => ('@' + formatAddr(addr));
 class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
-		const topic = this.props.topic;
-		console.log('I see topic is:', topic);
-		this.props.joinChat( topic );
 
 		this.state = {
 			count: 15 + props.unreadMessages.length,
@@ -38,11 +34,14 @@ class Chatroom extends React.Component {
 		};
 		this.unreadCount = props.unreadMessages.length;
 		this.wasScrolledToBottom = true;
-		this.markedRead = new Set;
 		this.textarea = React.createRef();
+		// Mark all unread messages as read on chat opening.
+		this.markAllRead();
+		this.onScrollTop = debounce(this.onScrollTop, 300);
 	}
 
 	loadMore = () => {
+		console.log('Loading more messages', this.state.count);
 		this.setState({
 			count: this.state.count + 10,
 		});
@@ -66,32 +65,14 @@ class Chatroom extends React.Component {
 	// Also saved in submit (as empty string).
 	_saveDraft = e => this.props.saveDraft(e.target.value);
 
-	/**
-	 * Since componentWillUnmount does not "make it" when the popup is closed by clicking elsewhere, listen for mouse to go over the edge.
-	 */
-	onMouseLeave = () => {
-		this.markRead();
-	}
-
-	markRead() {
-		if (this.markedRead.size > 0) {
-			if (this.props.unreadMessages.length > 0) {
-				this.props.markAsRead(this.props.topic, Array.from(this.markedRead));
-			}
-			this.markedRead.clear();
-		}
-	}
-
 	markAllRead() {
 		if (this.props.unreadMessages.length > 0) {
 			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
 		}
-		this.markedRead.clear();
 	}
 
 	componentWillUnmount() {
 		this.textarea.current.removeEventListener('change', this._saveDraft);
-		this.markRead();
 	}
 
 	componentDidUpdate() {
@@ -101,14 +82,13 @@ class Chatroom extends React.Component {
 	}
 
 	UNSAFE_componentWillUpdate() {
-		const { messages } = this.refs;
-		const scrollPosition = messages.scrollTop;
-		const scrollBottom = (messages.scrollHeight - messages.clientHeight);
+		const scrollPosition = this.messages.scrollTop;
+		const scrollBottom = (this.messages.scrollHeight - this.messages.clientHeight);
 		this.wasScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
 	}
 
 	scrollToBot() {
-		ReactDOM.findDOMNode(this.refs.messages).scrollTop = ReactDOM.findDOMNode(this.refs.messages).scrollHeight;
+		this.messages.scrollTop = this.messages.scrollHeight;
 		this.wasScrolledToBottom = true;
 	}
 
@@ -122,11 +102,20 @@ class Chatroom extends React.Component {
 		}
 
 		const message = {
-			content: inputValue,
-			contentType: 'text',
+			content: inputValue, // Deprecated. TODO remove.
+			contentType: 'text', // Deprecated. TODO remove.
+			topic: this.props.topic, // Deprecate
+			type: 'message/text',
+			payload: {
+				content: inputValue,
+			},
+			meta: {
+				// topic field is going to be deprecated soon! TODO
+				topic: this.props.topic,
+			}
 		};
 
-		this.props.createMessage({ ...message, topic: this.props.topic });
+		this.props.createMessage(message);
 		this.textarea.current.value = '';
 		this.props.saveDraft('');
 		this.textarea.current.focus();
@@ -156,108 +145,109 @@ class Chatroom extends React.Component {
 		this.textarea.current.selectionEnd = caretPosition + referral.length;
 	}
 
-	/**
-	 * A queue system for marking messages read.
-	 */
-	queueMarkRead = id => {
-		this.markedRead.add(id);
-	}
-
-	togglePreview = () => this.setState({
-		showingPreview: !this.state.showingPreview,
+	togglePreview = ({showing}) => this.setState({
+		showingPreview: showing,
 	});
+
+	onScrollTop = (el) => {
+		if (el.scrollTop <= 25 && this.props.messages.length > this.state.count) {
+			this.loadMore();
+		}
+	}
 
 	/**
 	 * TODO Should split this thing up a bit. It's HUGE.
 	 */
 	render() {
-		const { subs, unreadMessages, messages } = this.props;
+		const { subscribing, subs, messages } = this.props;
+		console.log(subscribing);
 		// Messages that are being loaded.
 		const visibleMessages = messages.slice( -(this.state.count) );
 
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if ( visibleMessages.length - this.unreadCount === idx ) {
-				acc.push(<hr ref="lastRead" key={message.id + 'lastRead'}/>);
+				acc.push(
+					<div className="level x-last-read" key={message.id + 'lastRead'}>
+						<hr ref="lastRead" className="level-item has-background-primary" />
+						<span className="level-item is-size-7 has-text-grey has-text-centered is-uppercase">{__('New messages')}</span>
+						<hr className="level-item has-background-primary" />
+					</div>
+				);
 			}
 			return acc.concat(
-				<li key={message.id} className={classnames('message', {
-					me: message.isMe,
-					'refers-to-me': message.refersToMe,
-				})}>
-					{ ( unreadMessages.some(i => i === message.id) ) ?
-						(
-							<VisibilitySensor
-								onChange={visible => visible && this.queueMarkRead(message.id)}
-								scrollCheck={true}
-							>
-								<Message
-									refer={this.refer}
-									message={message}
-									isSubscribed={subs.includes(message.addr)}
-								/>
-							</VisibilitySensor>
-						) : (
-							<Message
-								refer={this.refer}
-								message={message}
-								isSubscribed={subs.includes(message.addr)}
-							/>
-						) }
-				</li>
+				<Message
+					className={classnames('', {
+						'x-me': message.isMe,
+						'x-refers-to-me': message.refersToMe,
+					})}
+					refer={this.refer}
+					message={message}
+					isSubscribed={subs.includes(message.addr)}
+					key={message.id || idx}
+				/>
 			);
 		}, []);
 
 		return (
-			<div className="messages-container-outer" onMouseLeave={this.onMouseLeave}>
-				<div className="messages-container" ref="messages">
-					<InfiniteScroll
-						pageStart={0}
-						isReverse
-						loadMore={this.loadMore}
-						hasMore={(visibleMessages.length < messages.length)}
-						loader={<div className="loader" key={0} />}
-						useWindow={false}
-						initialLoad={false}
-					>
-						<ul className="messages">
+			<div className="hero is-fullheight-with-navbar x-is-fullwidth" onMouseLeave={this.onMouseLeave}>
+				<div className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height" ref={ref => this.messages = ref} onScroll={e => this.onScrollTop(e.target)}>
+					<div className="container">
+						<div className="x-chat">
 							{ messageList }
-						</ul>
-					</InfiniteScroll>
-					<VisibilitySensor onChange={vis => vis && this.markAllRead()}>
-						<hr className="sensor" />
-					</VisibilitySensor>
+						</div>
+						<VisibilitySensor onChange={vis => vis && this.markAllRead()}>
+							<hr className="x-sensor" />
+						</VisibilitySensor>
+					</div>
 				</div>
-				<form className="input" onSubmit={(e) => this.submitText(e)}>
-					<div className="form-text-area">
-						<TextareaAutosize
-							rows={3}
-							maxRows={15}
-							ref={this.textarea}
-							className={classnames('', {
-								hidden: this.state.showingPreview
-							})}
-							onKeyDown={this.onEnterPress}
-						/>
-						{ this.state.showingPreview &&
-							<div className={classnames('preview')}>
-								<Markdown
-									source={this.textarea.current?.value}
+				<div className="hero-foot">
+					<form className="card" onSubmit={(e) => this.submitText(e)}>
+						<div className="card-content x-is-small-padding field">
+							<div className={classnames('control', {
+								'is-loading': subscribing,
+							})}>
+								<TextareaAutosize
+									rows={1}
+									maxRows={10}
+									ref={this.textarea}
+									className={classnames('textarea', {
+										'is-hidden': this.state.showingPreview,
+									})}
+									onKeyDown={this.onEnterPress}
 								/>
+								{ this.state.showingPreview &&
+									<Markdown
+										source={this.textarea.current?.value}
+									/>
+								}
 							</div>
-						}
-					</div>
-					<div className="form-footer">
-						<div className="button-group">
-							<button type="button" className="button preview-button" onClick={this.togglePreview}>
-								{this.state.showingPreview ? __('Text') : __('Preview')}
-							</button>
+							<div className="level is-mobile">
+								<div className="level-left">
+									<div className="tabs is-small x-tabs-has-bigger-border">
+										<ul>
+											<li className={classnames('', {
+												'is-active': !this.state.showingPreview,
+											})} onClick={() => this.togglePreview({ showing: false })}>
+												<a>{__('Text')}</a>
+											</li>
+											<li className={classnames('', {
+												'is-active': this.state.showingPreview,
+											})} onClick={() => this.togglePreview({ showing: true })}>
+												<a>{__('Preview')}</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div className="level-right">
+									<div className="level-item">
+										<NknBalance />
+									</div>
+									<input type="submit" className="button is-small is-primary level-item" value={ __('Submit') } />
+								</div>
+							</div>
 						</div>
-						<div className="flex-filler"></div>
-						<div className="button-group">
-						</div>
-						<input type="submit" value={ __('Submit') } />
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		);
 	}
@@ -269,13 +259,13 @@ const mapStateToProps = (state, ownProps) => ({
 	subs: state.subscribers,
 	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
 	topic: ownProps.match.params.topic,
+	subscribing: Object.keys(state.subscriptions).includes(ownProps.match.params.topic),
 });
 
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
 	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
-	joinChat: topic => dispatch(joinChat(topic)),
 });
 
 export default connect(

@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import '../components/LoginBox.css'; // TODO move file to container folder
 import { __ } from '../../misc/util';
 import configs from '../../misc/configs';
 import LoadingScreen from '../components/LoadingScreen';
+import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login } from '../../redux/actions';
 
 class LoginBox extends React.Component {
@@ -41,7 +41,7 @@ class LoginBox extends React.Component {
 			password: this.state.password,
 			rememberMe: this.state.rememberMe,
 		}))
-			.then(msg => !msg.addr && this.setState({ error: __('Invalid credentials.') }))
+			.then(msg => !msg && this.setState({ error: __('Wrong password.') }))
 			.catch(console.warn);
 	}
 
@@ -66,68 +66,93 @@ class LoginBox extends React.Component {
 						/>
 					</LoadingScreen>
 				) : (
-					<div className="box-container">
-						<div className="inner-container">
-							<div className="header">
+					<div className="hero is-primary">
+						<div className="hero-body">
+							<h1 className="title has-text-centered is-size-2">
 								{ window.location.search.includes('register') ? __('Welcome!') : __('Welcome Back!') }
-							</div>
+							</h1>
+							<div className="columns is-centered">
+								<div className="column is-half">
+									<div className="notification is-light">
+										<figure className="image container is-64x64">
+											<DchatLogo />
+										</figure>
+										<p className="subtitle has-text-grey has-text-centered">
+											{ __('The decentralized chat awaits.') }
+										</p>
 
-							<p className="description sub-title">
-								{ __('The decentralized chat awaits.') }
-							</p>
-
-							<p className="error">
-								{ this.state.error }
-							</p>
-
-							<form className="box" onSubmit={this.handleLoginSubmit}>
-								<div className="input-group">
-									<label htmlFor="username">{ __('Username') + ' (' + __('optional') + ')' }</label>
-									<input
-										type="username"
-										name="username"
-										value={this.state.username}
-										onChange={this.handleChange}
-										className="login-input"
-										placeholder="Username"
-										autoComplete="current-user"
-									/>
-									<label htmlFor="password">{ __('Password') }</label>
-									<input
-										type="password"
-										name="password"
-										value={this.state.password}
-										onChange={this.handleChange}
-										className="login-input"
-										placeholder="Password"
-										autoComplete="current-user"
-										required />
+										<form className="" onSubmit={this.handleLoginSubmit}>
+											<div className="field">
+												<label className="label">
+													{ __('Username')}
+													<span className="has-text-grey-light is-size-7">{' (' + __('optional') + ')' }</span>
+												</label>
+												<div className="control">
+													<input
+														type="username"
+														name="username"
+														value={this.state.username}
+														onChange={this.handleChange}
+														className="input"
+														placeholder="Username"
+														autoComplete="current-user"
+													/>
+												</div>
+											</div>
+											<div className="field">
+												<label className="label">{ __('Password') }</label>
+												<div className="control">
+													<input
+														type="password"
+														name="password"
+														value={this.state.password}
+														onChange={this.handleChange}
+														className="input password"
+														placeholder="Password"
+														autoComplete="current-user"
+														required
+													/>
+													<p className="help is-danger">
+														{ this.state.error }
+													</p>
+												</div>
+											</div>
+											<div className="field">
+												<div className="control">
+													<label className="checkbox">
+														<input
+															type="checkbox"
+															checked={this.state.rememberMe}
+															onChange={this.handleCheckboxChange}
+															value="rememberMe"
+															name="rememberMe"
+															id="rememberMe"
+														/>
+														{ __('Remember me?') }
+													</label>
+												</div>
+											</div>
+											<div className="field">
+												<div className="control">
+													<button type="submit" className="button is-link">
+														{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
+													</button>
+												</div>
+											</div>
+										</form>
+										<div style={{marginTop: '1em'}}>
+											{__('Forgot password?') + ' '}
+											<a style={
+												this.state.cleared ?
+													{ color: 'gray', cursor: 'auto' } :
+													{ color: 'blue', cursor: 'pointer' }
+											} onClick={this.clear}>
+												{/* TODO clear chats as well. */}
+												{this.state.cleared ? __('Cleared') : __('Reset')}
+											</a>
+										</div>
+									</div>
 								</div>
-								<div className="input-group forgetmenot">
-									<label htmlFor="rememberMe">
-										<input
-											type="checkbox"
-											checked={this.state.rememberMe}
-											onChange={this.handleCheckboxChange}
-											value="rememberMe"
-											name="rememberMe"
-											id="rememberMe" />
-										{ __('Remember me?') }</label>
-								</div>
-								<button className="login-btn">
-									{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
-								</button>
-							</form>
-							<div style={{marginTop: '1em'}}>
-								{__('Forgot password?') + ' '}
-								<a style={
-									this.state.cleared ?
-										{ color: 'gray', cursor: 'auto' } :
-										{ color: 'blue', cursor: 'pointer' }
-								} onClick={this.clear}>
-									{/* TODO clear chats as well. */}
-									{this.state.cleared ? __('Cleared') : __('Reset')}
-								</a>
 							</div>
 						</div>
 					</div>

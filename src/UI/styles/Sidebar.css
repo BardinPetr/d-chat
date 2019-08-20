@@ -1,0 +1,19 @@
+.sidebar-new-channel-button::before {
+	content: "+";
+}
+
+.sidebar {
+	flex-direction: column;
+	background-color: white;
+}
+
+.chats-list input {
+	width: 60%;
+}
+
+@media (min-width: 768px) {
+	.sidebar-content {
+		width: 230px;
+		padding-right: 15px;
+	}
+}
