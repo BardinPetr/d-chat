@@ -102,17 +102,9 @@ class Chatroom extends React.Component {
 		}
 
 		const message = {
-			content: inputValue, // Deprecated. TODO remove.
-			contentType: 'text', // Deprecated. TODO remove.
-			topic: this.props.topic, // Deprecate
-			type: 'message/text',
-			payload: {
-				content: inputValue,
-			},
-			meta: {
-				// topic field is going to be deprecated soon! TODO
-				topic: this.props.topic,
-			}
+			content: inputValue,
+			contentType: 'text',
+			topic: this.props.topic, // TODO Deprecate and use topicHash instead
 		};
 
 		this.props.createMessage(message);

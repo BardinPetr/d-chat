@@ -5,47 +5,35 @@
   "s": {
     "message": " < 30 s"
   },
-  "Andgivefeedbackthanks": {
-    "message": " And give feedback, thanks!"
+  "Addachannel": {
+    "message": " Add a channel"
   },
-  "Back": {
-    "message": " Back"
+  "Channels": {
+    "message": " Channels"
   },
   "Cleared": {
     "message": " Cleared"
   },
-  "Connectingtoblockchain": {
-    "message": " Connecting to blockchain..."
-  },
-  "Connecting": {
-    "message": " Connecting..."
+  "Connectingtotheblockchain": {
+    "message": " Connecting to the blockchain..."
   },
   "DChat": {
     "message": " D-Chat"
   },
-  "Enterchannelname": {
-    "message": " Enter channel name"
-  },
-  "Fetchingbalance": {
-    "message": " Fetching balance..."
-  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
-  "GetNKN": {
-    "message": " Get NKN"
+  "General": {
+    "message": " General"
   },
-  "Go": {
-    "message": " Go"
-  },
-  "Invalidcredentials": {
-    "message": " Invalid credentials."
+  "Home": {
+    "message": " Home"
   },
   "Join": {
     "message": " Join"
   },
-  "Joinchannel": {
-    "message": " Join channel"
+  "JoiningachanneltakestimeusuallylessthansecondsItdependsonwhichblockyoursubscriptiontransactiongetsintoWhenyoujoinyouareinfactsubscribingyousee": {
+    "message": " Joining a channel takes time, usually less than 60 seconds. It depends on which block your subscription transaction gets into. When you \"join\", you are in fact \"subscribing\", you see."
   },
   "LogIn": {
     "message": " Log In"
@@ -53,14 +41,23 @@
   "Logintodchatandthenrefres": {
     "message": " Log in to d-chat (and then refres"
   },
+  "Nevermind": {
+    "message": " Nevermind"
+  },
+  "Newmessages": {
+    "message": " New messages"
+  },
+  "Newview": {
+    "message": " New view"
+  },
+  "Nowonceyouhavesomecoinsjoinchannel": {
+    "message": " Now, once you have some coins, join channel"
+  },
   "Panel": {
     "message": " Panel"
   },
   "Password": {
     "message": " Password"
-  },
-  "PopOut": {
-    "message": " Pop Out"
   },
   "Preview": {
     "message": " Preview"
@@ -83,9 +80,6 @@
   "Submit": {
     "message": " Submit"
   },
-  "SubscribingtoachannelcantakeawhilebutusuallylessthansecondsItdependsonwhichblockyougetinto": {
-    "message": " Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into."
-  },
   "Subscribing": {
     "message": " Subscribing..."
   },
@@ -101,14 +95,14 @@
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
   },
-  "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
-    "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
+  "Tip": {
+    "message": " Tip"
+  },
+  "Transactioncomplete": {
+    "message": " Transaction complete."
   },
   "Username": {
     "message": " Username"
-  },
-  "Waitedforlongerthanseconds": {
-    "message": " Waited for longer than 5 seconds?"
   },
   "WelcomeBack": {
     "message": " Welcome Back!"
@@ -116,8 +110,17 @@
   "Welcome": {
     "message": " Welcome!"
   },
+  "Wrongpassword": {
+    "message": " Wrong password."
+  },
+  "Youcangetsomeforfree": {
+    "message": " You can get some for free."
+  },
   "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
     "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
+  },
+  "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
+    "message": " You will need some NKN coins to join channels successfully!"
   },
   "YouwillneedsomeNKNtosubscribetochats": {
     "message": " You will need some NKN to subscribe to chats."
@@ -127,6 +130,9 @@
   },
   "Yourbalance": {
     "message": " Your balance"
+  },
+  "andgivefeedbackthanks": {
+    "message": " and give feedback, thanks!"
   },
   "optional": {
     "message": " optional"

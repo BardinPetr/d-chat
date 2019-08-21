@@ -1,11 +1,12 @@
 import React from 'react';
-import { matchPath } from 'react-router-dom';
+import { matchPath, Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { __, getChatDisplayName } from '../../misc/util';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import { TopicsList, NewTopicForm } from 'Approot/UI/containers/Sidebar';
+import { NewTopicForm } from 'Approot/UI/containers/Sidebar';
 import Popout from 'Approot/UI/components/Popout';
 import history from 'Approot/UI/history';
+import TopicsList from 'Approot/UI/containers/TopicsList';
 
 class Header extends React.Component {
 
@@ -64,6 +65,7 @@ class Header extends React.Component {
 						'is-active': this.state.active,
 					})}>
 						<div className="navbar-start">
+							<Link className="navbar-item" to="/">{__('Home')}</Link>
 							<div className="navbar-item">
 								<p className="menu-label">{__('Channels')}</p>
 								<TopicsList />

@@ -15,7 +15,8 @@
   "content_scripts": [
 	{
 		"matches": ["https://nkn-faucet.herokuapp.com/*"],
-		"js": ["content.js"]
+		"js": ["content.js"],
+		"all_frames": true
 	}
   ],
   "browser_action": {

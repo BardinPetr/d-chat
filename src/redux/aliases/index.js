@@ -1,10 +1,34 @@
 import NKN from '../../misc/nkn';
-import { transactionComplete, getSubscribers, getUnreadMessages, setSubscribers, connected, createChat, enterChat, receivingMessage, subscribe, setLoginStatus, subscribeCompleted } from '../actions';
+import {
+	createTransaction,
+	transactionComplete,
+	getSubscribers,
+	getUnreadMessages,
+	setSubscribers,
+	connected,
+	createChat,
+	enterChat,
+	receivingMessage,
+	subscribe,
+	setLoginStatus,
+	subscribeCompleted,
+} from '../actions';
 import passworder from 'browser-passworder';
-import { getAddressFromIdentifier, setBadgeText } from 'Approot/misc/util';
+import { getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
+import uuidv1 from 'uuid/v1';
 
 // TODO move to own file
 const password = 'd-chat!!!';
+
+const prepareNewMessage = msg => {
+	const newMsg = {
+		id: uuidv1(),
+		timestamp: new Date().toUTCString(),
+		...msg,
+	};
+	return newMsg;
+};
+
 
 const subscribeToChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
@@ -28,7 +52,6 @@ const joinChat = originalAction => (dispatch, getState) => {
 			.then(txId => {
 				console.log('Subscription transaction:', txId);
 				// There will be a bunch of work when "hide chat" is implemented.
-				dispatch(createChat(topic));
 				dispatch(subscribe(topic, txId));
 			},
 			err => {
@@ -36,6 +59,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 			}
 			);
 	}
+	dispatch(createChat(topic));
 	return dispatch( enterChat(topic) );
 };
 
@@ -62,6 +86,7 @@ const login = originalAction => (dispatch, getState) => {
 			dispatch(receivingMessage(...args));
 		});
 
+		// Pending subscriptions handler.
 		nknClient.on('block', block => {
 			console.log('New block!!!', block);
 			let subs = getState().subscriptions;
@@ -76,6 +101,7 @@ const login = originalAction => (dispatch, getState) => {
 			}
 		});
 
+		// Pending value transfers handler.
 		nknClient.on('block', block => {
 			const pendingTransactions = getState().transactions.unconfirmed.map(i => i.id);
 
@@ -108,12 +134,15 @@ const login = originalAction => (dispatch, getState) => {
 	return dispatch( setLoginStatus(status) );
 };
 
+// TODO remove topic from message.
 const publishMessage = originalAction => () => {
 	console.log('Publishing message', originalAction);
+
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
-	message.timestamp = new Date().toUTCString();
+
 	window.nknClient.publishMessage(topic, message);
+
 	return originalAction;
 };
 
@@ -137,8 +166,10 @@ const markRead = originalAction => async (dispatch, getState) => {
 };
 
 const logout = () => {
-	window.nknClient.close();
-	window.nknClient = null;
+	if (window.nknClient) {
+		window.nknClient.close();
+		window.nknClient = null;
+	}
 	localStorage.clear();
 	return {
 		type: 'LOGOUT'
@@ -146,33 +177,50 @@ const logout = () => {
 };
 
 const getBalance = () => async (dispatch) => {
+	if (!window.nknClient) {
+		return;
+	}
+
 	const balance = await window.nknClient.wallet.getBalance();
 	return dispatch({
 		type: 'nkn/GET_BALANCE',
 		payload: {
-			balance: balance.toString(),
+			balance: balance.toFixed(8),
 		}
 	});
 };
 
-const sendNKN = originalAction => async () => {
+const newTransaction = originalAction => async (dispatch) => {
 	console.log('Sending NKN', originalAction);
 	const { to, value, topic } = originalAction.payload;
-	window.nknClient.wallet.transferTo(
-		getAddressFromIdentifier(to),
+	// Send
+	return window.nknClient.wallet.transferTo(
+		getAddressFromPubKey(to),
 		value
 	).then(tx => {
-		console.log('NKN was sent. tx:', tx);
-		window.nknClient.send(
+		const message = prepareNewMessage({
+			contentType: 'nkn/tip',
+			transactionID: tx,
+			value,
 			to,
-			JSON.stringify({
-				topic,
-				contentType: 'nkn/tip',
-				transactionID: tx,
-				timestamp: new Date().toUTCString()
-			})
-		);
-	}).catch(console.error);
+			sender: window.nknClient.wallet.address,
+			topic, // ehh TODO rm.
+		});
+
+		console.log('NKN was sent. tx:', tx, 'creating message', message);
+
+		// Add to list of transactions.
+		dispatch(createTransaction(tx, message));
+
+		message.meta.isPrivate = true;
+		// Send notice to recipient.
+		window.nknClient.sendMessage(
+			to,
+			message
+		).then(() => console.log('Successfully sent notice'))
+			.catch(e => console.error('Error when sending notice', e));
+
+	}).catch(e => console.error('Error when sending tx', e));
 };
 
 export default {
@@ -183,6 +231,6 @@ export default {
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
 	'GET_BALANCE_ALIAS': getBalance,
-	'nkn/SEND_NKN_ALIAS': sendNKN,
-	'SUBSCRIBE_TO_CHAT': subscribeToChat,
+	'nkn/NEW_TRANSACTION_ALIAS': newTransaction,
+	'SUBSCRIBE_TO_CHAT_ALIAS': subscribeToChat,
 };

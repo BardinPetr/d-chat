@@ -1,25 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { __, getChatURL } from 'Approot/misc/util';
-import TopicLink from 'Approot/UI/components/TopicLink';
 import history from 'Approot/UI/history';
-
-const mapStateToProps = state => ({
-	topics: Object.keys(state.chatSettings || {}),
-});
-
-export const TopicsList = connect(
-	mapStateToProps
-)(({ topics }) => (
-	<ul className="menu-list">
-		{topics.map((topic, key) => (
-			<li key={key}>
-				<TopicLink topic={topic} />
-			</li>
-		))}
-	</ul>
-));
+import TopicsList from 'Approot/UI/containers/TopicsList';
 
 export const NewTopicForm = () => {
 	const [topic, setTopic] = useState('');

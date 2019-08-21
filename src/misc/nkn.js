@@ -83,7 +83,7 @@ class NKN extends nkn {
 		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
-			identifier: username.trim() || 'Pseudonymous',
+			identifier: username.trim() || undefined,
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: seed,
 		});
@@ -109,12 +109,28 @@ class NKN extends nkn {
 	// publish = (topicID, message) => {
 	publishMessage = (topic, message) => {
 		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
-		this.publish(
-			genChatID( topic ),
-			BUCKET,
-			JSON.stringify(message),
-			{ encrypt: true }
-		);
+		try {
+			return this.publish(
+				genChatID( topic ),
+				BUCKET,
+				JSON.stringify(message),
+				{ encrypt: true }
+			);
+		} catch(e) {
+			console.error('Error when publishing', e);
+		}
+	}
+
+	sendMessage = (to, message) => {
+		console.log('Sending private message', message, 'to', to);
+		try {
+			return this.send(
+				to,
+				JSON.stringify(message)
+			);
+		} catch(e) {
+			console.error('Error when sending', e);
+		}
 	}
 
 	getSubscribers = topic => (
