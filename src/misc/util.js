@@ -33,7 +33,7 @@ export function getChatURL(topic) {
 		return '';
 	}
 	// Usually shoved to <Link to={} /> so remember to prepend '#' on form actions etc.
-	return '/chat/' + encodeURIComponent(topic.slice(1));
+	return '/chat/' + topic.slice(1);
 }
 
 export function getChatName(topic) {
@@ -47,7 +47,7 @@ export function getChatName(topic) {
 	return topic;
 }
 
-export function __(str, placeholders) {
+export function __(str, ...placeholders) {
 	// The i18n generator has a bug with empty prefix, so trim.
 	// Chrome doesn't want things in the keys.
 	return i18n.getMessage(str.replace(/[^a-zA-Z_]/g, ''), placeholders).trim();

@@ -14,6 +14,9 @@
   "Cleared": {
     "message": " Cleared"
   },
+  "Confirmed": {
+    "message": " Confirmed"
+  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
@@ -26,14 +29,23 @@
   "General": {
     "message": " General"
   },
+  "GetsomeNKNforfree": {
+    "message": " Get some NKN for free"
+  },
   "Home": {
     "message": " Home"
+  },
+  "IncomingTransaction": {
+    "message": " Incoming Transaction"
+  },
+  "InsufficientFunds": {
+    "message": " Insufficient Funds"
   },
   "Join": {
     "message": " Join"
   },
-  "JoiningachanneltakestimeusuallylessthansecondsItdependsonwhichblockyoursubscriptiontransactiongetsintoWhenyoujoinyouareinfactsubscribingyousee": {
-    "message": " Joining a channel takes time, usually less than 60 seconds. It depends on which block your subscription transaction gets into. When you \"join\", you are in fact \"subscribing\", you see."
+  "JoiningachannelmeansmakingatransactionontheblockchainwhichtakesabitoftimeThoughusuallylessthansecondsitvariesdependingonwhichblockyoursubscriptiontransactiongetsinto": {
+    "message": " Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into."
   },
   "LogIn": {
     "message": " Log In"
@@ -50,8 +62,14 @@
   "Newview": {
     "message": " New view"
   },
-  "Nowonceyouhavesomecoinsjoinchannel": {
-    "message": " Now, once you have some coins, join channel"
+  "Notransactionmessage": {
+    "message": " No transaction message."
+  },
+  "Nowregardlessofcoinsjoinchannel": {
+    "message": " Now, regardless of coins, join channel"
+  },
+  "OutgoingTransaction": {
+    "message": " Outgoing Transaction"
   },
   "Panel": {
     "message": " Panel"
@@ -83,6 +101,12 @@
   "Subscribing": {
     "message": " Subscribing..."
   },
+  "SubscriptionConfirmed": {
+    "message": " Subscription Confirmed"
+  },
+  "Successfullysubscribedto": {
+    "message": " Successfully subscribed to"
+  },
   "Tab": {
     "message": " Tab"
   },
@@ -98,9 +122,6 @@
   "Tip": {
     "message": " Tip"
   },
-  "Transactioncomplete": {
-    "message": " Transaction complete."
-  },
   "Username": {
     "message": " Username"
   },
@@ -113,11 +134,14 @@
   "Wrongpassword": {
     "message": " Wrong password."
   },
-  "Youcangetsomeforfree": {
-    "message": " You can get some for free."
+  "Youcangetsomefromthefaucetbelow": {
+    "message": " You can get some from the faucet below."
   },
-  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
-    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
+  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
+    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed."
+  },
+  "YouneedNKNcoinsforsubscribingYouwillnotreceivemessages": {
+    "message": " You need NKN coins for subscribing. You will not receive messages."
   },
   "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
     "message": " You will need some NKN coins to join channels successfully!"
@@ -131,8 +155,8 @@
   "Yourbalance": {
     "message": " Your balance"
   },
-  "andgivefeedbackthanks": {
-    "message": " and give feedback, thanks!"
+  "andsayhiSomeonewilltipyoucoins": {
+    "message": " and say hi! Someone will tip you coins."
   },
   "optional": {
     "message": " optional"

@@ -1,32 +1,28 @@
-import { formatAddr, parseAddr } from 'Approot/misc/util';
+import { __, formatAddr, parseAddr } from 'Approot/misc/util';
 import configs from 'Approot/misc/configs';
 import { runtime, notifications } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
 
+/**
+ * Here lies the D-Chat NKN message schema.
+ */
 class Message {
 	constructor(message) {
 		const now = new Date().getTime();
 
-		this.type = message.contentType || 'message/text';
+		// TODO is.string() checks
+		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
-		this.content = '';
+		this.content = message.content || '';
+		if (this.contentType === 'nkn/tip' && !this.content) {
+			this.content = '(' + __('No transaction message.') + ')';
+		}
 		this.topic = message.topic || '';
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
-		switch ( message.type ) {
-			case 'nkn/tip':
-				this.isPrivate = message.isPrivate;
-				break;
-
-
-			case 'nkn/beg':
-				this.content = 'is BEGGING for a tip';
-				break;
-
-			case 'message/text':
-			default:
-				this.content = String(message.content) || '';
-		}
+		this.transactionID = message.transactionID;
+		this.isPrivate = Boolean(message.isPrivate);
+		this.value = message.value;
 
 		if (this.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();

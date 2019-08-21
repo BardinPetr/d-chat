@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
+import { reducer as toastr } from 'react-redux-toastr';
 
 const messages = (state = configs.messages, action ) => {
 	let newState, initial;
@@ -30,20 +31,6 @@ const messages = (state = configs.messages, action ) => {
 	return newState;
 };
 
-const subscribers = (state = [], action) => {
-	let newState;
-	switch (action.type) {
-		case 'SET_SUBSCRIBERS':
-			newState = [ ...action.payload.subscribers ];
-			break;
-
-		case 'GET_SUBSCRIBERS':
-		default:
-			newState = [ ...state ];
-	}
-	return newState;
-};
-
 const subscriptions = ( state = {}, action ) => {
 	let newState;
 	switch ( action.type ) {
@@ -66,27 +53,27 @@ const subscriptions = ( state = {}, action ) => {
 };
 
 const transactions = (state = { unconfirmed: [], confirmed: [] }, action) => {
-	console.log(state, action);
-	let newState, removed;
+	let newState, removed, original;
 	switch (action.type) {
 		case 'nkn/CREATE_TRANSACTION':
+			// Sending tx to yourself makes it dupe, but whatever.
 			newState = {
 				...state,
-				unconfirmed: [...state.unconfirmed, {
-					id: action.payload.payload.transactionID,
-					data: action.payload,
-				}],
+				unconfirmed: [...state.unconfirmed,
+					action.payload,
+				],
 			};
 			break;
 
 		case 'nkn/TRANSACTION_COMPLETE':
-			removed = [...state.unconfirmed].splice(
-				state.unconfirmed.findIndex(i => i.id === action.payload.transactionID),
+			original = [...state.unconfirmed];
+			removed = original.splice(
+				state.unconfirmed.findIndex(i => i.transactionID === action.payload.transactionID),
 				1
 			);
 			console.log('Confirmed transaction:', removed);
 			newState = {
-				unconfirmed: [...state.unconfirmed],
+				unconfirmed: [...original],
 				confirmed: [...state.confirmed.concat(removed)],
 			};
 			break;
@@ -118,7 +105,7 @@ const login = (state = {}, action) => {
 		case 'CONNECTED':
 			newState = {
 				...state,
-				connected: true
+				connected: true,
 			};
 			break;
 
@@ -238,7 +225,6 @@ export default combineReducers({
 	login,
 	// Chat.
 	messages,
-	subscribers,
 	draftMessage,
 	chatSettings,
 	// Client's ongoing subscriptions, waiting to be resolved.
@@ -248,4 +234,6 @@ export default combineReducers({
 	transactions,
 	// UI
 	navigation,
+	// react-redux-toastr
+	toastr,
 });

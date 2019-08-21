@@ -9,6 +9,7 @@ import {
  * Deals with incoming messages.
  */
 export const handleMessage = (message, dispatch) => {
+	console.log('HANDLING MESSAGE:', message);
 	if (message.contentType === 'nkn/tip') {
 		// Resub to chat (noob friendly tipping).
 		dispatch(

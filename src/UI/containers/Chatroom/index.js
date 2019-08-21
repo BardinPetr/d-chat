@@ -12,7 +12,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import TextareaAutosize from 'react-autosize-textarea';
 import Message from '../../components/Message';
 import { __, formatAddr } from 'Approot/misc/util';
-import { markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
+import { getSubscribers, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
 import Markdown from '../../components/Markdown';
 import debounce from 'debounce';
 import NknBalance from 'Approot/UI/containers/NknBalance';
@@ -31,6 +31,7 @@ class Chatroom extends React.Component {
 		this.state = {
 			count: 15 + props.unreadMessages.length,
 			showingPreview: false,
+			subs: [],
 		};
 		this.unreadCount = props.unreadMessages.length;
 		this.wasScrolledToBottom = true;
@@ -38,6 +39,10 @@ class Chatroom extends React.Component {
 		// Mark all unread messages as read on chat opening.
 		this.markAllRead();
 		this.onScrollTop = debounce(this.onScrollTop, 300);
+
+		this.getSubsInterval = setInterval(() => this.props.getSubscribers(props.topic).then(
+			(subs) => this.setState({subs})
+		), 10000);
 	}
 
 	loadMore = () => {
@@ -55,6 +60,10 @@ class Chatroom extends React.Component {
 		}
 		this.textarea.current.focus();
 		this.textarea.current.value = this.props.draft;
+
+		this.props.getSubscribers(this.props.topic).then(
+			(subs) => this.setState({subs})
+		);
 		/*
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
@@ -73,6 +82,7 @@ class Chatroom extends React.Component {
 
 	componentWillUnmount() {
 		this.textarea.current.removeEventListener('change', this._saveDraft);
+		clearInterval(this.getSubsInterval);
 	}
 
 	componentDidUpdate() {
@@ -151,10 +161,10 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE.
 	 */
 	render() {
-		const { subscribing, subs, messages } = this.props;
-		console.log(subscribing);
+		const { subscribing, messages } = this.props;
 		// Messages that are being loaded.
 		const visibleMessages = messages.slice( -(this.state.count) );
+		console.log(this.state.subs);
 
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if ( visibleMessages.length - this.unreadCount === idx ) {
@@ -174,7 +184,7 @@ class Chatroom extends React.Component {
 					})}
 					refer={this.refer}
 					message={message}
-					isSubscribed={subs.includes(message.addr)}
+					isSubscribed={this.state.subs.includes(message.addr)}
 					key={message.id || idx}
 				/>
 			);
@@ -248,7 +258,6 @@ class Chatroom extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
 	draft: state.draftMessage,
 	messages: state.messages[ownProps.match.params.topic] || [],
-	subs: state.subscribers,
 	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
 	topic: ownProps.match.params.topic,
 	subscribing: Object.keys(state.subscriptions).includes(ownProps.match.params.topic),
@@ -258,6 +267,7 @@ const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
 	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
+	getSubscribers: (topic) => dispatch(getSubscribers(topic)),
 });
 
 export default connect(

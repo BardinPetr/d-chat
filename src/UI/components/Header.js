@@ -73,7 +73,7 @@ class Header extends React.Component {
 						</div>
 						<div className="navbar-end">
 							<div className="navbar-item">
-								<label className="label menu-label">
+								<label className="menu-label">
 									{__('Add a channel')}
 								</label>
 								<NewTopicForm />

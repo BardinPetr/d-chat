@@ -22,15 +22,17 @@ export const NewTopicForm = () => {
 
 const Sidebar = () => (
 	<aside className="menu is-narrow-mobile section is-hidden-mobile">
-		<p className="menu-label is-hidden-tablet">{__('General')}</p>
-		<Link to="/" className="navbar-item">
-			{__('Home')}
-		</Link>
+		<p className="menu-label is-hidden-touch">{__('General')}</p>
+		<ul className="menu-list">
+			<li>
+				<Link to="/">{__('Home')}</Link>
+			</li>
+		</ul>
 
-		<p className="menu-label is-hidden-tablet">{__('Channels')}</p>
+		<p className="menu-label is-hidden-touch">{__('Channels')}</p>
 		<TopicsList />
 
-		<label className="label menu-label is-hidden-tablet">
+		<label className="menu-label is-hidden-touch">
 			{__('Add a channel')}
 		</label>
 		<NewTopicForm />

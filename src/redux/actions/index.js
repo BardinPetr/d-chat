@@ -2,10 +2,11 @@
  * TODO: sort out the aliases to the end to make some bookkeeping sense.
  */
 
-import { getChatName, setBadgeText } from 'Approot/misc/util';
+import { __, getChatName, setBadgeText } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 import { handleMessage } from './Messaging';
+import { actions as toastr } from 'react-redux-toastr';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
@@ -35,6 +36,11 @@ export const connected = () => ({
 
 export const subscribeCompleted = topic => dispatch => {
 	dispatch(getSubscribers(topic));
+	dispatch(toastr.add({
+		type: 'success',
+		title: __('Subscription Confirmed'),
+		message: __('Successfully subscribed to') + ` #${topic}.`,
+	}));
 	return dispatch({
 		type: 'SUBSCRIBE_COMPLETED',
 		payload: {
@@ -48,14 +54,6 @@ export const subscribe = (topic, transactionID) => ({
 	payload: {
 		topic: getChatName( topic ),
 		transactionID
-	}
-});
-
-export const setSubscribers = (topic, subscribers) => ({
-	type: 'SET_SUBSCRIBERS',
-	payload: {
-		topic: getChatName( topic ),
-		subscribers,
 	}
 });
 
@@ -150,10 +148,22 @@ export const markUnread = (topic, ids) => (dispatch, getState) => {
 	});
 };
 
-export const createTransaction = (id, data) => ({
-	type: 'nkn/CREATE_TRANSACTION',
-	payload: data,
-});
+export const createTransaction = (id, data) => dispatch => {
+	console.log('Creating transaction', id, data);
+	const toastTitle = data.outgoing ? __('Outgoing Transaction') : __('Incoming Transaction');
+	dispatch(toastr.add({
+		type: 'info',
+		title: toastTitle,
+		message: `${data?.value?.toFixed(8) || '?'} NKN.`,
+	}));
+	return dispatch({
+		type: 'nkn/CREATE_TRANSACTION',
+		payload: {
+			transactionID: id,
+			data,
+		},
+	});
+};
 
 /**
  * Called by .on('message') listener.
@@ -170,13 +180,13 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
 	return handleMessage(message, dispatch);
 };
 
-export const newTransaction = ({ topic, to, value, type, ...rest }) => ({
+export const newTransaction = ({ topic, to, value, contentType, ...rest }) => ({
 	type: 'nkn/NEW_TRANSACTION_ALIAS',
 	payload: {
 		value: value * 10 ** -8,
 		to,
 		topic,
-		type,
+		contentType,
 		...rest,
 	}
 });
@@ -188,21 +198,30 @@ const subscribeToChat = topic => ({
 	},
 });
 
-export const transactionComplete = transactionID => (dispatch, getState) => {
+export const transactionComplete = completedTransactionID => (dispatch, getState) => {
 	const { unconfirmed } = getState().transactions;
-	const { id, data } = unconfirmed.find(tx => transactionID === tx.id);
+	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
-	console.log('Transaction completed:', id, data);
 	switch (data.contentType) {
 		case 'nkn/tip':
 			dispatch(subscribeToChat(data.topic));
 			break;
 	}
 
+	let title = data.outgoing ? __('Outgoing Transaction') : __('Incoming Transaction');
+	title += ' ' + __('Confirmed');
+
+	dispatch(toastr.add({
+		type: 'success',
+		title:  title,
+		message: `${data.value?.toFixed(8) || '?'} NKN.`,
+		// TODO add link to #/transactions/:id or something.
+	}));
+
 	return dispatch({
 		type: 'nkn/TRANSACTION_COMPLETE',
 		payload: {
-			transactionID: id,
+			transactionID,
 			data,
 		},
 	});

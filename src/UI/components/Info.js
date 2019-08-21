@@ -11,17 +11,18 @@ const Info = () => {
 			<div className="section">
 				<div className="container">
 					<p className="field">
-						{ __('Joining a channel takes time, usually less than 60 seconds. It depends on which block your subscription transaction gets into. When you "join", you are in fact "subscribing", you see.') }
+						{ __('Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into.') }
 					</p>
 					<p className="field">
-						<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription resolves.') }</i>
+						<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed.') }</i>
 					</p>
 					<p className="field">
 						<strong>{__('You will need some NKN coins to join channels successfully!')}</strong>
+						{' '}{__('You can get some from the faucet below.')}
 					</p>
 					<div className="field">
 						<a className="button is-info is-outlined" onClick={() => setActive(!active)}>
-							<span>{__('You can get some for free.')}</span>
+							<span>{__('Get some NKN for free')}</span>
 							<span className="icon is-small">
 								{ active ?
 									<IoMdArrowDropdownCircle />
@@ -40,10 +41,10 @@ const Info = () => {
 							</div>
 						</div>
 					</div>
-					<p className="field">
-						{__('Now, once you have some coins, join channel')}
-						{' '}<TopicLink topic="d-chat" />,{' '}
-						{__('and give feedback, thanks!')}
+					<p className="field" style={{wordBreak: 'keep-all'}}>
+						{__('Now, regardless of coins, join channel')}
+						{' '}<TopicLink topic="d-chat" />{' '}
+						{__('and say hi! Someone will tip you coins.')}
 					</p>
 				</div>
 			</div>

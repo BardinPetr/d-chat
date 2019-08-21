@@ -10,7 +10,7 @@ const LoadingScreen = ({ loading, children }) => (
 				<div className="hero-body">
 					<div className="columns is-centered">
 						<div className="column is-half">
-							<div className="notification is-light">
+							<div className="notification is-white">
 								<figure className="image container is-64x64">
 									<NknLoading trans />
 								</figure>

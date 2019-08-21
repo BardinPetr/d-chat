@@ -13,7 +13,7 @@ import { joinChat, navigated } from 'Approot/redux/actions';
 const store = new Store();
 
 const renderApp = () => store.ready().then(() => {
-	history.push(store.state.navigation.mostRecentPage);
+	history.replace(store.state.navigation.mostRecentPage);
 	history.listen((location) => {
 		const match = matchPath(location.pathname, {
 			path: '/chat/:topic',

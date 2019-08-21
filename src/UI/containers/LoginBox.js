@@ -54,7 +54,6 @@ class LoginBox extends React.Component {
 
 	render() {
 		const { loggedIn, connecting } = this.props;
-		console.log('hello??', connecting);
 		return (
 			loggedIn
 				? (
@@ -67,7 +66,7 @@ class LoginBox extends React.Component {
 					</LoadingScreen>
 				) : (
 					<div className="hero is-primary">
-						<div className="hero-body">
+						<div className="hero-body" style={{height: '100vh'}}>
 							<h1 className="title has-text-centered is-size-2">
 								{ window.location.search.includes('register') ? __('Welcome!') : __('Welcome Back!') }
 							</h1>

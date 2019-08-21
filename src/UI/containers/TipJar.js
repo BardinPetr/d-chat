@@ -8,29 +8,38 @@ import { __ } from 'Approot/misc/util';
 const TipJar = ({ addr, dispatch, topic, confirmedTransactions, unconfirmedTransactions }) => {
 	const [transaction, setTransaction] = useState('');
 	const [error, setError] = useState('');
+	const [disabled, setDisabled] = useState(false);
 
 	const send = () => dispatch(newTransaction({
 		to: addr,
 		value: 10,
 		topic,
-		type: 'nkn/tip',
+		contentType: 'nkn/tip',
 	}))
-		.then(tx => setTransaction(tx))
-		.catch(() => setError(true));
+		.then(payload => {
+			if (payload.transactionID) {
+				setTransaction(payload.transactionID);
+			} else {
+				setError(true);
+			}
+			setDisabled(false);
+		});
 
 	return (
 		<div className="tip-jar buttons are-small">
 			<a
 				title={__('Tip')}
 				className={classnames('button tip-jar-button', {
-					'is-loading': unconfirmedTransactions.some(tx => tx.id === transaction),
+					'is-loading': unconfirmedTransactions.some(tx => tx.transactionID === transaction),
 					'is-danger': error,
-					'is-success': confirmedTransactions.some(tx => tx.id === transaction),
+					'is-success': confirmedTransactions.some(tx => tx.transactionID === transaction),
 				})}
 				onClick={() => {
 					setError(false);
+					setDisabled(true);
 					send();
 				}}
+				disabled={disabled}
 			>
 				<span className="icon">
 					<IoLogoBitcoin />
