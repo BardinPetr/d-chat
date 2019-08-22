@@ -14,15 +14,15 @@ class Message {
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
 		this.content = message.content || '';
-		if (this.contentType === 'nkn/tip' && !this.content) {
-			this.content = '(' + __('No transaction message.') + ')';
-		}
 		this.topic = message.topic || '';
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
 		this.transactionID = message.transactionID;
 		this.isPrivate = Boolean(message.isPrivate);
-		this.value = message.value;
+		this.value = message.value || 1e-7; // The default WAS 10 sats.
+		if (this.contentType === 'nkn/tip' && !this.content) {
+			this.content = __('Sent you') + ' ' + this.value.toFixed(8) + 'NKN';
+		}
 
 		if (this.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();

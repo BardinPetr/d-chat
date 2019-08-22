@@ -42,7 +42,7 @@ class Chatroom extends React.Component {
 
 		this.getSubsInterval = setInterval(() => this.props.getSubscribers(props.topic).then(
 			(subs) => this.setState({subs})
-		), 10000);
+		), 60000);
 	}
 
 	loadMore = () => {
@@ -164,7 +164,6 @@ class Chatroom extends React.Component {
 		const { subscribing, messages } = this.props;
 		// Messages that are being loaded.
 		const visibleMessages = messages.slice( -(this.state.count) );
-		console.log(this.state.subs);
 
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if ( visibleMessages.length - this.unreadCount === idx ) {

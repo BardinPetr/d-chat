@@ -41,14 +41,13 @@ class LoginBox extends React.Component {
 			password: this.state.password,
 			rememberMe: this.state.rememberMe,
 		}))
-			.then(msg => !msg && this.setState({ error: __('Wrong password.') }))
+			.then(msg => !msg.addr && this.setState({ error: __('Wrong password.') }))
 			.catch(console.warn);
 	}
 
 	clear (e) {
 		e.preventDefault();
 		configs.walletJSON = configs.$default.walletJSON;
-		configs.messages = configs.$default.messages;
 		this.setState({ cleared: true });
 	}
 
@@ -99,7 +98,12 @@ class LoginBox extends React.Component {
 												</div>
 											</div>
 											<div className="field">
-												<label className="label">{ __('Password') }</label>
+												<label className="label">
+													{ __('Password') }
+													<span className="help is-danger is-inline">
+														{ ' ' + this.state.error }
+													</span>
+												</label>
 												<div className="control">
 													<input
 														type="password"
@@ -111,9 +115,6 @@ class LoginBox extends React.Component {
 														autoComplete="current-user"
 														required
 													/>
-													<p className="help is-danger">
-														{ this.state.error }
-													</p>
 												</div>
 											</div>
 											<div className="field">
@@ -146,8 +147,7 @@ class LoginBox extends React.Component {
 													{ color: 'gray', cursor: 'auto' } :
 													{ color: 'blue', cursor: 'pointer' }
 											} onClick={this.clear}>
-												{/* TODO clear chats as well. */}
-												{this.state.cleared ? __('Cleared') : __('Reset')}
+												{this.state.cleared ? __('Created') : __('Create new')}
 											</a>
 										</div>
 									</div>

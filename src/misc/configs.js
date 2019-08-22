@@ -6,5 +6,5 @@ export default new Configs({
 	showNotifications: true,
 	chatSettings: {}
 }, {
-	localKeys: [ 'chatSettings', 'showNotifications' ]
+	localKeys: [ 'showNotifications' ]
 });

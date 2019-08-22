@@ -11,12 +11,14 @@ import {
 	subscribe,
 	setLoginStatus,
 	subscribeCompleted,
+	setSubscribers,
 } from '../actions';
 import passworder from 'browser-passworder';
-import { __, getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
+import { __, getAddressFromPubKey, setBadgeText, getChatDisplayName } from 'Approot/misc/util';
 import uuidv1 from 'uuid/v1';
 import { actions as toastr } from 'react-redux-toastr';
 
+const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
 const password = 'd-chat!!!';
 
@@ -38,7 +40,7 @@ const subscribeToChat = originalAction => dispatch => {
 				dispatch(subscribe(topic, txId));
 				dispatch(toastr.add({
 					type: 'info',
-					title: __('Subscribing...'),
+					title: __('Subscribing to') + ' ' + getChatDisplayName(topic),
 				}));
 			},
 			err => {
@@ -59,7 +61,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 				dispatch(subscribe(topic, txId));
 				dispatch(toastr.add({
 					type: 'info',
-					title: __('Subscribing...'),
+					title: __('Subscribing to') + ' ' + getChatDisplayName(topic),
 				}));
 			},
 			err => {
@@ -99,11 +101,10 @@ const login = originalAction => (dispatch, getState) => {
 			// New users beg for coins on '#D-Chat Intro'.
 			const balance = await nknClient.wallet.getBalance();
 			if (balance.eq(0)) {
-				const begTopic = 'D-Chat Intro';
-				nknClient.publishMessage(begTopic, prepareNewMessage({
+				nknClient.publishMessage(BEGTOPIC, prepareNewMessage({
 					contentType: 'text',
-					content: 'I am dirt poor, please tip me. __This message was sent automatically.__',
-					topic: begTopic
+					content: 'Please, tip me. _This message was sent automatically._',
+					topic: BEGTOPIC
 				}));
 			}
 		});
@@ -133,7 +134,6 @@ const login = originalAction => (dispatch, getState) => {
 			const transactions = getState().transactions;
 			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
 
-			console.log('Transactions:', transactions);
 			for ( let pendingTx of pendingTransactions ) {
 				if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
 					console.log('Transaction complete!');
@@ -173,11 +173,15 @@ const publishMessage = originalAction => () => {
 	return originalAction;
 };
 
-const getSubscribersHandler = originalAction => async () => {
+const getSubscribersHandler = originalAction => async (dispatch) => {
 	console.log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
-	const subscribers = await window.nknClient.getSubscribers(topic);
-	originalAction.payload = Object.keys(subscribers);
+	let subscribers = await window.nknClient.getSubscribers(topic);
+	subscribers = Object.keys(subscribers || {});
+
+	dispatch(setSubscribers(topic, subscribers));
+
+	originalAction.payload = subscribers;
 	return originalAction;
 };
 
@@ -252,12 +256,16 @@ const newTransaction = originalAction => async (dispatch) => {
 			e => console.error('Error when sending notice', e));
 
 		// Return tx id for UI.
-		return tx;
+		return { tx };
 
-	}, e => console.error('Error when sending tx', e));
+	}, e => {
+		console.error('Error when sending tx', e);
+		return { error: e.msg };
+	});
 
 	originalAction.payload = {
-		transactionID: tx,
+		transactionID: tx.tx,
+		error: tx.error,
 	};
 	return originalAction;
 };
@@ -266,7 +274,7 @@ export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
 	'JOIN_CHAT': joinChat,
-	'GET_SUBSCRIBERS': getSubscribersHandler,
+	'chat/GET_SUBSCRIBERS_ALIAS': getSubscribersHandler,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
 	'GET_BALANCE_ALIAS': getBalance,

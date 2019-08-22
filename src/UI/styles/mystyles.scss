@@ -58,6 +58,9 @@ $primary: #1791f2;
 	overflow-y: scroll;
 	height: 0;
 }
+.x-avatar {
+	cursor: pointer;
+}
 
 body, html, #root {
 	overflow-y: auto !important;

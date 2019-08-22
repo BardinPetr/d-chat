@@ -20,7 +20,7 @@ const TipJar = ({ addr, dispatch, topic, confirmedTransactions, unconfirmedTrans
 			if (payload.transactionID) {
 				setTransaction(payload.transactionID);
 			} else {
-				setError(true);
+				setError(payload.error);
 			}
 			setDisabled(false);
 		});
@@ -28,7 +28,7 @@ const TipJar = ({ addr, dispatch, topic, confirmedTransactions, unconfirmedTrans
 	return (
 		<div className="tip-jar buttons are-small">
 			<a
-				title={__('Tip')}
+				title={error ? error : __('Tip')}
 				className={classnames('button tip-jar-button', {
 					'is-loading': unconfirmedTransactions.some(tx => tx.transactionID === transaction),
 					'is-danger': error,
@@ -44,7 +44,6 @@ const TipJar = ({ addr, dispatch, topic, confirmedTransactions, unconfirmedTrans
 				<span className="icon">
 					<IoLogoBitcoin />
 				</span>
-				<span>10sats</span>
 			</a>
 		</div>
 	);

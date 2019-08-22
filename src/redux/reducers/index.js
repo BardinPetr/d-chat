@@ -177,7 +177,19 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				...state,
 				[action.payload.topic]: {
 					unread: [],
+					subscribers: [],
 					...state[action.payload.topic],
+				}
+			};
+			configs.chatSettings = newState;
+			break;
+
+		case 'chat/SET_SUBSCRIBERS':
+			newState = {
+				...state,
+				[action.payload.topic]: {
+					...state[action.payload.topic],
+					subscribers: action.payload.subscribers,
 				}
 			};
 			break;

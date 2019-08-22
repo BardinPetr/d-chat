@@ -25,8 +25,8 @@ const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 		<span
 			title={addr + (unsubscribed ? ('\n' + __('This person is not subscribed and will not receive messages.')) : '')}
 			onClick={() => refer(addr)}
-			className={classnames('avatar', {
-				unsubscribed
+			className={classnames('x-avatar', {
+				'has-text-grey': unsubscribed
 			})}
 		>
 			<span className="">{username}</span>

@@ -5,20 +5,26 @@
   "s": {
     "message": " < 30 s"
   },
+  "Account": {
+    "message": " Account"
+  },
   "Addachannel": {
     "message": " Add a channel"
   },
   "Channels": {
     "message": " Channels"
   },
-  "Cleared": {
-    "message": " Cleared"
-  },
   "Confirmed": {
     "message": " Confirmed"
   },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
+  },
+  "Createnew": {
+    "message": " Create new"
+  },
+  "Created": {
+    "message": " Created"
   },
   "DChat": {
     "message": " D-Chat"
@@ -41,29 +47,23 @@
   "InsufficientFunds": {
     "message": " Insufficient Funds"
   },
-  "Join": {
-    "message": " Join"
-  },
   "JoiningachannelmeansmakingatransactionontheblockchainwhichtakesabitoftimeThoughusuallylessthansecondsitvariesdependingonwhichblockyoursubscriptiontransactiongetsinto": {
     "message": " Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into."
   },
   "LogIn": {
     "message": " Log In"
   },
+  "LogOut": {
+    "message": " Log Out"
+  },
   "Logintodchatandthenrefres": {
     "message": " Log in to d-chat (and then refres"
-  },
-  "Nevermind": {
-    "message": " Nevermind"
   },
   "Newmessages": {
     "message": " New messages"
   },
   "Newview": {
     "message": " New view"
-  },
-  "Notransactionmessage": {
-    "message": " No transaction message."
   },
   "Nowregardlessofcoinsjoinchannel": {
     "message": " Now, regardless of coins, join channel"
@@ -89,8 +89,8 @@
   "Rememberme": {
     "message": " Remember me?"
   },
-  "Reset": {
-    "message": " Reset"
+  "Sentyou": {
+    "message": " Sent you"
   },
   "Signout": {
     "message": " Sign out"
@@ -98,8 +98,11 @@
   "Submit": {
     "message": " Submit"
   },
-  "Subscribing": {
-    "message": " Subscribing..."
+  "Subscribers": {
+    "message": " Subscribers"
+  },
+  "Subscribingto": {
+    "message": " Subscribing to"
   },
   "SubscriptionConfirmed": {
     "message": " Subscription Confirmed"
@@ -121,6 +124,9 @@
   },
   "Tip": {
     "message": " Tip"
+  },
+  "Topic": {
+    "message": " Topic"
   },
   "Username": {
     "message": " Username"
@@ -146,14 +152,8 @@
   "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
     "message": " You will need some NKN coins to join channels successfully!"
   },
-  "YouwillneedsomeNKNtosubscribetochats": {
-    "message": " You will need some NKN to subscribe to chats."
-  },
   "Youraddresswasautomaticallyfilledinbydchat": {
     "message": " Your address was automatically filled in by d-chat."
-  },
-  "Yourbalance": {
-    "message": " Your balance"
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."

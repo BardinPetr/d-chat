@@ -59,10 +59,18 @@ export const subscribe = (topic, transactionID) => ({
 
 // An alias.
 export const getSubscribers = topic => ({
-	type: 'GET_SUBSCRIBERS',
+	type: 'chat/GET_SUBSCRIBERS_ALIAS',
 	payload: {
 		topic: getChatName( topic )
 	}
+});
+
+export const setSubscribers = (topic, subscribers) => ({
+	type: 'chat/SET_SUBSCRIBERS',
+	payload: {
+		topic,
+		subscribers,
+	},
 });
 
 // Handles subscribing (background). An alias.
@@ -154,7 +162,7 @@ export const createTransaction = (id, data) => dispatch => {
 	dispatch(toastr.add({
 		type: 'info',
 		title: toastTitle,
-		message: `${data?.value?.toFixed(8) || '?'} NKN.`,
+		message: `${data?.value?.toFixed(8) || '?'}NKN.`,
 	}));
 	return dispatch({
 		type: 'nkn/CREATE_TRANSACTION',
@@ -214,7 +222,7 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 	dispatch(toastr.add({
 		type: 'success',
 		title:  title,
-		message: `${data.value?.toFixed(8) || '?'} NKN.`,
+		message: `${data.value?.toFixed(8) || '?'}NKN.`,
 		// TODO add link to #/transactions/:id or something.
 	}));
 
