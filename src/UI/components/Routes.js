@@ -40,7 +40,7 @@ const Routes = () => (
 			transitionOut="bounceOut"
 			progressBar
 			closeOnToastrClick
-			className="is-small"
+			className="is-size-7"
 		/>
 	</div>
 );

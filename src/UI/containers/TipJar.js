@@ -26,10 +26,10 @@ const TipJar = ({ addr, dispatch, topic, confirmedTransactions, unconfirmedTrans
 		});
 
 	return (
-		<div className="tip-jar buttons are-small">
+		<div className="buttons are-small">
 			<a
 				title={error ? error : __('Tip')}
-				className={classnames('button tip-jar-button', {
+				className={classnames('button is-white', {
 					'is-loading': unconfirmedTransactions.some(tx => tx.transactionID === transaction),
 					'is-danger': error,
 					'is-success': confirmedTransactions.some(tx => tx.transactionID === transaction),

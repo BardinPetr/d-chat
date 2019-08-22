@@ -60,6 +60,10 @@ $primary: #1791f2;
 }
 .x-avatar {
 	cursor: pointer;
+
+	&:hover {
+		color: blueviolet;
+	}
 }
 .x-is-fullheight {
 	height: 100vh;
@@ -68,4 +72,23 @@ $primary: #1791f2;
 
 body, html, #root {
 	overflow-y: auto !important;
+}
+
+.redux-toastr {
+	.toastr {
+		min-height: inherit;
+
+		.rrt-middle-container {
+			margin-left: 1rem;
+		}
+
+		.rrt-left-container {
+			display: none !important;
+		}
+	}
+	.top-right {
+		top: 3.25rem;
+		width: inherit;
+		max-width: 300px;
+	}
 }

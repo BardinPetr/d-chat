@@ -168,7 +168,7 @@ const publishMessage = originalAction => () => {
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
 
-	window.nknClient.publishMessage(topic, message);
+	window.nknClient.publishMessage(topic, prepareNewMessage(message));
 
 	return originalAction;
 };

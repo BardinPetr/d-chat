@@ -33,11 +33,14 @@ class Chatroom extends React.Component {
 			showingPreview: false,
 			subs: [],
 		};
-		this.unreadCount = props.unreadMessages.length;
+
+		console.log('unreadid', props.unreadMessages);
+		// No fooling around.
+		this.lastReadId = props.unreadMessages[0];
+
 		this.wasScrolledToBottom = true;
 		this.textarea = React.createRef();
 		// Mark all unread messages as read on chat opening.
-		// this.markAllRead();
 		this.onScrollTop = debounce(this.onScrollTop, 300);
 
 		this.getSubsInterval = setInterval(() => this.props.getSubscribers(props.topic).then(
@@ -53,6 +56,7 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidMount() {
+		this.markAllRead();
 		if (this.refs.lastRead) {
 			this.refs.lastRead.scrollIntoView({ block: 'center' });
 		} else {
@@ -71,7 +75,7 @@ class Chatroom extends React.Component {
 		this.textarea.current.addEventListener('change', this._saveDraft);
 	}
 
-	// Also saved in submit (as empty string).
+	// Also cleared on submit.
 	_saveDraft = e => this.props.saveDraft(e.target.value);
 
 	markAllRead() {
@@ -165,8 +169,11 @@ class Chatroom extends React.Component {
 		// Messages that are being loaded.
 		const visibleMessages = messages.slice( -(this.state.count) );
 
+		// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
+		let didNotMarkYet = true;
 		const messageList = visibleMessages.reduce((acc, message, idx) => {
-			if ( visibleMessages.length - this.unreadCount === idx ) {
+			if ( didNotMarkYet && message.id === this.lastReadId ) {
+				// Insert last read message thing.
 				acc.push(
 					<div className="level x-last-read" key={message.id + 'lastRead'}>
 						<hr ref="lastRead" className="level-item has-background-primary" />
@@ -174,6 +181,7 @@ class Chatroom extends React.Component {
 						<hr className="level-item has-background-primary is-hidden-mobile" />
 					</div>
 				);
+				didNotMarkYet = false;
 			}
 			return acc.concat(
 				<Message
