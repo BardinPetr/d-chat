@@ -1,19 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
+import { getChatDisplayName } from 'Approot/misc/util';
 
-const TopicsList = ({ topics }) => (
+const TopicsList = ({ chats }) => (
 	<ul className="menu-list">
-		{topics.map((topic, key) => (
+		{chats.map((chat, key) => (
 			<li key={key}>
-				<TopicLink topic={topic} />
+				<TopicLink topic={chat.topic} className={classnames('is-clearfix', {
+					'has-text-black': chat.unread.length > 0,
+				})}>
+					<span>
+						{getChatDisplayName(chat.topic)}
+					</span>
+					<span className="is-pulled-right">
+						{chat.unread.length > 0 ? chat.unread.length : ''}
+					</span>
+				</TopicLink>
 			</li>
 		))}
 	</ul>
 );
 
-const mapStateToProps = state => ({
-	topics: Object.keys(state.chatSettings || {}),
-});
+const mapStateToProps = state => {
+	let newState = [];
+	for (const key in state.chatSettings) {
+		newState.push({
+			topic: key,
+			unread: state.chatSettings[key].unread,
+		});
+	}
+	return ({
+		chats: newState,
+	});
+};
 
 export default connect(mapStateToProps)(TopicsList);

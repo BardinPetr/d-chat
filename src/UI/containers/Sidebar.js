@@ -6,7 +6,7 @@ import NewTopicForm from 'Approot/UI/components/NewTopicForm';
 import Logout from 'Approot/UI/containers/Logout';
 
 const Sidebar = () => (
-	<aside className="menu section is-hidden-mobile">
+	<aside className="menu section is-hidden-mobile x-is-fullheight">
 		<p className="menu-label is-hidden-touch">{__('General')}</p>
 		<ul className="menu-list">
 			<li>

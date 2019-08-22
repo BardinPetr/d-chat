@@ -37,7 +37,7 @@ class Chatroom extends React.Component {
 		this.wasScrolledToBottom = true;
 		this.textarea = React.createRef();
 		// Mark all unread messages as read on chat opening.
-		this.markAllRead();
+		// this.markAllRead();
 		this.onScrollTop = debounce(this.onScrollTop, 300);
 
 		this.getSubsInterval = setInterval(() => this.props.getSubscribers(props.topic).then(
@@ -170,8 +170,8 @@ class Chatroom extends React.Component {
 				acc.push(
 					<div className="level x-last-read" key={message.id + 'lastRead'}>
 						<hr ref="lastRead" className="level-item has-background-primary" />
-						<span className="level-item is-size-7 has-text-grey has-text-centered is-uppercase">{__('New messages')}</span>
-						<hr className="level-item has-background-primary" />
+						<span className="level-item is-size-7 has-text-grey has-text-centered is-uppercase">{__('New messages below')}</span>
+						<hr className="level-item has-background-primary is-hidden-mobile" />
 					</div>
 				);
 			}

@@ -61,6 +61,10 @@ $primary: #1791f2;
 .x-avatar {
 	cursor: pointer;
 }
+.x-is-fullheight {
+	height: 100vh;
+	overflow-y: auto;
+}
 
 body, html, #root {
 	overflow-y: auto !important;
