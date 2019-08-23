@@ -5,8 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const paths = require('../paths');
 
 const nknClientJsLibProtocolRegex = /(messages|payloads|transaction|sigchain)_pb\.js/;
-const cssRegex = /\.css$/;
-const cssModuleRegex = /\.module\.css$/;
+const cssRegex = /\.s?css$/;
+const cssModuleRegex = /\.module\.s?css$/;
 
 
 
@@ -25,6 +25,10 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 			},
 			{
 				loader: require.resolve('css-loader'),
+				options: cssOptions,
+			},
+			{
+				loader: 'sass-loader',
 				options: cssOptions,
 			},
 			{

@@ -123,7 +123,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		watchMissingNodeModulesPlugin,
 		miniCssExtractPlugin,
 		ignorePlugin,
-		terserPlugin,
+		// terserPlugin,
 		optimizeCSSAssetsPlugin,
 		moduleScopePlugin,
 		copyPlugin,

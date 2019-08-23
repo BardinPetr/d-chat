@@ -4,10 +4,7 @@
 
 import React from 'react';
 import TimeAgo from 'react-timeago';
-import 'rc-tooltip/assets/bootstrap.css';
 import Markdown from './Markdown';
-import prettyMs from 'pretty-ms';
-import isNumber from 'is-number';
 import { __ } from 'Approot/misc/util';
 import classnames from 'classnames';
 import TipJar from '../containers/TipJar';
@@ -23,28 +20,21 @@ const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	return defaultFormatter();
 };
 
-const Ping = ({ping}) => (
-	<span className={ping < 500 ? 'ping nice' : ping < 2000 ? 'ping ok' : 'ping bad'}>{prettyMs(ping)}</span>
-);
-
-const Nickname = ({id, addr, refer, timestamp, username, ping, unsubscribed}) => (
+const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 	<span>
 		<span
-			title={addr + (unsubscribed ? '\n' + __('This person is not subscribed and will not receive messages.') : '')}
+			title={addr + (unsubscribed ? ('\n' + __('This person is not subscribed and will not receive messages.')) : '')}
 			onClick={() => refer(addr)}
-			className={classnames('avatar', {
-				unsubscribed
+			className={classnames('x-avatar', {
+				'has-text-grey': unsubscribed
 			})}
-			data-tip
-			data-for={timestamp}
-			aria-describedby={id}
 		>
-			{username}
+			<span className="">{username} {username ? '.' : ''}</span>
+			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
 			{' '}
 		</span>
-		<span className="hint">
-			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={5} />
-			{ isNumber(ping) && <Ping ping={ping} /> }
+		<span className="has-text-grey is-size-7">
+			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={30} />
 		</span>
 	</span>
 );
@@ -65,23 +55,25 @@ class Message extends React.Component {
 	}
 
 	render() {
-		const { refer, message, isSubscribed } = this.props;
+		const { refer, message, isSubscribed, className, isNotice } = this.props;
 		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
+
 		return (
-			<div>
-				<span>
+			<div className={`message ${isNotice ? 'has-background-grey-lighter' : ''} ${className}`}>
+				<div className="message-header is-paddingless has-text-weight-light">
 					<Nickname
-						id={message.id}
 						refer={refer}
 						addr={message.addr}
 						username={message.username}
 						timestamp={message.timestamp}
-						ping={message.ping}
 						unsubscribed={unsubscribed}
+						pubKey={message.pubKey || ''}
 					/>
-					<TipJar topic={message.topic} addr={message.addr} />
-				</span>
-				<div className="message-content">
+					<TipJar className={classnames('', {
+						'is-hidden': isNotice,
+					})} messageID={message.id} topic={message.topic} addr={message.addr} />
+				</div>
+				<div className="message-body x-is-small-padding">
 					<Markdown
 						source={message.content}
 					/>

@@ -1,67 +1,15 @@
 import React from 'react';
-import Modal from 'react-modal';
-import Dropdown from 'rc-dropdown';
-import Menu, { Item as MenuItem } from 'rc-menu';
-import '../rc-dropdown.css';
-import { IoMdOpen } from 'react-icons/io';
-import { IS_FIREFOX, __, getChatDisplayName } from '../../misc/util';
-import { runtime, tabs, windows } from 'webextension-polyfill';
-import SubscriberList from '../containers/SubscriberList';
-import NknBalance from '../containers/NknBalance';
+import { matchPath, Link } from 'react-router-dom';
+import classnames from 'classnames';
+import { __, getChatDisplayName } from '../../misc/util';
+import history from 'Approot/UI/history';
 
-Modal.setAppElement('#root');
-
-const popout = type => {
-	switch (type) {
-		case 'panel':
-			windows.create({
-				url: runtime.getURL('sidebar.html'),
-				type: 'panel',
-				height: 700,
-				width: 550,
-			});
-			break;
-
-		case 'tab':
-			tabs.create({
-				url: runtime.getURL('sidebar.html'),
-			});
-			break;
-	}
-};
-
-
-const customStyles = {
-	content: {
-		inset: 0,
-		position: IS_FIREFOX ? 'relative' : 'absolute',
-		margin: 'auto',
-		height: 'min-content'
-	},
-	overlay: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-	}
-};
-
-const MyMenu = (
-	<Menu selectedKeys={[]} className="dropdown">
-		<MenuItem className="dropdown-item" onClick={() => popout('panel')} key="1">{__('Panel')}</MenuItem>
-		<MenuItem className="dropdown-item" onClick={() => popout('tab')} key="2">{__('Tab')}</MenuItem>
-	</Menu>
-);
-
-const Popout = () => (
-	<span className="new popout">
-		<Dropdown
-			trigger={['click']}
-			overlay={MyMenu}
-		>
-			<IoMdOpen title={ __('Pop Out') } />
-		</Dropdown>
-	</span>
-);
+import DchatLogo from 'Approot/UI/components/DchatLogo';
+import NewTopicForm from 'Approot/UI/components/NewTopicForm';
+import Popout from 'Approot/UI/components/Popout';
+import TopicsList from 'Approot/UI/containers/TopicsList';
+import SubscriberList from 'Approot/UI/containers/SubscriberList';
+import Logout from 'Approot/UI/containers/Logout';
 
 class Header extends React.Component {
 
@@ -69,82 +17,119 @@ class Header extends React.Component {
 		super(props);
 
 		this.state = {
-			modalIsOpen: false,
 			topic: '',
+			active: false,
+			subsOpen: false,
 		};
+
+		// Using the items in the hamburger menu should close it.
+		this.unlisten = history.listen(() => this.setState({
+			active: false
+		}));
 	}
 
-	openModal = () => {
-		this.setState({modalIsOpen: true});
+	componentWillUnmount() {
+		this.unlisten();
 	}
-
-	closeModal = () => {
-		this.setState({modalIsOpen: false});
-	}
-
-	handleAccept = (e) => {
-		e.preventDefault();
-		this.closeModal();
-		this.newChat();
-	}
-
-	newChat = async () => {
-		let topic = this.state.topic;
-		if (!topic) {
-			return;
-		}
-
-		topic = topic.trim();
-		if (!topic.length) {
-			return;
-		}
-
-		this.props.enterChatroom(topic);
-	};
 
 	handleTopicChange = (e) => {
 		this.setState({topic: e.target.value});
 	}
 
 	render() {
-		const { topic, enterChatroom, connected } = this.props;
-		return (
-			<header className="chat-header">
-				<Modal
-					isOpen={this.state.modalIsOpen}
-					onRequestClose={this.closeModal}
-					style={customStyles}
-					onAfterOpen={() => this.refs.topicInput.focus()}
-				>
-					<h2 className="title">{ __('Enter channel name') }</h2>
-					<form className="input narrow input-channel-form" onSubmit={this.handleAccept}>
-						<input type="text" ref="topicInput" onChange={this.handleTopicChange} />
-						<button type="submit" className="submit">{ __('Go') }</button>
-					</form>
-					<p className="description">
-						{__('You will need some NKN to subscribe to chats.') + ' '}
-					</p>
-					<p className="description">
-						{__('Your balance')}: <NknBalance />
-					</p>
-				</Modal>
 
-				{ topic ? (
-					<span className="chatroom-header">
-						<span className="back" onClick={() => enterChatroom(null)}>{'< ' + __('Back')}</span>
-						<span className="chatname" title={getChatDisplayName(topic)}>{getChatDisplayName(topic)}</span>
-						<SubscriberList />
-					</span>
-				) : (
-					<span className="chatlist-header">
-						<Popout />
-						<span className="title">{ __('D-Chat') }</span>
-						<span className={`join-button new ${!connected ? 'disabled' : ''}`} title={!connected ? __('Connecting...') : undefined } onClick={this.openModal}>{ __('Join') }</span>
-					</span>
-				)
-				}
-			</header>
+		const topic = matchPath(
+			this.props.location.pathname,
+			{
+				path: '/chat/:topic'
+			}
+		)?.params.topic;
+
+		return (
+			<nav className="navbar is-primary has-text-white">
+				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
+
+					<div className="navbar-item">
+						<figure className="image is-32x32">
+							<DchatLogo white />
+						</figure>
+					</div>
+
+					<div className="navbar-item">
+						<h5 className="title is-5 has-text-white">{getChatDisplayName(topic) || __('D-Chat')}</h5>
+					</div>
+
+					<a
+						className={classnames('navbar-burger burger', {
+							'is-active': this.state.active,
+						})}
+						onClick={() => this.setState({ active: !this.state.active })}
+						aria-label="menu"
+						aria-expanded={this.state.active}
+						role="button"
+					>
+						<span aria-hidden="true"></span>
+						<span aria-hidden="true"></span>
+						<span aria-hidden="true"></span>
+					</a>
+
+				</div>
+				<div
+					className={classnames('navbar-menu', {
+						'is-active': this.state.active,
+					})}
+					role="navigation"
+					aria-label="main navigation"
+				>
+					<div className="navbar-end">
+						<SubscriberList
+							className={classnames('navbar-item has-dropdown is-hoverable', {
+								'is-hidden': topic == null,
+							})}
+							topic={topic}
+						/>
+					</div>
+					<div className="navbar-start is-hidden-tablet">
+
+						<Link className="navbar-item" to="/">{__('Home')}</Link>
+
+						<div className="navbar-item">
+							<p className="menu-label">{__('Channels')}</p>
+							<TopicsList />
+						</div>
+
+						<div className="navbar-item">
+							<label className="menu-label">
+								{__('Add a channel')}
+							</label>
+							<NewTopicForm />
+						</div>
+
+						<div className="navbar-item">
+							<p className="menu-label">{__('New view')}</p>
+							<Popout />
+						</div>
+
+						<div className="navbar-item is-hidden-desktop">
+							<label className="menu-label">
+								{__('Account')}
+							</label>
+							<ul className="menu-list">
+								<li>
+									<Logout>
+										{__('Log Out')}
+									</Logout>
+								</li>
+							</ul>
+						</div>
+
+
+					</div>
+
+				</div>
+			</nav>
 		);
 	}
 }
+
 export default Header;

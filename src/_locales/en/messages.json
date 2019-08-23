@@ -5,62 +5,80 @@
   "s": {
     "message": " < 30 s"
   },
-  "Andgivefeedbackthanks": {
-    "message": " And give feedback, thanks!"
+  "Account": {
+    "message": " Account"
   },
-  "Back": {
-    "message": " Back"
+  "Addachannel": {
+    "message": " Add a channel"
   },
-  "Cleared": {
-    "message": " Cleared"
+  "Channels": {
+    "message": " Channels"
   },
-  "Connectingtoblockchain": {
-    "message": " Connecting to blockchain..."
+  "Connectingtotheblockchain": {
+    "message": " Connecting to the blockchain..."
   },
-  "Connecting": {
-    "message": " Connecting..."
+  "Createnew": {
+    "message": " Create new"
+  },
+  "Created": {
+    "message": " Created"
   },
   "DChat": {
     "message": " D-Chat"
   },
-  "Enterchannelname": {
-    "message": " Enter channel name"
-  },
-  "Fetchingbalance": {
-    "message": " Fetching balance..."
-  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
-  "GetNKN": {
-    "message": " Get NKN"
+  "General": {
+    "message": " General"
   },
-  "Go": {
-    "message": " Go"
+  "GetsomeNKNforfree": {
+    "message": " Get some NKN for free"
   },
-  "Invalidcredentials": {
-    "message": " Invalid credentials."
+  "Home": {
+    "message": " Home"
   },
-  "Join": {
-    "message": " Join"
+  "Incoming": {
+    "message": " Incoming"
   },
-  "Joinchannel": {
-    "message": " Join channel"
+  "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
+    "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
+  },
+  "JoiningachannelmeansmakingatransactionontheblockchainwhichtakesabitoftimeThoughusuallylessthansecondsitvariesdependingonwhichblockyoursubscriptiontransactiongetsinto": {
+    "message": " Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into."
   },
   "LogIn": {
     "message": " Log In"
   },
+  "LogOut": {
+    "message": " Log Out"
+  },
   "Logintodchatandthenrefres": {
     "message": " Log in to d-chat (and then refres"
+  },
+  "Newincomingtransaction": {
+    "message": " New incoming transaction"
+  },
+  "Newmessagesbelow": {
+    "message": " New messages below"
+  },
+  "Newoutgoingtransaction": {
+    "message": " New outgoing transaction"
+  },
+  "Newview": {
+    "message": " New view"
+  },
+  "Nowregardlessofcoinsjoinchannel": {
+    "message": " Now, regardless of coins, join channel"
+  },
+  "Outgoing": {
+    "message": " Outgoing"
   },
   "Panel": {
     "message": " Panel"
   },
   "Password": {
     "message": " Password"
-  },
-  "PopOut": {
-    "message": " Pop Out"
   },
   "Preview": {
     "message": " Preview"
@@ -74,20 +92,20 @@
   "Rememberme": {
     "message": " Remember me?"
   },
-  "Reset": {
-    "message": " Reset"
-  },
   "Signout": {
     "message": " Sign out"
   },
   "Submit": {
     "message": " Submit"
   },
-  "SubscribingtoachannelcantakeawhilebutusuallylessthansecondsItdependsonwhichblockyougetinto": {
-    "message": " Subscribing to a channel can take a while, but usually less than 60 seconds. It depends on which block you get into."
+  "Subscribers": {
+    "message": " Subscribers"
   },
-  "Subscribing": {
-    "message": " Subscribing..."
+  "Subscribingto": {
+    "message": " Subscribing to"
+  },
+  "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
+    "message": " Subscription confirmed. You are now receiving messages from"
   },
   "Tab": {
     "message": " Tab"
@@ -101,14 +119,17 @@
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
   },
-  "TojoinorcreateachannelusethebuttontoprightYouwillthenbesubscribedtothechannel": {
-    "message": " To join or create a channel, use the button top-right. You will then be subscribed to the channel."
+  "Tip": {
+    "message": " Tip"
+  },
+  "Topic": {
+    "message": " Topic"
+  },
+  "TransactionConfirmed": {
+    "message": " Transaction Confirmed"
   },
   "Username": {
     "message": " Username"
-  },
-  "Waitedforlongerthanseconds": {
-    "message": " Waited for longer than 5 seconds?"
   },
   "WelcomeBack": {
     "message": " Welcome Back!"
@@ -116,20 +137,35 @@
   "Welcome": {
     "message": " Welcome!"
   },
-  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionresolves": {
-    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription resolves."
+  "Wrongpassword": {
+    "message": " Wrong password."
   },
-  "YouwillneedsomeNKNtosubscribetochats": {
-    "message": " You will need some NKN to subscribe to chats."
+  "Youcangetsomefromthefaucetbelow": {
+    "message": " You can get some from the faucet below."
+  },
+  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
+    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed."
+  },
+  "Youcansendmessagesbutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
+    "message": " You can send messages, but you will not receive them until your subscription is confirmed."
+  },
+  "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
+    "message": " You will need some NKN coins to join channels successfully!"
   },
   "Youraddresswasautomaticallyfilledinbydchat": {
     "message": " Your address was automatically filled in by d-chat."
   },
-  "Yourbalance": {
-    "message": " Your balance"
+  "andsayhiSomeonewilltipyoucoins": {
+    "message": " and say hi! Someone will tip you coins."
+  },
+  "nonick": {
+    "message": " no nick"
   },
   "optional": {
     "message": " optional"
+  },
+  "tipped": {
+    "message": " tipped."
   },
   "extensionName": {
     "message": "D-Chat"

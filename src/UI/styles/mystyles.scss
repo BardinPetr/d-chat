@@ -1,0 +1,95 @@
+$primary: #1791f2;
+
+@charset "utf-8";
+@import "../../../node_modules/bulma/bulma";
+
+.x-sensor {
+	background: transparent;
+	margin: 0;
+	padding: 0;
+	outline: 0;
+}
+.x-is-align-start {
+	align-items: flex-start !important;
+}
+.x-is-small-padding {
+	padding: 0.5rem;
+}
+.x-is-fullwidth {
+	width: 100%;
+}
+.x-tabs-has-bigger-border a {
+	border-bottom-width: 2px;
+	
+}
+.x-chat {
+	padding-bottom: 1rem;
+
+	.message {
+		margin-bottom: 0.5rem;
+		background-color: white;
+	}
+	
+	.message-header {
+		background-color: transparent;
+		color: $primary;
+		padding-left: 0.2rem !important;
+	}
+
+	.x-me {
+		.message-body {
+			border-left-color: #9b1a34;
+		}
+		.message-header {
+			color: #9b1a34;
+		}
+	}
+
+	.message-body {
+		border-left-color: $primary;
+		border-left-width: 3px;
+		border-radius: 0;
+	}
+
+	.x-refers-to-me .message-body {
+		background-color: rgba(242,199,68,.2);
+	}
+}
+.x-is-fixed-height {
+	overflow-y: scroll;
+	height: 0;
+}
+.x-avatar {
+	cursor: pointer;
+
+	&:hover {
+		color: blueviolet;
+	}
+}
+.x-is-fullheight {
+	height: 100vh;
+	overflow-y: auto;
+}
+
+body, html, #root {
+	overflow-y: auto !important;
+}
+
+.redux-toastr {
+	.toastr {
+		min-height: inherit;
+
+		.rrt-middle-container {
+			margin-left: 1rem;
+		}
+
+		.rrt-left-container {
+			display: none !important;
+		}
+	}
+	.top-right {
+		top: 3.25rem;
+		width: inherit;
+		max-width: 300px;
+	}
+}

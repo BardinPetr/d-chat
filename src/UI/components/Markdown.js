@@ -3,11 +3,13 @@ import ReactMarkdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
 
 const Markdown = ({source}) => (
-	<ReactMarkdown
-		source={source}
-		escapeHtml={true}
-		renderers={{code: CodeBlock}}
-	/>
+	<div className="content">
+		<ReactMarkdown
+			source={source}
+			escapeHtml={true}
+			renderers={{code: CodeBlock}}
+		/>
+	</div>
 );
 
 export default Markdown;

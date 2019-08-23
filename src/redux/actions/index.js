@@ -2,10 +2,16 @@
  * TODO: sort out the aliases to the end to make some bookkeeping sense.
  */
 
-import { extension } from 'webextension-polyfill';
-import { getChatName, setBadgeText } from 'Approot/misc/util';
+import { __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
+
+export const navigated = to => ({
+	type: 'ui/NAVIGATED',
+	payload: {
+		to,
+	},
+});
 
 export const getBalance = () => ({
 	type: 'GET_BALANCE_ALIAS',
@@ -23,38 +29,58 @@ export const saveDraft = text => ({
 });
 
 export const connected = () => ({
-	type: 'CONNECTED'
+	type: 'CONNECTED',
 });
 
-export const subscribeCompleted = topic => ({
-	type: 'SUBSCRIBE_COMPLETED',
+export const subscribeCompleted = topic => dispatch => {
+	dispatch(getSubscribers(topic));
+
+	new Message({
+		topic,
+		contentType: 'dchat/subscribe',
+		content: __('Subscription confirmed. You are now receiving messages from') + ` ${getChatDisplayName(topic)}.`,
+		isPrivate: true,
+	}).receive(dispatch);
+
+	return dispatch({
+		type: 'SUBSCRIBE_COMPLETED',
+		payload: {
+			topic: getChatName( topic )
+		}
+	});
+};
+
+export const subscribe = (topic, transactionID) => (dispatch) => {
+	new Message({
+		topic,
+		contentType: 'dchat/subscribe',
+		content: __('Subscribing to') + ' ' + getChatDisplayName(topic) + '.\n\n' + __('You can send messages, but you will not receive them until your subscription is confirmed.'),
+		isPrivate: true,
+	}).receive(dispatch);
+
+	dispatch({
+		type: 'SUBSCRIBE',
+		payload: {
+			topic: getChatName( topic ),
+			transactionID
+		}
+	});
+};
+
+// An alias.
+export const getSubscribers = topic => ({
+	type: 'chat/GET_SUBSCRIBERS_ALIAS',
 	payload: {
 		topic: getChatName( topic )
-	}
-});
-
-export const subscribe = (topic, transactionID) => ({
-	type: 'SUBSCRIBE',
-	payload: {
-		topic: getChatName( topic ),
-		transactionID
 	}
 });
 
 export const setSubscribers = (topic, subscribers) => ({
-	type: 'SET_SUBSCRIBERS',
+	type: 'chat/SET_SUBSCRIBERS',
 	payload: {
-		topic: getChatName( topic ),
+		topic,
 		subscribers,
-	}
-});
-
-// An alias.
-export const getSubscribers = topic => ({
-	type: 'GET_SUBSCRIBERS',
-	payload: {
-		topic: getChatName( topic )
-	}
+	},
 });
 
 // Handles subscribing (background). An alias.
@@ -105,7 +131,7 @@ export const publishMessage = message => ({
 	}
 });
 
-const receiveMessage = message => ({
+export const receiveMessage = message => ({
 	type: 'RECEIVE_MESSAGE',
 	payload: {
 		message,
@@ -140,56 +166,40 @@ export const markUnread = (topic, ids) => (dispatch, getState) => {
 	});
 };
 
-const newTransaction = (id, data) => ({
-	type: 'nkn/NEW_TRANSACTION',
-	payload: {
-		transactionID: id,
-		data,
-	},
-});
+export const createTransaction = (id, data) => dispatch => {
+	console.log('Creating transaction', id, data);
+	return dispatch({
+		type: 'nkn/CREATE_TRANSACTION',
+		payload: {
+			transactionID: id,
+			data,
+		},
+	});
+};
 
 /**
  * Called by .on('message') listener.
  */
-export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
+export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
 	let message = {};
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		message = new Message(data).from(src);
-		if (message.contentType === 'nkn/tip') {
-			// Resub to chat (noob friendly tipping).
-			dispatch(newTransaction(message.transactionID, {
-				then: 'subscribe',
-				topic: message.topic,
-			}));
-		}
 	} else {
 		return;
 	}
 
-	// Create notification?
-	if ( !message.isMe ) {
-		let views = extension.getViews({
-			type: 'popup'
-		});
-		// Notify unless chat is open.
-		if ( views.length === 0 || ( views.length === 1 && message.topic !== getState().topic ) ) {
-			message.notify();
-
-			// Make this one work for all types of views.
-			dispatch( markUnread(message.topic, [message.id]) );
-		}
-	}
-
-	return dispatch(receiveMessage(message));
+	return message.receive(dispatch);
 };
 
-export const sendNKN = ({ topic, to, value }) => ({
-	type: 'nkn/SEND_NKN_ALIAS',
+export const newTransaction = ({ topic, to, value, contentType, ...rest }) => ({
+	type: 'nkn/NEW_TRANSACTION_ALIAS',
 	payload: {
 		value: value * 10 ** -8,
 		to,
-		topic
+		topic,
+		contentType,
+		...rest,
 	}
 });
 
@@ -200,21 +210,39 @@ const subscribeToChat = topic => ({
 	},
 });
 
-export const transactionComplete = transactionID => (dispatch, getState) => {
+export const transactionComplete = completedTransactionID => (dispatch, getState) => {
 	const { unconfirmed } = getState().transactions;
-	const { id, data } = unconfirmed.find(tx => transactionID === tx.id);
+	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
-	console.log('Now subscribing to...', data);
-	switch (data.then) {
-		case 'subscribe':
+	switch (data.contentType) {
+		case 'nkn/tip':
 			dispatch(subscribeToChat(data.topic));
 			break;
+	}
+
+	let title, flag;
+	if (data.to === window.nknClient.addr) {
+		title = __('Incoming');
+		flag = true;
+	} else if (data.addr === window.nknClient.addr) {
+		title = __('Outgoing');
+		flag = true;
+	}
+	console.log(title, 'transactionComplete:', data);
+	if (flag) {
+		// Transaction was TO or FROM me, so notify.
+		title += ' ' + __('Transaction Confirmed');
+		createNotification({
+			title,
+		});
+		dispatch(getBalance());
 	}
 
 	return dispatch({
 		type: 'nkn/TRANSACTION_COMPLETE',
 		payload: {
-			transactionID: id,
+			transactionID,
+			data,
 		},
 	});
 };

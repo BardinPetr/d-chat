@@ -3,14 +3,13 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs';
 
 const messages = (state = configs.messages, action ) => {
-	let newState;
-	let initial;
+	let newState, initial;
 	switch (action.type) {
 		case 'RECEIVE_MESSAGE':
 			initial = state[action.payload.topic] || [];
 			newState = {
 				...state,
-				[action.payload.topic]: [ ...initial, action.payload.message ]
+				[action.payload.topic]: [ ...initial, action.payload.message ],
 			};
 			configs.messages = newState;
 			break;
@@ -19,7 +18,7 @@ const messages = (state = configs.messages, action ) => {
 		case 'CREATE_CHAT':
 			newState = {
 				...state,
-				[action.payload.topic]: state[action.payload.topic] || []
+				[action.payload.topic]: state[action.payload.topic] || [],
 			};
 			configs.messages = newState;
 			break;
@@ -27,20 +26,6 @@ const messages = (state = configs.messages, action ) => {
 		case 'PUBLISH_MESSAGE':
 		default:
 			newState = state;
-	}
-	return newState;
-};
-
-const subscribers = (state = [], action) => {
-	let newState;
-	switch (action.type) {
-		case 'SET_SUBSCRIBERS':
-			newState = [ ...action.payload.subscribers ];
-			break;
-
-		case 'GET_SUBSCRIBERS':
-		default:
-			newState = [ ...state ];
 	}
 	return newState;
 };
@@ -66,28 +51,34 @@ const subscriptions = ( state = {}, action ) => {
 	return newState;
 };
 
-const transactions = (state = { unconfirmed: [], confirmed: [] }, action) => {
-	let newState, removed;
+const transactions = (state = {
+	unconfirmed: [],
+	confirmed: configs.transactions.confirmed
+}, action) => {
+	let newState, removed, original;
 	switch (action.type) {
-		case 'nkn/NEW_TRANSACTION':
+		case 'nkn/CREATE_TRANSACTION':
+			// Sending tx to yourself makes it dupe, but whatever.
 			newState = {
 				...state,
-				unconfirmed: [...state.unconfirmed, {
-					id: action.payload.transactionID,
-					data: action.payload.data,
-				}],
+				unconfirmed: [...state.unconfirmed,
+					action.payload,
+				],
 			};
 			break;
 
 		case 'nkn/TRANSACTION_COMPLETE':
-			removed = state.unconfirmed.splice(
-				state.unconfirmed.findIndex(i => i.id === action.payload.transactionID),
+			original = [...state.unconfirmed];
+			removed = original.splice(
+				state.unconfirmed.findIndex(i => i.transactionID === action.payload.transactionID),
 				1
 			);
+			console.log('Confirmed transaction:', removed);
 			newState = {
-				unconfirmed: [...state.unconfirmed],
+				unconfirmed: [...original],
 				confirmed: [...state.confirmed.concat(removed)],
 			};
+			configs.transactions.confirmed = newState;
 			break;
 
 		default:
@@ -117,7 +108,7 @@ const login = (state = {}, action) => {
 		case 'CONNECTED':
 			newState = {
 				...state,
-				connected: true
+				connected: true,
 			};
 			break;
 
@@ -125,22 +116,6 @@ const login = (state = {}, action) => {
 			newState = {};
 			break;
 
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
-// Active topic handler.
-const topic = (state = null, { type, payload }) => {
-	let newState;
-	switch (type) {
-		case 'ENTER_CHAT':
-			newState = payload.topic;
-			break;
-
-		// An alias, this one.
-		case 'JOIN_CHAT':
 		default:
 			newState = state;
 	}
@@ -204,8 +179,20 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			newState = {
 				...state,
 				[action.payload.topic]: {
-					...state[action.payload.topic],
 					unread: [],
+					subscribers: [],
+					...state[action.payload.topic],
+				}
+			};
+			configs.chatSettings = newState;
+			break;
+
+		case 'chat/SET_SUBSCRIBERS':
+			newState = {
+				...state,
+				[action.payload.topic]: {
+					...state[action.payload.topic],
+					subscribers: action.payload.subscribers,
 				}
 			};
 			break;
@@ -232,17 +219,34 @@ const nkn = (state = { balance: -1 }, action) => {
 	return newState;
 };
 
+// Most recent open page, where re-opening popup will start.
+const navigation = (state = { mostRecentPage: '/' }, action) => {
+	let newState;
+	switch (action.type) {
+		case 'ui/NAVIGATED':
+			newState = {
+				...state,
+				mostRecentPage: action.payload.to,
+			};
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 export default combineReducers({
 	login,
-	// Client's ongoing subscriptions, waiting to be resolved.
-	subscriptions,
-	// Active chat.
-	topic,
+	// Chat.
 	messages,
-	subscribers,
 	draftMessage,
 	chatSettings,
+	// Client's ongoing subscriptions, waiting to be resolved.
+	subscriptions,
 	// Information about wallet/client/so forth.
 	nkn,
 	transactions,
+	// UI
+	navigation,
 });
