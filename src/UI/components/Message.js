@@ -29,7 +29,7 @@ const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 				'has-text-grey': unsubscribed
 			})}
 		>
-			<span className="">{username}</span>
+			<span className="">{username} {username ? '.' : ''}</span>
 			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
 			{' '}
 		</span>
