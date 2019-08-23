@@ -33,14 +33,15 @@ $primary: #1791f2;
 	.message-header {
 		background-color: transparent;
 		color: $primary;
+		padding-left: 0.2rem !important;
 	}
 
 	.x-me {
 		.message-body {
-			border-left-color: $danger;
+			border-left-color: #9b1a34;
 		}
 		.message-header {
-			color: $danger;
+			color: #9b1a34;
 		}
 	}
 

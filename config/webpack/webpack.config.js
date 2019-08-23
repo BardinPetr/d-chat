@@ -66,7 +66,7 @@ module.exports = function (webpackEnv) {
 		optimization: {
 			minimize: isEnvProduction,
 			minimizer: [
-				plugins.terserPlugin,
+				// plugins.terserPlugin,
 				plugins.optimizeCSSAssetsPlugin,
 			]
 		},

@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
-import { reducer as toastr } from 'react-redux-toastr';
 
 const messages = (state = configs.messages, action ) => {
 	let newState, initial;
@@ -52,7 +51,10 @@ const subscriptions = ( state = {}, action ) => {
 	return newState;
 };
 
-const transactions = (state = { unconfirmed: [], confirmed: [] }, action) => {
+const transactions = (state = {
+	unconfirmed: [],
+	confirmed: configs.transactions.confirmed
+}, action) => {
 	let newState, removed, original;
 	switch (action.type) {
 		case 'nkn/CREATE_TRANSACTION':
@@ -76,6 +78,7 @@ const transactions = (state = { unconfirmed: [], confirmed: [] }, action) => {
 				unconfirmed: [...original],
 				confirmed: [...state.confirmed.concat(removed)],
 			};
+			configs.transactions.confirmed = newState;
 			break;
 
 		default:
@@ -246,6 +249,4 @@ export default combineReducers({
 	transactions,
 	// UI
 	navigation,
-	// react-redux-toastr
-	toastr,
 });

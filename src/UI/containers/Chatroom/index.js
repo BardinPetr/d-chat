@@ -1,14 +1,11 @@
 /**
  * Contains messages list + submit box.
  *
- * TODO make VisibilitySensor change badge text instantly, move chatlist & textarea code into their own components.
- * Maybe drop the whole VisibilitySensor and think of something else.
  * Probably do something to improve the chat rendering. It basically renders every time.
  */
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import VisibilitySensor from 'react-visibility-sensor';
 import TextareaAutosize from 'react-autosize-textarea';
 import Message from '../../components/Message';
 import { __, formatAddr } from 'Approot/misc/util';
@@ -31,21 +28,17 @@ class Chatroom extends React.Component {
 		this.state = {
 			count: 15 + props.unreadMessages.length,
 			showingPreview: false,
-			subs: [],
 		};
 
-		console.log('unreadid', props.unreadMessages);
 		// No fooling around.
 		this.lastReadId = props.unreadMessages[0];
 
 		this.wasScrolledToBottom = true;
 		this.textarea = React.createRef();
 		// Mark all unread messages as read on chat opening.
-		this.onScrollTop = debounce(this.onScrollTop, 300);
+		this.onScroll = debounce(this.onScroll, 300);
 
-		this.getSubsInterval = setInterval(() => this.props.getSubscribers(props.topic).then(
-			(subs) => this.setState({subs})
-		), 60000);
+		this.getSubsInterval = setInterval(() => props.getSubscribers(props.topic), 60000);
 	}
 
 	loadMore = () => {
@@ -65,9 +58,7 @@ class Chatroom extends React.Component {
 		this.textarea.current.focus();
 		this.textarea.current.value = this.props.draft;
 
-		this.props.getSubscribers(this.props.topic).then(
-			(subs) => this.setState({subs})
-		);
+		this.props.getSubscribers(this.props.topic);
 		/*
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
@@ -155,9 +146,14 @@ class Chatroom extends React.Component {
 		showingPreview: showing,
 	});
 
-	onScrollTop = (el) => {
+	onScroll = (el) => {
+		// Top
 		if (el.scrollTop <= 25 && this.props.messages.length > this.state.count) {
 			this.loadMore();
+		}
+		// Bot
+		if (el.scrollTop > el.scrollTopMax - 25) {
+			this.markAllRead();
 		}
 	}
 
@@ -191,22 +187,20 @@ class Chatroom extends React.Component {
 					})}
 					refer={this.refer}
 					message={message}
-					isSubscribed={this.state.subs.includes(message.addr)}
-					key={message.id || idx}
+					isSubscribed={this.props.subs.includes(message.addr)}
+					key={message.id + idx}
+					isNotice={['dchat/subscribe', 'nkn/tip'].includes(message.contentType)}
 				/>
 			);
 		}, []);
 
 		return (
-			<div className="hero is-fullheight-with-navbar x-is-fullwidth" onMouseLeave={this.onMouseLeave}>
-				<div className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height" ref={ref => this.messages = ref} onScroll={e => this.onScrollTop(e.target)}>
+			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
+				<div className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height" ref={ref => this.messages = ref} onScroll={e => this.onScroll(e.target)}>
 					<div className="container">
 						<div className="x-chat">
 							{ messageList }
 						</div>
-						<VisibilitySensor onChange={vis => vis && this.markAllRead()}>
-							<hr className="x-sensor" />
-						</VisibilitySensor>
 					</div>
 				</div>
 				<div className="hero-foot">
@@ -268,6 +262,7 @@ const mapStateToProps = (state, ownProps) => ({
 	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
 	topic: ownProps.match.params.topic,
 	subscribing: Object.keys(state.subscriptions).includes(ownProps.match.params.topic),
+	subs: state.chatSettings[ownProps.match.params.topic]?.subscribers || [],
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -4,7 +4,11 @@ export default new Configs({
 	walletJSON: null,
 	messages: {},
 	showNotifications: true,
-	chatSettings: {}
+	chatSettings: {},
+	// Confirmed transactions only.
+	transactions: {
+		confirmed: [],
+	},
 }, {
 	localKeys: [ 'showNotifications' ]
 });

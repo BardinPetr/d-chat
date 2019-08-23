@@ -30,7 +30,7 @@ const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 			})}
 		>
 			<span className="">{username}</span>
-			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 6)}...</i>
+			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
 			{' '}
 		</span>
 		<span className="has-text-grey is-size-7">
@@ -55,37 +55,31 @@ class Message extends React.Component {
 	}
 
 	render() {
-		const { refer, message, isSubscribed, className } = this.props;
+		const { refer, message, isSubscribed, className, isNotice } = this.props;
 		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
 
-		if (message.contentType === 'nkn/tip') {
-			return(
-				<div className={`message ${className}`}>
-
+		return (
+			<div className={`message ${isNotice ? 'has-background-grey-lighter' : ''} ${className}`}>
+				<div className="message-header is-paddingless has-text-weight-light">
+					<Nickname
+						refer={refer}
+						addr={message.addr}
+						username={message.username}
+						timestamp={message.timestamp}
+						unsubscribed={unsubscribed}
+						pubKey={message.pubKey || ''}
+					/>
+					<TipJar className={classnames('', {
+						'is-hidden': isNotice,
+					})} messageID={message.id} topic={message.topic} addr={message.addr} />
 				</div>
-			);
-		} else {
-			return (
-				<div className={`message ${className}`}>
-					<div className="message-header is-paddingless has-text-weight-light">
-						<Nickname
-							refer={refer}
-							addr={message.addr}
-							username={message.username}
-							timestamp={message.timestamp}
-							unsubscribed={unsubscribed}
-							pubKey={message.pubKey || ''}
-						/>
-						<TipJar topic={message.topic} addr={message.addr} />
-					</div>
-					<div className="message-body x-is-small-padding">
-						<Markdown
-							source={message.content}
-						/>
-					</div>
+				<div className="message-body x-is-small-padding">
+					<Markdown
+						source={message.content}
+					/>
 				</div>
-			);
-		}
+			</div>
+		);
 	}
 }
 

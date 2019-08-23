@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "2.7.0",
+  "version": "3.0.0",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -126,12 +126,10 @@
     "react-markdown": "^4.1.0",
     "react-modal": "^3.9.1",
     "react-redux": "^7.1.0",
-    "react-redux-toastr": "^7.5.1",
     "react-router-dom": "^5.0.1",
     "react-router-private": "^1.0.16",
     "react-timeago": "^4.4.0",
     "react-tooltip": "^3.10.0",
-    "react-visibility-sensor": "^5.1.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2",

@@ -2,11 +2,9 @@
  * TODO: sort out the aliases to the end to make some bookkeeping sense.
  */
 
-import { __, getChatName, setBadgeText } from 'Approot/misc/util';
+import { __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
-import { handleMessage } from './Messaging';
-import { actions as toastr } from 'react-redux-toastr';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
@@ -36,11 +34,14 @@ export const connected = () => ({
 
 export const subscribeCompleted = topic => dispatch => {
 	dispatch(getSubscribers(topic));
-	dispatch(toastr.add({
-		type: 'success',
-		title: __('Subscription Confirmed'),
-		message: __('Successfully subscribed to') + ` #${topic}.`,
-	}));
+
+	new Message({
+		topic,
+		contentType: 'dchat/subscribe',
+		content: __('Subscription confirmed. You are now receiving messages from') + ` ${getChatDisplayName(topic)}.`,
+		isPrivate: true,
+	}).receive(dispatch);
+
 	return dispatch({
 		type: 'SUBSCRIBE_COMPLETED',
 		payload: {
@@ -49,13 +50,22 @@ export const subscribeCompleted = topic => dispatch => {
 	});
 };
 
-export const subscribe = (topic, transactionID) => ({
-	type: 'SUBSCRIBE',
-	payload: {
-		topic: getChatName( topic ),
-		transactionID
-	}
-});
+export const subscribe = (topic, transactionID) => (dispatch) => {
+	new Message({
+		topic,
+		contentType: 'dchat/subscribe',
+		content: __('Subscribing to') + ' ' + getChatDisplayName(topic) + '.\n\n' + __('You can send messages, but you will not receive them until your subscription is confirmed.'),
+		isPrivate: true,
+	}).receive(dispatch);
+
+	dispatch({
+		type: 'SUBSCRIBE',
+		payload: {
+			topic: getChatName( topic ),
+			transactionID
+		}
+	});
+};
 
 // An alias.
 export const getSubscribers = topic => ({
@@ -158,12 +168,6 @@ export const markUnread = (topic, ids) => (dispatch, getState) => {
 
 export const createTransaction = (id, data) => dispatch => {
 	console.log('Creating transaction', id, data);
-	const toastTitle = data.outgoing ? __('Outgoing Transaction') : __('Incoming Transaction');
-	dispatch(toastr.add({
-		type: 'info',
-		title: toastTitle,
-		message: `${data?.value?.toFixed(8) || '?'}NKN.`,
-	}));
 	return dispatch({
 		type: 'nkn/CREATE_TRANSACTION',
 		payload: {
@@ -185,7 +189,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
 		return;
 	}
 
-	return handleMessage(message, dispatch);
+	return message.receive(dispatch);
 };
 
 export const newTransaction = ({ topic, to, value, contentType, ...rest }) => ({
@@ -216,15 +220,22 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 			break;
 	}
 
-	let title = data.outgoing ? __('Outgoing Transaction') : __('Incoming Transaction');
-	title += ' ' + __('Confirmed');
-
-	dispatch(toastr.add({
-		type: 'success',
-		title:  title,
-		message: `${data.value?.toFixed(8) || '?'}NKN.`,
-		// TODO add link to #/transactions/:id or something.
-	}));
+	let title, flag;
+	if (data.to === window.nknClient.addr) {
+		title = __('Incoming');
+		flag = true;
+	} else if (data.addr === window.nknClient.addr) {
+		title = __('Outgoing');
+		flag = true;
+	}
+	if (flag) {
+		// Transaction was TO or FROM me, so notify.
+		title += ' ' + __('Transaction Confirmed');
+		console.log(title, 'transactionComplete:', data);
+		createNotification({
+			title,
+		});
+	}
 
 	return dispatch({
 		type: 'nkn/TRANSACTION_COMPLETE',

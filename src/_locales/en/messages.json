@@ -14,9 +14,6 @@
   "Channels": {
     "message": " Channels"
   },
-  "Confirmed": {
-    "message": " Confirmed"
-  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
@@ -41,11 +38,11 @@
   "Home": {
     "message": " Home"
   },
-  "IncomingTransaction": {
-    "message": " Incoming Transaction"
+  "Incoming": {
+    "message": " Incoming"
   },
-  "InsufficientFunds": {
-    "message": " Insufficient Funds"
+  "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
+    "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
   },
   "JoiningachannelmeansmakingatransactionontheblockchainwhichtakesabitoftimeThoughusuallylessthansecondsitvariesdependingonwhichblockyoursubscriptiontransactiongetsinto": {
     "message": " Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into."
@@ -59,6 +56,9 @@
   "Logintodchatandthenrefres": {
     "message": " Log in to d-chat (and then refres"
   },
+  "NEWTRANSACTION": {
+    "message": " NEW TRANSACTION"
+  },
   "Newmessagesbelow": {
     "message": " New messages below"
   },
@@ -68,8 +68,8 @@
   "Nowregardlessofcoinsjoinchannel": {
     "message": " Now, regardless of coins, join channel"
   },
-  "OutgoingTransaction": {
-    "message": " Outgoing Transaction"
+  "Outgoing": {
+    "message": " Outgoing"
   },
   "Panel": {
     "message": " Panel"
@@ -89,9 +89,6 @@
   "Rememberme": {
     "message": " Remember me?"
   },
-  "Sentyou": {
-    "message": " Sent you"
-  },
   "Signout": {
     "message": " Sign out"
   },
@@ -104,11 +101,8 @@
   "Subscribingto": {
     "message": " Subscribing to"
   },
-  "SubscriptionConfirmed": {
-    "message": " Subscription Confirmed"
-  },
-  "Successfullysubscribedto": {
-    "message": " Successfully subscribed to"
+  "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
+    "message": " Subscription confirmed. You are now receiving messages from"
   },
   "Tab": {
     "message": " Tab"
@@ -128,6 +122,9 @@
   "Topic": {
     "message": " Topic"
   },
+  "TransactionConfirmed": {
+    "message": " Transaction Confirmed"
+  },
   "Username": {
     "message": " Username"
   },
@@ -146,8 +143,8 @@
   "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
     "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed."
   },
-  "YouneedNKNcoinsforsubscribingYouwillnotreceivemessages": {
-    "message": " You need NKN coins for subscribing. You will not receive messages."
+  "Youcansendmessagesbutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
+    "message": " You can send messages, but you will not receive them until your subscription is confirmed."
   },
   "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
     "message": " You will need some NKN coins to join channels successfully!"
@@ -158,8 +155,17 @@
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
   },
+  "nonick": {
+    "message": " no nick"
+  },
   "optional": {
     "message": " optional"
+  },
+  "sentyou": {
+    "message": " sent you"
+  },
+  "tipped": {
+    "message": " tipped."
   },
   "extensionName": {
     "message": "D-Chat"

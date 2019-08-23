@@ -18,7 +18,7 @@ const SubscriberList = ({ subscribers, className }) => {
 			<div className={classnames('navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !open,
 			})}>
-				{subscribers.map((sub, key) => (
+				{subscribers.sort().map((sub, key) => (
 					<a className="navbar-item" key={key}>
 						{sub}
 					</a>

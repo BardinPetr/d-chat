@@ -1,7 +1,8 @@
 import shasum	from 'shasum';
-import { i18n, runtime, browserAction } from 'webextension-polyfill';
+import { i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
+import configs from 'Approot/misc/configs';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/, '');
@@ -70,7 +71,7 @@ export const parseAddr = addr => {
 	let formattedAddr = '';
 	if (lastDotPosition !== -1) {
 		formattedAddr =  addr.substring(0, lastDotPosition);
-		pubKey = addr.slice(lastDotPosition);
+		pubKey = addr.slice(lastDotPosition + 1);
 	}
 	return [ formattedAddr, pubKey ];
 };
@@ -97,3 +98,14 @@ export const setBadgeText = txt => {
 };
 
 export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
+
+export const createNotification = async (options) => {
+	if (configs.showNotifications) {
+		return notifications.create( 'd-chat', {
+			type: 'basic',
+			title: options.title || '',
+			message: options.message || '',
+			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
+		});
+	}
+};

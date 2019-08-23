@@ -1,6 +1,6 @@
 import NKN from '../../misc/nkn';
+import Message from 'Approot/background/Message';
 import {
-	createTransaction,
 	transactionComplete,
 	getSubscribers,
 	getUnreadMessages,
@@ -14,23 +14,11 @@ import {
 	setSubscribers,
 } from '../actions';
 import passworder from 'browser-passworder';
-import { __, getAddressFromPubKey, setBadgeText, getChatDisplayName } from 'Approot/misc/util';
-import uuidv1 from 'uuid/v1';
-import { actions as toastr } from 'react-redux-toastr';
+import { __, getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
 
 const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
 const password = 'd-chat!!!';
-
-const prepareNewMessage = msg => {
-	const newMsg = {
-		id: uuidv1(),
-		timestamp: new Date().toUTCString(),
-		...msg,
-	};
-	return newMsg;
-};
-
 
 const subscribeToChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
@@ -38,10 +26,6 @@ const subscribeToChat = originalAction => dispatch => {
 		window.nknClient.subscribe( topic )
 			.then(txId => {
 				dispatch(subscribe(topic, txId));
-				dispatch(toastr.add({
-					type: 'info',
-					title: __('Subscribing to') + ' ' + getChatDisplayName(topic),
-				}));
 			},
 			err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
@@ -59,19 +43,16 @@ const joinChat = originalAction => (dispatch, getState) => {
 				console.log('Subscription transaction:', txId);
 				// There will be a bunch of work when "hide chat" is implemented.
 				dispatch(subscribe(topic, txId));
-				dispatch(toastr.add({
-					type: 'info',
-					title: __('Subscribing to') + ' ' + getChatDisplayName(topic),
-				}));
 			},
 			err => {
 				// Insufficient funds.
 				if ( err.data.includes('funds') ) {
-					dispatch(toastr.add({
-						type: 'error',
-						title: __('Insufficient Funds'),
-						message: __('You need NKN coins for subscribing. You will not receive messages.'),
-					}));
+					new Message({
+						topic,
+						error: true,
+						content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.'),
+						contentType: 'dchat/subscribe',
+					}).receive(dispatch);
 				}
 				console.log('Errored at subscribe. Already subscribed?', err);
 			}
@@ -101,11 +82,11 @@ const login = originalAction => (dispatch, getState) => {
 			// New users beg for coins on '#D-Chat Intro'.
 			const balance = await nknClient.wallet.getBalance();
 			if (balance.eq(0)) {
-				nknClient.publishMessage(BEGTOPIC, prepareNewMessage({
+				new Message({
 					contentType: 'text',
 					content: 'Please, tip me. _This message was sent automatically._',
 					topic: BEGTOPIC
-				}));
+				}).publish(BEGTOPIC);
 			}
 		});
 
@@ -168,7 +149,7 @@ const publishMessage = originalAction => () => {
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
 
-	window.nknClient.publishMessage(topic, prepareNewMessage(message));
+	new Message(message).publish(topic);
 
 	return originalAction;
 };
@@ -222,51 +203,56 @@ const getBalance = () => async (dispatch) => {
 	});
 };
 
-const newTransaction = originalAction => async (dispatch) => {
+const newTransaction = originalAction => async () => {
 	console.log('Sending NKN', originalAction);
-	const { to, value, topic } = originalAction.payload;
+	const { to, value, topic, targetID } = originalAction.payload;
 
 	// Send
 	const tx = await window.nknClient.wallet.transferTo(
 		getAddressFromPubKey(to),
 		value
 	).then(tx => {
-		const message = prepareNewMessage({
+		const message = new Message({
 			contentType: 'nkn/tip',
 			transactionID: tx,
 			value,
 			to,
 			topic, // ehh TODO rm.
-		});
+			targetID,
+		}).from('me');
+		message.publish(topic);
 
 		console.log('NKN was sent. tx:', tx, 'creating message', message);
 
-		// Add to list of outgoing transactions.
-		dispatch(createTransaction(tx, {
-			...message,
-			outgoing: true,
-		}));
-
-		// Send notice to recipient.
-		message.isPrivate = true;
-		window.nknClient.sendMessage(
+		// Need to create a new message to get a new ID, for tipping oneself.
+		// (You send and receive the message when you tip yourself.)
+		const noticeMessage = new Message({
+			contentType: 'nkn/tip',
+			transactionID: tx,
+			value,
 			to,
-			message
-		).then(() => console.log('Successfully sent notice'),
-			e => console.error('Error when sending notice', e));
+			topic, // ehh TODO rm.
+			targetID,
+			isPrivate: true,
+		}).from('me');
+		noticeMessage.send(to)
+			.then(() => console.log('Successfully sent notice'),
+				e => console.error('Error when sending notice', e));
 
 		// Return tx id for UI.
 		return { tx };
 
 	}, e => {
 		console.error('Error when sending tx', e);
-		return { error: e.msg };
+		return { error: e.msg || e.data };
 	});
 
 	originalAction.payload = {
 		transactionID: tx.tx,
 		error: tx.error,
 	};
+
+	console.log('RETURNING ORIGINAL ACTION:', originalAction);
 	return originalAction;
 };
 

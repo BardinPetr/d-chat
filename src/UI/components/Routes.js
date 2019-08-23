@@ -4,8 +4,6 @@ import Info from 'Approot/UI/components/Info';
 import Chatroom from 'Approot/UI/containers/Chatroom';
 import Header from 'Approot/UI/components/Header';
 import Sidebar from 'Approot/UI/containers/Sidebar';
-import Toastr from 'react-redux-toastr';
-import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
 const Routes = () => (
 	<div className="columns is-gapless">
@@ -34,14 +32,6 @@ const Routes = () => (
 				</div>
 			</section>
 		</div>
-		<Toastr
-			timeOut={5000}
-			transitionIn="bounceInDown"
-			transitionOut="bounceOut"
-			progressBar
-			closeOnToastrClick
-			className="is-size-7"
-		/>
 	</div>
 );
 
