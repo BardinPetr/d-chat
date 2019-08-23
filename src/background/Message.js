@@ -24,10 +24,6 @@ class Message {
 		this.isPrivate = Boolean(message.isPrivate);
 		this.to = message.to;
 		this.value = message.value || 1e-7; // The default WAS 10 sats. Can remove this soon (or set to -1);
-
-		if (this.contentType === 'nkn/tip') {
-			this.title = __('NEW TRANSACTION') + ': ' + getChatDisplayName(this.topic);
-		}
 		if (this.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();
 		} else {
@@ -57,6 +53,17 @@ class Message {
 	}
 
 	async notify() {
+		if (this.contentType === 'nkn/tip') {
+			if (this.to === window.nknClient.addr) {
+				this.title = __('New incoming transaction') + ': ' + getChatDisplayName(this.topic);
+			} else if (this.to) {
+				this.title = __('New outgoing transaction') + ': ' + getChatDisplayName(this.topic);
+			} else {
+				// Do not notify without reasonable title.
+				return;
+			}
+		}
+
 		let title = this.title || `D-Chat ${getChatDisplayName(this.topic)}, ${this.username}.${this.pubKey.slice(0, 8)}:`;
 		return createNotification({
 			message: this.content,
@@ -72,6 +79,7 @@ class Message {
 		this.refersToMe = undefined;
 		this.username = undefined;
 		this.title = undefined;
+		this.targetID = undefined;
 		this.to = to;
 		return window.nknClient.sendMessage(to, this);
 	}

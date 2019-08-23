@@ -21,7 +21,6 @@ const popout = type => {
 	}
 };
 
-// TODO add subscriberlist back
 const Popout = () => (
 	<ul className="menu-list">
 		<li onClick={() => popout('panel')} key="1">

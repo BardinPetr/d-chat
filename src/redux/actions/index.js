@@ -228,13 +228,14 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 		title = __('Outgoing');
 		flag = true;
 	}
+	console.log(title, 'transactionComplete:', data);
 	if (flag) {
 		// Transaction was TO or FROM me, so notify.
 		title += ' ' + __('Transaction Confirmed');
-		console.log(title, 'transactionComplete:', data);
 		createNotification({
 			title,
 		});
+		dispatch(getBalance());
 	}
 
 	return dispatch({
