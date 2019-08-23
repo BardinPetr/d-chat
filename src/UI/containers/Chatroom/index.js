@@ -215,6 +215,7 @@ class Chatroom extends React.Component {
 									ref={this.textarea}
 									className={classnames('textarea', {
 										'is-hidden': this.state.showingPreview,
+										'is-warning': subscribing,
 									})}
 									onKeyDown={this.onEnterPress}
 								/>

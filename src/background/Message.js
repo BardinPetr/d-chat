@@ -47,7 +47,7 @@ class Message {
 			formatAddr( window.nknClient.addr )
 		);
 		if (this.contentType === 'nkn/tip') {
-			this.content = `${this.username}.${this.pubKey.slice(0,8)} ${__('sent you')} ${this.value.toFixed(8)} NKN.`;
+			this.content = `${this.username}.${this.pubKey.slice(0,8)}: ${this.value.toFixed(8)} NKN.`;
 		}
 		return this;
 	}
