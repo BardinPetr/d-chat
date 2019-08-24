@@ -2,6 +2,9 @@
  * Contains messages list + submit box.
  *
  * Probably do something to improve the chat rendering. It basically renders every time.
+ *
+ * TODO maybe put a "lock" on scroll:
+ *   always scroll to bot, unless has been manually scrolled up.
  */
 import React from 'react';
 import { connect } from 'react-redux';

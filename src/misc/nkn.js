@@ -86,6 +86,7 @@ class NKN extends nkn {
 			identifier: username.trim() || undefined,
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: seed,
+			msgHoldingSeconds: 1e+65,
 		});
 
 		this.wallet = wallet;

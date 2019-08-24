@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Info from 'Approot/UI/components/Info';
+import Home from 'Approot/UI/containers/Home';
 import Chatroom from 'Approot/UI/containers/Chatroom';
 import Header from 'Approot/UI/components/Header';
 import Sidebar from 'Approot/UI/containers/Sidebar';
@@ -27,7 +27,7 @@ const Routes = () => (
 					<Route
 						path="/"
 						exact={true}
-						component={Info}
+						component={Home}
 					/>
 				</div>
 			</section>

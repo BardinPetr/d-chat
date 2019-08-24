@@ -56,7 +56,7 @@ class Message {
 		if (this.contentType === 'nkn/tip') {
 			if (this.to === window.nknClient.addr) {
 				this.title = __('New incoming transaction') + ': ' + getChatDisplayName(this.topic);
-			} else if (this.to) {
+			} else if (this.addr === window.nknClient.addr) {
 				this.title = __('New outgoing transaction') + ': ' + getChatDisplayName(this.topic);
 			} else {
 				// Do not notify without reasonable title.
@@ -71,7 +71,7 @@ class Message {
 		});
 	}
 
-	send(to) {
+	send(toAddr) {
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -80,11 +80,11 @@ class Message {
 		this.username = undefined;
 		this.title = undefined;
 		this.targetID = undefined;
-		this.to = to;
-		return window.nknClient.sendMessage(to, this);
+		this.to = toAddr;
+		return window.nknClient.sendMessage(toAddr, this);
 	}
 
-	publish(to) {
+	publish(topic) {
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -93,8 +93,7 @@ class Message {
 		this.isPrivate = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		this.to = to;
-		return window.nknClient.publishMessage(to, this);
+		return window.nknClient.publishMessage(topic, this);
 	}
 
 	async receive(dispatch) {

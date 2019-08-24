@@ -2,7 +2,7 @@
  * TODO: sort out the aliases to the end to make some bookkeeping sense.
  */
 
-import { __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
+import { parseAddr, __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 
@@ -220,20 +220,23 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 			break;
 	}
 
-	let title, flag;
+	let title, amInvolved = false, message = `${getChatDisplayName(data.topic)}, `;
 	if (data.to === window.nknClient.addr) {
 		title = __('Incoming');
-		flag = true;
+		message += parseAddr(data.addr)[0];
+		amInvolved = true;
 	} else if (data.addr === window.nknClient.addr) {
 		title = __('Outgoing');
-		flag = true;
+		message += parseAddr(data.to)[0];
+		amInvolved = true;
 	}
 	console.log(title, 'transactionComplete:', data);
-	if (flag) {
+	if (amInvolved) {
 		// Transaction was TO or FROM me, so notify.
 		title += ' ' + __('Transaction Confirmed');
 		createNotification({
 			title,
+			message,
 		});
 		dispatch(getBalance());
 	}

@@ -14,7 +14,7 @@
   },
   "content_scripts": [
 	{
-		"matches": ["https://nkn-faucet.herokuapp.com/*"],
+		"matches": ["*://nkn-faucet.herokuapp.com/*"],
 		"js": ["content.js"],
 		"all_frames": true
 	}

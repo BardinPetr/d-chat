@@ -33,7 +33,7 @@ const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
 			{' '}
 		</span>
-		<span className="has-text-grey is-size-7">
+		<span className="has-text-grey is-size-7 x-is-small-padding-left">
 			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={30} />
 		</span>
 	</span>
@@ -61,17 +61,19 @@ class Message extends React.Component {
 		return (
 			<div className={`message ${isNotice ? 'has-background-grey-lighter' : ''} ${className}`}>
 				<div className="message-header is-paddingless has-text-weight-light">
-					<Nickname
-						refer={refer}
-						addr={message.addr}
-						username={message.username}
-						timestamp={message.timestamp}
-						unsubscribed={unsubscribed}
-						pubKey={message.pubKey || ''}
-					/>
-					<TipJar className={classnames('', {
-						'is-hidden': isNotice,
-					})} messageID={message.id} topic={message.topic} addr={message.addr} />
+					<span>
+						<Nickname
+							refer={refer}
+							addr={message.addr}
+							username={message.username}
+							timestamp={message.timestamp}
+							unsubscribed={unsubscribed}
+							pubKey={message.pubKey || ''}
+						/>
+						<TipJar className={classnames('is-inline-flex', {
+							'is-hidden': isNotice,
+						})} messageID={message.id} topic={message.topic} addr={message.addr} />
+					</span>
 				</div>
 				<div className="message-body x-is-small-padding">
 					<Markdown
