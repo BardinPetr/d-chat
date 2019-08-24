@@ -48,16 +48,12 @@ class Header extends React.Component {
 		return (
 			<nav className="navbar is-primary has-text-white">
 				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
-
-					<div className="navbar-item">
+					<Link to="/" className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
-					</div>
-
-					<div className="navbar-item">
-						<h5 className="title is-5 has-text-white">{getChatDisplayName(topic) || __('D-Chat')}</h5>
-					</div>
+						<h5 className="title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
+					</Link>
 
 					<a
 						className={classnames('navbar-burger burger', {

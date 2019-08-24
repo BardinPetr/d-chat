@@ -86,6 +86,7 @@ class NKN extends nkn {
 			identifier: username.trim() || undefined,
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: seed,
+			msgHoldingSeconds: 3999999999,
 		});
 
 		this.wallet = wallet;
@@ -107,29 +108,32 @@ class NKN extends nkn {
 
 	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
 	// publish = (topicID, message) => {
-	publishMessage = (topic, message) => {
+	publishMessage = async (topic, message, options = {}) => {
 		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		try {
 			return this.publish(
 				genChatID( topic ),
 				BUCKET,
 				JSON.stringify(message),
-				{ encrypt: true }
+				options
 			);
 		} catch(e) {
 			console.error('Error when publishing', e);
+			throw e;
 		}
 	}
 
-	sendMessage = (to, message) => {
+	sendMessage = async (to, message, options = {}) => {
 		console.log('Sending private message', message, 'to', to);
 		try {
 			return this.send(
 				to,
-				JSON.stringify(message)
+				JSON.stringify(message),
+				options
 			);
 		} catch(e) {
 			console.error('Error when sending', e);
+			throw e;
 		}
 	}
 

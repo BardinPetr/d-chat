@@ -1,4 +1,5 @@
 $primary: #1791f2;
+$navbar-breakpoint: 769px;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -15,8 +16,15 @@ $primary: #1791f2;
 .x-is-small-padding {
 	padding: 0.5rem;
 }
+.x-is-padding-left {
+	padding-left: 0.4em;
+}
 .x-is-fullwidth {
 	width: 100%;
+}
+.menu-list .x-input {
+	padding: 0.5em 0.75em;
+	width: 80%;
 }
 .x-tabs-has-bigger-border a {
 	border-bottom-width: 2px;
@@ -33,7 +41,6 @@ $primary: #1791f2;
 	.message-header {
 		background-color: transparent;
 		color: $primary;
-		padding-left: 0.2rem !important;
 	}
 
 	.x-me {
@@ -73,23 +80,4 @@ $primary: #1791f2;
 
 body, html, #root {
 	overflow-y: auto !important;
-}
-
-.redux-toastr {
-	.toastr {
-		min-height: inherit;
-
-		.rrt-middle-container {
-			margin-left: 1rem;
-		}
-
-		.rrt-left-container {
-			display: none !important;
-		}
-	}
-	.top-right {
-		top: 3.25rem;
-		width: inherit;
-		max-width: 300px;
-	}
 }

@@ -26,6 +26,9 @@
   "DChat": {
     "message": " D-Chat"
   },
+  "DChatversion": {
+    "message": " D-Chat version"
+  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
@@ -52,9 +55,6 @@
   },
   "LogOut": {
     "message": " Log Out"
-  },
-  "Logintodchatandthenrefres": {
-    "message": " Log in to d-chat (and then refres"
   },
   "Newincomingtransaction": {
     "message": " New incoming transaction"
@@ -140,6 +140,9 @@
   "Wrongpassword": {
     "message": " Wrong password."
   },
+  "Youareknownas": {
+    "message": " You are known as"
+  },
   "Youcangetsomefromthefaucetbelow": {
     "message": " You can get some from the faucet below."
   },
@@ -152,8 +155,11 @@
   "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
     "message": " You will need some NKN coins to join channels successfully!"
   },
-  "Youraddresswasautomaticallyfilledinbydchat": {
-    "message": " Your address was automatically filled in by d-chat."
+  "Yourwalletaddressis": {
+    "message": " Your wallet address is"
+  },
+  "Yourwalletbalance": {
+    "message": " Your wallet balance"
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."

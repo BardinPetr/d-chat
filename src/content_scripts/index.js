@@ -1,4 +1,3 @@
-import { __ } from 'Approot/misc/util';
 import { runtime } from 'webextension-polyfill';
 
 runtime.sendMessage({
@@ -7,8 +6,7 @@ runtime.sendMessage({
 	const input = document.querySelector('input#nkn');
 	if ( key && input.value === '' ) {
 		input.value = key;
-		document.querySelector('.status-extra').innerText = __('Your address was automatically filled in by d-chat.');
-	} else if (input.value === '') {
-		document.querySelector('.status-extra').innerText = __('Log in to d-chat (and then refresh) to have your NKN address automatically filled.');
+		// Suddenly i18n is not working in content script.
+		document.querySelector('.status-extra').innerText = ('Your address was automatically filled in by D-Chat.');
 	}
 });

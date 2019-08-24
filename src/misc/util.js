@@ -66,6 +66,9 @@ export const formatAddr = addr => {
 };
 
 export const parseAddr = addr => {
+	if (!addr) {
+		return ['', ''];
+	}
 	const lastDotPosition = addr.lastIndexOf('.');
 	let pubKey = addr;
 	let formattedAddr = '';
