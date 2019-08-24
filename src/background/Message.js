@@ -10,6 +10,7 @@ class Message {
 	constructor(message) {
 		const now = new Date().getTime();
 
+		console.log('what...', message);
 		// TODO is.string() checks
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
@@ -82,10 +83,10 @@ class Message {
 		this.targetID = undefined;
 		this.to = toAddr;
 		let options;
-		if (this.contentType = 'nkn/tip') {
+		if (this.contentType === 'nkn/tip') {
 			options = {
 				msgHoldingSeconds: 0,
-			}
+			};
 		}
 		return window.nknClient.sendMessage(toAddr, this, options);
 	}
@@ -100,10 +101,10 @@ class Message {
 		this.username = undefined;
 		this.title = undefined;
 		let options;
-		if (this.contentType = 'nkn/tip') {
+		if (this.contentType === 'nkn/tip') {
 			options = {
 				msgHoldingSeconds: 0,
-			}
+			};
 		}
 		return window.nknClient.publishMessage(topic, this, options);
 	}
