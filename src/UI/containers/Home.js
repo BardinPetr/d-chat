@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import NknBalance from 'Approot/UI/containers/NknBalance';
 import Info from 'Approot/UI/components/Info';
 import { __, getAddressFromPubKey, parseAddr } from 'Approot/misc/util';
+import { runtime } from 'webextension-polyfill';
 
 const Home = ({ addr }) => (
 	<div className="column">
@@ -18,6 +19,10 @@ const Home = ({ addr }) => (
 			<div className="field">
 				<p className="is-size-7">{__('Your wallet balance')}</p>
 				<NknBalance />
+			</div>
+			<div className="field">
+				<p className="is-size-7">{__('D-Chat version')}</p>
+				<p>{runtime.getManifest().version}</p>
 			</div>
 		</div>
 		<div className="section" style={{paddingTop: 0}}>

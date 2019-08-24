@@ -26,6 +26,9 @@
   "DChat": {
     "message": " D-Chat"
   },
+  "DChatversion": {
+    "message": " D-Chat version"
+  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
