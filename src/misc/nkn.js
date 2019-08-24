@@ -108,9 +108,7 @@ class NKN extends nkn {
 
 	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
 	// publish = (topicID, message) => {
-	publishMessage = async (topic, message, options = {
-		encrypt: true,
-	}) => {
+	publishMessage = async (topic, message, options = {}) => {
 		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		try {
 			return this.publish(
@@ -125,11 +123,7 @@ class NKN extends nkn {
 		}
 	}
 
-	sendMessage = async (to, message, options = {
-		encrypt: true,
-		// TODO once private messaging is implemented, remove this.
-		msgHoldingSeconds: 0,
-	}) => {
+	sendMessage = async (to, message, options = {}) => {
 		console.log('Sending private message', message, 'to', to);
 		try {
 			return this.send(

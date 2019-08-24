@@ -81,7 +81,13 @@ class Message {
 		this.title = undefined;
 		this.targetID = undefined;
 		this.to = toAddr;
-		return window.nknClient.sendMessage(toAddr, this);
+		let options;
+		if (this.contentType = 'nkn/tip') {
+			options = {
+				msgHoldingSeconds: 0,
+			}
+		}
+		return window.nknClient.sendMessage(toAddr, this, options);
 	}
 
 	publish(topic) {
@@ -93,7 +99,13 @@ class Message {
 		this.isPrivate = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		return window.nknClient.publishMessage(topic, this);
+		let options;
+		if (this.contentType = 'nkn/tip') {
+			options = {
+				msgHoldingSeconds: 0,
+			}
+		}
+		return window.nknClient.publishMessage(topic, this, options);
 	}
 
 	async receive(dispatch) {
