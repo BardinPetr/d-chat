@@ -34,7 +34,7 @@ const Info = () => {
 						'is-hidden': !active
 					})}>
 						{/* Don't load if not expanded */}
-						{ active && <iframe scrolling="no" style={{ width: '100%', height: '600px', }} src="https://nkn-faucet.herokuapp.com" />
+						{ active && <iframe scrolling="no" style={{ width: '400px', height: '600px', }} src="https://nkn-faucet.herokuapp.com" />
 						}
 					</div>
 				</div>
