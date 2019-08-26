@@ -19,7 +19,7 @@ const Info = () => {
 				{' '}{__('You can get some from the faucet below.')}
 			</p>
 			<div className="field">
-				<a className="button is-info is-outlined" onClick={() => setActive(!active)}>
+				<a className="button is-primary is-outlined" onClick={() => setActive(!active)}>
 					<span>{__('Get some NKN for free')}</span>
 					<span className="icon is-small">
 						{ active ?
