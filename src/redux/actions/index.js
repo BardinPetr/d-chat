@@ -148,6 +148,7 @@ export const markRead = (topic, ids) => ({
 	}
 });
 
+// Helper. Not an action.
 export const getUnreadMessages = async state => {
 	const chats = Object.values(state.chatSettings);
 	return chats.reduce((acc, settings) => acc + (settings.unread?.length || 0), 0);
@@ -166,16 +167,13 @@ export const markUnread = (topic, ids) => (dispatch, getState) => {
 	});
 };
 
-export const createTransaction = (id, data) => dispatch => {
-	console.log('Creating transaction', id, data);
-	return dispatch({
-		type: 'nkn/CREATE_TRANSACTION',
-		payload: {
-			transactionID: id,
-			data,
-		},
-	});
-};
+export const createTransaction = (id, data) => ({
+	type: 'nkn/CREATE_TRANSACTION',
+	payload: {
+		transactionID: id,
+		data,
+	},
+});
 
 /**
  * Called by .on('message') listener.
@@ -192,13 +190,14 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
 	return message.receive(dispatch);
 };
 
-export const newTransaction = ({ topic, to, value, contentType, ...rest }) => ({
+export const newTransaction = ({ content, topic, to, value, contentType, ...rest }) => ({
 	type: 'nkn/NEW_TRANSACTION_ALIAS',
 	payload: {
 		value: value * 10 ** -8,
 		to,
 		topic,
 		contentType,
+		content,
 		...rest,
 	}
 });
@@ -230,7 +229,9 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 		message += parseAddr(data.to)[0];
 		amInvolved = true;
 	}
+
 	console.log(title, 'transactionComplete:', data);
+
 	if (amInvolved) {
 		// Transaction was TO or FROM me, so notify.
 		title += ' ' + __('Transaction Confirmed');

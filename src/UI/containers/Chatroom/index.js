@@ -16,6 +16,7 @@ import { getSubscribers, markRead, publishMessage, saveDraft } from 'Approot/red
 import Markdown from '../../components/Markdown';
 import debounce from 'debounce';
 import NknBalance from 'Approot/UI/containers/NknBalance';
+import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 
 const mention = (addr) => ('@' + formatAddr(addr));
 
@@ -41,19 +42,19 @@ class Chatroom extends React.Component {
 		// Mark all unread messages as read on chat opening.
 		this.onScroll = debounce(this.onScroll, 300);
 
-		this.getSubsInterval = setInterval(() => props.getSubscribers(props.topic), 60000);
 	}
 
 	loadMore = () => {
-		console.log('Loading more messages', this.state.count);
 		this.setState({
 			count: this.state.count + 10,
 		});
 	}
 
 	componentDidMount() {
+		this.getSubsInterval = setInterval(() => this.props.getSubscribers(this.props.topic), 60000);
+		this.props.getSubscribers(this.props.topic);
 		this.markAllRead();
-		if (this.refs.lastRead) {
+		if (this.refs.lastRead && this.props.unreadMessages.length) {
 			this.refs.lastRead.scrollIntoView({ block: 'center' });
 		} else {
 			this.scrollToBot();
@@ -61,7 +62,6 @@ class Chatroom extends React.Component {
 		this.textarea.current.focus();
 		this.textarea.current.value = this.props.draft;
 
-		this.props.getSubscribers(this.props.topic);
 		/*
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
@@ -87,12 +87,6 @@ class Chatroom extends React.Component {
 		if ( this.wasScrolledToBottom ) {
 			this.scrollToBot();
 		}
-	}
-
-	UNSAFE_componentWillUpdate() {
-		const scrollPosition = this.messages.scrollTop;
-		const scrollBottom = (this.messages.scrollHeight - this.messages.clientHeight);
-		this.wasScrolledToBottom = (scrollBottom <= 0) || (scrollPosition === scrollBottom);
 	}
 
 	scrollToBot() {
@@ -150,6 +144,7 @@ class Chatroom extends React.Component {
 	});
 
 	onScroll = (el) => {
+		this.wasScrolledToBottom = false;
 		// Top
 		if (el.scrollTop <= 25 && this.props.messages.length > this.state.count) {
 			this.loadMore();
@@ -157,6 +152,7 @@ class Chatroom extends React.Component {
 		// Bot
 		if (el.scrollTop > el.scrollTopMax - 25) {
 			this.markAllRead();
+			this.wasScrolledToBottom = true;
 		}
 	}
 
@@ -165,12 +161,24 @@ class Chatroom extends React.Component {
 	 */
 	render() {
 		const { subscribing, messages } = this.props;
-		// Messages that are being loaded.
-		const visibleMessages = messages.slice( -(this.state.count) );
+
+		const all = messages.reduce((acc, msg) => {
+			switch (msg.contentType) {
+				case 'nkn/tip':
+				case 'reaction':
+					acc.reactions.push(msg);
+					break;
+
+				case 'text':
+				default:
+					acc.messages.push(msg);
+			}
+			return acc;
+		}, { reactions: [], messages: [] });
 
 		// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 		let didNotMarkYet = true;
-		const messageList = visibleMessages.reduce((acc, message, idx) => {
+		const messageList = all.messages.slice(-(this.state.count)).reduce((acc, message, idx) => {
 			if ( didNotMarkYet && message.id === this.lastReadId ) {
 				// Insert last read message thing.
 				acc.push(
@@ -182,6 +190,9 @@ class Chatroom extends React.Component {
 				);
 				didNotMarkYet = false;
 			}
+
+			const reactions = all.reactions.filter(reaction => reaction.targetID === message.id);
+
 			return acc.concat(
 				<Message
 					className={classnames('', {
@@ -192,8 +203,14 @@ class Chatroom extends React.Component {
 					message={message}
 					isSubscribed={this.props.subs.includes(message.addr)}
 					key={message.id + idx}
-					isNotice={['dchat/subscribe', 'nkn/tip'].includes(message.contentType)}
-				/>
+					isNotice={['dchat/subscribe'].includes(message.contentType)}
+				>
+					{reactions.length > 0 &&
+						<Reactions
+							reactions={reactions}
+						/>
+					}
+				</Message>
 			);
 		}, []);
 
@@ -221,6 +238,7 @@ class Chatroom extends React.Component {
 										'is-warning': subscribing,
 									})}
 									onKeyDown={this.onEnterPress}
+									onResize={() => this.wasScrolledToBottom && this.scrollToBot()}
 								/>
 								{ this.state.showingPreview &&
 									<Markdown

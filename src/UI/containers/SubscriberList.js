@@ -15,7 +15,7 @@ const SubscriberList = ({ subscribers, className }) => {
 			>
 				{subscribers.length} {__('Subscribers')}
 			</a>
-			<div className={classnames('navbar-dropdown is-clipped is-right', {
+			<div className={classnames('x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !open,
 			})}>
 				{subscribers.sort().map((sub, key) => (

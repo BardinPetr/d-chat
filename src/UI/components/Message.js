@@ -33,7 +33,7 @@ const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
 			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
 			{' '}
 		</span>
-		<span className="has-text-grey is-size-7 x-is-small-padding-left">
+		<span className="has-text-grey is-size-7 x-is-padding-left">
 			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={30} />
 		</span>
 	</span>
@@ -55,7 +55,7 @@ class Message extends React.Component {
 	}
 
 	render() {
-		const { refer, message, isSubscribed, className, isNotice } = this.props;
+		const { refer, message, isSubscribed, className, isNotice, children } = this.props;
 		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
 
 		return (
@@ -79,6 +79,7 @@ class Message extends React.Component {
 					<Markdown
 						source={message.content}
 					/>
+					{children}
 				</div>
 			</div>
 		);

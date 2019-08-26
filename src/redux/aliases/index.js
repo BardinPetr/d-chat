@@ -15,6 +15,7 @@ import {
 } from '../actions';
 import passworder from 'browser-passworder';
 import { __, getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
+import uuidv1 from 'uuid/v1';
 
 const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
@@ -205,7 +206,7 @@ const getBalance = () => async (dispatch) => {
 
 const newTransaction = originalAction => async () => {
 	console.log('Sending NKN', originalAction);
-	const { to, value, topic, targetID } = originalAction.payload;
+	const { to, content, value, topic, targetID } = originalAction.payload;
 
 	// Send
 	const tx = await window.nknClient.wallet.transferTo(
@@ -214,9 +215,8 @@ const newTransaction = originalAction => async () => {
 	).then(tx => {
 		const message = new Message({
 			contentType: 'nkn/tip',
-			transactionID: tx,
 			value,
-			to,
+			content,
 			topic, // ehh TODO rm.
 			targetID,
 		}).from('me');
@@ -224,24 +224,14 @@ const newTransaction = originalAction => async () => {
 
 		console.log('NKN was sent. tx:', tx, 'creating message', message);
 
-		// Need to create a new message to get a new ID, for tipping oneself.
-		// (You send and receive the message when you tip yourself.)
-		const noticeMessage = new Message({
-			contentType: 'nkn/tip',
-			transactionID: tx,
-			value,
-			to,
-			topic, // ehh TODO rm.
-			targetID,
-			isPrivate: true,
-		}).from('me');
-		noticeMessage.send(to)
+		// Generate new ID, then send privately.
+		message.transactionID = tx;
+		message.id = uuidv1();
+		message.send(to)
 			.then(() => console.log('Successfully sent notice'),
 				e => console.error('Error when sending notice', e));
 
-		// Return tx id for UI.
 		return { tx };
-
 	}, e => {
 		console.error('Error when sending tx', e);
 		return { error: e.msg || e.data };
@@ -252,7 +242,6 @@ const newTransaction = originalAction => async () => {
 		error: tx.error,
 	};
 
-	console.log('RETURNING ORIGINAL ACTION:', originalAction);
 	return originalAction;
 };
 
