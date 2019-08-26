@@ -1,9 +1,34 @@
 $primary: #1791f2;
+$info: rgba(29,155,209,.1);
 $navbar-breakpoint: 769px;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
 
+.x-has-max-height {
+    max-height: 300px;
+    overflow-y: auto !important;
+}
+.x-reactions {
+    padding-bottom: 0.35rem;
+}
+.x-reactions .button {
+    width: 2.7rem;
+    height: 1.4rem;
+}
+.x-tipjar {
+    visibility: hidden;
+}
+.message:hover .x-tipjar {
+    visibility: visible;
+}
+.message-body .content {
+    margin-bottom: 0;
+}
+
+.buttons.x-are-very-rounded .button {
+    border-radius: 25px !important;
+}
 .x-sensor {
 	background: transparent;
 	margin: 0;

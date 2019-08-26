@@ -10,7 +10,6 @@ class Message {
 	constructor(message) {
 		const now = new Date().getTime();
 
-		console.log('what...', message);
 		// TODO is.string() checks
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
@@ -47,13 +46,11 @@ class Message {
 		this.refersToMe = this.content && this.content.includes(
 			formatAddr( window.nknClient.addr )
 		);
-		if (this.contentType === 'nkn/tip') {
-			this.content = `${this.username}.${this.pubKey.slice(0,8)}: ${this.value.toFixed(8)} NKN.`;
-		}
 		return this;
 	}
 
 	async notify() {
+		this.notified = true;
 		if (this.contentType === 'nkn/tip') {
 			if (this.to === window.nknClient.addr) {
 				this.title = __('New incoming transaction') + ': ' + getChatDisplayName(this.topic);
@@ -82,6 +79,7 @@ class Message {
 		this.title = undefined;
 		this.targetID = undefined;
 		this.to = toAddr;
+		this.isPrivate = true;
 		let options;
 		if (this.contentType === 'nkn/tip') {
 			options = {
@@ -100,24 +98,19 @@ class Message {
 		this.isPrivate = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		let options;
-		if (this.contentType === 'nkn/tip') {
-			options = {
-				msgHoldingSeconds: 0,
-			};
-		}
-		return window.nknClient.publishMessage(topic, this, options);
+		return window.nknClient.publishMessage(topic, this);
 	}
 
 	async receive(dispatch) {
 		switch (this.contentType) {
 			case 'nkn/tip':
-				// Resub to chat (noob friendly tipping).
-				dispatch(
-					createTransaction(this.transactionID, this)
-				);
-				this.notify();
-				return;
+				if (this.isPrivate) {
+					dispatch(
+						createTransaction(this.transactionID, this)
+					);
+					this.notify();
+				}
+				break;
 
 			case 'dchat/subscribe':
 				this.isMe = true;
@@ -125,7 +118,7 @@ class Message {
 		}
 
 		// Create notification?
-		if ( !this.isMe ) {
+		if ( !this.isMe && !this.notified ) {
 			let views = extension.getViews({
 				type: 'popup'
 			});
