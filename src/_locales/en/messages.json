@@ -119,9 +119,6 @@
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
   },
-  "Tip": {
-    "message": " Tip"
-  },
   "Topic": {
     "message": " Topic"
   },
@@ -164,14 +161,8 @@
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
   },
-  "nonick": {
-    "message": " no nick"
-  },
   "optional": {
     "message": " optional"
-  },
-  "tipped": {
-    "message": " tipped."
   },
   "extensionName": {
     "message": "D-Chat"
