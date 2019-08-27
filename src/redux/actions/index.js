@@ -1,10 +1,7 @@
-/**
- * TODO: sort out the aliases to the end to make some bookkeeping sense.
- */
-
 import { parseAddr, __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
+import sleep from 'sleep-promise';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
@@ -213,33 +210,21 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 	const { unconfirmed } = getState().transactions;
 	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
-	switch (data.contentType) {
-		case 'nkn/tip':
-			dispatch(subscribeToChat(data.topic));
-			break;
-	}
-
-	let title, amInvolved = false, message = `${getChatDisplayName(data.topic)}, `;
 	if (data.to === window.nknClient.addr) {
-		title = __('Incoming');
-		message += parseAddr(data.addr)[0];
-		amInvolved = true;
-	} else if (data.addr === window.nknClient.addr) {
-		title = __('Outgoing');
-		message += parseAddr(data.to)[0];
-		amInvolved = true;
-	}
+		let message = `${__('From')} ${parseAddr(data.addr)[0]} ${__('in')} ${getChatDisplayName(data.topic)}`;
 
-	console.log(title, 'transactionComplete:', data);
+		if (data.contentType === 'nkn/tip') {
+			// Timeout 1sec to avoid potential "no funds" errors.
+			sleep(1000).then(() => dispatch(subscribeToChat(data.topic)));
+		}
 
-	if (amInvolved) {
-		// Transaction was TO or FROM me, so notify.
-		title += ' ' + __('Transaction Confirmed');
 		createNotification({
-			title,
+			title: __('Incoming Transaction Confirmed'),
 			message,
 		});
-		dispatch(getBalance());
+
+		// Timeout 1sec to avoid potential "no funds" errors.
+		sleep(1000).then(() =>dispatch(getBalance()));
 	}
 
 	return dispatch({

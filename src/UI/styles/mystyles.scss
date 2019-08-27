@@ -10,17 +10,14 @@ $navbar-breakpoint: 769px;
     overflow-y: auto !important;
 }
 .x-reactions {
-    padding-bottom: 0.35rem;
+    margin-top: 0.5rem;
 }
 .x-reactions .button {
     width: 2.7rem;
     height: 1.4rem;
 }
-.x-tipjar {
+.x-is-hover {
     visibility: hidden;
-}
-.message:hover .x-tipjar {
-    visibility: visible;
 }
 .message-body .content {
     margin-bottom: 0;
@@ -55,12 +52,23 @@ $navbar-breakpoint: 769px;
 	border-bottom-width: 2px;
 	
 }
+.container {
+    max-width: 100%;
+}
 .x-chat {
 	padding-bottom: 1rem;
 
 	.message {
+		&:hover {
+			background-color: $grey-lighter;
+
+			.x-is-hover {
+				visibility: visible;
+			}
+		}
 		margin-bottom: 0.5rem;
 		background-color: white;
+		word-wrap: break-word;
 	}
 	
 	.message-header {

@@ -13,6 +13,7 @@ const Info = () => {
 			</p>
 			<p className="field">
 				<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed.') }</i>
+				{__('This only applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented.')}
 			</p>
 			<p className="field">
 				<strong>{__('You will need some NKN coins to join channels successfully!')}</strong>

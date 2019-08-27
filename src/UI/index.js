@@ -14,13 +14,20 @@ const store = new Store();
 
 const renderApp = () => store.ready().then(() => {
 	history.replace(store.state.navigation.mostRecentPage);
-	history.listen((location) => {
+
+	const subscribeToNavigatedChat = (location) => {
 		const match = matchPath(location.pathname, {
 			path: '/chat/:topic',
 		});
 		if (match != null) {
 			store.dispatch(joinChat(match.params.topic));
 		}
+	};
+
+	subscribeToNavigatedChat(history.location);
+
+	history.listen((location) => {
+		subscribeToNavigatedChat(location);
 		store.dispatch(navigated(location.pathname));
 	});
 }).then(async () => ReactDOM.render(

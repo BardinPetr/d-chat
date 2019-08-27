@@ -11,6 +11,12 @@
   "Addachannel": {
     "message": " Add a channel"
   },
+  "Afteryoureceivecoinsyoumayhavetoreloadthispage": {
+    "message": " After you receive coins, you may have to reload this page."
+  },
+  "Automatedmessage": {
+    "message": " Automated message."
+  },
   "Channels": {
     "message": " Channels"
   },
@@ -32,6 +38,9 @@
   "Forgotpassword": {
     "message": " Forgot password?"
   },
+  "From": {
+    "message": " From"
+  },
   "General": {
     "message": " General"
   },
@@ -41,8 +50,8 @@
   "Home": {
     "message": " Home"
   },
-  "Incoming": {
-    "message": " Incoming"
+  "IncomingTransactionConfirmed": {
+    "message": " Incoming Transaction Confirmed"
   },
   "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
     "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
@@ -56,14 +65,17 @@
   "LogOut": {
     "message": " Log Out"
   },
-  "Newincomingtransaction": {
-    "message": " New incoming transaction"
+  "Message": {
+    "message": " Message"
+  },
+  "Newincomingtransactionin": {
+    "message": " New incoming transaction in"
   },
   "Newmessagesbelow": {
     "message": " New messages below"
   },
-  "Newoutgoingtransaction": {
-    "message": " New outgoing transaction"
+  "Newoutgoingtransactionin": {
+    "message": " New outgoing transaction in"
   },
   "Newview": {
     "message": " New view"
@@ -71,8 +83,8 @@
   "Nowregardlessofcoinsjoinchannel": {
     "message": " Now, regardless of coins, join channel"
   },
-  "Outgoing": {
-    "message": " Outgoing"
+  "PRIVATEMESSAGE": {
+    "message": " PRIVATE MESSAGE"
   },
   "Panel": {
     "message": " Panel"
@@ -92,9 +104,6 @@
   "Rememberme": {
     "message": " Remember me?"
   },
-  "Signout": {
-    "message": " Sign out"
-  },
   "Submit": {
     "message": " Submit"
   },
@@ -103,6 +112,9 @@
   },
   "Subscribingto": {
     "message": " Subscribing to"
+  },
+  "Subscribingnotreceivingmessagesyet": {
+    "message": " Subscribing; not receiving messages yet."
   },
   "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
     "message": " Subscription confirmed. You are now receiving messages from"
@@ -116,14 +128,20 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
+  "ThisonlyappliestomessagesintopicsPrivatemessagesaredifferentnosubscriptionrequiredPrivatemessagingnotyetimplemented": {
+    "message": " This only applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented."
+  },
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
+  },
+  "TipNKN": {
+    "message": " Tip NKN"
   },
   "Topic": {
     "message": " Topic"
   },
-  "TransactionConfirmed": {
-    "message": " Transaction Confirmed"
+  "TriedtosubscribebuthadnocoinsReactwithanemojitosubscribethem": {
+    "message": " Tried to subscribe, but had no coins. React with an emoji to subscribe them."
   },
   "Username": {
     "message": " Username"
@@ -160,6 +178,9 @@
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
+  },
+  "in": {
+    "message": " in"
   },
   "optional": {
     "message": " optional"

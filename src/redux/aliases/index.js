@@ -16,6 +16,7 @@ import {
 import passworder from 'browser-passworder';
 import { __, getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
 import uuidv1 from 'uuid/v1';
+import sleep from 'sleep-promise';
 
 const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
@@ -27,6 +28,12 @@ const subscribeToChat = originalAction => dispatch => {
 		window.nknClient.subscribe( topic )
 			.then(txId => {
 				dispatch(subscribe(topic, txId));
+				// TODO swap contentType to something else.
+				new Message({
+					topic,
+					content: __('Subscribing; not receiving messages yet.') + ' _' + __('Automated message.') + '_',
+					contentType: 'text',
+				}).from('me').publish(topic);
 			},
 			err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
@@ -44,6 +51,13 @@ const joinChat = originalAction => (dispatch, getState) => {
 				console.log('Subscription transaction:', txId);
 				// There will be a bunch of work when "hide chat" is implemented.
 				dispatch(subscribe(topic, txId));
+
+				// TODO swap contentType to something else.
+				new Message({
+					topic,
+					content: __('Subscribing; not receiving messages yet.') + ' _' + __('Automated message.') + '_',
+					contentType: 'text',
+				}).from('me').publish(topic);
 			},
 			err => {
 				// Insufficient funds.
@@ -51,9 +65,15 @@ const joinChat = originalAction => (dispatch, getState) => {
 					new Message({
 						topic,
 						error: true,
-						content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.'),
+						content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.') + '\n\n' + __('After you receive coins, you may have to reload this page.'),
 						contentType: 'dchat/subscribe',
 					}).receive(dispatch);
+
+					new Message({
+						topic,
+						contentType: 'dchat/text',
+						content: __('Tried to subscribe, but had no coins. React with an emoji to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
+					}).from('me').publish(topic);
 				}
 				console.log('Errored at subscribe. Already subscribed?', err);
 			}
@@ -65,8 +85,6 @@ const joinChat = originalAction => (dispatch, getState) => {
 
 /**
  * Logs in and adds nkn listeners. Dispatches chat updates like "new message".
- *
- * XXX how about moving the listeners into NKN file? And making singleton pattern?
  */
 const login = originalAction => (dispatch, getState) => {
 	const credentials = originalAction.payload.credentials;
@@ -77,11 +95,12 @@ const login = originalAction => (dispatch, getState) => {
 		const nknClient = new NKN(credentials);
 
 		nknClient.on('connect', async () => {
-			console.log( 'connected' );
 			dispatch(connected());
 
 			// New users beg for coins on '#D-Chat Intro'.
-			const balance = await nknClient.wallet.getBalance();
+			// Sleep 3secs. Sometimes it would send out false positives.
+			const balance = await sleep(3000).then(() => nknClient.wallet.getBalance());
+			console.log('CONNECTED:BALANCE:', balance);
 			if (balance.eq(0)) {
 				new Message({
 					contentType: 'text',
@@ -220,6 +239,7 @@ const newTransaction = originalAction => async () => {
 			topic, // ehh TODO rm.
 			targetID,
 		}).from('me');
+		message.notify();
 		message.publish(topic);
 
 		console.log('NKN was sent. tx:', tx, 'creating message', message);
@@ -227,6 +247,7 @@ const newTransaction = originalAction => async () => {
 		// Generate new ID, then send privately.
 		message.transactionID = tx;
 		message.id = uuidv1();
+		message.title = `${__('PRIVATE MESSAGE')}: ${message.title}`;
 		message.send(to)
 			.then(() => console.log('Successfully sent notice'),
 				e => console.error('Error when sending notice', e));

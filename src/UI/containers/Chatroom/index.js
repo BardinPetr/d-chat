@@ -1,20 +1,16 @@
 /**
  * Contains messages list + submit box.
- *
- * Probably do something to improve the chat rendering. It basically renders every time.
- *
- * TODO maybe put a "lock" on scroll:
- *   always scroll to bot, unless has been manually scrolled up.
  */
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import sleep from 'sleep-promise';
+
 import TextareaAutosize from 'react-autosize-textarea';
 import Message from '../../components/Message';
-import { __, formatAddr } from 'Approot/misc/util';
+import { __, formatAddr, getChatDisplayName } from 'Approot/misc/util';
 import { getSubscribers, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
 import Markdown from '../../components/Markdown';
-import debounce from 'debounce';
 import NknBalance from 'Approot/UI/containers/NknBalance';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 
@@ -34,31 +30,31 @@ class Chatroom extends React.Component {
 			showingPreview: false,
 		};
 
-		// No fooling around.
 		this.lastReadId = props.unreadMessages[0];
 
 		this.wasScrolledToBottom = true;
 		this.textarea = React.createRef();
-		// Mark all unread messages as read on chat opening.
-		this.onScroll = debounce(this.onScroll, 300);
 
 	}
 
-	loadMore = () => {
+	loadMoreMessages = () => {
 		this.setState({
 			count: this.state.count + 10,
 		});
 	}
 
 	componentDidMount() {
-		this.getSubsInterval = setInterval(() => this.props.getSubscribers(this.props.topic), 60000);
+		this.getSubsInterval = setInterval(() => this.props.getSubscribers(this.props.topic), 30000);
 		this.props.getSubscribers(this.props.topic);
-		this.markAllRead();
+
 		if (this.refs.lastRead && this.props.unreadMessages.length) {
 			this.refs.lastRead.scrollIntoView({ block: 'center' });
+			this.wasScrolledToBottom = false;
 		} else {
 			this.scrollToBot();
 		}
+
+		this.markAllMessagesRead();
 		this.textarea.current.focus();
 		this.textarea.current.value = this.props.draft;
 
@@ -72,7 +68,7 @@ class Chatroom extends React.Component {
 	// Also cleared on submit.
 	_saveDraft = e => this.props.saveDraft(e.target.value);
 
-	markAllRead() {
+	markAllMessagesRead() {
 		if (this.props.unreadMessages.length > 0) {
 			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
 		}
@@ -90,7 +86,7 @@ class Chatroom extends React.Component {
 	}
 
 	scrollToBot() {
-		this.messages.scrollTop = this.messages.scrollHeight;
+		this.messages.scrollTop = this.messages.scrollTopMax;
 		this.wasScrolledToBottom = true;
 	}
 
@@ -119,6 +115,10 @@ class Chatroom extends React.Component {
 	 * Makes enter submit, shift enter insert newline.
 	 */
 	onEnterPress = e => {
+		// Fix bug where key sequence '<s-enter>x' will scroll.
+		if (this.wasScrolledToBottom) {
+			sleep(0).then(() => this.scrollToBot());
+		}
 		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
 			e.preventDefault();
 			this.submitText(e);
@@ -146,12 +146,12 @@ class Chatroom extends React.Component {
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Top
-		if (el.scrollTop <= 25 && this.props.messages.length > this.state.count) {
-			this.loadMore();
+		if (el.scrollTop <= 50 && this.props.messages.length > this.state.count) {
+			this.loadMoreMessages();
 		}
 		// Bot
 		if (el.scrollTop > el.scrollTopMax - 25) {
-			this.markAllRead();
+			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
 	}
@@ -160,7 +160,7 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE.
 	 */
 	render() {
-		const { subscribing, messages } = this.props;
+		const { subscribing, messages, topic } = this.props;
 
 		const all = messages.reduce((acc, msg) => {
 			switch (msg.contentType) {
@@ -237,6 +237,7 @@ class Chatroom extends React.Component {
 										'is-hidden': this.state.showingPreview,
 										'is-warning': subscribing,
 									})}
+									placeholder={`${__('Message')} ${getChatDisplayName(topic)}`}
 									onKeyDown={this.onEnterPress}
 									onResize={() => this.wasScrolledToBottom && this.scrollToBot()}
 								/>

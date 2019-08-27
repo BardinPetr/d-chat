@@ -13,7 +13,7 @@ const Routes = () => (
 				component={Sidebar}
 			/>
 		</div>
-		<div className="column">
+		<div className="column is-four-fifths">
 			<Route
 				path="/"
 				component={Header}
