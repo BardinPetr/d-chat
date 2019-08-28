@@ -4,21 +4,23 @@ import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
 import { getChatDisplayName } from 'Approot/misc/util';
 
-const TopicsList = ({ chats }) => (
+const TopicsList = ({ chats, whispers }) => (
 	<ul className="menu-list">
 		{chats.map((chat, key) => (
-			<li key={key}>
-				<TopicLink topic={chat.topic} className={classnames('is-clearfix', {
-					'has-text-black': chat.unread.length > 0,
-				})}>
-					<span>
-						{getChatDisplayName(chat.topic)}
-					</span>
-					<span className="is-pulled-right">
-						{chat.unread.length > 0 ? chat.unread.length : ''}
-					</span>
-				</TopicLink>
-			</li>
+			((chat.topic.startsWith('/whisper/') && whispers) || (!chat.topic.startsWith('/whisper/') && !whispers)) ? (
+				<li key={key} title={getChatDisplayName(chat.topic)}>
+					<TopicLink topic={chat.topic} className={classnames('is-clearfix x-truncate', {
+						'has-text-black': chat.unread.length > 0,
+					})}>
+						<span>
+							{getChatDisplayName(chat.topic)}
+						</span>
+						<span className="is-pulled-right">
+							{chat.unread.length > 0 ? chat.unread.length : ''}
+						</span>
+					</TopicLink>
+				</li>
+			) : undefined
 		))}
 	</ul>
 );

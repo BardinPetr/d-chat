@@ -37,11 +37,11 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 			onMount={() => setAriaExpanded('true')}
 			onHide={() => setAriaExpanded('false')}
 		>
-			<button className="x-is-hover button is-small is-white" aria-expanded={ariaExpanded}>
+			<span aria-expanded={ariaExpanded}>
 				<span className="icon is-small">
 					<IoMdHappy />
 				</span>
-			</button>
+			</span>
 		</Tippy>
 	);
 };

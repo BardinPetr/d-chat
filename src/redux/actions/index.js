@@ -1,4 +1,12 @@
-import { parseAddr, __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
+import {
+	genPrivateChatName,
+	parseAddr,
+	__,
+	getChatDisplayName,
+	getChatName,
+	setBadgeText,
+	createNotification,
+} from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 import sleep from 'sleep-promise';
@@ -42,10 +50,23 @@ export const subscribeCompleted = topic => dispatch => {
 	return dispatch({
 		type: 'SUBSCRIBE_COMPLETED',
 		payload: {
-			topic: getChatName( topic )
-		}
+			topic: getChatName( topic ),
+		},
 	});
 };
+
+// Whispers have 'null' as topic.
+export const sendPrivateMessage = (message) => ({
+	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
+	payload: {
+		recipient: message.topic,
+		message: {
+			...message,
+			isPrivate: true,
+			topic: null,
+		},
+	},
+});
 
 export const subscribe = (topic, transactionID) => (dispatch) => {
 	new Message({
@@ -80,17 +101,10 @@ export const setSubscribers = (topic, subscribers) => ({
 	},
 });
 
-// Handles subscribing (background). An alias.
-export const joinChat = topic => ({
-	type: 'JOIN_CHAT',
-	payload: {
-		topic: getChatName( topic )
-	}
-});
+export const enterPrivateChat = recipient => createChat(genPrivateChatName(recipient));
 
-// Handles UI changes with JOIN_CHAT.
-export const enterChat = topic => ({
-	type: 'ENTER_CHAT',
+export const joinChat = topic => ({
+	type: 'JOIN_CHAT_ALIAS',
 	payload: {
 		topic: getChatName( topic )
 	}
@@ -137,11 +151,12 @@ export const receiveMessage = message => ({
 });
 
 // Alias.
-export const markRead = (topic, ids) => ({
+export const markRead = (topic, ids, options = {}) => ({
 	type: 'chat/MARK_READ_ALIAS',
 	payload: {
 		topic,
 		ids,
+		options,
 	}
 });
 

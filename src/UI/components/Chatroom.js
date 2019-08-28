@@ -2,15 +2,13 @@
  * Contains messages list + submit box.
  */
 import React from 'react';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 import sleep from 'sleep-promise';
 
 import TextareaAutosize from 'react-autosize-textarea';
-import Message from '../../components/Message';
+import Message from 'Approot/UI/components/Message';
 import { __, formatAddr, getChatDisplayName } from 'Approot/misc/util';
-import { getSubscribers, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
-import Markdown from '../../components/Markdown';
+import Markdown from 'Approot/UI/components/Markdown';
 import NknBalance from 'Approot/UI/containers/NknBalance';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 
@@ -279,23 +277,4 @@ class Chatroom extends React.Component {
 	}
 }
 
-const mapStateToProps = (state, ownProps) => ({
-	draft: state.draftMessage,
-	messages: state.messages[ownProps.match.params.topic] || [],
-	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
-	topic: ownProps.match.params.topic,
-	subscribing: Object.keys(state.subscriptions).includes(ownProps.match.params.topic),
-	subs: state.chatSettings[ownProps.match.params.topic]?.subscribers || [],
-});
-
-const mapDispatchToProps = dispatch => ({
-	createMessage: message => dispatch(publishMessage(message)),
-	saveDraft: draft => dispatch(saveDraft(draft)),
-	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
-	getSubscribers: (topic) => dispatch(getSubscribers(topic)),
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Chatroom);
+export default Chatroom;

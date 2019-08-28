@@ -25,10 +25,20 @@ export function getChatDisplayName(topic) {
 	if (!topic){
 		return '';
 	}
+	if (topic.startsWith('/whisper/')) {
+		return topic.slice('/whisper/'.length);
+	}
 	return leadingHashIt(String(topic));
 }
 
 export function getChatURL(topic) {
+	if (!topic) {
+		return '';
+	}
+	if (topic.startsWith('/whisper/')) {
+		return topic;
+	}
+
 	topic = getChatDisplayName(topic);
 	if (!topic) {
 		return '';
@@ -112,3 +122,6 @@ export const createNotification = async (options) => {
 		});
 	}
 };
+
+export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
+export const getWhisperURL = (recipient) => `/whisper/${recipient}`;

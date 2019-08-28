@@ -75,6 +75,7 @@
     "bottleneck": "^2.19.5",
     "browser-passworder": "^2.0.3",
     "bulma": "^0.7.5",
+    "bulma-tooltip": "^2.0.2",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "chrome-launch": "^1.1.4",

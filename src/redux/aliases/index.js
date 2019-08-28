@@ -6,7 +6,6 @@ import {
 	getUnreadMessages,
 	connected,
 	createChat,
-	enterChat,
 	receivingMessage,
 	subscribe,
 	setLoginStatus,
@@ -14,7 +13,12 @@ import {
 	setSubscribers,
 } from '../actions';
 import passworder from 'browser-passworder';
-import { __, getAddressFromPubKey, setBadgeText } from 'Approot/misc/util';
+import {
+	genPrivateChatName,
+	__,
+	getAddressFromPubKey,
+	setBadgeText,
+} from 'Approot/misc/util';
 import uuidv1 from 'uuid/v1';
 import sleep from 'sleep-promise';
 
@@ -28,12 +32,7 @@ const subscribeToChat = originalAction => dispatch => {
 		window.nknClient.subscribe( topic )
 			.then(txId => {
 				dispatch(subscribe(topic, txId));
-				// TODO swap contentType to something else.
-				new Message({
-					topic,
-					content: __('Subscribing; not receiving messages yet.') + ' _' + __('Automated message.') + '_',
-					contentType: 'text',
-				}).from('me').publish(topic);
+				dispatch(getSubscribers(topic));
 			},
 			err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
@@ -42,45 +41,42 @@ const subscribeToChat = originalAction => dispatch => {
 	}
 };
 
-const joinChat = originalAction => (dispatch, getState) => {
+const joinChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
-	console.log('is anybody out there? Entering moonchat', topic, getState());
-	if ( topic != null ) {
-		window.nknClient.subscribe( topic )
-			.then(txId => {
-				console.log('Subscription transaction:', txId);
-				// There will be a bunch of work when "hide chat" is implemented.
-				dispatch(subscribe(topic, txId));
+	if ( !topic ) {
+		return;
+	}
+	console.log('is anybody out there? Entering moonchat', topic);
 
-				// TODO swap contentType to something else.
+	window.nknClient.subscribe( topic )
+		.then(txId => {
+			console.log('Subscription transaction:', txId);
+			// There will be a bunch of work when "hide chat" is implemented.
+			dispatch(subscribe(topic, txId));
+			dispatch(getSubscribers(topic));
+		},
+		err => {
+			// Insufficient funds.
+			if ( err.data.includes('funds') ) {
 				new Message({
 					topic,
-					content: __('Subscribing; not receiving messages yet.') + ' _' + __('Automated message.') + '_',
-					contentType: 'text',
-				}).from('me').publish(topic);
-			},
-			err => {
-				// Insufficient funds.
-				if ( err.data.includes('funds') ) {
-					new Message({
-						topic,
-						error: true,
-						content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.') + '\n\n' + __('After you receive coins, you may have to reload this page.'),
-						contentType: 'dchat/subscribe',
-					}).receive(dispatch);
+					error: true,
+					content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.') + '\n\n' + __('After you receive coins, you may have to reload this page.'),
+					contentType: 'dchat/subscribe',
+				}).receive(dispatch);
 
-					new Message({
-						topic,
-						contentType: 'dchat/text',
-						content: __('Tried to subscribe, but had no coins. React with an emoji to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
-					}).from('me').publish(topic);
-				}
-				console.log('Errored at subscribe. Already subscribed?', err);
+				// TODO create contentType 'dchat/text'.
+				new Message({
+					topic,
+					contentType: 'text',
+					content: __('Tried to subscribe, but had no coins. React with an emoji to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
+				}).publish(topic);
 			}
-			);
-	}
+			console.log('Errored at subscribe. Already subscribed?', err);
+		});
+
 	dispatch(createChat(topic));
-	return dispatch( enterChat(topic) );
+	// return dispatch( enterChat(topic) );
 };
 
 /**
@@ -98,8 +94,13 @@ const login = originalAction => (dispatch, getState) => {
 			dispatch(connected());
 
 			// New users beg for coins on '#D-Chat Intro'.
-			// Sleep 3secs. Sometimes it would send out false positives.
-			const balance = await sleep(3000).then(() => nknClient.wallet.getBalance());
+			// Try twice + sleep 10secs. Sometimes it sends out false positives.
+			const balance = await nknClient.wallet.getBalance()
+				.then(balance => balance.eq(0) ? sleep(10000).then(
+					() => nknClient.wallet.getBalance()
+				) : balance)
+				.then(balance => balance);
+
 			console.log('CONNECTED:BALANCE:', balance);
 			if (balance.eq(0)) {
 				new Message({
@@ -174,6 +175,21 @@ const publishMessage = originalAction => () => {
 	return originalAction;
 };
 
+const sendPrivateMessage = originalAction => (dispatch) => {
+	console.log('Sending private message', originalAction);
+
+	const message = new Message(originalAction.payload.message);
+	const recipient = originalAction.payload.recipient;
+
+	message.send(recipient);
+
+	// Override topic so it matches. Otherwise it would be receiving person's topic.
+	message.topic = genPrivateChatName(recipient);
+	message.from('me').receive(dispatch);
+
+	return originalAction;
+};
+
 const getSubscribersHandler = originalAction => async (dispatch) => {
 	console.log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
@@ -192,10 +208,17 @@ const markRead = originalAction => async (dispatch, getState) => {
 		getUnreadMessages(getState()).then(count => setBadgeText( count - ids ));
 	}
 
-	return dispatch({
-		type: 'chat/MARK_READ',
-		payload: originalAction.payload,
-	});
+	if (originalAction.payload.options.private) {
+		return dispatch({
+			type: 'chat/MARK_READ_PRIVATE',
+			payload: originalAction.payload,
+		});
+	} else {
+		return dispatch({
+			type: 'chat/MARK_READ',
+			payload: originalAction.payload,
+		});
+	}
 };
 
 const logout = () => {
@@ -269,11 +292,12 @@ const newTransaction = originalAction => async () => {
 export default {
 	'PUBLISH_MESSAGE': publishMessage,
 	'LOGIN': login,
-	'JOIN_CHAT': joinChat,
+	'JOIN_CHAT_ALIAS': joinChat,
 	'chat/GET_SUBSCRIBERS_ALIAS': getSubscribersHandler,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
 	'GET_BALANCE_ALIAS': getBalance,
 	'nkn/NEW_TRANSACTION_ALIAS': newTransaction,
 	'SUBSCRIBE_TO_CHAT_ALIAS': subscribeToChat,
+	'SEND_PRIVATE_MESSAGE_ALIAS': sendPrivateMessage,
 };

@@ -4,10 +4,36 @@ $navbar-breakpoint: 769px;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
+@import "../../../node_modules/bulma-tooltip";
 
+@media (max-width: 768px) {
+    .x-fix-mobile.navbar-brand {
+        max-width: inherit !important;
+        .navbar-item {
+            max-width: 70% !important;
+        }
+    }
+}
+.x-fix-mobile.navbar-brand {
+    max-width: 60%;
+    .navbar-item {
+        max-width: 100%;
+        .image {
+            flex-shrink: 0;
+        }
+    }
+}
+.x-truncate {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
 .x-has-max-height {
     max-height: 300px;
     overflow-y: auto !important;
+}
+.x-has-max-width {
+    max-width: 500px;
 }
 .x-reactions {
     margin-top: 0.5rem;

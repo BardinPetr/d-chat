@@ -7,7 +7,7 @@ import TimeAgo from 'react-timeago';
 import Markdown from './Markdown';
 import { __ } from 'Approot/misc/util';
 import classnames from 'classnames';
-import EmojiPicker from './EmojiPicker';
+import Toolbar from './MessageOperations';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if ( unit === 'second' ){
@@ -74,7 +74,7 @@ class Message extends React.Component {
 				</div>
 				<div className="message-body x-is-small-padding">
 					<div className="is-pulled-right">
-						<EmojiPicker
+						<Toolbar
 							id={message.id}
 							topic={message.topic}
 							addr={message.addr}

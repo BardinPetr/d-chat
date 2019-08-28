@@ -11,6 +11,9 @@
   "Addachannel": {
     "message": " Add a channel"
   },
+  "Addreaction": {
+    "message": " Add reaction"
+  },
   "Afteryoureceivecoinsyoumayhavetoreloadthispage": {
     "message": " After you receive coins, you may have to reload this page."
   },
@@ -104,6 +107,9 @@
   "Rememberme": {
     "message": " Remember me?"
   },
+  "Startaprivateconversation": {
+    "message": " Start a private conversation"
+  },
   "Submit": {
     "message": " Submit"
   },
@@ -112,9 +118,6 @@
   },
   "Subscribingto": {
     "message": " Subscribing to"
-  },
-  "Subscribingnotreceivingmessagesyet": {
-    "message": " Subscribing; not receiving messages yet."
   },
   "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
     "message": " Subscription confirmed. You are now receiving messages from"
@@ -128,8 +131,8 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "ThisonlyappliestomessagesintopicsPrivatemessagesaredifferentnosubscriptionrequiredPrivatemessagingnotyetimplemented": {
-    "message": " This only applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented."
+  "ThisappliestomessagesintopicsPrivatemessagesaredifferentnosubscriptionrequiredPrivatemessagingnotyetimplemented": {
+    "message": " This applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented."
   },
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
@@ -151,6 +154,9 @@
   },
   "Welcome": {
     "message": " Welcome!"
+  },
+  "Whispers": {
+    "message": " Whispers"
   },
   "Wrongpassword": {
     "message": " Wrong password."

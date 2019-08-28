@@ -38,21 +38,23 @@ class Header extends React.Component {
 
 	render() {
 
-		const topic = matchPath(
+		const path = matchPath(
 			this.props.location.pathname,
 			{
-				path: '/chat/:topic'
+				path: ['/chat/:topic', '/whisper/:whisper']
 			}
-		)?.params.topic;
+		);
+		const topic = path?.params.topic || path?.url;
+		const isPrivateChat = topic?.startsWith('/whisper/');
 
 		return (
 			<nav className="navbar is-primary has-text-white">
-				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
+				<div className="x-fix-mobile navbar-brand" aria-label="menu navigation" role="navigation">
 					<Link to="/" className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
-						<h5 className="title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
+						<h5 title={getChatDisplayName(topic)} className="x-truncate title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
 					</Link>
 
 					<a
@@ -80,7 +82,7 @@ class Header extends React.Component {
 					<div className="navbar-end">
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
-								'is-hidden': topic == null,
+								'is-hidden': topic == null || isPrivateChat,
 							})}
 							topic={topic}
 						/>
@@ -92,6 +94,11 @@ class Header extends React.Component {
 						<div className="navbar-item">
 							<p className="menu-label">{__('Channels')}</p>
 							<TopicsList />
+						</div>
+
+						<div className="navbar-item">
+							<p className="menu-label">{__('Whispers')}</p>
+							<TopicsList whispers />
 						</div>
 
 						<div className="navbar-item">

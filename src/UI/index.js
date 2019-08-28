@@ -8,7 +8,7 @@ import LoginBox from './containers/LoginBox';
 import Routes from './components/Routes';
 import './styles/mystyles.scss';
 import history from './history';
-import { joinChat, navigated } from 'Approot/redux/actions';
+import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
 
 const store = new Store();
 
@@ -16,11 +16,20 @@ const renderApp = () => store.ready().then(() => {
 	history.replace(store.state.navigation.mostRecentPage);
 
 	const subscribeToNavigatedChat = (location) => {
-		const match = matchPath(location.pathname, {
+		let match = matchPath(location.pathname, {
 			path: '/chat/:topic',
 		});
+
 		if (match != null) {
 			store.dispatch(joinChat(match.params.topic));
+		} else {
+			match = matchPath(location.pathname, {
+				path: '/whisper/:topic',
+			});
+
+			if (match != null) {
+				store.dispatch(enterPrivateChat(match.params.topic));
+			}
 		}
 	};
 
