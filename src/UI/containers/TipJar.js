@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions';
 
-const TipJar = ({ className, addr, dispatch, topic, messageID, }) => {
-	const [error, setError] = useState('');
+const emojis = [['👍', 1], ['🖤', 50], ['🏴‍☠️', 500]];
+
+const TipJar = ({ className, addr, dispatch, topic, messageID, setText }) => {
+	const [status, setStatus] = useState(['','','']);
 	const [disabled, setDisabled] = useState(false);
 
 	// React cries memory leak - doubt it.
-	const send = (content, value) => {
-		setError('');
+	const send = (content, value, index) => {
+		if ( !addr ) {
+			return;
+		}
+
+		let e = status.slice();
+		e[index] = '';
+		setStatus(e);
 		dispatch(newTransaction({
 			to: addr,
 			value,
@@ -19,24 +28,25 @@ const TipJar = ({ className, addr, dispatch, topic, messageID, }) => {
 		}))
 			.then(payload => {
 				if (payload.error) {
-					setError(payload.error);
+					let e = status.slice();
+					e[index] = payload.error;
+					setStatus(e);
 				}
 				setDisabled(false);
 			});
 	};
 
-	let title;
-	if (error) {
-		title = error;
-	}
-
 	return (
-		<div className={`x-tipjar buttons are-small has-addons ${className}`}>
-			{[['👍', 1], ['🖤', 50], ['🏴‍☠️', 500]].map((items, idx) => (
-				<a title={title || `${items[1]}sats`}
-					className="button is-white"
-					onClick={() => send(...items)}
+		<div className={`buttons are-small has-addons ${className}`}>
+			{emojis.map((items, idx) => (
+				<a
+					className={classnames('button', {
+						'is-danger': status[idx],
+					})}
+					onClick={() => send(...items, idx)}
 					disabled={disabled}
+					onMouseOver={() => setText(status[idx] || `${items[1]}sats`)}
+					onMouseOut={() => setText(null)}
 					key={idx}
 				>
 					{items[0]}

@@ -7,7 +7,7 @@ import { runtime } from 'webextension-polyfill';
 
 const Home = ({ addr }) => (
 	<div className="column">
-		<div className="notification" style={{overflowWrap: 'anywhere'}}>
+		<div className="notification" style={{overflowWrap: 'anywhere', wordBreak: 'all'}}>
 			<div className="field">
 				<p className="is-size-7">{__('You are known as')}</p>
 				<p>{addr}</p>

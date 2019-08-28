@@ -8,19 +8,35 @@ import LoginBox from './containers/LoginBox';
 import Routes from './components/Routes';
 import './styles/mystyles.scss';
 import history from './history';
-import { joinChat, navigated } from 'Approot/redux/actions';
+import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
 
 const store = new Store();
 
 const renderApp = () => store.ready().then(() => {
 	history.replace(store.state.navigation.mostRecentPage);
-	history.listen((location) => {
-		const match = matchPath(location.pathname, {
+
+	const subscribeToNavigatedChat = (location) => {
+		let match = matchPath(location.pathname, {
 			path: '/chat/:topic',
 		});
+
 		if (match != null) {
 			store.dispatch(joinChat(match.params.topic));
+		} else {
+			match = matchPath(location.pathname, {
+				path: '/whisper/:topic',
+			});
+
+			if (match != null) {
+				store.dispatch(enterPrivateChat(match.params.topic));
+			}
 		}
+	};
+
+	subscribeToNavigatedChat(history.location);
+
+	history.listen((location) => {
+		subscribeToNavigatedChat(location);
 		store.dispatch(navigated(location.pathname));
 	});
 }).then(async () => ReactDOM.render(

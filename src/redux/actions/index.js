@@ -1,10 +1,15 @@
-/**
- * TODO: sort out the aliases to the end to make some bookkeeping sense.
- */
-
-import { parseAddr, __, getChatDisplayName, getChatName, setBadgeText, createNotification } from 'Approot/misc/util';
+import {
+	genPrivateChatName,
+	parseAddr,
+	__,
+	getChatDisplayName,
+	getChatName,
+	setBadgeText,
+	createNotification,
+} from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
+import sleep from 'sleep-promise';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
@@ -45,10 +50,23 @@ export const subscribeCompleted = topic => dispatch => {
 	return dispatch({
 		type: 'SUBSCRIBE_COMPLETED',
 		payload: {
-			topic: getChatName( topic )
-		}
+			topic: getChatName( topic ),
+		},
 	});
 };
+
+// Whispers have 'null' as topic.
+export const sendPrivateMessage = (message) => ({
+	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
+	payload: {
+		recipient: message.topic,
+		message: {
+			...message,
+			isPrivate: true,
+			topic: null,
+		},
+	},
+});
 
 export const subscribe = (topic, transactionID) => (dispatch) => {
 	new Message({
@@ -83,17 +101,10 @@ export const setSubscribers = (topic, subscribers) => ({
 	},
 });
 
-// Handles subscribing (background). An alias.
-export const joinChat = topic => ({
-	type: 'JOIN_CHAT',
-	payload: {
-		topic: getChatName( topic )
-	}
-});
+export const enterPrivateChat = recipient => createChat(genPrivateChatName(recipient));
 
-// Handles UI changes with JOIN_CHAT.
-export const enterChat = topic => ({
-	type: 'ENTER_CHAT',
+export const joinChat = topic => ({
+	type: 'JOIN_CHAT_ALIAS',
 	payload: {
 		topic: getChatName( topic )
 	}
@@ -140,11 +151,12 @@ export const receiveMessage = message => ({
 });
 
 // Alias.
-export const markRead = (topic, ids) => ({
+export const markRead = (topic, ids, options = {}) => ({
 	type: 'chat/MARK_READ_ALIAS',
 	payload: {
 		topic,
 		ids,
+		options,
 	}
 });
 
@@ -213,33 +225,21 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 	const { unconfirmed } = getState().transactions;
 	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
-	switch (data.contentType) {
-		case 'nkn/tip':
-			dispatch(subscribeToChat(data.topic));
-			break;
-	}
-
-	let title, amInvolved = false, message = `${getChatDisplayName(data.topic)}, `;
 	if (data.to === window.nknClient.addr) {
-		title = __('Incoming');
-		message += parseAddr(data.addr)[0];
-		amInvolved = true;
-	} else if (data.addr === window.nknClient.addr) {
-		title = __('Outgoing');
-		message += parseAddr(data.to)[0];
-		amInvolved = true;
-	}
+		let message = `${__('From')} ${parseAddr(data.addr)[0]} ${__('in')} ${getChatDisplayName(data.topic)}`;
 
-	console.log(title, 'transactionComplete:', data);
+		if (data.contentType === 'nkn/tip') {
+			// Timeout 1sec to avoid potential "no funds" errors.
+			sleep(1000).then(() => dispatch(subscribeToChat(data.topic)));
+		}
 
-	if (amInvolved) {
-		// Transaction was TO or FROM me, so notify.
-		title += ' ' + __('Transaction Confirmed');
 		createNotification({
-			title,
+			title: __('Incoming Transaction Confirmed'),
 			message,
 		});
-		dispatch(getBalance());
+
+		// Timeout 1sec to avoid potential "no funds" errors.
+		sleep(1000).then(() =>dispatch(getBalance()));
 	}
 
 	return dispatch({

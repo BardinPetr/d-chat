@@ -7,7 +7,7 @@ import Logout from 'Approot/UI/containers/Logout';
 import Popout from 'Approot/UI/components/Popout';
 
 const Sidebar = () => (
-	<aside className="menu section is-hidden-mobile x-is-fullheight x-is-small-padding">
+	<aside className="menu section is-hidden-mobile x-is-fullheight x-is-small-padding" style={{overflowX: 'hidden'}}>
 		<p className="menu-label">{__('General')}</p>
 		<ul className="menu-list">
 			<li>
@@ -17,6 +17,9 @@ const Sidebar = () => (
 
 		<p className="menu-label">{__('Channels')}</p>
 		<TopicsList />
+
+		<p className="menu-label">{__('Whispers')}</p>
+		<TopicsList whispers />
 
 		<label className="menu-label">
 			{__('Add a channel')}

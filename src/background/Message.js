@@ -1,10 +1,21 @@
-import { createNotification, getChatDisplayName, __, formatAddr, parseAddr } from 'Approot/misc/util';
+import { genPrivateChatName, createNotification, getChatDisplayName, __, formatAddr, parseAddr } from 'Approot/misc/util';
 import { receiveMessage, createTransaction, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
 
 /**
  * Here lies the D-Chat NKN message schema.
+ *
+ * Some things:
+ *  Topic is chatroom topic. Might change it to topicHash in the future, to improve privacy (topic can't be overheard by listeners, then).
+ *   Specify null as topic in whispers.
+ *  Specify a unique ID so people can react to certain messages via `targetID`.
+ *  Mark messages sent with `nknClient.send()` as private with `isPrivate = true`;
+ *  `transactionID` should be set for tips, so client will get confirmation message.
+ *  Can't remember what `to` was for. TODO
+ *  `value` is value in satoshis.
+ *  `timestamp` from toUTCString.
+ * Rest of stuff is practically internal, didn't have the presence of mind to underscore them.
  */
 class Message {
 	constructor(message) {
@@ -14,7 +25,7 @@ class Message {
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
 		this.content = message.content || '';
-		this.topic = message.topic || '';
+		this.topic = message.topic === undefined ? '' : message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
 		this.transactionID = message.transactionID;
@@ -34,10 +45,14 @@ class Message {
 	from(src) {
 		if (src === 'me') {
 			src = window.nknClient.addr;
+		} else if (this.isPrivate && this.topic === null) {
+			this.topic = genPrivateChatName(src);
 		}
+
 		if ( src === window.nknClient.addr ) {
 			this.isMe = true;
 		}
+
 		const [ name, pubKey ] = parseAddr(src);
 		this.addr = src;
 		// Includes dot if identifier exists.
@@ -46,6 +61,7 @@ class Message {
 		this.refersToMe = this.content && this.content.includes(
 			formatAddr( window.nknClient.addr )
 		);
+
 		return this;
 	}
 
@@ -53,9 +69,9 @@ class Message {
 		this.notified = true;
 		if (this.contentType === 'nkn/tip') {
 			if (this.to === window.nknClient.addr) {
-				this.title = __('New incoming transaction') + ': ' + getChatDisplayName(this.topic);
+				this.title = __('New incoming transaction in') + ': ' + getChatDisplayName(this.topic);
 			} else if (this.addr === window.nknClient.addr) {
-				this.title = __('New outgoing transaction') + ': ' + getChatDisplayName(this.topic);
+				this.title = __('New outgoing transaction in') + ': ' + getChatDisplayName(this.topic);
 			} else {
 				// Do not notify without reasonable title.
 				return;
@@ -70,6 +86,7 @@ class Message {
 	}
 
 	send(toAddr) {
+
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -78,15 +95,22 @@ class Message {
 		this.username = undefined;
 		this.title = undefined;
 		this.targetID = undefined;
-		this.to = toAddr;
+		this.notified = undefined;
+		this.to = undefined;
 		this.isPrivate = true;
+
 		let options;
 		if (this.contentType === 'nkn/tip') {
 			options = {
 				msgHoldingSeconds: 0,
 			};
 		}
-		return window.nknClient.sendMessage(toAddr, this, options);
+
+		const ret = window.nknClient.sendMessage(toAddr, this, options);
+
+		// Mark who this message has been sent to.
+		this.to = toAddr;
+		return ret;
 	}
 
 	publish(topic) {
@@ -98,6 +122,7 @@ class Message {
 		this.isPrivate = undefined;
 		this.username = undefined;
 		this.title = undefined;
+		this.notified = undefined;
 		return window.nknClient.publishMessage(topic, this);
 	}
 
@@ -110,6 +135,11 @@ class Message {
 					);
 					this.notify();
 				}
+				break;
+
+			case 'reaction':
+				// Omit notifications for reactions.
+				this.notified = true;
 				break;
 
 			case 'dchat/subscribe':

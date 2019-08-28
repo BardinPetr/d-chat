@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -62,6 +62,7 @@
     "@jukben/emoji-search": "^1.1.7",
     "@polymer/paper-button": "^3.0.1",
     "@svgr/webpack": "2.4.1",
+    "@tippy.js/react": "^2.2.3",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "@webscopeio/react-textarea-autocomplete": "^4.6.1",
     "babel-core": "7.0.0-bridge.0",
@@ -74,6 +75,7 @@
     "bottleneck": "^2.19.5",
     "browser-passworder": "^2.0.3",
     "bulma": "^0.7.5",
+    "bulma-tooltip": "^2.0.2",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "chrome-launch": "^1.1.4",
@@ -136,6 +138,7 @@
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "shasum": "^1.0.2",
+    "sleep-promise": "^8.0.1",
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "throttleit": "^1.0.0",

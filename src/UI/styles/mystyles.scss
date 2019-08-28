@@ -4,26 +4,51 @@ $navbar-breakpoint: 769px;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
+@import "../../../node_modules/bulma-tooltip";
 
+@media (max-width: 768px) {
+    .x-fix-mobile.navbar-brand {
+        max-width: inherit !important;
+        .navbar-item {
+            max-width: 70% !important;
+        }
+    }
+}
+.x-fix-mobile.navbar-brand {
+    max-width: 60%;
+    .navbar-item {
+        max-width: 100%;
+        .image {
+            flex-shrink: 0;
+        }
+    }
+}
+.x-truncate {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
 .x-has-max-height {
     max-height: 300px;
     overflow-y: auto !important;
 }
+.x-has-max-width {
+    max-width: 500px;
+}
 .x-reactions {
-    padding-bottom: 0.35rem;
+    margin-top: 0.5rem;
 }
 .x-reactions .button {
     width: 2.7rem;
     height: 1.4rem;
 }
-.x-tipjar {
+.x-is-hover {
     visibility: hidden;
-}
-.message:hover .x-tipjar {
-    visibility: visible;
 }
 .message-body .content {
     margin-bottom: 0;
+    white-space: pre-wrap;
+    font-size: 0.9375rem;
 }
 
 .buttons.x-are-very-rounded .button {
@@ -55,12 +80,23 @@ $navbar-breakpoint: 769px;
 	border-bottom-width: 2px;
 	
 }
+.container {
+    max-width: 100%;
+}
 .x-chat {
 	padding-bottom: 1rem;
 
 	.message {
+		&:hover {
+			background-color: $white-ter;
+
+			.x-is-hover {
+				visibility: visible;
+			}
+		}
 		margin-bottom: 0.5rem;
 		background-color: white;
+		word-wrap: break-word;
 	}
 	
 	.message-header {

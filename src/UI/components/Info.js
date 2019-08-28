@@ -13,13 +13,14 @@ const Info = () => {
 			</p>
 			<p className="field">
 				<i>{ __('You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed.') }</i>
+				{__('This applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented.')}
 			</p>
 			<p className="field">
 				<strong>{__('You will need some NKN coins to join channels successfully!')}</strong>
 				{' '}{__('You can get some from the faucet below.')}
 			</p>
 			<div className="field">
-				<a className="button is-info is-outlined" onClick={() => setActive(!active)}>
+				<a className="button is-primary is-outlined" onClick={() => setActive(!active)}>
 					<span>{__('Get some NKN for free')}</span>
 					<span className="icon is-small">
 						{ active ?
@@ -34,7 +35,7 @@ const Info = () => {
 						'is-hidden': !active
 					})}>
 						{/* Don't load if not expanded */}
-						{ active && <iframe scrolling="no" style={{ width: '100%', height: '600px', }} src="https://nkn-faucet.herokuapp.com" />
+						{ active && <iframe scrolling="no" style={{ width: '400px', height: '600px', }} src="https://nkn-faucet.herokuapp.com" />
 						}
 					</div>
 				</div>
