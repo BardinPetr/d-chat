@@ -1,4 +1,4 @@
-import { createNotification, getChatDisplayName, __, formatAddr, parseAddr } from 'Approot/misc/util';
+import { genPrivateChatName, createNotification, getChatDisplayName, __, formatAddr, parseAddr } from 'Approot/misc/util';
 import { receiveMessage, createTransaction, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
@@ -45,10 +45,14 @@ class Message {
 	from(src) {
 		if (src === 'me') {
 			src = window.nknClient.addr;
+		} else if (this.isPrivate && this.topic === null) {
+			this.topic = genPrivateChatName(src);
 		}
+
 		if ( src === window.nknClient.addr ) {
 			this.isMe = true;
 		}
+
 		const [ name, pubKey ] = parseAddr(src);
 		this.addr = src;
 		// Includes dot if identifier exists.

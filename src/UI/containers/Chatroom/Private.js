@@ -9,13 +9,12 @@ import { genPrivateChatName } from 'Approot/misc/util';
 const mapStateToProps = (state, ownProps) => {
 	const recipient = ownProps.match.params.recipient;
 	const topic = genPrivateChatName(recipient);
-	console.log('PRIVATE CHAT', recipient, topic);
 	return ({
 		draft: state.draftMessage,
 		messages: state.messages[topic] || [],
 		unreadMessages: state.chatSettings[topic]?.unread || [],
 		topic: recipient,
-		subs: recipient,
+		subs: [recipient, state.login?.addr],
 	});
 };
 
