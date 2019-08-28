@@ -21,6 +21,8 @@ $navbar-breakpoint: 769px;
 }
 .message-body .content {
     margin-bottom: 0;
+    white-space: pre-wrap;
+    font-size: 0.9375rem;
 }
 
 .buttons.x-are-very-rounded .button {
@@ -60,7 +62,7 @@ $navbar-breakpoint: 769px;
 
 	.message {
 		&:hover {
-			background-color: $grey-lighter;
+			background-color: $white-ter;
 
 			.x-is-hover {
 				visibility: visible;
