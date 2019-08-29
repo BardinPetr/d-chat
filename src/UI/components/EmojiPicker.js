@@ -13,7 +13,7 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 	return (
 		<Tippy
 			content={
-				<div className="">
+				<div className="x-tippy x-emoji-picker">
 					<div className="">
 						{text != null ? text : __('Tip NKN')}
 					</div>

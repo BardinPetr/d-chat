@@ -142,3 +142,9 @@ $navbar-breakpoint: 769px;
 body, html, #root {
 	overflow-y: auto !important;
 }
+
+.x-tippy {
+    .x-emoji-picker {
+        min-width: 100px;
+    }
+}
