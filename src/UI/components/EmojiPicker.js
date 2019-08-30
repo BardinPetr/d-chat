@@ -13,7 +13,7 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 	return (
 		<Tippy
 			content={
-				<div className="">
+				<div className="x-tippy x-emoji-picker">
 					<div className="">
 						{text != null ? text : __('Tip NKN')}
 					</div>
@@ -37,11 +37,13 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 			onMount={() => setAriaExpanded('true')}
 			onHide={() => setAriaExpanded('false')}
 		>
-			<span aria-expanded={ariaExpanded}>
-				<span className="icon is-small">
-					<IoMdHappy />
+			<a className="button tooltip is-tooltip-left" data-tooltip={__('Add reaction')}>
+				<span aria-expanded={ariaExpanded} className="">
+					<span className="icon is-small">
+						<IoMdHappy />
+					</span>
 				</span>
-			</span>
+			</a>
 		</Tippy>
 	);
 };

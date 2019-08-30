@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -123,7 +123,7 @@
     "rc-tooltip": "^3.7.3",
     "react": "^16.9.0",
     "react-app-polyfill": "^0.2.2",
-    "react-autosize-textarea": "^7.0.0",
+    "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.9.0",
     "react-markdown": "^4.1.0",
     "react-modal": "^3.9.1",

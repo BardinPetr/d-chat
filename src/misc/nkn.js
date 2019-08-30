@@ -1,7 +1,7 @@
 import nkn from 'nkn-multiclient';
 import nknWallet from 'nkn-wallet';
 import configs from './configs';
-import { genChatID } from './util';
+import { log, genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 const BUCKET = 0;
@@ -67,18 +67,18 @@ class NKN extends nkn {
 		const seed = SEED_ADDRESSES[ Math.floor( Math.random() * SEED_ADDRESSES.length ) ];
 
 		if (walletJSON) {
-			console.log('Loading existing wallet!');
+			log('Loading existing wallet!');
 			wallet = nknWallet.loadJsonWallet(walletJSON, password);
 
 			if ( !wallet || !wallet.getPrivateKey ) {
 				throw 'Invalid credentials.';
 			}
 		} else {
-			console.log('Creating new wallet.');
+			log('Creating new wallet.');
 			wallet = nknWallet.newWallet(password);
 			configs.walletJSON = wallet.toJSON();
 		}
-		console.log('Rpc seed address:', seed);
+		log('Rpc seed address:', seed);
 
 		// TODO : connection fail here will majorly break things.
 		super({
@@ -93,7 +93,7 @@ class NKN extends nkn {
 	}
 
 	subscribe = topic => {
-		console.log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
+		log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
 		return this.wallet.subscribe(
 			genChatID( topic ),
 			BUCKET,
@@ -109,7 +109,7 @@ class NKN extends nkn {
 	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
 	// publish = (topicID, message) => {
 	publishMessage = async (topic, message, options = {}) => {
-		console.log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
+		log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		try {
 			return this.publish(
 				genChatID( topic ),
@@ -124,7 +124,7 @@ class NKN extends nkn {
 	}
 
 	sendMessage = async (to, message, options = {}) => {
-		console.log('Sending private message', message, 'to', to);
+		log('Sending private message', message, 'to', to);
 		try {
 			return this.send(
 				to,

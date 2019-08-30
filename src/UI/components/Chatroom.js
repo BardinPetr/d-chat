@@ -3,12 +3,12 @@
  */
 import React from 'react';
 import classnames from 'classnames';
-import sleep from 'sleep-promise';
+import debounce from 'debounce';
 
 import TextareaAutosize from 'react-autosize-textarea';
+import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Message from 'Approot/UI/components/Message';
-import { __, formatAddr, getChatDisplayName } from 'Approot/misc/util';
-import Markdown from 'Approot/UI/components/Markdown';
+import { __, formatAddr } from 'Approot/misc/util';
 import NknBalance from 'Approot/UI/containers/NknBalance';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 
@@ -24,21 +24,23 @@ class Chatroom extends React.Component {
 		super(props);
 
 		this.state = {
-			count: 15 + props.unreadMessages.length,
+			count: 25 + props.unreadMessages.length,
 			showingPreview: false,
 		};
 
 		this.lastReadId = props.unreadMessages[0];
 
 		this.wasScrolledToBottom = true;
-		this.textarea = React.createRef();
+		this.onScroll = debounce(this.onScroll, 1000);
 
 	}
 
 	loadMoreMessages = () => {
-		this.setState({
-			count: this.state.count + 10,
-		});
+		if ( this.props.messages.length > this.state.count ) {
+			this.setState({
+				count: this.state.count + 10,
+			});
+		}
 	}
 
 	componentDidMount() {
@@ -53,14 +55,15 @@ class Chatroom extends React.Component {
 		}
 
 		this.markAllMessagesRead();
-		this.textarea.current.focus();
-		this.textarea.current.value = this.props.draft;
+		this.msg.setState({
+			value: this.props.draft,
+		});
 
 		/*
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
 		*/
-		this.textarea.current.addEventListener('change', this._saveDraft);
+		this.textarea.addEventListener('change', this._saveDraft);
 	}
 
 	// Also cleared on submit.
@@ -73,11 +76,16 @@ class Chatroom extends React.Component {
 	}
 
 	componentWillUnmount() {
-		this.textarea.current.removeEventListener('change', this._saveDraft);
+		this.textarea.removeEventListener('change', this._saveDraft);
 		clearInterval(this.getSubsInterval);
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if ( prevProps.messages.length < this.props.messages.length ) {
+			this.setState({
+				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
+			});
+		}
 		if ( this.wasScrolledToBottom ) {
 			this.scrollToBot();
 		}
@@ -91,7 +99,7 @@ class Chatroom extends React.Component {
 	submitText = (e) => {
 		e.preventDefault();
 
-		let inputValue = this.textarea.current.value.trim();
+		let inputValue = this.msg.state.value.trim();
 
 		if (inputValue === '') {
 			return;
@@ -104,22 +112,19 @@ class Chatroom extends React.Component {
 		};
 
 		this.props.createMessage(message);
-		this.textarea.current.value = '';
+		this.msg.setState({value: ''});
 		this.props.saveDraft('');
-		this.textarea.current.focus();
+		this.textarea.focus();
 	}
 
 	/**
 	 * Makes enter submit, shift enter insert newline.
 	 */
 	onEnterPress = e => {
-		// Fix bug where key sequence '<s-enter>x' will scroll.
-		if (this.wasScrolledToBottom) {
-			sleep(0).then(() => this.scrollToBot());
-		}
 		if ( e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false ) {
 			e.preventDefault();
 			this.submitText(e);
+			this.msg.setState({value: ''});
 		}
 	}
 
@@ -127,24 +132,33 @@ class Chatroom extends React.Component {
 	 * Click on name -> add @mention.
 	 */
 	refer = addr => {
-		const caretPosition = this.textarea.current.selectionEnd;
-		const currentValue = this.textarea.current.value;
+		const caretPosition = this.msg.getCaretPosition();
+		const currentValue = this.msg.state.value;
 		const referral = mention(addr) + ' ';
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
 		const value = [currentValue.slice(0, caretPosition), referral,  currentValue.slice(caretPosition)].join('');
-		this.textarea.current.value = value;
-		this.textarea.current.focus();
-		this.textarea.current.selectionEnd = caretPosition + referral.length;
+		this.msg.setState({value}, () => {
+			this.textarea.focus();
+			this.msg.setCaretPosition(caretPosition + referral.length);
+		});
 	}
 
 	togglePreview = ({showing}) => this.setState({
 		showingPreview: showing,
 	});
 
+	onResize = (el) => {
+		el.parentElement.style.minHeight = el.style.height;
+		if (this.wasScrolledToBottom) {
+			this.scrollToBot();
+		}
+	}
+
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Top
-		if (el.scrollTop <= 50 && this.props.messages.length > this.state.count) {
+		if (el.scrollTop <= (el.scrollTopMax * 0.8) && this.props.messages.length > this.state.count) {
+
 			this.loadMoreMessages();
 		}
 		// Bot
@@ -155,12 +169,14 @@ class Chatroom extends React.Component {
 	}
 
 	/**
-	 * TODO Should split this thing up a bit. It's HUGE.
+	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
 		const { subscribing, messages, topic } = this.props;
 
-		const all = messages.reduce((acc, msg) => {
+		// Should I separate reactions & messages in background level?
+		// Simply slicing for now to save resources.
+		const all = messages.slice(-(this.state.count)).reduce((acc, msg) => {
 			switch (msg.contentType) {
 				case 'nkn/tip':
 				case 'reaction':
@@ -176,7 +192,7 @@ class Chatroom extends React.Component {
 
 		// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 		let didNotMarkYet = true;
-		const messageList = all.messages.slice(-(this.state.count)).reduce((acc, message, idx) => {
+		const messageList = all.messages.reduce((acc, message, idx) => {
 			if ( didNotMarkYet && message.id === this.lastReadId ) {
 				// Insert last read message thing.
 				acc.push(
@@ -206,6 +222,8 @@ class Chatroom extends React.Component {
 					{reactions.length > 0 &&
 						<Reactions
 							reactions={reactions}
+							topic={topic}
+							createMessage={this.props.createMessage}
 						/>
 					}
 				</Message>
@@ -227,23 +245,22 @@ class Chatroom extends React.Component {
 							<div className={classnames('control', {
 								'is-loading': subscribing,
 							})}>
-								<TextareaAutosize
-									rows={1}
-									maxRows={10}
-									ref={this.textarea}
-									className={classnames('textarea', {
-										'is-hidden': this.state.showingPreview,
-										'is-warning': subscribing,
-									})}
-									placeholder={`${__('Message')} ${getChatDisplayName(topic)}`}
+								<TextareaAutoCompleter
+									subscribing={subscribing}
+									topic={topic}
+									innerRef={ref => this.textarea = ref}
+									ref={ref => this.msg = ref}
 									onKeyDown={this.onEnterPress}
-									onResize={() => this.wasScrolledToBottom && this.scrollToBot()}
+									onResize={(e) => this.onResize(e.target)}
+									autoFocus
+									textAreaComponent={{
+										component: TextareaAutosize,
+										ref: 'innerRef',
+									}}
+									subs={this.props.subs}
+									mention={mention}
+									showingPreview={this.state.showingPreview}
 								/>
-								{ this.state.showingPreview &&
-									<Markdown
-										source={this.textarea.current?.value}
-									/>
-								}
 							</div>
 							<div className="level is-mobile">
 								<div className="level-left">

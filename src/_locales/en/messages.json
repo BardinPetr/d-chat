@@ -41,9 +41,6 @@
   "Forgotpassword": {
     "message": " Forgot password?"
   },
-  "From": {
-    "message": " From"
-  },
   "General": {
     "message": " General"
   },
@@ -52,9 +49,6 @@
   },
   "Home": {
     "message": " Home"
-  },
-  "IncomingTransactionConfirmed": {
-    "message": " Incoming Transaction Confirmed"
   },
   "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
     "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
@@ -71,23 +65,14 @@
   "Message": {
     "message": " Message"
   },
-  "Newincomingtransactionin": {
-    "message": " New incoming transaction in"
-  },
   "Newmessagesbelow": {
     "message": " New messages below"
-  },
-  "Newoutgoingtransactionin": {
-    "message": " New outgoing transaction in"
   },
   "Newview": {
     "message": " New view"
   },
   "Nowregardlessofcoinsjoinchannel": {
     "message": " Now, regardless of coins, join channel"
-  },
-  "PRIVATEMESSAGE": {
-    "message": " PRIVATE MESSAGE"
   },
   "Panel": {
     "message": " Panel"
@@ -106,6 +91,9 @@
   },
   "Rememberme": {
     "message": " Remember me?"
+  },
+  "Remove": {
+    "message": " Remove"
   },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
@@ -184,9 +172,6 @@
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
-  },
-  "in": {
-    "message": " in"
   },
   "optional": {
     "message": " optional"

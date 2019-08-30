@@ -14,6 +14,14 @@ $navbar-breakpoint: 769px;
         }
     }
 }
+.x-topic-link {
+    .x-is-hover-hidden {
+        display: none;
+    }
+    &:hover .x-is-hover-hidden {
+        display: inline-block;
+    }
+}
 .x-fix-mobile.navbar-brand {
     max-width: 60%;
     .navbar-item {
@@ -141,4 +149,10 @@ $navbar-breakpoint: 769px;
 
 body, html, #root {
 	overflow-y: auto !important;
+}
+
+.x-tippy {
+    .x-emoji-picker {
+        min-width: 100px;
+    }
 }

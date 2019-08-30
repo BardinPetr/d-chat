@@ -5,7 +5,16 @@ import configs from '../../misc/configs';
 const messages = (state = configs.messages, action ) => {
 	let newState, initial;
 	switch (action.type) {
+		case 'chat/REMOVE':
+			initial = { ...state };
+			delete initial[action.payload.topic];
+			newState = initial;
+			break;
+
 		case 'RECEIVE_MESSAGE':
+			if (!action.payload.topic) {
+				return state;
+			}
 			initial = state[action.payload.topic] || [];
 			newState = {
 				...state,
@@ -73,7 +82,6 @@ const transactions = (state = {
 				state.unconfirmed.findIndex(i => i.transactionID === action.payload.transactionID),
 				1
 			);
-			console.log('Confirmed transaction:', removed);
 			newState = {
 				unconfirmed: [...original],
 				confirmed: [...state.confirmed.concat(removed)],
@@ -146,6 +154,12 @@ const draftMessage = (state = '', action) => {
 const chatSettings = (state = configs.chatSettings, action) => {
 	let newState, initial;
 	switch (action.type) {
+		case 'chat/REMOVE':
+			initial = { ...state };
+			delete initial[action.payload.topic];
+			newState = initial;
+			break;
+
 		case 'chat/TOGGLE_NOTIFICATIONS':
 			break;
 
