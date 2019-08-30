@@ -9,6 +9,4 @@ export default new Configs({
 	transactions: {
 		confirmed: [],
 	},
-}, {
-	localKeys: [ 'showNotifications' ]
 });

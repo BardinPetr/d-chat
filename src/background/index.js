@@ -7,11 +7,12 @@ import configs from '../misc/configs';
 import { login } from '../redux/actions';
 // Even a bit of obfuscation is better than none for "remember me".
 import passworder from 'browser-passworder';
+import { log } from 'Approot/misc/util';
 
 const password = 'd-chat!!!';
 
 let credentials = localStorage.getItem('credentials');
-console.log('Credentials?', credentials != null);
+log('Credentials?', credentials != null);
 if (credentials) {
 	try {
 		credentials = JSON.parse(credentials);
@@ -32,7 +33,7 @@ configs.$loaded.then(() => {
 	wrapStore( store );
 
 	if ( credentials ) {
-		console.log('Using existing credentials');
+		log('Using existing credentials');
 		passworder.decrypt(password, credentials)
 			.then(creds => store.dispatch(login(creds)));
 	}

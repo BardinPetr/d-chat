@@ -29,7 +29,8 @@ const TipJar = ({ className, addr, dispatch, topic, messageID, setText }) => {
 			.then(payload => {
 				if (payload.error) {
 					let e = status.slice();
-					e[index] = payload.error;
+					// TODO make the popup not spaz out on long strings.
+					e[index] = payload.error.slice(0, 12);
 					setStatus(e);
 				}
 				setDisabled(false);

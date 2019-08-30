@@ -18,8 +18,8 @@ import {
 	__,
 	getAddressFromPubKey,
 	setBadgeText,
+	log,
 } from 'Approot/misc/util';
-import uuidv1 from 'uuid/v1';
 import sleep from 'sleep-promise';
 
 const BEGTOPIC = 'D-Chat Intro';
@@ -28,14 +28,14 @@ const password = 'd-chat!!!';
 
 const subscribeToChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
-	if ( topic != null && topic !== 'D-Chat Intro' ) {
+	if ( topic != null && topic !== 'D-Chat Intro' && !topic.startsWith('/whisper/') ) {
 		window.nknClient.subscribe( topic )
 			.then(txId => {
 				dispatch(subscribe(topic, txId));
 				dispatch(getSubscribers(topic));
 			},
 			err => {
-				console.log('Errored at subscribe. Already subscribed?', err);
+				log('Errored at subscribe. Already subscribed?', err);
 			}
 			);
 	}
@@ -46,11 +46,11 @@ const joinChat = originalAction => (dispatch) => {
 	if ( !topic ) {
 		return;
 	}
-	console.log('is anybody out there? Entering moonchat', topic);
+	log('is anybody out there? Entering moonchat', topic);
 
 	window.nknClient.subscribe( topic )
 		.then(txId => {
-			console.log('Subscription transaction:', txId);
+			log('Subscription transaction:', txId);
 			// There will be a bunch of work when "hide chat" is implemented.
 			dispatch(subscribe(topic, txId));
 			dispatch(getSubscribers(topic));
@@ -72,7 +72,7 @@ const joinChat = originalAction => (dispatch) => {
 					content: __('Tried to subscribe, but had no coins. React with an emoji to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
 				}).publish(topic);
 			}
-			console.log('Errored at subscribe. Already subscribed?', err);
+			log('Errored at subscribe. Already subscribed?', err);
 		});
 
 	dispatch(createChat(topic));
@@ -92,16 +92,18 @@ const login = originalAction => (dispatch, getState) => {
 
 		nknClient.on('connect', async () => {
 			dispatch(connected());
+			log('connected');
 
 			// New users beg for coins on '#D-Chat Intro'.
-			// Try twice + sleep 10secs. Sometimes it sends out false positives.
+			// Try twice + sleep 10secs, because sometimes it false positives.
 			const balance = await nknClient.wallet.getBalance()
-				.then(balance => balance.eq(0) ? sleep(10000).then(
-					() => nknClient.wallet.getBalance()
-				) : balance)
+				.then(balance => balance.eq(0) ? (
+					sleep(10000).then(
+						() => nknClient.wallet.getBalance()
+					)) : balance)
 				.then(balance => balance);
 
-			console.log('CONNECTED:BALANCE:', balance);
+			log('CONNECTED:BALANCE:', balance);
 			if (balance.eq(0)) {
 				new Message({
 					contentType: 'text',
@@ -112,18 +114,18 @@ const login = originalAction => (dispatch, getState) => {
 		});
 
 		nknClient.on('message', (...args) => {
-			console.log('Received message:', ...args);
+			log('Received message:', ...args);
 			dispatch(receivingMessage(...args));
 		});
 
 		// Pending subscriptions handler.
 		nknClient.on('block', block => {
-			console.log('New block!!!', block);
+			log('New block!!!', block);
 			let subs = getState().subscriptions;
 			for	( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
 				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
-					console.log('Subscribe completed!');
+					log('Subscribe completed!');
 					dispatch(subscribeCompleted(topic));
 					// Doesn't update correctly without timeout.
 					setTimeout(() => dispatch(getSubscribers(topic)), 500);
@@ -135,10 +137,11 @@ const login = originalAction => (dispatch, getState) => {
 		nknClient.on('block', block => {
 			const transactions = getState().transactions;
 			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
+			log(transactions);
 
 			for ( let pendingTx of pendingTransactions ) {
 				if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
-					console.log('Transaction complete!');
+					log('Transaction complete!');
 					dispatch(transactionComplete(pendingTx));
 				}
 			}
@@ -154,10 +157,10 @@ const login = originalAction => (dispatch, getState) => {
 				);
 		}
 
-		console.log('logged in');
+		log('logged in');
 		status = { addr: nknClient.addr };
 	} catch (e) {
-		console.log('Failed login.', e);
+		log('Failed login.', e);
 		status = { error: true };
 	}
 	return dispatch( setLoginStatus(status) );
@@ -165,7 +168,7 @@ const login = originalAction => (dispatch, getState) => {
 
 // TODO remove topic from message.
 const publishMessage = originalAction => () => {
-	console.log('Publishing message', originalAction);
+	log('Publishing message', originalAction);
 
 	const message = originalAction.payload.message;
 	const topic = originalAction.payload.message.topic;
@@ -175,23 +178,23 @@ const publishMessage = originalAction => () => {
 	return originalAction;
 };
 
-const sendPrivateMessage = originalAction => (dispatch) => {
-	console.log('Sending private message', originalAction);
+const sendPrivateMessage = originalAction => async (dispatch) => {
 
 	const message = new Message(originalAction.payload.message);
 	const recipient = originalAction.payload.recipient;
+	log('Sending private message', originalAction);
 
-	message.send(recipient);
+	await message.whisper(recipient);
 
 	// Override topic so it matches. Otherwise it would be receiving person's topic.
 	message.topic = genPrivateChatName(recipient);
-	message.from('me').receive(dispatch);
+	await message.from('me').receive(dispatch);
 
 	return originalAction;
 };
 
 const getSubscribersHandler = originalAction => async (dispatch) => {
-	console.log('Getting subs', originalAction);
+	log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
 	let subscribers = await window.nknClient.getSubscribers(topic);
 	subscribers = Object.keys(subscribers || {});
@@ -246,34 +249,39 @@ const getBalance = () => async (dispatch) => {
 	});
 };
 
-const newTransaction = originalAction => async () => {
-	console.log('Sending NKN', originalAction);
+/**
+ * Sends funds.
+ */
+const newTransaction = originalAction => async (dispatch) => {
+	log('Sending NKN', originalAction);
 	const { to, content, value, topic, targetID } = originalAction.payload;
+	const isWhisper = topic.startsWith('/whisper/');
 
 	// Send
 	const tx = await window.nknClient.wallet.transferTo(
 		getAddressFromPubKey(to),
 		value
-	).then(tx => {
+	).then(async (tx) => {
 		const message = new Message({
 			contentType: 'nkn/tip',
 			value,
 			content,
-			topic, // ehh TODO rm.
+			topic,
 			targetID,
-		}).from('me');
-		message.notify();
-		message.publish(topic);
+		});
 
-		console.log('NKN was sent. tx:', tx, 'creating message', message);
+		log('NKN was sent. tx:', tx, 'creating message', message);
+		if (isWhisper) {
+			// Simply receive it as a reaction.
+			message.contentType = 'reaction';
+			message.receive(dispatch);
+		} else {
+			// Receive it by publishing it.
+			message.publish(topic);
+		}
 
-		// Generate new ID, then send privately.
 		message.transactionID = tx;
-		message.id = uuidv1();
-		message.title = `${__('PRIVATE MESSAGE')}: ${message.title}`;
-		message.send(to)
-			.then(() => console.log('Successfully sent notice'),
-				e => console.error('Error when sending notice', e));
+		message.send(to);
 
 		return { tx };
 	}, e => {

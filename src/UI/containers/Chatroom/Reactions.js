@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { publishMessage } from 'Approot/redux/actions';
 import classnames from 'classnames';
 
-const Reactions = ({ reactions, myAddr, dispatch }) => {
+const Reactions = ({ topic, reactions, myAddr, createMessage }) => {
 	const countedReactions = reactions.reduce((acc, reaction) => {
 		const same = acc.findIndex(r => r.content == reaction.content);
 		if (same !== -1) {
@@ -30,12 +29,12 @@ const Reactions = ({ reactions, myAddr, dispatch }) => {
 					className={classnames('button is-primary is-outlined', {
 						'has-background-info': haveReacted,
 					})}
-					onClick={() => dispatch(publishMessage({
-						topic: reaction.topic,
+					onClick={() => createMessage({
+						topic,
 						targetID: reaction.targetID,
 						contentType: 'reaction',
 						content: reaction.content,
-					}))}
+					})}
 					key={idx}
 				>
 					<span>{reaction.content}</span>

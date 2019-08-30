@@ -51,6 +51,9 @@ export function getChatName(topic) {
 	if (!topic) {
 		return null;
 	}
+	if (topic.startsWith('/whisper/')) {
+		return topic;
+	}
 	topic = unleadingHashIt(String(topic));
 	if (!topic) {
 		return null;
@@ -125,3 +128,9 @@ export const createNotification = async (options) => {
 
 export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
 export const getWhisperURL = (recipient) => `/whisper/${recipient}`;
+
+export const log = (...args) => {
+	if (localStorage.getItem('debug')) {
+		console.log('d-chat:', args);
+	}
+};

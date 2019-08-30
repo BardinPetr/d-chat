@@ -1,11 +1,9 @@
 import {
 	genPrivateChatName,
-	parseAddr,
 	__,
 	getChatDisplayName,
 	getChatName,
 	setBadgeText,
-	createNotification,
 } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
@@ -55,7 +53,6 @@ export const subscribeCompleted = topic => dispatch => {
 	});
 };
 
-// Whispers have 'null' as topic.
 export const sendPrivateMessage = (message) => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
@@ -63,7 +60,6 @@ export const sendPrivateMessage = (message) => ({
 		message: {
 			...message,
 			isPrivate: true,
-			topic: null,
 		},
 	},
 });
@@ -146,8 +142,8 @@ export const receiveMessage = message => ({
 	type: 'RECEIVE_MESSAGE',
 	payload: {
 		message,
-		topic: getChatName(message.topic)
-	}
+		topic: getChatName(message.topic),
+	},
 });
 
 // Alias.
@@ -202,7 +198,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
 	return message.receive(dispatch);
 };
 
-export const newTransaction = ({ content, topic, to, value, contentType, ...rest }) => ({
+export const newTransaction = ({ targetID, content, topic, to, value, contentType, ...rest }) => ({
 	type: 'nkn/NEW_TRANSACTION_ALIAS',
 	payload: {
 		value: value * 10 ** -8,
@@ -210,6 +206,7 @@ export const newTransaction = ({ content, topic, to, value, contentType, ...rest
 		topic,
 		contentType,
 		content,
+		targetID,
 		...rest,
 	}
 });
@@ -221,26 +218,18 @@ const subscribeToChat = topic => ({
 	},
 });
 
+// Subscribing on outgoing & incoming tx's. Whatever, man. Need to rework subscriptions anyway.
 export const transactionComplete = completedTransactionID => (dispatch, getState) => {
 	const { unconfirmed } = getState().transactions;
 	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
-	if (data.to === window.nknClient.addr) {
-		let message = `${__('From')} ${parseAddr(data.addr)[0]} ${__('in')} ${getChatDisplayName(data.topic)}`;
-
-		if (data.contentType === 'nkn/tip') {
-			// Timeout 1sec to avoid potential "no funds" errors.
-			sleep(1000).then(() => dispatch(subscribeToChat(data.topic)));
-		}
-
-		createNotification({
-			title: __('Incoming Transaction Confirmed'),
-			message,
-		});
-
+	if (data.contentType === 'nkn/tip') {
 		// Timeout 1sec to avoid potential "no funds" errors.
-		sleep(1000).then(() =>dispatch(getBalance()));
+		sleep(1000).then(() => dispatch(subscribeToChat(data.topic)));
 	}
+
+	// Timeout 1sec to avoid potential "no funds" errors.
+	sleep(1000).then(() => dispatch(getBalance()));
 
 	return dispatch({
 		type: 'nkn/TRANSACTION_COMPLETE',
@@ -250,3 +239,10 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 		},
 	});
 };
+
+export const removeChat = topic => ({
+	type: 'chat/REMOVE',
+	payload: {
+		topic,
+	},
+});

@@ -1,5 +1,12 @@
-import { genPrivateChatName, createNotification, getChatDisplayName, __, formatAddr, parseAddr } from 'Approot/misc/util';
-import { receiveMessage, createTransaction, markUnread } from 'Approot/redux/actions';
+import {
+	genPrivateChatName,
+	createNotification,
+	getChatDisplayName,
+	formatAddr,
+	parseAddr,
+	log,
+} from 'Approot/misc/util';
+import { 	createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
 
@@ -8,11 +15,10 @@ import uuidv1 from 'uuid/v1';
  *
  * Some things:
  *  Topic is chatroom topic. Might change it to topicHash in the future, to improve privacy (topic can't be overheard by listeners, then).
- *   Specify null as topic in whispers.
+ *   Omit `topic` in whispers.
  *  Specify a unique ID so people can react to certain messages via `targetID`.
  *  Mark messages sent with `nknClient.send()` as private with `isPrivate = true`;
  *  `transactionID` should be set for tips, so client will get confirmation message.
- *  Can't remember what `to` was for. TODO
  *  `value` is value in satoshis.
  *  `timestamp` from toUTCString.
  * Rest of stuff is practically internal, didn't have the presence of mind to underscore them.
@@ -25,7 +31,7 @@ class Message {
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
 		this.content = message.content || '';
-		this.topic = message.topic === undefined ? '' : message.topic;
+		this.topic = message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
 		this.transactionID = message.transactionID;
@@ -33,8 +39,7 @@ class Message {
 		// Useful for reactions, tips, etc. Anything you use on a specific message.
 		this.targetID = message.targetID;
 		this.isPrivate = Boolean(message.isPrivate);
-		this.to = message.to;
-		this.value = message.value || 1e-7; // The default WAS 10 sats. Can remove this soon (or set to -1);
+		this.value = message.value;
 		if (this.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();
 		} else {
@@ -45,7 +50,8 @@ class Message {
 	from(src) {
 		if (src === 'me') {
 			src = window.nknClient.addr;
-		} else if (this.isPrivate && this.topic === null) {
+		} else if (this.isPrivate && this.topic == null) {
+			log('Received private message', this, src);
 			this.topic = genPrivateChatName(src);
 		}
 
@@ -67,17 +73,6 @@ class Message {
 
 	async notify() {
 		this.notified = true;
-		if (this.contentType === 'nkn/tip') {
-			if (this.to === window.nknClient.addr) {
-				this.title = __('New incoming transaction in') + ': ' + getChatDisplayName(this.topic);
-			} else if (this.addr === window.nknClient.addr) {
-				this.title = __('New outgoing transaction in') + ': ' + getChatDisplayName(this.topic);
-			} else {
-				// Do not notify without reasonable title.
-				return;
-			}
-		}
-
 		let title = this.title || `D-Chat ${getChatDisplayName(this.topic)}, ${this.username}.${this.pubKey.slice(0, 8)}:`;
 		return createNotification({
 			message: this.content,
@@ -85,7 +80,15 @@ class Message {
 		});
 	}
 
-	send(toAddr) {
+	async whisper(to) {
+		this.topic = undefined;
+		return this.send(to);
+	}
+
+	async send(toAddr) {
+		if ( toAddr === window.nknClient.addr ) {
+			return;
+		}
 
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
@@ -94,9 +97,7 @@ class Message {
 		this.refersToMe = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		this.targetID = undefined;
 		this.notified = undefined;
-		this.to = undefined;
 		this.isPrivate = true;
 
 		let options;
@@ -106,14 +107,12 @@ class Message {
 			};
 		}
 
-		const ret = window.nknClient.sendMessage(toAddr, this, options);
+		const sendingMessage = await window.nknClient.sendMessage(toAddr, this, options);
 
-		// Mark who this message has been sent to.
-		this.to = toAddr;
-		return ret;
+		return sendingMessage;
 	}
 
-	publish(topic) {
+	async publish(topic) {
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -133,8 +132,8 @@ class Message {
 					dispatch(
 						createTransaction(this.transactionID, this)
 					);
-					this.notify();
 				}
+				this.notified = true;
 				break;
 
 			case 'reaction':

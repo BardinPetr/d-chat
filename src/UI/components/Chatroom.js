@@ -80,14 +80,19 @@ class Chatroom extends React.Component {
 		clearInterval(this.getSubsInterval);
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if ( prevProps.messages.length < this.props.messages.length ) {
+			this.setState({
+				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
+			});
+		}
 		if ( this.wasScrolledToBottom ) {
 			this.scrollToBot();
 		}
 	}
 
 	scrollToBot() {
-		this.messages.scrollTop = this.messages.scrollHeight;
+		this.messages.scrollTop = this.messages.scrollTopMax;
 		this.wasScrolledToBottom = true;
 	}
 
@@ -152,7 +157,8 @@ class Chatroom extends React.Component {
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Top
-		if (el.scrollTop <= 250 && this.props.messages.length > this.state.count) {
+		if (el.scrollTop <= (el.scrollTopMax * 0.8) && this.props.messages.length > this.state.count) {
+
 			this.loadMoreMessages();
 		}
 		// Bot
@@ -163,11 +169,13 @@ class Chatroom extends React.Component {
 	}
 
 	/**
-	 * TODO Should split this thing up a bit. It's HUGE.
+	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
 		const { subscribing, messages, topic } = this.props;
 
+		// Should I separate reactions & messages in background level?
+		// Simply slicing for now to save resources.
 		const all = messages.slice(-(this.state.count)).reduce((acc, msg) => {
 			switch (msg.contentType) {
 				case 'nkn/tip':
@@ -214,6 +222,8 @@ class Chatroom extends React.Component {
 					{reactions.length > 0 &&
 						<Reactions
 							reactions={reactions}
+							topic={topic}
+							createMessage={this.props.createMessage}
 						/>
 					}
 				</Message>
