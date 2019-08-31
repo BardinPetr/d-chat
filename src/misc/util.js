@@ -3,6 +3,7 @@ import { i18n, runtime, browserAction, notifications } from 'webextension-polyfi
 import isNumber from 'is-number';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
 import configs from 'Approot/misc/configs';
+import debounce from 'debounce';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/, '');
@@ -115,7 +116,7 @@ export const setBadgeText = txt => {
 
 export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
 
-export const createNotification = async (options) => {
+export const createNotification = debounce((options) => {
 	if (configs.showNotifications) {
 		return notifications.create( 'd-chat', {
 			type: 'basic',
@@ -124,7 +125,7 @@ export const createNotification = async (options) => {
 			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
 		});
 	}
-};
+}, 1000);
 
 export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
 export const getWhisperURL = (recipient) => `/whisper/${recipient}`;

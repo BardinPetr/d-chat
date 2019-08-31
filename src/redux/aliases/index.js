@@ -26,7 +26,7 @@ const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
 const password = 'd-chat!!!';
 
-const subscribeToChat = originalAction => dispatch => {
+const subscribeToChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
 	if ( topic != null && topic !== 'D-Chat Intro' && !topic.startsWith('/whisper/') ) {
 		window.nknClient.subscribe( topic )
@@ -57,7 +57,7 @@ const joinChat = originalAction => (dispatch) => {
 		},
 		err => {
 			// Insufficient funds.
-			if ( err.data.includes('funds') ) {
+			if ( err.data?.includes('funds') ) {
 				new Message({
 					topic,
 					error: true,
@@ -75,8 +75,7 @@ const joinChat = originalAction => (dispatch) => {
 			log('Errored at subscribe. Already subscribed?', err);
 		});
 
-	dispatch(createChat(topic));
-	// return dispatch( enterChat(topic) );
+	return dispatch(createChat(topic));
 };
 
 /**
@@ -96,13 +95,14 @@ const login = originalAction => (dispatch, getState) => {
 
 			// New users beg for coins on '#D-Chat Intro'.
 			// Try twice + sleep 10secs, because sometimes it false positives.
-			const balance = await nknClient.wallet.getBalance()
+			const balance = await sleep(100).then(() => nknClient.wallet.getBalance())
 				.then(balance => balance.eq(0) ? (
 					sleep(10000).then(
 						() => nknClient.wallet.getBalance()
 					)) : balance)
 				.then(balance => balance);
 
+			// Seems to wait 10 secs EVERY TIME?
 			log('CONNECTED:BALANCE:', balance);
 			if (balance.eq(0)) {
 				new Message({
@@ -120,13 +120,15 @@ const login = originalAction => (dispatch, getState) => {
 
 		// Pending subscriptions handler.
 		nknClient.on('block', block => {
-			log('New block!!!', block);
 			let subs = getState().subscriptions;
-			for	( let topic of Object.keys(subs) ) {
+			log('New block!!!', block, '.subscriptions:', subs);
+			for ( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
 				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
 					log('Subscribe completed!');
-					dispatch(subscribeCompleted(topic));
+					dispatch(subscribeCompleted(topic, {
+						blockheight: block.header.height,
+					}));
 					// Doesn't update correctly without timeout.
 					setTimeout(() => dispatch(getSubscribers(topic)), 500);
 				}
@@ -135,6 +137,7 @@ const login = originalAction => (dispatch, getState) => {
 
 		// Pending value transfers handler.
 		nknClient.on('block', block => {
+			window.latestBlockHeight = block.header.height;
 			const transactions = getState().transactions;
 			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
 			log(transactions);
@@ -166,7 +169,7 @@ const login = originalAction => (dispatch, getState) => {
 	return dispatch( setLoginStatus(status) );
 };
 
-// TODO remove topic from message.
+// TODO replace topic with topicHash in message.
 const publishMessage = originalAction => () => {
 	log('Publishing message', originalAction);
 
@@ -186,7 +189,6 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 
 	await message.whisper(recipient);
 
-	// Override topic so it matches. Otherwise it would be receiving person's topic.
 	message.topic = genPrivateChatName(recipient);
 	await message.from('me').receive(dispatch);
 
@@ -196,8 +198,8 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 const getSubscribersHandler = originalAction => async (dispatch) => {
 	log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
-	let subscribers = await window.nknClient.getSubscribers(topic);
-	subscribers = Object.keys(subscribers || {});
+	let { subscribers, subscribersInTxPool } = await window.nknClient.getSubs(topic);
+	subscribers = subscribers.concat(subscribersInTxPool);
 
 	dispatch(setSubscribers(topic, subscribers));
 
@@ -298,8 +300,8 @@ const newTransaction = originalAction => async (dispatch) => {
 };
 
 export default {
-	'PUBLISH_MESSAGE': publishMessage,
-	'LOGIN': login,
+	'PUBLISH_MESSAGE_ALIAS': publishMessage,
+	'LOGIN_ALIAS': login,
 	'JOIN_CHAT_ALIAS': joinChat,
 	'chat/GET_SUBSCRIBERS_ALIAS': getSubscribersHandler,
 	'chat/MARK_READ_ALIAS': markRead,

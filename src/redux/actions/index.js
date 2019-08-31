@@ -35,9 +35,10 @@ export const connected = () => ({
 	type: 'CONNECTED',
 });
 
-export const subscribeCompleted = topic => dispatch => {
+export const subscribeCompleted = (topic) => dispatch => {
 	dispatch(getSubscribers(topic));
 
+	// TODO when it hits. check if this is still needed.
 	new Message({
 		topic,
 		contentType: 'dchat/subscribe',
@@ -65,6 +66,7 @@ export const sendPrivateMessage = (message) => ({
 });
 
 export const subscribe = (topic, transactionID) => (dispatch) => {
+	// TODO when it hits. check if this is still needed. And same to <Info />
 	new Message({
 		topic,
 		contentType: 'dchat/subscribe',
@@ -72,7 +74,7 @@ export const subscribe = (topic, transactionID) => (dispatch) => {
 		isPrivate: true,
 	}).receive(dispatch);
 
-	dispatch({
+	return dispatch({
 		type: 'SUBSCRIBE',
 		payload: {
 			topic: getChatName( topic ),
@@ -81,7 +83,6 @@ export const subscribe = (topic, transactionID) => (dispatch) => {
 	});
 };
 
-// An alias.
 export const getSubscribers = topic => ({
 	type: 'chat/GET_SUBSCRIBERS_ALIAS',
 	payload: {
@@ -121,17 +122,15 @@ export const setLoginStatus = status => ({
 	}
 });
 
-// Aliased
 export const login = credentials => ({
-	type: 'LOGIN',
+	type: 'LOGIN_ALIAS',
 	payload: {
 		credentials
 	}
 });
 
-// Aliased
 export const publishMessage = message => ({
-	type: 'PUBLISH_MESSAGE',
+	type: 'PUBLISH_MESSAGE_ALIAS',
 	payload: {
 		message,
 		topic: getChatName(message.topic)
@@ -146,7 +145,6 @@ export const receiveMessage = message => ({
 	},
 });
 
-// Alias.
 export const markRead = (topic, ids, options = {}) => ({
 	type: 'chat/MARK_READ_ALIAS',
 	payload: {

@@ -1,11 +1,12 @@
-import nkn from 'nkn-multiclient';
+import nkn from 'nkn-client';
 import nknWallet from 'nkn-wallet';
 import configs from './configs';
 import { log, genChatID } from './util';
-import rpcCall from 'nkn-client/lib/rpc';
 
-const BUCKET = 0;
-const FEE = 0.00000001; // 1 satoshi
+// TODO should move nkn stuff into a worker?
+
+// TODO when it hits.
+const FEE = 0.0000000; // 1; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
@@ -61,11 +62,15 @@ const SEED_ADDRESSES = [
  */
 class NKN extends nkn {
 
-	constructor({username, password})	{
+	constructor({username, password}) {
 		let wallet;
 		const walletJSON = configs.walletJSON;
 		const seed = SEED_ADDRESSES[ Math.floor( Math.random() * SEED_ADDRESSES.length ) ];
 
+		// TODO when it hits.
+		nknWallet.configure({
+			rpcAddr:'http://35.242.218.240:30003',
+		});
 		if (walletJSON) {
 			log('Loading existing wallet!');
 			wallet = nknWallet.loadJsonWallet(walletJSON, password);
@@ -85,18 +90,29 @@ class NKN extends nkn {
 			originalClient: true,
 			identifier: username.trim() || undefined,
 			seed: wallet.getSeed(),
-			seedRpcServerAddr: seed,
+			// TODO when it hits.
+			seedRpcServerAddr: 'http://35.242.218.240:30003', // seed,
 			msgHoldingSeconds: 3999999999,
 		});
 
 		this.wallet = wallet;
 	}
 
-	subscribe = topic => {
-		log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
+	subscribe = async (topic) => {
+		const topicID = genChatID( topic );
+		const subInfo = await this.getSubscription(
+			topicID,
+			this.addr
+		);
+
+		// TODO......
+		if ( !window.latestBlockHeight || subInfo.expiresAt - window.latestBlockHeight > 5000 ) {
+			throw 'Too soon.';
+		}
+
+		log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN', this);
 		return this.wallet.subscribe(
-			genChatID( topic ),
-			BUCKET,
+			topicID,
 			FORBLOCKS,
 			this.identifier,
 			'',
@@ -106,14 +122,11 @@ class NKN extends nkn {
 		);
 	}
 
-	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
-	// publish = (topicID, message) => {
-	publishMessage = async (topic, message, options = {}) => {
+	publishMessage = async (topic, message, options = { txPool: true }) => {
 		log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		try {
 			return this.publish(
 				genChatID( topic ),
-				BUCKET,
 				JSON.stringify(message),
 				options
 			);
@@ -137,13 +150,21 @@ class NKN extends nkn {
 		}
 	}
 
-	getSubscribers = topic => (
-		rpcCall(
-			this.options.seedRpcServerAddr,
-			'getsubscribers',
-			{ topic: genChatID( topic ), bucket: BUCKET }
-		)
-	);
+	// TODO when it hits. recheck on this
+	getSubs = (topic, options = {
+		offset: 0,
+		limit: 1000,
+		meta: false,
+		txPool: true,
+	}) => {
+		return this.getSubscribers(
+			genChatID( topic ),
+			options.offset,
+			options.limit,
+			options.meta,
+			options.txPool,
+		);
+	}
 
 }
 
