@@ -128,14 +128,14 @@ class LoginBox extends React.Component {
 															name="rememberMe"
 															id="rememberMe"
 														/>
-														{ __('Remember me?') }
+														{ __('Store password') }
 													</label>
 												</div>
 											</div>
 											<div className="field">
 												<div className="control">
 													<button type="submit" className="button is-link">
-														{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
+														{ window.location.search.includes('register') ? __('Create') :  __('Log In') }
 													</button>
 												</div>
 											</div>
@@ -147,8 +147,9 @@ class LoginBox extends React.Component {
 													{ color: 'gray', cursor: 'auto' } :
 													{ color: 'blue', cursor: 'pointer' }
 											} onClick={this.clear}>
-												{this.state.cleared ? __('Created') : __('Create new')}
+												{this.state.cleared ? __('Done') : __('Create new')}
 											</a>
+											{', ' + __('and your old wallet will be removed.')}
 										</div>
 									</div>
 								</div>

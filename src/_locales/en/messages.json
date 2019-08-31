@@ -26,17 +26,20 @@
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
+  "Create": {
+    "message": " Create"
+  },
   "Createnew": {
     "message": " Create new"
-  },
-  "Created": {
-    "message": " Created"
   },
   "DChat": {
     "message": " D-Chat"
   },
   "DChatversion": {
     "message": " D-Chat version"
+  },
+  "Done": {
+    "message": " Done"
   },
   "Forgotpassword": {
     "message": " Forgot password?"
@@ -83,20 +86,17 @@
   "Preview": {
     "message": " Preview"
   },
-  "Register": {
-    "message": " Register"
-  },
   "Reload": {
     "message": " Reload"
-  },
-  "Rememberme": {
-    "message": " Remember me?"
   },
   "Remove": {
     "message": " Remove"
   },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
+  },
+  "Storepassword": {
+    "message": " Store password"
   },
   "Submit": {
     "message": " Submit"
@@ -172,6 +172,9 @@
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
+  },
+  "andyouroldwalletwillberemoved": {
+    "message": " and your old wallet will be removed."
   },
   "optional": {
     "message": " optional"
