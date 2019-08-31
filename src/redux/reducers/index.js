@@ -9,6 +9,7 @@ const messages = (state = configs.messages, action ) => {
 			initial = { ...state };
 			delete initial[action.payload.topic];
 			newState = initial;
+			configs.messages = newState;
 			break;
 
 		case 'RECEIVE_MESSAGE':
@@ -158,6 +159,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			initial = { ...state };
 			delete initial[action.payload.topic];
 			newState = initial;
+			configs.chatSettings = newState;
 			break;
 
 		case 'chat/TOGGLE_NOTIFICATIONS':
