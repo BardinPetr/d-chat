@@ -1,14 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getBalance } from 'Approot/redux/actions';
 
-const NknBalance = ({ balance, dispatch }) => {
-	// Similar to componentDidMount
-	useEffect(() => {
-		dispatch(getBalance());
-	}, []);
+const NknBalance = ({ balance }) => {
 	return (
-		<span onClick={() => dispatch(getBalance())} className="has-text-grey">
+		<span className="has-text-grey">
 			{balance} NKN
 		</span>
 	);

@@ -5,7 +5,7 @@ import { newTransaction } from 'Approot/redux/actions';
 
 const emojis = [['👍', 1], ['🖤', 50], ['🏴‍☠️', 500]];
 
-const TipJar = ({ className, addr, dispatch, topic, messageID, setText }) => {
+const TipJar = ({ topic, className, addr, dispatch, messageID, setText }) => {
 	const [status, setStatus] = useState(['','','']);
 	const [disabled, setDisabled] = useState(false);
 

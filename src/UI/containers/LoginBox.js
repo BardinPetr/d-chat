@@ -5,7 +5,7 @@ import { __ } from '../../misc/util';
 import configs from '../../misc/configs';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import { login } from '../../redux/actions';
+import { login, logout } from '../../redux/actions';
 
 class LoginBox extends React.Component {
 
@@ -49,6 +49,7 @@ class LoginBox extends React.Component {
 		e.preventDefault();
 		configs.walletJSON = configs.$default.walletJSON;
 		this.setState({ cleared: true });
+		this.props.dispatch(logout());
 	}
 
 	render() {
@@ -128,14 +129,14 @@ class LoginBox extends React.Component {
 															name="rememberMe"
 															id="rememberMe"
 														/>
-														{ __('Remember me?') }
+														{ __('Store password') }
 													</label>
 												</div>
 											</div>
 											<div className="field">
 												<div className="control">
 													<button type="submit" className="button is-link">
-														{ window.location.search.includes('register') ? __('Register') :  __('Log In') }
+														{ window.location.search.includes('register') ? __('Create') :  __('Log In') }
 													</button>
 												</div>
 											</div>
@@ -147,8 +148,9 @@ class LoginBox extends React.Component {
 													{ color: 'gray', cursor: 'auto' } :
 													{ color: 'blue', cursor: 'pointer' }
 											} onClick={this.clear}>
-												{this.state.cleared ? __('Created') : __('Create new')}
+												{this.state.cleared ? __('Done') : __('Create new')}
 											</a>
+											{', ' + __('and your old wallet will be removed.')}
 										</div>
 									</div>
 								</div>

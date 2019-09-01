@@ -11,6 +11,7 @@ import Message from 'Approot/UI/components/Message';
 import { __, formatAddr } from 'Approot/misc/util';
 import NknBalance from 'Approot/UI/containers/NknBalance';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
+import InfiniteScroller from 'react-infinite-scroller';
 
 const mention = (addr) => ('@' + formatAddr(addr));
 
@@ -24,7 +25,7 @@ class Chatroom extends React.Component {
 		super(props);
 
 		this.state = {
-			count: 25 + props.unreadMessages.length,
+			count: 15 + props.unreadMessages.length,
 			showingPreview: false,
 		};
 
@@ -37,8 +38,9 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		if ( this.props.messages.length > this.state.count ) {
+			this.wasScrolledToBottom = false;
 			this.setState({
-				count: this.state.count + 10,
+				count: this.state.count + 5,
 			});
 		}
 	}
@@ -81,7 +83,7 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if ( prevProps.messages.length < this.props.messages.length ) {
+		if ( prevProps.topic === this.props.topic && prevProps.messages.length < this.props.messages.length ) {
 			this.setState({
 				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
 			});
@@ -156,13 +158,8 @@ class Chatroom extends React.Component {
 
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
-		// Top
-		if (el.scrollTop <= (el.scrollTopMax * 0.8) && this.props.messages.length > this.state.count) {
-
-			this.loadMoreMessages();
-		}
 		// Bot
-		if (el.scrollTop > el.scrollTopMax - 25) {
+		if (el.scrollTop > el.scrollTopMax - 15) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
@@ -172,27 +169,13 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
-		const { subscribing, messages, topic } = this.props;
+		const { subscribing, messages, topic, reactions } = this.props;
 
-		// Should I separate reactions & messages in background level?
-		// Simply slicing for now to save resources.
-		const all = messages.slice(-(this.state.count)).reduce((acc, msg) => {
-			switch (msg.contentType) {
-				case 'nkn/tip':
-				case 'reaction':
-					acc.reactions.push(msg);
-					break;
-
-				case 'text':
-				default:
-					acc.messages.push(msg);
-			}
-			return acc;
-		}, { reactions: [], messages: [] });
+		const visibleMessages = messages.slice(-(this.state.count));
 
 		// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 		let didNotMarkYet = true;
-		const messageList = all.messages.reduce((acc, message, idx) => {
+		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if ( didNotMarkYet && message.id === this.lastReadId ) {
 				// Insert last read message thing.
 				acc.push(
@@ -205,7 +188,7 @@ class Chatroom extends React.Component {
 				didNotMarkYet = false;
 			}
 
-			const reactions = all.reactions.filter(reaction => reaction.targetID === message.id);
+			const reactionsForMessage = reactions[message.id] || [];
 
 			return acc.concat(
 				<Message
@@ -218,10 +201,11 @@ class Chatroom extends React.Component {
 					isSubscribed={this.props.subs.includes(message.addr)}
 					key={message.id + idx}
 					isNotice={['dchat/subscribe'].includes(message.contentType)}
+					topic={topic}
 				>
-					{reactions.length > 0 &&
+					{reactionsForMessage.length > 0 &&
 						<Reactions
-							reactions={reactions}
+							reactions={reactionsForMessage}
 							topic={topic}
 							createMessage={this.props.createMessage}
 						/>
@@ -233,11 +217,23 @@ class Chatroom extends React.Component {
 		return (
 			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
 				<div className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height" ref={ref => this.messages = ref} onScroll={e => this.onScroll(e.target)}>
-					<div className="container">
-						<div className="x-chat">
-							{ messageList }
+					<InfiniteScroller
+						pageStart={0}
+						isReverse
+						loadMore={this.loadMoreMessages}
+						hasMore={visibleMessages.length < messages.length}
+						loader={<div className="is-loader" key={0} />}
+						initialLoad={false}
+						useWindow={false}
+						threshold={100}
+						className="x-is-fullwidth"
+					>
+						<div className="container">
+							<div className="x-chat">
+								{ messageList }
+							</div>
 						</div>
-					</div>
+					</InfiniteScroller>
 				</div>
 				<div className="hero-foot">
 					<form className="card" onSubmit={(e) => this.submitText(e)}>
@@ -260,6 +256,7 @@ class Chatroom extends React.Component {
 									subs={this.props.subs}
 									mention={mention}
 									showingPreview={this.state.showingPreview}
+									source={this.msg?.state.value || ''}
 								/>
 							</div>
 							<div className="level is-mobile">
