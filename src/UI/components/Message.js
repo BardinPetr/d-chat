@@ -7,7 +7,7 @@ import TimeAgo from 'react-timeago';
 import Markdown from './Markdown';
 import { __ } from 'Approot/misc/util';
 import classnames from 'classnames';
-import Toolbar from './MessageOperations';
+import Toolbar from './MessageToolbar';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if ( unit === 'second' ){
@@ -55,7 +55,7 @@ class Message extends React.Component {
 	}
 
 	render() {
-		const { refer, message, isSubscribed, className, isNotice, children } = this.props;
+		const { topic, refer, message, isSubscribed, className, isNotice, children } = this.props;
 		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
 
 		return (
@@ -76,8 +76,9 @@ class Message extends React.Component {
 					<div className="is-pulled-right">
 						<Toolbar
 							id={message.id}
-							topic={message.topic}
+							topic={topic}
 							addr={message.addr}
+							topic={topic}
 						/>
 					</div>
 					<Markdown

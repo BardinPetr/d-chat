@@ -47,17 +47,23 @@
   "General": {
     "message": " General"
   },
-  "GetsomeNKNforfree": {
-    "message": " Get some NKN for free"
+  "GetsomeNKNforfreefromthefaucet": {
+    "message": " Get some NKN for free, from the faucet"
   },
   "Home": {
     "message": " Home"
   },
+  "Identity": {
+    "message": " Identity"
+  },
   "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
     "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
   },
-  "JoiningachannelmeansmakingatransactionontheblockchainwhichtakesabitoftimeThoughusuallylessthansecondsitvariesdependingonwhichblockyoursubscriptiontransactiongetsinto": {
-    "message": " Joining a channel means making a transaction on the blockchain, which takes a bit of time. Though usually less than 60 seconds, it varies depending on which block your subscription transaction gets into."
+  "Joinachatroom": {
+    "message": " Join a chatroom"
+  },
+  "Joinchannel": {
+    "message": " Join channel"
   },
   "LogIn": {
     "message": " Log In"
@@ -74,9 +80,6 @@
   "Newview": {
     "message": " New view"
   },
-  "Nowregardlessofcoinsjoinchannel": {
-    "message": " Now, regardless of coins, join channel"
-  },
   "Panel": {
     "message": " Panel"
   },
@@ -85,6 +88,9 @@
   },
   "Preview": {
     "message": " Preview"
+  },
+  "Privatemessage": {
+    "message": " Private message"
   },
   "Reload": {
     "message": " Reload"
@@ -119,9 +125,6 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "ThisappliestomessagesintopicsPrivatemessagesaredifferentnosubscriptionrequiredPrivatemessagingnotyetimplemented": {
-    "message": " This applies to messages in #topics. Private messages are different; no subscription required. Private messaging not yet implemented."
-  },
   "Thispersonisnotsubscribedandwillnotreceivemessages": {
     "message": " This person is not subscribed and will not receive messages."
   },
@@ -152,17 +155,8 @@
   "Youareknownas": {
     "message": " You are known as"
   },
-  "Youcangetsomefromthefaucetbelow": {
-    "message": " You can get some from the faucet below."
-  },
-  "Youcansendmessagesbeforesubscriptionscompletebutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
-    "message": " You can send messages before subscriptions complete, but you will not receive them until your subscription is confirmed."
-  },
   "Youcansendmessagesbutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
     "message": " You can send messages, but you will not receive them until your subscription is confirmed."
-  },
-  "YouwillneedsomeNKNcoinstojoinchannelssuccessfully": {
-    "message": " You will need some NKN coins to join channels successfully!"
   },
   "Yourwalletaddressis": {
     "message": " Your wallet address is"

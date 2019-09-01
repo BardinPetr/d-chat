@@ -5,7 +5,6 @@ import { __, getChatDisplayName } from '../../misc/util';
 import history from 'Approot/UI/history';
 
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import NewTopicForm from 'Approot/UI/components/NewTopicForm';
 import Popout from 'Approot/UI/components/Popout';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import SubscriberList from 'Approot/UI/containers/SubscriberList';
@@ -99,13 +98,6 @@ class Header extends React.Component {
 						<div className="navbar-item">
 							<p className="menu-label">{__('Whispers')}</p>
 							<TopicsList whispers />
-						</div>
-
-						<div className="navbar-item">
-							<label className="menu-label">
-								{__('Add a channel')}
-							</label>
-							<NewTopicForm />
 						</div>
 
 						<div className="navbar-item">

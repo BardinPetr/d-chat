@@ -5,7 +5,7 @@ import { __ } from '../../misc/util';
 import configs from '../../misc/configs';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import { login } from '../../redux/actions';
+import { login, logout } from '../../redux/actions';
 
 class LoginBox extends React.Component {
 
@@ -49,6 +49,7 @@ class LoginBox extends React.Component {
 		e.preventDefault();
 		configs.walletJSON = configs.$default.walletJSON;
 		this.setState({ cleared: true });
+		this.props.dispatch(logout());
 	}
 
 	render() {

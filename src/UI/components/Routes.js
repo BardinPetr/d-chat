@@ -4,7 +4,7 @@ import Home from 'Approot/UI/containers/Home';
 import PublicChatroom from 'Approot/UI/containers/Chatroom/Public';
 import PrivateChatroom from 'Approot/UI/containers/Chatroom/Private';
 import Header from 'Approot/UI/components/Header';
-import Sidebar from 'Approot/UI/containers/Sidebar';
+import Sidebar from 'Approot/UI/components/Sidebar';
 
 const Routes = () => (
 	<div className="columns is-gapless">

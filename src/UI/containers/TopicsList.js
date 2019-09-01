@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
-import { getChatDisplayName, __ } from 'Approot/misc/util';
+import { getChatURL, getChatDisplayName, __ } from 'Approot/misc/util';
 import { removeChat } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 
@@ -12,14 +12,14 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 			((chat.topic.startsWith('/whisper/') && whispers) || (!chat.topic.startsWith('/whisper/') && !whispers)) ? (
 				<li key={key} title={getChatDisplayName(chat.topic)}>
 					<TopicLink topic={chat.topic} className={classnames('x-topic-link is-clearfix x-truncate', {
-						'has-text-black': chat.unread.length > 0,
+						'is-active': chat.active,
+						'has-text-black': (chat.unread.length > 0),
 					})}>
 						<span
 							title={__('Remove')}
 							className="delete is-small is-inline-block-mobile x-is-hover-hidden" onClick={(e) => {
 								e.preventDefault();
 								// Navigate away from closing chat first.
-								// XXX obvious collision bug, but don't care for now.
 								if (history.location.pathname.indexOf(chat.topic) > -1) {
 									history.push('/');
 								}
@@ -46,6 +46,7 @@ const mapStateToProps = state => {
 		newState.push({
 			topic: key,
 			unread: state.chatSettings[key].unread,
+			active: history.location.pathname === getChatURL(key),
 		});
 	}
 	return ({

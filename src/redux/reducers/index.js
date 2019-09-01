@@ -2,38 +2,80 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
 
-const messages = (state = configs.messages, action ) => {
-	let newState, initial;
+const reactions = (state = configs.reactions, action) => {
+	let newState, initial, targetID;
+	const topic = action.payload?.topic;
+
 	switch (action.type) {
 		case 'chat/REMOVE':
 			initial = { ...state };
-			delete initial[action.payload.topic];
+			delete initial[topic];
+			newState = initial;
+			configs.reactions = newState;
+			break;
+
+		case 'chat/RECEIVE_REACTION':
+			targetID = action.payload.message.targetID;
+			if ( !targetID ) {
+				return state;
+			} else {
+				initial = state[topic][targetID] || [];
+			}
+			newState = {
+				...state,
+				[topic]: {
+					...state[topic],
+					[targetID]: [ ...initial, action.payload.message ],
+				},
+			};
+			configs.reactions = newState;
+			break;
+
+		case 'chat/CREATE_CHAT':
+			newState = {
+				...state,
+				[topic]: state[topic] || {},
+			};
+			configs.reactions = newState;
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
+const messages = (state = configs.messages, action ) => {
+	let newState, initial;
+	const topic = action.payload?.topic;
+
+	switch (action.type) {
+		case 'chat/REMOVE':
+			initial = { ...state };
+			delete initial[topic];
 			newState = initial;
 			configs.messages = newState;
 			break;
 
-		case 'RECEIVE_MESSAGE':
-			if (!action.payload.topic) {
-				return state;
-			}
-			initial = state[action.payload.topic] || [];
+		case 'chat/RECEIVE_MESSAGE':
+			initial = state[topic] || [];
 			newState = {
 				...state,
-				[action.payload.topic]: [ ...initial, action.payload.message ],
+				[topic]: [ ...initial, action.payload.message ],
 			};
 			configs.messages = newState;
 			break;
 
 		// This one is for displaying all rooms in the chatlist.
-		case 'CREATE_CHAT':
+		case 'chat/CREATE_CHAT':
 			newState = {
 				...state,
-				[action.payload.topic]: state[action.payload.topic] || [],
+				[topic]: state[topic] || [],
 			};
 			configs.messages = newState;
 			break;
 
-		case 'PUBLISH_MESSAGE':
+		case 'chat/PUBLISH_MESSAGE':
 		default:
 			newState = state;
 	}
@@ -42,17 +84,19 @@ const messages = (state = configs.messages, action ) => {
 
 const subscriptions = ( state = {}, action ) => {
 	let newState;
+	const topic = action.payload?.topic;
+
 	switch ( action.type ) {
 		case 'SUBSCRIBE':
 			newState = {
 				...state,
-				[action.payload.topic]: action.payload.transactionID
+				[topic]: action.payload.transactionID
 			};
 			break;
 
 		case 'SUBSCRIBE_COMPLETED':
 			newState = { ...state };
-			delete newState[action.payload.topic];
+			delete newState[topic];
 			break;
 
 		default:
@@ -63,31 +107,33 @@ const subscriptions = ( state = {}, action ) => {
 
 const transactions = (state = {
 	unconfirmed: [],
-	confirmed: configs.transactions.confirmed
+	confirmed: configs.transactions.confirmed,
 }, action) => {
-	let newState, removed, original;
+	let newState, removed, initial;
+
 	switch (action.type) {
 		case 'nkn/CREATE_TRANSACTION':
 			// Sending tx to yourself makes it dupe, but whatever.
 			newState = {
 				...state,
-				unconfirmed: [...state.unconfirmed,
+				unconfirmed: [
+					...state.unconfirmed,
 					action.payload,
 				],
 			};
 			break;
 
 		case 'nkn/TRANSACTION_COMPLETE':
-			original = [...state.unconfirmed];
-			removed = original.splice(
+			initial = [...state.unconfirmed];
+			removed = initial.splice(
 				state.unconfirmed.findIndex(i => i.transactionID === action.payload.transactionID),
 				1
 			);
 			newState = {
-				unconfirmed: [...original],
+				unconfirmed: [...initial],
 				confirmed: [...state.confirmed.concat(removed)],
 			};
-			configs.transactions.confirmed = newState;
+			configs.transactions.confirmed = newState.confirmed;
 			break;
 
 		default:
@@ -103,9 +149,6 @@ const login = (state = {}, action) => {
 			newState = action.payload.credentials;
 			break;
 
-		// There is something wrong with the .then in loginbox, in webext-redux.
-		// It does not resolve the correct value.
-		// Compare addr to null (in loginbox.js) is my workaround.
 		case 'LOGIN_STATUS':
 			if ( action.error ) {
 				newState = { error: true };
@@ -146,31 +189,25 @@ const draftMessage = (state = '', action) => {
 
 /**
  * Handles individual chat (topic) settings.
- *
- * Settings include:
- * - ...
- *
- * modify_read_count: Payload: { changes: { add, setTo } }
  */
 const chatSettings = (state = configs.chatSettings, action) => {
 	let newState, initial;
+	const topic = action.payload?.topic;
+
 	switch (action.type) {
 		case 'chat/REMOVE':
 			initial = { ...state };
-			delete initial[action.payload.topic];
+			delete initial[topic];
 			newState = initial;
 			configs.chatSettings = newState;
 			break;
 
-		case 'chat/TOGGLE_NOTIFICATIONS':
-			break;
-
 		case 'chat/MARK_UNREAD':
-			initial = state[action.payload.topic]?.unread || [];
+			initial = state[topic]?.unread || [];
 			newState = {
 				...state,
-				[action.payload.topic]: {
-					...state[action.payload.topic],
+				[topic]: {
+					...state[topic],
 					unread: [ ...initial, ...action.payload.ids ],
 				},
 			};
@@ -179,11 +216,11 @@ const chatSettings = (state = configs.chatSettings, action) => {
 
 		case 'chat/MARK_READ':
 			// Grab all unread messages.
-			initial = state[action.payload.topic]?.unread || [];
+			initial = state[topic]?.unread || [];
 			newState = {
 				...state,
-				[action.payload.topic]: {
-					...state[action.payload.topic],
+				[topic]: {
+					...state[topic],
 					// Filter out newly read message from unread messages.
 					unread: initial.filter(i => !action.payload.ids.some(id => i === id) ),
 				},
@@ -191,13 +228,13 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			configs.chatSettings = newState;
 			break;
 
-		case 'CREATE_CHAT':
+		case 'chat/CREATE_CHAT':
 			newState = {
 				...state,
-				[action.payload.topic]: {
+				[topic]: {
 					unread: [],
 					subscribers: [],
-					...state[action.payload.topic],
+					...state[topic],
 				}
 			};
 			configs.chatSettings = newState;
@@ -206,8 +243,8 @@ const chatSettings = (state = configs.chatSettings, action) => {
 		case 'chat/SET_SUBSCRIBERS':
 			newState = {
 				...state,
-				[action.payload.topic]: {
-					...state[action.payload.topic],
+				[topic]: {
+					...state[topic],
 					subscribers: action.payload.subscribers,
 				}
 			};
@@ -256,6 +293,7 @@ export default combineReducers({
 	login,
 	// Chat.
 	messages,
+	reactions,
 	draftMessage,
 	chatSettings,
 	// Client's ongoing subscriptions, waiting to be resolved.

@@ -5,14 +5,18 @@ import { connect } from 'react-redux';
 import Chatroom from 'Approot/UI/components/Chatroom';
 import { getSubscribers, markRead, publishMessage, saveDraft } from 'Approot/redux/actions';
 
-const mapStateToProps = (state, ownProps) => ({
-	draft: state.draftMessage,
-	messages: state.messages[ownProps.match.params.topic] || [],
-	unreadMessages: state.chatSettings[ownProps.match.params.topic]?.unread || [],
-	topic: ownProps.match.params.topic,
-	subscribing: Object.keys(state.subscriptions).includes(ownProps.match.params.topic),
-	subs: state.chatSettings[ownProps.match.params.topic]?.subscribers || [],
-});
+const mapStateToProps = (state, ownProps) => {
+	const topic = ownProps.match.params.topic;
+	return ({
+		draft: state.draftMessage,
+		messages: state.messages[topic] || [],
+		reactions: state.reactions[topic] || {},
+		unreadMessages: state.chatSettings[topic]?.unread || [],
+		topic: topic,
+		subscribing: Object.keys(state.subscriptions).includes(topic),
+		subs: state.chatSettings[topic]?.subscribers || [],
+	});
+};
 
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(publishMessage(message)),

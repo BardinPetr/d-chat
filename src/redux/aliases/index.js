@@ -11,6 +11,7 @@ import {
 	setLoginStatus,
 	subscribeCompleted,
 	setSubscribers,
+	getBalance,
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -20,9 +21,7 @@ import {
 	setBadgeText,
 	log,
 } from 'Approot/misc/util';
-import sleep from 'sleep-promise';
 
-const BEGTOPIC = 'D-Chat Intro';
 // TODO move to own file
 const password = 'd-chat!!!';
 
@@ -83,34 +82,19 @@ const joinChat = originalAction => (dispatch) => {
  * Logs in and adds nkn listeners. Dispatches chat updates like "new message".
  */
 const login = originalAction => (dispatch, getState) => {
+	log('Attempting login', originalAction);
 	const credentials = originalAction.payload.credentials;
 	const rememberMe = credentials && credentials.rememberMe;
 
 	let status;
 	try {
 		const nknClient = new NKN(credentials);
+		setInterval(() => dispatch(getBalance()), 20 * 1000);
 
 		nknClient.on('connect', async () => {
 			dispatch(connected());
+			dispatch(getBalance());
 			log('connected');
-
-			// New users beg for coins on '#D-Chat Intro'.
-			// Try twice + sleep 10secs, because sometimes it false positives.
-			const balance = await nknClient.wallet.getBalance()
-				.then(balance => balance.eq(0) ? (
-					sleep(10000).then(
-						() => nknClient.wallet.getBalance()
-					)) : balance)
-				.then(balance => balance);
-
-			log('CONNECTED:BALANCE:', balance);
-			if (balance.eq(0)) {
-				new Message({
-					contentType: 'text',
-					content: 'Please, tip me. _This message was sent automatically._',
-					topic: BEGTOPIC
-				}).publish(BEGTOPIC);
-			}
 		});
 
 		nknClient.on('message', (...args) => {
@@ -235,12 +219,14 @@ const logout = () => {
 	};
 };
 
-const getBalance = () => async (dispatch) => {
+const getTheBalance = () => async (dispatch) => {
 	if (!window.nknClient) {
 		return;
 	}
 
+	log('Fetching balance');
 	const balance = await window.nknClient.wallet.getBalance();
+	log('Balance:', balance);
 	return dispatch({
 		type: 'nkn/GET_BALANCE',
 		payload: {
@@ -298,13 +284,13 @@ const newTransaction = originalAction => async (dispatch) => {
 };
 
 export default {
-	'PUBLISH_MESSAGE': publishMessage,
-	'LOGIN': login,
+	'PUBLISH_MESSAGE_ALIAS': publishMessage,
+	'LOGIN_ALIAS': login,
 	'JOIN_CHAT_ALIAS': joinChat,
 	'chat/GET_SUBSCRIBERS_ALIAS': getSubscribersHandler,
 	'chat/MARK_READ_ALIAS': markRead,
 	'LOGOUT_ALIAS': logout,
-	'GET_BALANCE_ALIAS': getBalance,
+	'GET_BALANCE_ALIAS': getTheBalance,
 	'nkn/NEW_TRANSACTION_ALIAS': newTransaction,
 	'SUBSCRIBE_TO_CHAT_ALIAS': subscribeToChat,
 	'SEND_PRIVATE_MESSAGE_ALIAS': sendPrivateMessage,

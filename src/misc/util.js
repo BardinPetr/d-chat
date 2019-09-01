@@ -31,6 +31,16 @@ export function getChatDisplayName(topic) {
 	return leadingHashIt(String(topic));
 }
 
+export function getPrivateChatURL(topic) {
+	if (!topic) {
+		return '';
+	}
+	if (topic.startsWith('/whisper/')) {
+		return topic;
+	}
+	return '/whisper/' + topic;
+}
+
 export function getChatURL(topic) {
 	if (!topic) {
 		return '';
