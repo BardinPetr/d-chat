@@ -8,9 +8,6 @@
   "Account": {
     "message": " Account"
   },
-  "Addachannel": {
-    "message": " Add a channel"
-  },
   "Addreaction": {
     "message": " Add reaction"
   },
@@ -43,9 +40,6 @@
   },
   "Forgotpassword": {
     "message": " Forgot password?"
-  },
-  "General": {
-    "message": " General"
   },
   "GetsomeNKNforfreefromthefaucet": {
     "message": " Get some NKN for free, from the faucet"

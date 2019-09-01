@@ -38,8 +38,9 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		if ( this.props.messages.length > this.state.count ) {
+			this.wasScrolledToBottom = false;
 			this.setState({
-				count: this.state.count + 10,
+				count: this.state.count + 5,
 			});
 		}
 	}
@@ -82,7 +83,7 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if ( prevProps.messages.length < this.props.messages.length ) {
+		if ( prevProps.topic === this.props.topic && prevProps.messages.length < this.props.messages.length ) {
 			this.setState({
 				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
 			});
@@ -158,7 +159,7 @@ class Chatroom extends React.Component {
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Bot
-		if (el.scrollTop > el.scrollTopMax - 25) {
+		if (el.scrollTop > el.scrollTopMax - 15) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
@@ -216,21 +217,23 @@ class Chatroom extends React.Component {
 		return (
 			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
 				<div className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height" ref={ref => this.messages = ref} onScroll={e => this.onScroll(e.target)}>
-					<div className="container">
-						<div className="x-chat">
-							<InfiniteScroller
-								pageStart={0}
-								isReverse
-								loadMore={this.loadMoreMessages}
-								hasMore={visibleMessages.length < messages.length}
-								loader={<div className="is-loader" key={0} />}
-								initialLoad={false}
-								threshold={100}
-							>
+					<InfiniteScroller
+						pageStart={0}
+						isReverse
+						loadMore={this.loadMoreMessages}
+						hasMore={visibleMessages.length < messages.length}
+						loader={<div className="is-loader" key={0} />}
+						initialLoad={false}
+						useWindow={false}
+						threshold={100}
+						className="x-is-fullwidth"
+					>
+						<div className="container">
+							<div className="x-chat">
 								{ messageList }
-							</InfiniteScroller>
+							</div>
 						</div>
-					</div>
+					</InfiniteScroller>
 				</div>
 				<div className="hero-foot">
 					<form className="card" onSubmit={(e) => this.submitText(e)}>
@@ -253,6 +256,7 @@ class Chatroom extends React.Component {
 									subs={this.props.subs}
 									mention={mention}
 									showingPreview={this.state.showingPreview}
+									source={this.msg?.state.value || ''}
 								/>
 							</div>
 							<div className="level is-mobile">
