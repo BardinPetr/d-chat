@@ -265,7 +265,6 @@ export const removeChat = topic => ({
 
 // Don't change a reaction into a message.
 export const modifyMessage = (id, topic, modifiedMessage) => {
-	console.log('MODIFYING', modifiedMessage);
 	let type = 'chat/MODIFY_MESSAGE';
 	if ( isReaction(modifiedMessage) ) {
 		type = 'chat/MODIFY_REACTION';
