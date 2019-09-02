@@ -4,10 +4,12 @@ import {
 	getChatDisplayName,
 	getChatName,
 	setBadgeText,
+	isReaction,
 } from 'Approot/misc/util';
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 import sleep from 'sleep-promise';
+
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
@@ -138,12 +140,11 @@ export const publishMessage = message => ({
 });
 
 export const receiveMessage = message => {
-	let type = '';
-	if ( message.contentType === 'reaction' || message.contentType === 'nkn/tip' ) {
+	let type = 'chat/RECEIVE_MESSAGE';
+	if ( isReaction( message ) ) {
 		type = 'chat/RECEIVE_REACTION';
-	} else {
-		type = 'chat/RECEIVE_MESSAGE';
 	}
+
 	return ({
 		type,
 		payload: {
@@ -153,12 +154,11 @@ export const receiveMessage = message => {
 	});
 };
 
-export const markRead = (topic, ids, options = {}) => ({
+export const markRead = (topic, ids) => ({
 	type: 'chat/MARK_READ_ALIAS',
 	payload: {
 		topic,
 		ids,
-		options,
 	}
 });
 
@@ -192,11 +192,22 @@ export const createTransaction = (id, data) => ({
 /**
  * Called by .on('message') listener.
  */
-export const receivingMessage = (src, payload, payloadType) => (dispatch) => {
+export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
 	let message = {};
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
-		message = new Message(data).from(src);
+		message = new Message(data);
+		if ( message.topic && message.contentType === 'nkn/tip' && message.isPrivate ) {
+			const subs = getState().chatSettings[message.topic]?.subscribers || [];
+			if (!subs.includes(window.nknClient.addr)) {
+				new Message({
+					contentType: 'dchat/subscribe',
+					topic: message.topic,
+					content: __('You have been tipped. Subscribing once tx is confirmed.')
+				}).receive(dispatch);
+			}
+		}
+		message = message.from(src);
 	} else {
 		return;
 	}
@@ -251,3 +262,21 @@ export const removeChat = topic => ({
 		topic,
 	},
 });
+
+// Don't change a reaction into a message.
+export const modifyMessage = (id, topic, modifiedMessage) => {
+	console.log('MODIFYING', modifiedMessage);
+	let type = 'chat/MODIFY_MESSAGE';
+	if ( isReaction(modifiedMessage) ) {
+		type = 'chat/MODIFY_REACTION';
+	}
+
+	return ({
+		type,
+		payload: {
+			id,
+			topic,
+			message: modifiedMessage,
+		},
+	});
+};

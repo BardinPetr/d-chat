@@ -2,6 +2,17 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
 
+const replaceMessage = (from, whatId, withWhat) => from.reduce((acc, item) => {
+	if ( whatId === item.id ) {
+		if ( withWhat ) {
+			return acc.concat(withWhat);
+		} else {
+			return acc;
+		}
+	}
+	return acc.concat(item);
+}, []);
+
 const reactions = (state = configs.reactions, action) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
@@ -39,6 +50,8 @@ const reactions = (state = configs.reactions, action) => {
 			configs.reactions = newState;
 			break;
 
+
+		case 'chat/MODIFY_REACTION':
 		default:
 			newState = state;
 	}
@@ -73,6 +86,14 @@ const messages = (state = configs.messages, action ) => {
 				[topic]: state[topic] || [],
 			};
 			configs.messages = newState;
+			break;
+
+		case 'chat/MODIFY_MESSAGE':
+			initial = state[topic];
+			newState = {
+				...state,
+				[topic]: replaceMessage(initial, action.payload.id, action.payload.message),
+			};
 			break;
 
 		case 'chat/PUBLISH_MESSAGE':

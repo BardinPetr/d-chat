@@ -150,7 +150,7 @@ class Chatroom extends React.Component {
 	});
 
 	onResize = (el) => {
-		el.parentElement.style.minHeight = el.style.height;
+		el.parentElement.parentElement.style.minHeight = el.style.height;
 		if (this.wasScrolledToBottom) {
 			this.scrollToBot();
 		}

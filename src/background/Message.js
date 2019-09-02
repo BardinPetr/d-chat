@@ -6,7 +6,7 @@ import {
 	parseAddr,
 	log,
 } from 'Approot/misc/util';
-import { 	createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
+import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
 
@@ -142,7 +142,9 @@ class Message {
 				break;
 
 			case 'dchat/subscribe':
-				this.isMe = true;
+				if ( !this.addr ) {
+					this.isMe = true;
+				}
 				break;
 		}
 
@@ -155,7 +157,6 @@ class Message {
 			if ( views.length === 0 ) {
 				this.notify();
 
-				// TODO Make this one work for all types of views.
 				dispatch( markUnread(this.topic, [this.id]) );
 			}
 		}

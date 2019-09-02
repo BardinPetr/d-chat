@@ -1,5 +1,6 @@
 import NKN from '../../misc/nkn';
 import Message from 'Approot/background/Message';
+import sleep from 'sleep-promise';
 import {
 	transactionComplete,
 	getSubscribers,
@@ -12,6 +13,7 @@ import {
 	subscribeCompleted,
 	setSubscribers,
 	getBalance,
+	modifyMessage
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -40,7 +42,7 @@ const subscribeToChat = originalAction => dispatch => {
 	}
 };
 
-const joinChat = originalAction => (dispatch) => {
+const joinChat = originalAction => (dispatch, getState) => {
 	const topic = originalAction.payload.topic;
 	if ( !topic ) {
 		return;
@@ -57,25 +59,23 @@ const joinChat = originalAction => (dispatch) => {
 		err => {
 			// Insufficient funds.
 			if ( err.data.includes('funds') ) {
-				new Message({
-					topic,
-					error: true,
-					content: __('Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page.') + '\n\n' + __('After you receive coins, you may have to reload this page.'),
-					contentType: 'dchat/subscribe',
-				}).receive(dispatch);
+				if ( !getState().subscriptions[topic] ) {
+					const noticeMsg = new Message({
+						topic,
+						contentType: 'dchat/subscribe',
+						content: __('Tried to subscribe, but had no coins. Someone, please, tip to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
+					});
+					noticeMsg.publish(topic);
 
-				// TODO create contentType 'dchat/text'.
-				new Message({
-					topic,
-					contentType: 'text',
-					content: __('Tried to subscribe, but had no coins. React with an emoji to subscribe them.') + '\n\n_' + __('Automated message.') + '_',
-				}).publish(topic);
+					dispatch(subscribe(topic, 'attempt'));
+					noticeMsg.content = __('You have no coins to subscribe. Sent out a request.');
+					noticeMsg.receive(dispatch);
+				}
 			}
 			log('Errored at subscribe. Already subscribed?', err);
 		});
 
 	dispatch(createChat(topic));
-	// return dispatch( enterChat(topic) );
 };
 
 /**
@@ -89,7 +89,6 @@ const login = originalAction => (dispatch, getState) => {
 	let status;
 	try {
 		const nknClient = new NKN(credentials);
-		setInterval(() => dispatch(getBalance()), 20 * 1000);
 
 		nknClient.on('connect', async () => {
 			dispatch(connected());
@@ -105,14 +104,17 @@ const login = originalAction => (dispatch, getState) => {
 		// Pending subscriptions handler.
 		nknClient.on('block', block => {
 			log('New block!!!', block);
+			// Lazy.
+			sleep(500).then(() => dispatch(getBalance()));
+
 			let subs = getState().subscriptions;
-			for	( let topic of Object.keys(subs) ) {
+			for ( let topic of Object.keys(subs) ) {
 				// Check that the sub is not yet resolved (not null), then try find it in the block.
 				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
 					log('Subscribe completed!');
 					dispatch(subscribeCompleted(topic));
 					// Doesn't update correctly without timeout.
-					setTimeout(() => dispatch(getSubscribers(topic)), 500);
+					sleep(500).then(() => dispatch(getSubscribers(topic)));
 				}
 			}
 		});
@@ -168,11 +170,17 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 	const recipient = originalAction.payload.recipient;
 	log('Sending private message', originalAction);
 
-	await message.whisper(recipient);
+	const whispering = message.whisper(recipient);
 
 	// Override topic so it matches. Otherwise it would be receiving person's topic.
 	message.topic = genPrivateChatName(recipient);
-	await message.from('me').receive(dispatch);
+
+	message.from('me').receive(dispatch).then(
+		() => whispering.catch(() => {
+			message.error = __('Not received. Counterparty offline?');
+			dispatch(modifyMessage(message.id, message.topic, message));
+		})
+	);
 
 	return originalAction;
 };
@@ -195,17 +203,10 @@ const markRead = originalAction => async (dispatch, getState) => {
 		getUnreadMessages(getState()).then(count => setBadgeText( count - ids ));
 	}
 
-	if (originalAction.payload.options.private) {
-		return dispatch({
-			type: 'chat/MARK_READ_PRIVATE',
-			payload: originalAction.payload,
-		});
-	} else {
-		return dispatch({
-			type: 'chat/MARK_READ',
-			payload: originalAction.payload,
-		});
-	}
+	return dispatch({
+		type: 'chat/MARK_READ',
+		payload: originalAction.payload,
+	});
 };
 
 const logout = () => {

@@ -43,7 +43,7 @@ const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subscribing,
 		/>
 		{showingPreview && <Markdown
 			source={source}
-			className=""
+			className="x-white-space"
 		/>}
 	</div>
 ));

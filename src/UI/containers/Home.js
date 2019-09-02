@@ -7,7 +7,7 @@ import {
 	getAddressFromPubKey,
 	parseAddr,
 	getChatURL,
-	getPrivateChatURL,
+	getWhisperURL,
 } from 'Approot/misc/util';
 import { runtime } from 'webextension-polyfill';
 import history from 'Approot/UI/history';
@@ -15,7 +15,7 @@ import history from 'Approot/UI/history';
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
 	const submit = () => {
-		let t = privateChat ? getPrivateChatURL(target): (getChatURL(target));
+		let t = privateChat ? getWhisperURL(target) : getChatURL(target);
 		history.push(t);
 		setTarget('');
 	};
