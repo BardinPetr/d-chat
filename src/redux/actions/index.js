@@ -40,14 +40,6 @@ export const connected = () => ({
 export const subscribeCompleted = (topic) => dispatch => {
 	dispatch(getSubscribers(topic));
 
-	// TODO when it hits. check if this is still needed.
-	new Message({
-		topic,
-		contentType: 'dchat/subscribe',
-		content: __('Subscription confirmed. You are now receiving messages from') + ` ${getChatDisplayName(topic)}.`,
-		isPrivate: true,
-	}).receive(dispatch);
-
 	return dispatch({
 		type: 'SUBSCRIBE_COMPLETED',
 		payload: {
@@ -68,11 +60,10 @@ export const sendPrivateMessage = (message) => ({
 });
 
 export const subscribe = (topic, transactionID) => (dispatch) => {
-	// TODO when it hits. check if this is still needed. And same to <Info />
 	new Message({
 		topic,
 		contentType: 'dchat/subscribe',
-		content: __('Subscribing to') + ' ' + getChatDisplayName(topic) + '.\n\n' + __('You can send messages, but you will not receive them until your subscription is confirmed.'),
+		content: __('Subscribing to') + ' ' + getChatDisplayName(topic) + '.',
 		isPrivate: true,
 	}).receive(dispatch);
 
