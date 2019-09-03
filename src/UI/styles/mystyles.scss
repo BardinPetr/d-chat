@@ -5,6 +5,7 @@ $navbar-breakpoint: 769px;
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
 @import "../../../node_modules/bulma-tooltip";
+@import "../../../node_modules/bulma-accordion";
 
 @media (max-width: 768px) {
     .x-fix-mobile.navbar-brand {

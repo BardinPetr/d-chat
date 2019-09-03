@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import NknBalance from 'Approot/UI/containers/NknBalance';
+import WalletInfo from 'Approot/UI/components/Wallet/Info';
 import Info from 'Approot/UI/components/Info';
 import {
 	__,
-	getAddressFromPubKey,
 	parseAddr,
 	getChatURL,
 	getWhisperURL,
@@ -30,26 +29,16 @@ const NewTopicForm = ({ privateChat }) => {
 };
 
 
-const Home = ({ addr }) => (
-	<div className="column">
-		<div className="notification" style={{marginBottom: 0, overflowWrap: 'anywhere', wordBreak: 'all'}}>
-			<div className="field">
-				<p className="is-size-7">{__('You are known as')}</p>
-				<p style={{userSelect: 'all'}}>{addr}</p>
-			</div>
-			<div className="field">
-				<p className="is-size-7">{__('Your wallet address is')}</p>
-				<p style={{userSelect: 'all'}}>{getAddressFromPubKey(parseAddr(addr)[1])}</p>
-			</div>
-			<div className="field">
-				<p className="is-size-7">{__('Your wallet balance')}</p>
-				<NknBalance />
-			</div>
+const Home = ({ client }) => (
+	<div className="container">
+
+		<WalletInfo client={client}>
 			<div className="field">
 				<p className="is-size-7">{__('D-Chat version')}</p>
 				<p>{runtime.getManifest().version}</p>
 			</div>
-		</div>
+		</WalletInfo>
+
 		<div className="section" style={{paddingTop: 0}}>
 			<div className="field">
 				<label className="label has-text-weight-normal">
@@ -73,7 +62,7 @@ const Home = ({ addr }) => (
 );
 
 const mapStateToProps = state => ({
-	addr: state.login?.addr,
+	client: state.clients.find(i => i.dchat.active),
 });
 
 export default connect(mapStateToProps)(Home);
