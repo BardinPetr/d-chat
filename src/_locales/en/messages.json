@@ -11,9 +11,6 @@
   "Addreaction": {
     "message": " Add reaction"
   },
-  "Afteryoureceivecoinsyoumayhavetoreloadthispage": {
-    "message": " After you receive coins, you may have to reload this page."
-  },
   "Automatedmessage": {
     "message": " Automated message."
   },
@@ -50,9 +47,6 @@
   "Identity": {
     "message": " Identity"
   },
-  "InsufficientFundsYouneedNKNcoinsforsubscribingYouwillnotreceivemessagesbutyoucansendthemIfyousendamessagesomeonelisteningmighttipyouNKNcoinssoyoucansubscribeOryoucanusethefaucetonthehomepage": {
-    "message": " Insufficient Funds. You need NKN coins for subscribing. You will not receive messages, but you can send them. If you send a message, someone listening might tip you NKN coins so you can subscribe. Or you can use the faucet on the home page."
-  },
   "Joinachatroom": {
     "message": " Join a chatroom"
   },
@@ -64,9 +58,6 @@
   },
   "LogOut": {
     "message": " Log Out"
-  },
-  "Message": {
-    "message": " Message"
   },
   "Newmessagesbelow": {
     "message": " New messages below"
@@ -107,9 +98,6 @@
   "Subscribingto": {
     "message": " Subscribing to"
   },
-  "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
-    "message": " Subscription confirmed. You are now receiving messages from"
-  },
   "Tab": {
     "message": " Tab"
   },
@@ -128,8 +116,8 @@
   "Topic": {
     "message": " Topic"
   },
-  "TriedtosubscribebuthadnocoinsReactwithanemojitosubscribethem": {
-    "message": " Tried to subscribe, but had no coins. React with an emoji to subscribe them."
+  "TriedtosubscribebuthadnocoinsSomeonepleasetiptosubscribethem": {
+    "message": " Tried to subscribe, but had no coins. Someone, please, tip to subscribe them."
   },
   "Username": {
     "message": " Username"
@@ -149,8 +137,11 @@
   "Youareknownas": {
     "message": " You are known as"
   },
-  "Youcansendmessagesbutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
-    "message": " You can send messages, but you will not receive them until your subscription is confirmed."
+  "YouhavebeentippedSubscribingoncetxisconfirmed": {
+    "message": " You have been tipped. Subscribing once tx is confirmed."
+  },
+  "YouhavenocoinstosubscribeSentoutarequest": {
+    "message": " You have no coins to subscribe. Sent out a request."
   },
   "Yourwalletaddressis": {
     "message": " Your wallet address is"

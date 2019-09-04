@@ -55,11 +55,16 @@ class Message extends React.Component {
 	}
 
 	render() {
-		const { topic, refer, message, isSubscribed, className, isNotice, children } = this.props;
+		const { topic, refer, message, isSubscribed, className, children } = this.props;
 		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
 
+		const isNotice = ['dchat/subscribe'].includes(message.contentType);
+		const { error } = message;
+
 		return (
-			<div className={`message ${isNotice ? 'has-background-grey-lighter' : ''} ${className}`}>
+			<div className={classnames(`message ${className}`, {
+				'has-background-grey-lighter': isNotice,
+			})}>
 				<div className="message-header is-paddingless has-text-weight-light">
 					<span>
 						<Nickname
@@ -79,6 +84,7 @@ class Message extends React.Component {
 							topic={topic}
 							addr={message.addr}
 							topic={topic}
+							showEmojiPicker={message.isMe}
 						/>
 					</div>
 					<Markdown
@@ -86,6 +92,7 @@ class Message extends React.Component {
 					/>
 					{children}
 				</div>
+				{error && <div className="tag is-danger">{error}</div>}
 			</div>
 		);
 	}

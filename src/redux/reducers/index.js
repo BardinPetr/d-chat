@@ -2,24 +2,28 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
 
+const replaceMessage = (from, whatId, withWhat) => from.reduce((acc, item) => {
+	if ( whatId === item.id ) {
+		if ( withWhat ) {
+			return acc.concat(withWhat);
+		} else {
+			return acc;
+		}
+	}
+	return acc.concat(item);
+}, []);
+
 const reactions = (state = configs.reactions, action) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
-		case 'chat/REMOVE':
-			initial = { ...state };
-			delete initial[topic];
-			newState = initial;
-			configs.reactions = newState;
-			break;
-
 		case 'chat/RECEIVE_REACTION':
 			targetID = action.payload.message.targetID;
 			if ( !targetID ) {
 				return state;
 			} else {
-				initial = state[topic][targetID] || [];
+				initial = state[topic]?.[targetID] || [];
 			}
 			newState = {
 				...state,
@@ -39,6 +43,8 @@ const reactions = (state = configs.reactions, action) => {
 			configs.reactions = newState;
 			break;
 
+
+		case 'chat/MODIFY_REACTION':
 		default:
 			newState = state;
 	}
@@ -50,13 +56,6 @@ const messages = (state = configs.messages, action ) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
-		case 'chat/REMOVE':
-			initial = { ...state };
-			delete initial[topic];
-			newState = initial;
-			configs.messages = newState;
-			break;
-
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
 			newState = {
@@ -75,30 +74,15 @@ const messages = (state = configs.messages, action ) => {
 			configs.messages = newState;
 			break;
 
-		case 'chat/PUBLISH_MESSAGE':
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
-const subscriptions = ( state = {}, action ) => {
-	let newState;
-	const topic = action.payload?.topic;
-
-	switch ( action.type ) {
-		case 'SUBSCRIBE':
+		case 'chat/MODIFY_MESSAGE':
+			initial = state[topic];
 			newState = {
 				...state,
-				[topic]: action.payload.transactionID
+				[topic]: replaceMessage(initial, action.payload.id, action.payload.message),
 			};
 			break;
 
-		case 'SUBSCRIBE_COMPLETED':
-			newState = { ...state };
-			delete newState[topic];
-			break;
-
+		case 'chat/PUBLISH_MESSAGE':
 		default:
 			newState = state;
 	}
@@ -296,8 +280,6 @@ export default combineReducers({
 	reactions,
 	draftMessage,
 	chatSettings,
-	// Client's ongoing subscriptions, waiting to be resolved.
-	subscriptions,
 	// Information about wallet/client/so forth.
 	nkn,
 	transactions,

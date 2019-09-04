@@ -7,7 +7,7 @@ import {
 	getAddressFromPubKey,
 	parseAddr,
 	getChatURL,
-	getPrivateChatURL,
+	getWhisperURL,
 } from 'Approot/misc/util';
 import { runtime } from 'webextension-polyfill';
 import history from 'Approot/UI/history';
@@ -15,7 +15,7 @@ import history from 'Approot/UI/history';
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
 	const submit = () => {
-		let t = privateChat ? getPrivateChatURL(target): (getChatURL(target));
+		let t = privateChat ? getWhisperURL(target) : getChatURL(target);
 		history.push(t);
 		setTarget('');
 	};
@@ -32,7 +32,7 @@ const NewTopicForm = ({ privateChat }) => {
 
 const Home = ({ addr }) => (
 	<div className="column">
-		<div className="notification" style={{marginBottom: 0, overflowWrap: 'anywhere', wordBreak: 'all'}}>
+		<div className="notification" style={{marginBottom: 0, overflowWrap: 'anywhere', wordBreak: 'break-all'}}>
 			<div className="field">
 				<p className="is-size-7">{__('You are known as')}</p>
 				<p style={{userSelect: 'all'}}>{addr}</p>

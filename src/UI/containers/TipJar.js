@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions';
+import history from 'Approot/UI/history';
+import { matchPath } from 'react-router-dom';
 
 const emojis = [['👍', 1], ['🖤', 50], ['🏴‍☠️', 500]];
 
@@ -9,11 +11,15 @@ const TipJar = ({ topic, className, addr, dispatch, messageID, setText }) => {
 	const [status, setStatus] = useState(['','','']);
 	const [disabled, setDisabled] = useState(false);
 
+
 	// React cries memory leak - doubt it.
 	const send = (content, value, index) => {
 		if ( !addr ) {
 			return;
 		}
+		const whisper = matchPath(history.location.pathname, {
+			path: '/whisper/:topic',
+		})?.url;
 
 		let e = status.slice();
 		e[index] = '';
@@ -21,7 +27,7 @@ const TipJar = ({ topic, className, addr, dispatch, messageID, setText }) => {
 		dispatch(newTransaction({
 			to: addr,
 			value,
-			topic,
+			topic: whisper ? whisper : topic,
 			targetID: messageID,
 			contentType: 'nkn/tip',
 			content,

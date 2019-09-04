@@ -6,7 +6,7 @@ import {
 	parseAddr,
 	log,
 } from 'Approot/misc/util';
-import { 	createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
+import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
 
@@ -100,14 +100,7 @@ class Message {
 		this.notified = undefined;
 		this.isPrivate = true;
 
-		let options;
-		if (this.contentType === 'nkn/tip') {
-			options = {
-				msgHoldingSeconds: 0,
-			};
-		}
-
-		const sendingMessage = await window.nknClient.sendMessage(toAddr, this, options);
+		const sendingMessage = await window.nknClient.sendMessage(toAddr, this);
 
 		return sendingMessage;
 	}
@@ -132,6 +125,10 @@ class Message {
 					dispatch(
 						createTransaction(this.transactionID, this)
 					);
+					if (!this.topic?.startsWith('/whisper/')) {
+						// We are going to receive this as a public message.
+						return;
+					}
 				}
 				this.notified = true;
 				break;
@@ -142,7 +139,9 @@ class Message {
 				break;
 
 			case 'dchat/subscribe':
-				this.isMe = true;
+				if ( !this.addr ) {
+					this.isMe = true;
+				}
 				break;
 		}
 
@@ -155,7 +154,6 @@ class Message {
 			if ( views.length === 0 ) {
 				this.notify();
 
-				// TODO Make this one work for all types of views.
 				dispatch( markUnread(this.topic, [this.id]) );
 			}
 		}

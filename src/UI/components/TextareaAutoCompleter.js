@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import Autocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
 import emoji from '@jukben/emoji-search';
-import { formatAddr, getChatDisplayName, __ } from 'Approot/misc/util';
+import { formatAddr } from 'Approot/misc/util';
 import Markdown from './Markdown';
 
 const AutofillEmojiItem = ({ entity: { name, char } }) => (
@@ -14,17 +14,15 @@ const AutofillMentionItem = ({ entity: { char } }) => (
 	<div>{formatAddr(char)}&hellip;</div>
 );
 
-const _outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end'  });
+const _outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end' });
 
-const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subscribing, subs, topic, mention, ...props }, ref) => (
+const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subs, mention, ...props }, ref) => (
 	<div className="">
 		<Autocomplete
 			className={classnames('textarea', {
 				'is-hidden': showingPreview,
-				'is-warning': subscribing,
 			})}
 			ref={ref}
-			placeholder={`${__('Message')} ${getChatDisplayName(topic)}`}
 			{...props}
 			trigger={{
 				':': {
@@ -43,7 +41,7 @@ const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subscribing,
 		/>
 		{showingPreview && <Markdown
 			source={source}
-			className="is-overlay"
+			className="x-white-space"
 		/>}
 	</div>
 ));

@@ -3,6 +3,7 @@ import { i18n, runtime, browserAction, notifications } from 'webextension-polyfi
 import isNumber from 'is-number';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
 import configs from 'Approot/misc/configs';
+import debounce from 'debounce';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/, '');
@@ -29,16 +30,6 @@ export function getChatDisplayName(topic) {
 		return topic.slice('/whisper/'.length);
 	}
 	return leadingHashIt(String(topic));
-}
-
-export function getPrivateChatURL(topic) {
-	if (!topic) {
-		return '';
-	}
-	if (topic.startsWith('/whisper/')) {
-		return topic;
-	}
-	return '/whisper/' + topic;
 }
 
 export function getChatURL(topic) {
@@ -125,7 +116,7 @@ export const setBadgeText = txt => {
 
 export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
 
-export const createNotification = async (options) => {
+export const createNotification = debounce((options) => {
 	if (configs.showNotifications) {
 		return notifications.create( 'd-chat', {
 			type: 'basic',
@@ -134,7 +125,7 @@ export const createNotification = async (options) => {
 			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
 		});
 	}
-};
+}, 1000, true);
 
 export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
 export const getWhisperURL = (recipient) => `/whisper/${recipient}`;
@@ -144,3 +135,5 @@ export const log = (...args) => {
 		console.log('d-chat:', args);
 	}
 };
+
+export const isReaction = message => message.contentType === 'reaction' || message.contentType === 'nkn/tip';
