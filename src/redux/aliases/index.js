@@ -39,7 +39,9 @@ const subscribeToChat = originalAction => (dispatch) => {
 	}
 };
 
-const joinChat = originalAction => (dispatch, getState) => {
+// Hack to keep track of sent beg messages, to avoid spamming.
+let beggedTopics = {};
+const joinChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
 	if ( !topic ) {
 		return;
@@ -56,7 +58,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 		err => {
 			// Insufficient funds.
 			if ( err.data?.includes('funds') ) {
-				if ( !getState().subscriptions[topic] ) {
+				if ( !beggedTopics[topic] ) {
 					const noticeMsg = new Message({
 						topic,
 						contentType: 'dchat/subscribe',
@@ -64,7 +66,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 					});
 					noticeMsg.publish(topic);
 
-					dispatch(subscribe(topic, 'attempt'));
+					beggedTopics[topic] = 'tried';
 					noticeMsg.content = __('You have no coins to subscribe. Sent out a request.');
 					noticeMsg.receive(dispatch);
 				}
@@ -100,6 +102,8 @@ const login = originalAction => (dispatch, getState) => {
 
 		// Pending value transfers handler.
 		nknClient.on('block', block => {
+			dispatch(getBalance());
+
 			const transactions = getState().transactions;
 			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
 			log('New block!!!', block, transactions);
@@ -228,11 +232,12 @@ const newTransaction = originalAction => async (dispatch) => {
 			targetID,
 		});
 
-		log('NKN was sent. tx:', tx, 'creating message', message);
+		log('NKN was sent to', getAddressFromPubKey(to), 'aka', to, '. tx:', tx, 'creating message', message);
 		if (isWhisper) {
 			// Simply receive it as a reaction.
 			message.contentType = 'reaction';
 			message.receive(dispatch);
+			message.topic = undefined;
 		} else {
 			// Receive it by publishing it.
 			message.publish(topic);

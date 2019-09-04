@@ -223,11 +223,9 @@ export const transactionComplete = completedTransactionID => (dispatch, getState
 	const { transactionID, data } = unconfirmed.find(tx => completedTransactionID === tx.transactionID);
 
 	if (data.contentType === 'nkn/tip') {
-		// Timeout 1sec to avoid potential "no funds" errors.
-		sleep(1000).then(() => dispatch(subscribeToChat(data.topic)));
+		// Timeout 5sec to avoid potential "no funds" errors. Still throws sometimes.
+		sleep(5000).then(() => dispatch(subscribeToChat(data.topic)));
 	}
-
-	sleep(1000).then(() => dispatch(getBalance()));
 
 	return dispatch({
 		type: 'nkn/TRANSACTION_COMPLETE',

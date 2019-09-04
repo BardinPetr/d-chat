@@ -38,7 +38,6 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		if ( this.props.messages.length > this.state.count ) {
-			this.wasScrolledToBottom = false;
 			this.setState({
 				count: this.state.count + 5,
 			});
@@ -46,6 +45,23 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidMount() {
+		this.mounter();
+	}
+
+	// Also cleared on submit.
+	_saveDraft = e => this.props.saveDraft(e.target.value);
+
+	markAllMessagesRead() {
+		if (this.props.unreadMessages.length > 0) {
+			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
+		}
+	}
+
+	componentWillUnmount() {
+		this.unmounter();
+	}
+
+	mounter = () => {
 		this.getSubsInterval = setInterval(() => this.props.getSubscribers(this.props.topic), 30000);
 		this.props.getSubscribers(this.props.topic);
 
@@ -68,34 +84,33 @@ class Chatroom extends React.Component {
 		this.textarea.addEventListener('change', this._saveDraft);
 	}
 
-	// Also cleared on submit.
-	_saveDraft = e => this.props.saveDraft(e.target.value);
-
-	markAllMessagesRead() {
-		if (this.props.unreadMessages.length > 0) {
-			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
-		}
-	}
-
-	componentWillUnmount() {
+	unmounter = () => {
 		this.textarea.removeEventListener('change', this._saveDraft);
 		clearInterval(this.getSubsInterval);
 	}
 
 	componentDidUpdate(prevProps) {
+
+		if (prevProps.topic !== this.props.topic) {
+			// Start over
+			this.unmounter();
+			this.mounter();
+		}
+
 		if ( prevProps.topic === this.props.topic && prevProps.messages.length < this.props.messages.length ) {
 			this.setState({
 				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
 			});
 		}
-		if ( this.wasScrolledToBottom ) {
-			this.scrollToBot();
-		}
+		this.scrollToBot();
 	}
 
 	scrollToBot() {
-		this.messages.scrollTop = this.messages.scrollTopMax;
-		this.wasScrolledToBottom = true;
+		console.log('scrolling to bot:', this.wasScrolledToBottom, this.messages.scrollTop, this.messages.scrollHeight);
+		if ( this.wasScrolledToBottom ) {
+			this.messages.scrollTop = this.messages.scrollHeight;
+			this.wasScrolledToBottom = true;
+		}
 	}
 
 	submitText = (e) => {
@@ -151,15 +166,13 @@ class Chatroom extends React.Component {
 
 	onResize = (el) => {
 		el.parentElement.parentElement.style.minHeight = el.style.height;
-		if (this.wasScrolledToBottom) {
-			this.scrollToBot();
-		}
+		this.scrollToBot();
 	}
 
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Bot
-		if (el.scrollTop > el.scrollTopMax - 15) {
+		if (el.scrollHeight - el.scrollTop >= el.clientHeight - 35) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}

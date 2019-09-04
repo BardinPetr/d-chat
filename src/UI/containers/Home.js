@@ -32,7 +32,7 @@ const NewTopicForm = ({ privateChat }) => {
 
 const Home = ({ addr }) => (
 	<div className="column">
-		<div className="notification" style={{marginBottom: 0, overflowWrap: 'anywhere', wordBreak: 'all'}}>
+		<div className="notification" style={{marginBottom: 0, overflowWrap: 'anywhere', wordBreak: 'break-all'}}>
 			<div className="field">
 				<p className="is-size-7">{__('You are known as')}</p>
 				<p style={{userSelect: 'all'}}>{addr}</p>

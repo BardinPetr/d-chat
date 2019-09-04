@@ -26,9 +26,6 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 					/>
 				</div>
 			}
-			className={classnames('', {
-				'is-hidden': isHidden,
-			})}
 			interactive={true}
 			arrow={true}
 			aria={null}
@@ -37,7 +34,9 @@ const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 			onMount={() => setAriaExpanded('true')}
 			onHide={() => setAriaExpanded('false')}
 		>
-			<a className="button tooltip is-tooltip-left" data-tooltip={__('Add reaction')}>
+			<a className={classnames('button tooltip is-tooltip-left',{
+				'is-hidden': isHidden,
+			})} data-tooltip={__('Add reaction')}>
 				<span aria-expanded={ariaExpanded} className="">
 					<span className="icon is-small">
 						<IoMdHappy />

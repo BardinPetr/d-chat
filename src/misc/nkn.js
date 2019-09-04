@@ -67,10 +67,6 @@ class NKN extends nkn {
 		const walletJSON = configs.walletJSON;
 		const seed = SEED_ADDRESSES[ Math.floor( Math.random() * SEED_ADDRESSES.length ) ];
 
-		nknWallet.configure({
-			rpcAddr: seed,
-		});
-
 		if (walletJSON) {
 			log('Loading existing wallet!');
 			wallet = nknWallet.loadJsonWallet(walletJSON, password);
