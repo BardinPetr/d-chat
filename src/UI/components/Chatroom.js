@@ -106,7 +106,6 @@ class Chatroom extends React.Component {
 	}
 
 	scrollToBot() {
-		console.log('scrolling to bot:', this.wasScrolledToBottom, this.messages.scrollTop, this.messages.scrollHeight);
 		if ( this.wasScrolledToBottom ) {
 			this.messages.scrollTop = this.messages.scrollHeight;
 			this.wasScrolledToBottom = true;
@@ -172,7 +171,7 @@ class Chatroom extends React.Component {
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Bot
-		if (el.scrollHeight - el.scrollTop >= el.clientHeight - 35) {
+		if (el.scrollHeight - el.scrollTop === el.clientHeight) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
