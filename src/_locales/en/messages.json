@@ -68,9 +68,6 @@
   "Newview": {
     "message": " New view"
   },
-  "NotreceivedCounterpartyoffline": {
-    "message": " Not received. Counterparty offline?"
-  },
   "Panel": {
     "message": " Panel"
   },
@@ -103,9 +100,6 @@
   },
   "Subscribingto": {
     "message": " Subscribing to"
-  },
-  "SubscriptionconfirmedYouarenowreceivingmessagesfrom": {
-    "message": " Subscription confirmed. You are now receiving messages from"
   },
   "Tab": {
     "message": " Tab"
@@ -145,9 +139,6 @@
   },
   "Youareknownas": {
     "message": " You are known as"
-  },
-  "Youcansendmessagesbutyouwillnotreceivethemuntilyoursubscriptionisconfirmed": {
-    "message": " You can send messages, but you will not receive them until your subscription is confirmed."
   },
   "YouhavebeentippedSubscribingoncetxisconfirmed": {
     "message": " You have been tipped. Subscribing once tx is confirmed."

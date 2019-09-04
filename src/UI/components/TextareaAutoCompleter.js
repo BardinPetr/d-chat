@@ -16,12 +16,11 @@ const AutofillMentionItem = ({ entity: { char } }) => (
 
 const _outputCaretEnd = (item) => ({ text: item.char, caretPosition: 'end'  });
 
-const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subscribing, subs, topic, mention, ...props }, ref) => (
+const TextareaAutoCompleter = forwardRef(({ source, showingPreview, subs, topic, mention, ...props }, ref) => (
 	<div className="">
 		<Autocomplete
 			className={classnames('textarea', {
 				'is-hidden': showingPreview,
-				'is-warning': subscribing,
 			})}
 			ref={ref}
 			placeholder={`${__('Message')} ${getChatDisplayName(topic)}`}

@@ -37,17 +37,6 @@ export const connected = () => ({
 	type: 'CONNECTED',
 });
 
-export const subscribeCompleted = (topic) => dispatch => {
-	dispatch(getSubscribers(topic));
-
-	return dispatch({
-		type: 'SUBSCRIBE_COMPLETED',
-		payload: {
-			topic: getChatName( topic ),
-		},
-	});
-};
-
 export const sendPrivateMessage = (message) => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
@@ -188,9 +177,10 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		message = new Message(data);
+
 		if ( message.topic && message.contentType === 'nkn/tip' && message.isPrivate ) {
 			const subs = getState().chatSettings[message.topic]?.subscribers || [];
-			if (!subs.includes(window.nknClient.addr)) {
+			if ( !subs.includes(window.nknClient.addr) ) {
 				new Message({
 					contentType: 'dchat/subscribe',
 					topic: message.topic,
@@ -198,6 +188,7 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 				}).receive(dispatch);
 			}
 		}
+
 		message = message.from(src);
 	} else {
 		return;

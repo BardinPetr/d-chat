@@ -169,7 +169,7 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
-		const { subscribing, messages, topic, reactions } = this.props;
+		const { messages, topic, reactions } = this.props;
 
 		const visibleMessages = messages.slice(-(this.state.count));
 
@@ -238,11 +238,8 @@ class Chatroom extends React.Component {
 				<div className="hero-foot">
 					<form className="card" onSubmit={(e) => this.submitText(e)}>
 						<div className="card-content x-is-small-padding field">
-							<div className={classnames('control', {
-								'is-loading': subscribing,
-							})}>
+							<div className={classnames('control')}>
 								<TextareaAutoCompleter
-									subscribing={subscribing}
 									topic={topic}
 									innerRef={ref => this.textarea = ref}
 									ref={ref => this.msg = ref}

@@ -13,7 +13,6 @@ const mapStateToProps = (state, ownProps) => {
 		reactions: state.reactions[topic] || {},
 		unreadMessages: state.chatSettings[topic]?.unread || [],
 		topic: topic,
-		subscribing: Object.keys(state.subscriptions).includes(topic),
 		subs: state.chatSettings[topic]?.subscribers || [],
 	});
 };

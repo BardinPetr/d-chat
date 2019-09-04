@@ -103,29 +103,6 @@ const messages = (state = configs.messages, action ) => {
 	return newState;
 };
 
-const subscriptions = ( state = {}, action ) => {
-	let newState;
-	const topic = action.payload?.topic;
-
-	switch ( action.type ) {
-		case 'SUBSCRIBE':
-			newState = {
-				...state,
-				[topic]: action.payload.transactionID
-			};
-			break;
-
-		case 'SUBSCRIBE_COMPLETED':
-			newState = { ...state };
-			delete newState[topic];
-			break;
-
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
 const transactions = (state = {
 	unconfirmed: [],
 	confirmed: configs.transactions.confirmed,
@@ -317,8 +294,6 @@ export default combineReducers({
 	reactions,
 	draftMessage,
 	chatSettings,
-	// Client's ongoing subscriptions, waiting to be resolved.
-	subscriptions,
 	// Information about wallet/client/so forth.
 	nkn,
 	transactions,

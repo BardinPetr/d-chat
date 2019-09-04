@@ -1,6 +1,5 @@
 import NKN from '../../misc/nkn';
 import Message from 'Approot/background/Message';
-import sleep from 'sleep-promise';
 import {
 	transactionComplete,
 	getSubscribers,
@@ -10,10 +9,8 @@ import {
 	receivingMessage,
 	subscribe,
 	setLoginStatus,
-	subscribeCompleted,
 	setSubscribers,
 	getBalance,
-	modifyMessage
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -101,25 +98,6 @@ const login = originalAction => (dispatch, getState) => {
 			dispatch(receivingMessage(...args));
 		});
 
-		// Pending subscriptions handler.
-		nknClient.on('block', block => {
-			// Lazy.
-			sleep(500).then(() => dispatch(getBalance()));
-
-			let subs = getState().subscriptions;
-			for ( let topic of Object.keys(subs) ) {
-				// Check that the sub is not yet resolved (not null), then try find it in the block.
-				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
-					log('Subscribe completed!');
-					dispatch(subscribeCompleted(topic, {
-						blockheight: block.header.height,
-					}));
-					// Doesn't update correctly without timeout.
-					sleep(500).then(() => dispatch(getSubscribers(topic)));
-				}
-			}
-		});
-
 		// Pending value transfers handler.
 		nknClient.on('block', block => {
 			const transactions = getState().transactions;
@@ -171,16 +149,10 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 	const recipient = originalAction.payload.recipient;
 	log('Sending private message', originalAction);
 
-	const whispering = message.whisper(recipient);
+	message.whisper(recipient);
 
 	message.topic = genPrivateChatName(recipient);
-
-	message.from('me').receive(dispatch).then(
-		() => whispering.catch(() => {
-			message.error = __('Counterparty offline?');
-			dispatch(modifyMessage(message.id, message.topic, message));
-		})
-	);
+	message.from('me').receive(dispatch);
 
 	return originalAction;
 };
