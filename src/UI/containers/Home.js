@@ -4,7 +4,6 @@ import WalletInfo from 'Approot/UI/components/Wallet/Info';
 import Info from 'Approot/UI/components/Info';
 import {
 	__,
-	parseAddr,
 	getChatURL,
 	getWhisperURL,
 } from 'Approot/misc/util';

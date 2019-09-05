@@ -4,7 +4,8 @@ import configs from './configs';
 import { log, genChatID } from './util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-const BUCKET = 0;
+// TODO should move nkn stuff into a worker?
+
 const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
@@ -61,14 +62,10 @@ const SEED_ADDRESSES = [
  */
 class NKN extends nkn {
 
-	constructor({username, password})	{
+	constructor({username, password}) {
 		let wallet;
 		const walletJSON = configs.walletJSON;
 		const seed = SEED_ADDRESSES[ Math.floor( Math.random() * SEED_ADDRESSES.length ) ];
-
-		nknWallet.configure({
-			rpcAddr: seed,
-		});
 
 		if (walletJSON) {
 			log('Loading existing wallet!');
@@ -96,28 +93,45 @@ class NKN extends nkn {
 		this.wallet = wallet;
 	}
 
-	subscribe = topic => {
-		log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN');
-		return this.wallet.subscribe(
-			genChatID( topic ),
-			BUCKET,
-			FORBLOCKS,
-			this.identifier,
-			'',
-			{
-				fee: FEE
-			}
+	subscribe = async (topic) => {
+		const topicID = genChatID( topic );
+
+		// TODO check only once per session?
+		const subInfo = this.defaultClient.getSubscription(
+			topicID,
+			this.addr
 		);
+		const latestBlockHeight = rpcCall(
+			this.defaultClient.options.seedRpcServerAddr,
+			'getlatestblockheight'
+		);
+
+		return Promise.all([
+			subInfo,
+			latestBlockHeight
+		]).then(([info, blockHeight]) => {
+			if ( info.expiresAt - blockHeight > 5000 ) {
+				return Promise.reject('Too soon.');
+			}
+
+			log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN', this);
+			return this.wallet.subscribe(
+				topicID,
+				FORBLOCKS,
+				this.identifier,
+				'',
+				{
+					fee: FEE
+				}
+			);
+		});
 	}
 
-	// I don't know how to override functions in react/babel. Keeps throwing errors. Traditional publish(){} doesn't work either.
-	// publish = (topicID, message) => {
-	publishMessage = async (topic, message, options = {}) => {
+	publishMessage = async (topic, message, options = { txPool: true }) => {
 		log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
 		try {
 			return this.publish(
 				genChatID( topic ),
-				BUCKET,
 				JSON.stringify(message),
 				options
 			);
@@ -141,13 +155,17 @@ class NKN extends nkn {
 		}
 	}
 
-	getSubscribers = topic => (
-		rpcCall(
-			this.options.seedRpcServerAddr,
-			'getsubscribers',
-			{ topic: genChatID( topic ), bucket: BUCKET }
-		)
-	);
+	getSubs = (topic, options = {
+		offset: 0,
+		limit: 1000,
+		meta: false,
+		txPool: true,
+	}) => {
+		return this.defaultClient.getSubscribers(
+			genChatID( topic ),
+			options
+		);
+	}
 
 }
 

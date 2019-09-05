@@ -38,7 +38,6 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		if ( this.props.messages.length > this.state.count ) {
-			this.wasScrolledToBottom = false;
 			this.setState({
 				count: this.state.count + 5,
 			});
@@ -46,6 +45,23 @@ class Chatroom extends React.Component {
 	}
 
 	componentDidMount() {
+		this.mounter();
+	}
+
+	// Also cleared on submit.
+	_saveDraft = e => this.props.saveDraft(e.target.value);
+
+	markAllMessagesRead() {
+		if (this.props.unreadMessages.length > 0) {
+			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
+		}
+	}
+
+	componentWillUnmount() {
+		this.unmounter();
+	}
+
+	mounter = () => {
 		this.getSubsInterval = setInterval(() => this.props.getSubscribers(this.props.topic), 30000);
 		this.props.getSubscribers(this.props.topic);
 
@@ -68,34 +84,32 @@ class Chatroom extends React.Component {
 		this.textarea.addEventListener('change', this._saveDraft);
 	}
 
-	// Also cleared on submit.
-	_saveDraft = e => this.props.saveDraft(e.target.value);
-
-	markAllMessagesRead() {
-		if (this.props.unreadMessages.length > 0) {
-			this.props.markAsRead(this.props.topic, this.props.unreadMessages);
-		}
-	}
-
-	componentWillUnmount() {
+	unmounter = () => {
 		this.textarea.removeEventListener('change', this._saveDraft);
 		clearInterval(this.getSubsInterval);
 	}
 
 	componentDidUpdate(prevProps) {
+
+		if (prevProps.topic !== this.props.topic) {
+			// Start over
+			this.unmounter();
+			this.mounter();
+		}
+
 		if ( prevProps.topic === this.props.topic && prevProps.messages.length < this.props.messages.length ) {
 			this.setState({
 				count: this.state.count + ( this.props.messages.length - prevProps.messages.length ),
 			});
 		}
-		if ( this.wasScrolledToBottom ) {
-			this.scrollToBot();
-		}
+		this.scrollToBot();
 	}
 
 	scrollToBot() {
-		this.messages.scrollTop = this.messages.scrollTopMax;
-		this.wasScrolledToBottom = true;
+		if ( this.wasScrolledToBottom ) {
+			this.messages.scrollTop = this.messages.scrollHeight;
+			this.wasScrolledToBottom = true;
+		}
 	}
 
 	submitText = (e) => {
@@ -151,15 +165,13 @@ class Chatroom extends React.Component {
 
 	onResize = (el) => {
 		el.parentElement.parentElement.style.minHeight = el.style.height;
-		if (this.wasScrolledToBottom) {
-			this.scrollToBot();
-		}
+		this.scrollToBot();
 	}
 
 	onScroll = (el) => {
 		this.wasScrolledToBottom = false;
 		// Bot
-		if (el.scrollTop > el.scrollTopMax - 15) {
+		if (el.scrollHeight - el.scrollTop === el.clientHeight) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
@@ -169,7 +181,7 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
-		const { subscribing, messages, topic, reactions } = this.props;
+		const { messages, topic, reactions } = this.props;
 
 		const visibleMessages = messages.slice(-(this.state.count));
 
@@ -238,11 +250,8 @@ class Chatroom extends React.Component {
 				<div className="hero-foot">
 					<form className="card" onSubmit={(e) => this.submitText(e)}>
 						<div className="card-content x-is-small-padding field">
-							<div className={classnames('control', {
-								'is-loading': subscribing,
-							})}>
+							<div className={classnames('control')}>
 								<TextareaAutoCompleter
-									subscribing={subscribing}
 									topic={topic}
 									innerRef={ref => this.textarea = ref}
 									ref={ref => this.msg = ref}

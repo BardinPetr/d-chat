@@ -84,6 +84,7 @@ class Message extends React.Component {
 							topic={topic}
 							addr={message.addr}
 							topic={topic}
+							showEmojiPicker={message.isMe}
 						/>
 					</div>
 					<Markdown

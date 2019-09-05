@@ -100,14 +100,7 @@ class Message {
 		this.notified = undefined;
 		this.isPrivate = true;
 
-		let options;
-		if (this.contentType === 'nkn/tip') {
-			options = {
-				msgHoldingSeconds: 0,
-			};
-		}
-
-		const sendingMessage = await window.nknClient.sendMessage(toAddr, this, options);
+		const sendingMessage = await window.nknClient.sendMessage(toAddr, this);
 
 		return sendingMessage;
 	}
@@ -132,6 +125,10 @@ class Message {
 					dispatch(
 						createTransaction(this.transactionID, this)
 					);
+					if (!this.topic?.startsWith('/whisper/')) {
+						// We are going to receive this as a public message.
+						return;
+					}
 				}
 				this.notified = true;
 				break;

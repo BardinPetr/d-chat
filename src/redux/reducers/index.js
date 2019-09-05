@@ -18,19 +18,12 @@ const reactions = (state = configs.reactions, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
-		case 'chat/REMOVE':
-			initial = { ...state };
-			delete initial[topic];
-			newState = initial;
-			configs.reactions = newState;
-			break;
-
 		case 'chat/RECEIVE_REACTION':
 			targetID = action.payload.message.targetID;
 			if ( !targetID ) {
 				return state;
 			} else {
-				initial = state[topic][targetID] || [];
+				initial = state[topic]?.[targetID] || [];
 			}
 			newState = {
 				...state,
@@ -63,13 +56,6 @@ const messages = (state = configs.messages, action ) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
-		case 'chat/REMOVE':
-			initial = { ...state };
-			delete initial[topic];
-			newState = initial;
-			configs.messages = newState;
-			break;
-
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
 			newState = {
@@ -97,29 +83,6 @@ const messages = (state = configs.messages, action ) => {
 			break;
 
 		case 'chat/PUBLISH_MESSAGE':
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
-const subscriptions = ( state = {}, action ) => {
-	let newState;
-	const topic = action.payload?.topic;
-
-	switch ( action.type ) {
-		case 'SUBSCRIBE':
-			newState = {
-				...state,
-				[topic]: action.payload.transactionID
-			};
-			break;
-
-		case 'SUBSCRIBE_COMPLETED':
-			newState = { ...state };
-			delete newState[topic];
-			break;
-
 		default:
 			newState = state;
 	}
@@ -317,8 +280,6 @@ export default combineReducers({
 	reactions,
 	draftMessage,
 	chatSettings,
-	// Client's ongoing subscriptions, waiting to be resolved.
-	subscriptions,
 	// Information about wallet/client/so forth.
 	nkn,
 	transactions,

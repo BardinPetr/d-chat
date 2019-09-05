@@ -1,6 +1,5 @@
 import NKN from '../../misc/nkn';
 import Message from 'Approot/background/Message';
-import sleep from 'sleep-promise';
 import {
 	transactionComplete,
 	getSubscribers,
@@ -10,10 +9,8 @@ import {
 	receivingMessage,
 	subscribe,
 	setLoginStatus,
-	subscribeCompleted,
 	setSubscribers,
 	getBalance,
-	modifyMessage
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -27,7 +24,7 @@ import {
 // TODO move to own file
 const password = 'd-chat!!!';
 
-const subscribeToChat = originalAction => dispatch => {
+const subscribeToChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
 	if ( topic != null && topic !== 'D-Chat Intro' && !topic.startsWith('/whisper/') ) {
 		window.nknClient.subscribe( topic )
@@ -42,7 +39,9 @@ const subscribeToChat = originalAction => dispatch => {
 	}
 };
 
-const joinChat = originalAction => (dispatch, getState) => {
+// Hack to keep track of sent beg messages, to avoid spamming.
+let beggedTopics = {};
+const joinChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
 	if ( !topic ) {
 		return;
@@ -58,8 +57,8 @@ const joinChat = originalAction => (dispatch, getState) => {
 		},
 		err => {
 			// Insufficient funds.
-			if ( err.data.includes('funds') ) {
-				if ( !getState().subscriptions[topic] ) {
+			if ( err.data?.includes('funds') ) {
+				if ( !beggedTopics[topic] ) {
 					const noticeMsg = new Message({
 						topic,
 						contentType: 'dchat/subscribe',
@@ -67,7 +66,7 @@ const joinChat = originalAction => (dispatch, getState) => {
 					});
 					noticeMsg.publish(topic);
 
-					dispatch(subscribe(topic, 'attempt'));
+					beggedTopics[topic] = 'tried';
 					noticeMsg.content = __('You have no coins to subscribe. Sent out a request.');
 					noticeMsg.receive(dispatch);
 				}
@@ -101,29 +100,13 @@ const login = originalAction => (dispatch, getState) => {
 			dispatch(receivingMessage(...args));
 		});
 
-		// Pending subscriptions handler.
-		nknClient.on('block', block => {
-			log('New block!!!', block);
-			// Lazy.
-			sleep(500).then(() => dispatch(getBalance()));
-
-			let subs = getState().subscriptions;
-			for ( let topic of Object.keys(subs) ) {
-				// Check that the sub is not yet resolved (not null), then try find it in the block.
-				if ( block.transactions.find(tx => subs[topic] === tx.hash ) ) {
-					log('Subscribe completed!');
-					dispatch(subscribeCompleted(topic));
-					// Doesn't update correctly without timeout.
-					sleep(500).then(() => dispatch(getSubscribers(topic)));
-				}
-			}
-		});
-
 		// Pending value transfers handler.
 		nknClient.on('block', block => {
+			dispatch(getBalance());
+
 			const transactions = getState().transactions;
 			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
-			log(transactions);
+			log('New block!!!', block, transactions);
 
 			for ( let pendingTx of pendingTransactions ) {
 				if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
@@ -152,7 +135,7 @@ const login = originalAction => (dispatch, getState) => {
 	return dispatch( setLoginStatus(status) );
 };
 
-// TODO remove topic from message.
+// TODO replace topic with topicHash in message.
 const publishMessage = originalAction => () => {
 	log('Publishing message', originalAction);
 
@@ -170,17 +153,10 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 	const recipient = originalAction.payload.recipient;
 	log('Sending private message', originalAction);
 
-	const whispering = message.whisper(recipient);
+	message.whisper(recipient);
 
-	// Override topic so it matches. Otherwise it would be receiving person's topic.
 	message.topic = genPrivateChatName(recipient);
-
-	message.from('me').receive(dispatch).then(
-		() => whispering.catch(() => {
-			message.error = __('Not received. Counterparty offline?');
-			dispatch(modifyMessage(message.id, message.topic, message));
-		})
-	);
+	message.from('me').receive(dispatch);
 
 	return originalAction;
 };
@@ -188,8 +164,8 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 const getSubscribersHandler = originalAction => async (dispatch) => {
 	log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
-	let subscribers = await window.nknClient.getSubscribers(topic);
-	subscribers = Object.keys(subscribers || {});
+	let { subscribers, subscribersInTxPool } = await window.nknClient.getSubs(topic);
+	subscribers = subscribers.concat(subscribersInTxPool);
 
 	dispatch(setSubscribers(topic, subscribers));
 
@@ -225,7 +201,6 @@ const getTheBalance = () => async (dispatch) => {
 		return;
 	}
 
-	log('Fetching balance');
 	const balance = await window.nknClient.wallet.getBalance();
 	log('Balance:', balance);
 	return dispatch({
@@ -257,11 +232,12 @@ const newTransaction = originalAction => async (dispatch) => {
 			targetID,
 		});
 
-		log('NKN was sent. tx:', tx, 'creating message', message);
+		log('NKN was sent to', getAddressFromPubKey(to), 'aka', to, '. tx:', tx, 'creating message', message);
 		if (isWhisper) {
 			// Simply receive it as a reaction.
 			message.contentType = 'reaction';
 			message.receive(dispatch);
+			message.topic = undefined;
 		} else {
 			// Receive it by publishing it.
 			message.publish(topic);
