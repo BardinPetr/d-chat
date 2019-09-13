@@ -24,7 +24,7 @@ const ProvideCredentials = ({ noPassword, submit, afterSubmit, children, callToA
 					{__('Username')}
 				</label>
 				<div className="control">
-					<input placeholder={__('Optional')} className="input" type="text" value={username} onChange={e => setUsername(e.target.value)} />
+					<input placeholder={__('optional')} className="input" type="text" value={username} onChange={e => setUsername(e.target.value)} />
 				</div>
 			</div>
 
