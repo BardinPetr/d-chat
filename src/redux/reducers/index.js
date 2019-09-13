@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
+import clients from './client';
 
 const replaceMessage = (from, whatId, withWhat) => from.reduce((acc, item) => {
 	if ( whatId === item.id ) {
@@ -56,6 +57,13 @@ const messages = (state = configs.messages, action ) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/REMOVE':
+			initial = { ...state };
+			initial[topic] = initial[topic].slice(0, 10);
+			newState = initial;
+			configs.messages = newState;
+			break;
+
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
 			newState = {
@@ -240,22 +248,6 @@ const chatSettings = (state = configs.chatSettings, action) => {
 	return newState;
 };
 
-const nkn = (state = { balance: -1 }, action) => {
-	let newState;
-	switch (action.type) {
-		case 'nkn/GET_BALANCE':
-			newState = {
-				...state,
-				balance: action.payload.balance,
-			};
-			break;
-
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
 // Most recent open page, where re-opening popup will start.
 const navigation = (state = { mostRecentPage: '/' }, action) => {
 	let newState;
@@ -275,13 +267,12 @@ const navigation = (state = { mostRecentPage: '/' }, action) => {
 
 export default combineReducers({
 	login,
+	clients,
 	// Chat.
 	messages,
 	reactions,
 	draftMessage,
 	chatSettings,
-	// Information about wallet/client/so forth.
-	nkn,
 	transactions,
 	// UI
 	navigation,

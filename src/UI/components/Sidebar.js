@@ -19,19 +19,24 @@ const Sidebar = () => (
 		<p className="menu-label">{__('Whispers')}</p>
 		<TopicsList whispers />
 
-		<p className="menu-label">{__('New view')}</p>
-		<Popout />
-
-		<label className="menu-label">
+		<p className="menu-label">
 			{__('Account')}
-		</label>
+		</p>
 		<ul className="menu-list">
+			<li>
+				<Link to="/wallets">
+					{__('Accounts')}
+				</Link>
+			</li>
 			<li>
 				<Logout>
 					{__('Log Out')}
 				</Logout>
 			</li>
 		</ul>
+
+		<p className="menu-label">{__('New view')}</p>
+		<Popout />
 
 	</aside>
 );

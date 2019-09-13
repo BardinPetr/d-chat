@@ -1,7 +1,6 @@
 import nkn from 'nkn-multiclient';
 import nknWallet from 'nkn-wallet';
-import configs from './configs';
-import { log, genChatID } from './util';
+import { log, genChatID } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 // TODO should move nkn stuff into a worker?
@@ -52,121 +51,95 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0041.nkn.org:30003',
 	'http://mainnet-seed-0042.nkn.org:30003',
 	'http://mainnet-seed-0043.nkn.org:30003',
-	'http://mainnet-seed-0044.nkn.org:30003'
+	'http://mainnet-seed-0044.nkn.org:30003',
 ];
+const getRandomSeed = () =>
+	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
+
+nknWallet.configure({
+	rpcAddr: getRandomSeed(),
+});
 
 /**
  * Couple of helpers for nkn module.
- *
- * Saves walletJSON to sync storage.
  */
 class NKN extends nkn {
-
-	constructor({username, password}) {
-		let wallet;
-		const walletJSON = configs.walletJSON;
-		const seed = SEED_ADDRESSES[ Math.floor( Math.random() * SEED_ADDRESSES.length ) ];
-
-		if (walletJSON) {
-			log('Loading existing wallet!');
-			wallet = nknWallet.loadJsonWallet(walletJSON, password);
-
-			if ( !wallet || !wallet.getPrivateKey ) {
-				throw 'Invalid credentials.';
-			}
-		} else {
-			log('Creating new wallet.');
-			wallet = nknWallet.newWallet(password);
-			configs.walletJSON = wallet.toJSON();
-		}
-		log('Rpc seed address:', seed);
-
+	constructor({ wallet, username }) {
 		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
-			identifier: username.trim() || undefined,
+			identifier: username?.trim() || undefined,
 			seed: wallet.getSeed(),
-			seedRpcServerAddr: seed,
+			seedRpcServerAddr: getRandomSeed(),
 			msgHoldingSeconds: 3999999999,
 		});
 
 		this.wallet = wallet;
 	}
 
-	subscribe = async (topic) => {
-		const topicID = genChatID( topic );
+	subscribe = async topic => {
+		const topicID = genChatID(topic);
 
 		// TODO check only once per session?
-		const subInfo = this.defaultClient.getSubscription(
-			topicID,
-			this.addr
-		);
+		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
-			'getlatestblockheight'
+			'getlatestblockheight',
 		);
 
-		return Promise.all([
-			subInfo,
-			latestBlockHeight
-		]).then(([info, blockHeight]) => {
-			if ( info.expiresAt - blockHeight > 5000 ) {
-				return Promise.reject('Too soon.');
-			}
-
-			log('Subscribing to', topic, 'aka', genChatID(topic), 'with fee', FEE, 'NKN', this);
-			return this.wallet.subscribe(
-				topicID,
-				FORBLOCKS,
-				this.identifier,
-				'',
-				{
-					fee: FEE
+		return Promise.all([subInfo, latestBlockHeight]).then(
+			([info, blockHeight]) => {
+				if (info.expiresAt - blockHeight > 5000) {
+					return Promise.reject('Too soon.');
 				}
-			);
-		});
-	}
+
+				log(
+					'Subscribing to',
+					topic,
+					'aka',
+					genChatID(topic),
+					'with fee',
+					FEE,
+					'NKN',
+				);
+				return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
+					fee: FEE,
+				});
+			},
+		);
+	};
 
 	publishMessage = async (topic, message, options = { txPool: true }) => {
-		log('Publishing message', message,'to', topic, 'aka', genChatID( topic ));
+		log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
-			return this.publish(
-				genChatID( topic ),
-				JSON.stringify(message),
-				options
-			);
-		} catch(e) {
+			return this.publish(genChatID(topic), JSON.stringify(message), options);
+		} catch (e) {
 			console.error('Error when publishing', e);
 			throw e;
 		}
-	}
+	};
 
 	sendMessage = async (to, message, options = {}) => {
 		log('Sending private message', message, 'to', to);
 		try {
-			return this.send(
-				to,
-				JSON.stringify(message),
-				options
-			);
-		} catch(e) {
+			return this.send(to, JSON.stringify(message), options);
+		} catch (e) {
 			console.error('Error when sending', e);
 			throw e;
 		}
-	}
+	};
 
-	getSubs = (topic, options = {
-		offset: 0,
-		limit: 1000,
-		meta: false,
-		txPool: true,
-	}) => {
-		return this.defaultClient.getSubscribers(
-			genChatID( topic ),
-			options
-		);
-	}
-
+	getSubs = (
+		topic,
+		options = {
+			offset: 0,
+			limit: 1000,
+			meta: false,
+			txPool: true,
+		},
+	) => {
+		return this.defaultClient.getSubscribers(genChatID(topic), options);
+	};
 }
 
 export default NKN;

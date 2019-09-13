@@ -8,6 +8,15 @@
   "Account": {
     "message": " Account"
   },
+  "Accounts": {
+    "message": " Accounts"
+  },
+  "Activate": {
+    "message": " Activate"
+  },
+  "Add": {
+    "message": " Add"
+  },
   "Addreaction": {
     "message": " Add reaction"
   },
@@ -23,17 +32,14 @@
   "Create": {
     "message": " Create"
   },
-  "Createnew": {
-    "message": " Create new"
-  },
   "DChat": {
     "message": " D-Chat"
   },
   "DChatversion": {
     "message": " D-Chat version"
   },
-  "Done": {
-    "message": " Done"
+  "Export": {
+    "message": " Export"
   },
   "Forgotpassword": {
     "message": " Forgot password?"
@@ -47,6 +53,12 @@
   "Identity": {
     "message": " Identity"
   },
+  "Image": {
+    "message": " Image"
+  },
+  "Import": {
+    "message": " Import"
+  },
   "Joinachatroom": {
     "message": " Join a chatroom"
   },
@@ -59,11 +71,20 @@
   "LogOut": {
     "message": " Log Out"
   },
+  "Messageas": {
+    "message": " Message as"
+  },
+  "New": {
+    "message": " New"
+  },
   "Newmessagesbelow": {
     "message": " New messages below"
   },
   "Newview": {
     "message": " New view"
+  },
+  "Nickname": {
+    "message": " Nickname"
   },
   "Panel": {
     "message": " Panel"
@@ -83,6 +104,9 @@
   "Remove": {
     "message": " Remove"
   },
+  "Removewallet": {
+    "message": " Remove wallet"
+  },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
   },
@@ -92,11 +116,11 @@
   "Submit": {
     "message": " Submit"
   },
+  "Subscribedto": {
+    "message": " Subscribed to"
+  },
   "Subscribers": {
     "message": " Subscribers"
-  },
-  "Subscribingto": {
-    "message": " Subscribing to"
   },
   "Tab": {
     "message": " Tab"
@@ -107,8 +131,8 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "Thispersonisnotsubscribedandwillnotreceivemessages": {
-    "message": " This person is not subscribed and will not receive messages."
+  "Thiswalletisalreadyimported": {
+    "message": " This wallet is already imported."
   },
   "TipNKN": {
     "message": " Tip NKN"
@@ -122,6 +146,15 @@
   "Username": {
     "message": " Username"
   },
+  "Walletaddress": {
+    "message": " Wallet address"
+  },
+  "Walletbalance": {
+    "message": " Wallet balance"
+  },
+  "Walletremoved": {
+    "message": " Wallet removed"
+  },
   "WelcomeBack": {
     "message": " Welcome Back!"
   },
@@ -134,26 +167,14 @@
   "Wrongpassword": {
     "message": " Wrong password."
   },
-  "Youareknownas": {
-    "message": " You are known as"
-  },
   "YouhavebeentippedSubscribingoncetxisconfirmed": {
     "message": " You have been tipped. Subscribing once tx is confirmed."
   },
   "YouhavenocoinstosubscribeSentoutarequest": {
     "message": " You have no coins to subscribe. Sent out a request."
   },
-  "Yourwalletaddressis": {
-    "message": " Your wallet address is"
-  },
-  "Yourwalletbalance": {
-    "message": " Your wallet balance"
-  },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."
-  },
-  "andyouroldwalletwillberemoved": {
-    "message": " and your old wallet will be removed."
   },
   "optional": {
     "message": " optional"

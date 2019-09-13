@@ -9,6 +9,7 @@ import {
 import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
 import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
+import NKN from './nknHandler';
 
 /**
  * Here lies the D-Chat NKN message schema.
@@ -40,7 +41,7 @@ class Message {
 		this.targetID = message.targetID;
 		this.isPrivate = Boolean(message.isPrivate);
 		this.value = message.value;
-		if (this.timestamp) {
+		if (message.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();
 		} else {
 			this.ping = 0;
@@ -49,13 +50,13 @@ class Message {
 
 	from(src) {
 		if (src === 'me') {
-			src = window.nknClient.addr;
+			src = NKN.instance.addr;
 		} else if (this.isPrivate && this.topic == null) {
 			log('Received private message', this, src);
 			this.topic = genPrivateChatName(src);
 		}
 
-		if ( src === window.nknClient.addr ) {
+		if ( src === NKN.instance.addr ) {
 			this.isMe = true;
 		}
 
@@ -65,7 +66,7 @@ class Message {
 		this.username = name;
 		this.pubKey = pubKey;
 		this.refersToMe = this.content && this.content.includes(
-			formatAddr( window.nknClient.addr )
+			formatAddr( NKN.instance.addr )
 		);
 
 		return this;
@@ -86,7 +87,7 @@ class Message {
 	}
 
 	async send(toAddr) {
-		if ( toAddr === window.nknClient.addr ) {
+		if ( toAddr === NKN.instance.addr ) {
 			return;
 		}
 
@@ -98,11 +99,10 @@ class Message {
 		this.username = undefined;
 		this.title = undefined;
 		this.notified = undefined;
+		this.ping = undefined;
 		this.isPrivate = true;
 
-		const sendingMessage = await window.nknClient.sendMessage(toAddr, this);
-
-		return sendingMessage;
+		return NKN.instance.sendMessage(toAddr, this);
 	}
 
 	async publish(topic) {
@@ -115,7 +115,8 @@ class Message {
 		this.username = undefined;
 		this.title = undefined;
 		this.notified = undefined;
-		return window.nknClient.publishMessage(topic, this);
+		this.ping = undefined;
+		return NKN.instance.publishMessage(topic, this);
 	}
 
 	async receive(dispatch) {

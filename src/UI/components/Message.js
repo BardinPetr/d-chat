@@ -1,5 +1,5 @@
 /**
- * Displays a message box.
+ * Displays a chat message.
  */
 
 import React from 'react';
@@ -10,8 +10,8 @@ import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
-	if ( unit === 'second' ){
-		if ( n < 30 ) {
+	if (unit === 'second') {
+		if (n < 30) {
 			return `${__('< 30 s')} ${ago}`;
 		} else {
 			return `${__('< 1 min')} ${ago}`;
@@ -20,51 +20,61 @@ const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	return defaultFormatter();
 };
 
-const Nickname = ({addr, refer, timestamp, username, unsubscribed, pubKey}) => (
+const Nickname = ({
+	addr,
+	refer,
+	timestamp,
+	username,
+	unsubscribed,
+	pubKey,
+}) => (
 	<span>
 		<span
-			title={addr + (unsubscribed ? ('\n' + __('This person is not subscribed and will not receive messages.')) : '')}
 			onClick={() => refer(addr)}
 			className={classnames('x-avatar', {
-				'has-text-grey': unsubscribed
+				'has-text-grey': unsubscribed,
 			})}
 		>
-			<span className="">{username}{username ? '.' : ''}</span>
-			<i className="is-size-7 has-text-weight-normal">{pubKey.slice(0, 8)}</i>
-			{' '}
+			<span className="">{username}</span>
+			{username ? '.' : ''}
+			<i className="is-size-7 has-text-weight-normal">
+				{pubKey.slice(0, 8)}
+			</i>{' '}
 		</span>
 		<span className="has-text-grey is-size-7 x-is-padding-left">
-			<TimeAgo formatter={formatTime} title={new Date(timestamp).toLocaleString()} date={timestamp} minPeriod={30} />
+			<TimeAgo
+				formatter={formatTime}
+				title={new Date(timestamp).toLocaleString()}
+				date={timestamp}
+				minPeriod={30}
+			/>
 		</span>
 	</span>
 );
 
-class Message extends React.Component {
-	// Otherwise the spinner will flash every time.
-	state = {
-		showSubscribedStatus: false
-	};
-	componentDidMount() {
-		this.timeout = setTimeout(
-			() => this.setState({ showSubscribedStatus: true }),
-			1000
-		);
-	}
-	componentWillUnmount() {
-		clearTimeout(this.timeout);
-	}
-
+class Message extends React.PureComponent {
 	render() {
-		const { topic, refer, message, isSubscribed, className, children } = this.props;
-		const unsubscribed = this.state.showSubscribedStatus && !isSubscribed;
+		const {
+			topic,
+			refer,
+			message,
+			isSubscribed,
+			className,
+			children,
+			imagesLoaded,
+		} = this.props;
+		const unsubscribed = !isSubscribed;
 
 		const isNotice = ['dchat/subscribe'].includes(message.contentType);
 		const { error } = message;
 
 		return (
-			<div className={classnames(`message ${className}`, {
-				'has-background-grey-lighter': isNotice,
-			})}>
+			<div
+				className={classnames(`message ${className}`, {
+					'has-background-grey-lighter': isNotice,
+					'x-notice': isNotice,
+				})}
+			>
 				<div className="message-header is-paddingless has-text-weight-light">
 					<span>
 						<Nickname
@@ -76,20 +86,17 @@ class Message extends React.Component {
 							pubKey={message.pubKey || ''}
 						/>
 					</span>
-				</div>
-				<div className="message-body x-is-small-padding">
 					<div className="is-pulled-right">
 						<Toolbar
 							id={message.id}
 							topic={topic}
 							addr={message.addr}
 							topic={topic}
-							showEmojiPicker={message.isMe}
 						/>
 					</div>
-					<Markdown
-						source={message.content}
-					/>
+				</div>
+				<div className="message-body x-is-small-padding">
+					<Markdown source={message.content} imagesLoaded={imagesLoaded} />
 					{children}
 				</div>
 				{error && <div className="tag is-danger">{error}</div>}

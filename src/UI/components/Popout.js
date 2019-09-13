@@ -7,7 +7,7 @@ const popout = type => {
 		case 'panel':
 			windows.create({
 				url: runtime.getURL('sidebar.html'),
-				type: 'panel',
+				type: 'popup',
 				height: 700,
 				width: 550,
 			});
