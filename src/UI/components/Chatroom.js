@@ -225,7 +225,7 @@ class Chatroom extends React.Component {
 				acc.push(
 					<div
 						className="is-divider"
-						ref="lastread"
+						ref="lastRead"
 						data-content={__('New messages below')}
 						key={message.id + 'lastRead'}
 					/>,
