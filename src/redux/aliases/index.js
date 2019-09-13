@@ -1,4 +1,4 @@
-import NKN from '../../misc/nkn';
+import NKN from 'Approot/background/nknHandler';
 import Message from 'Approot/background/Message';
 import {
 	transactionComplete,
@@ -12,13 +12,15 @@ import {
 	setSubscribers,
 	getBalance,
 } from '../actions';
+import { switchToClient, createNewClient } from '../actions/client';
 import passworder from 'browser-passworder';
 import {
 	genPrivateChatName,
 	__,
-	getAddressFromPubKey,
+	getAddressFromAddr,
 	setBadgeText,
 	log,
+	getChatDisplayName,
 } from 'Approot/misc/util';
 
 // TODO move to own file
@@ -27,10 +29,17 @@ const password = 'd-chat!!!';
 const subscribeToChat = originalAction => (dispatch) => {
 	const topic = originalAction.payload.topic;
 	if ( topic != null && topic !== 'D-Chat Intro' && !topic.startsWith('/whisper/') ) {
-		window.nknClient.subscribe( topic )
+		NKN.instance.subscribe( topic )
 			.then(txId => {
 				dispatch(subscribe(topic, txId));
 				dispatch(getSubscribers(topic));
+				new Message({
+					topic,
+					contentType: 'dchat/subscribe',
+					content: __('Subscribed to') + ' ' + getChatDisplayName(topic) + '.',
+					isPrivate: true,
+				}).receive(dispatch);
+
 			},
 			err => {
 				log('Errored at subscribe. Already subscribed?', err);
@@ -48,7 +57,7 @@ const joinChat = originalAction => (dispatch) => {
 	}
 	log('is anybody out there? Entering moonchat', topic);
 
-	window.nknClient.subscribe( topic )
+	NKN.instance.subscribe( topic )
 		.then(txId => {
 			log('Subscription transaction:', txId);
 			// There will be a bunch of work when "hide chat" is implemented.
@@ -77,47 +86,57 @@ const joinChat = originalAction => (dispatch) => {
 	dispatch(createChat(topic));
 };
 
+const addNKNListeners = async (dispatch, getState) => {
+	const client = NKN.instance;
+
+	client.on('connect', async () => {
+		dispatch(connected());
+		dispatch(getBalance());
+		log('connected');
+	});
+
+	client.on('message', (...args) => {
+		log('Received message:', ...args);
+		dispatch(receivingMessage(...args));
+	});
+
+	// Pending value transfers handler.
+	client.on('block', async block => {
+		dispatch(getBalance());
+
+		const transactions = getState().transactions;
+		const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
+		log('New block!!!', block, transactions);
+
+		for ( let pendingTx of pendingTransactions ) {
+			if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
+				log('Transaction complete!');
+				dispatch(transactionComplete(pendingTx));
+			}
+		}
+	});
+};
+
 /**
  * Logs in and adds nkn listeners. Dispatches chat updates like "new message".
  */
-const login = originalAction => (dispatch, getState) => {
+const login = originalAction => async (dispatch, getState) => {
 	log('Attempting login', originalAction);
 	const credentials = originalAction.payload.credentials;
 	const rememberMe = credentials && credentials.rememberMe;
 
 	let status;
 	try {
-		const nknClient = new NKN(credentials);
+		const nknClient = await NKN.start(credentials);
+		log('starting..', nknClient);
+		nknClient.close();
 
-		nknClient.on('connect', async () => {
-			dispatch(connected());
-			dispatch(getBalance());
-			log('connected');
-		});
+		if (getState().clients.every(client => client.wallet.Address !== nknClient.wallet.address)) {
+			const c = NKN.parseClient((nknClient));
+			await dispatch(createNewClient(c));
+		}
 
-		nknClient.on('message', (...args) => {
-			log('Received message:', ...args);
-			dispatch(receivingMessage(...args));
-		});
-
-		// Pending value transfers handler.
-		nknClient.on('block', block => {
-			dispatch(getBalance());
-
-			const transactions = getState().transactions;
-			const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
-			log('New block!!!', block, transactions);
-
-			for ( let pendingTx of pendingTransactions ) {
-				if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
-					log('Transaction complete!');
-					dispatch(transactionComplete(pendingTx));
-				}
-			}
-		});
-
-		// Can't be cloned but we want to keep this.
-		window.nknClient = nknClient;
+		dispatch(switchToClient(nknClient.wallet.address, credentials.username, credentials.password));
 
 		if ( rememberMe ) {
 			passworder.encrypt(password, credentials)
@@ -164,7 +183,7 @@ const sendPrivateMessage = originalAction => async (dispatch) => {
 const getSubscribersHandler = originalAction => async (dispatch) => {
 	log('Getting subs', originalAction);
 	const topic = originalAction.payload.topic;
-	let { subscribers, subscribersInTxPool } = await window.nknClient.getSubs(topic);
+	let { subscribers, subscribersInTxPool } = await NKN.instance.getSubs(topic);
 	subscribers = subscribers.concat(subscribersInTxPool);
 
 	dispatch(setSubscribers(topic, subscribers));
@@ -186,10 +205,7 @@ const markRead = originalAction => async (dispatch, getState) => {
 };
 
 const logout = () => {
-	if (window.nknClient) {
-		window.nknClient.close();
-		window.nknClient = null;
-	}
+	NKN.clear();
 	localStorage.clear();
 	return {
 		type: 'LOGOUT'
@@ -197,16 +213,19 @@ const logout = () => {
 };
 
 const getTheBalance = () => async (dispatch) => {
-	if (!window.nknClient) {
+	const client = NKN.instance;
+	if (!client) {
 		return;
 	}
 
-	const balance = await window.nknClient.wallet.getBalance();
+	const balance = await client.wallet.getBalance();
+
 	log('Balance:', balance);
 	return dispatch({
 		type: 'nkn/GET_BALANCE',
 		payload: {
 			balance: balance.toFixed(8),
+			address: client.wallet.address,
 		}
 	});
 };
@@ -220,8 +239,8 @@ const newTransaction = originalAction => async (dispatch) => {
 	const isWhisper = topic.startsWith('/whisper/');
 
 	// Send
-	const tx = await window.nknClient.wallet.transferTo(
-		getAddressFromPubKey(to),
+	const tx = await NKN.instance.wallet.transferTo(
+		getAddressFromAddr(to),
 		value
 	).then(async (tx) => {
 		const message = new Message({
@@ -232,7 +251,7 @@ const newTransaction = originalAction => async (dispatch) => {
 			targetID,
 		});
 
-		log('NKN was sent to', getAddressFromPubKey(to), 'aka', to, '. tx:', tx, 'creating message', message);
+		log('NKN was sent to', getAddressFromAddr(to), 'aka', to, '. tx:', tx, 'creating message', message);
 		if (isWhisper) {
 			// Simply receive it as a reaction.
 			message.contentType = 'reaction';
@@ -260,6 +279,61 @@ const newTransaction = originalAction => async (dispatch) => {
 	return originalAction;
 };
 
+const newClientHandler = originalAction => dispatch => {
+	const { username } = originalAction.payload;
+
+	try {
+		const client = NKN.createClient(username);
+		log('Created client:', client);
+		dispatch(createNewClient(client));
+		dispatch(switchToClient(client.wallet.Address));
+	} catch (e) {
+		originalAction.payload.error = __('Wrong password.');
+	}
+	return originalAction;
+};
+
+const switchToClientHandler = originalAction => (dispatch, getState) => {
+	const { address } = originalAction.payload;
+
+	log('Switching to client:', address);
+	try {
+		const client = NKN.activateClient(address);
+		addNKNListeners(dispatch, getState);
+		log('Switching to client:', client);
+
+		dispatch({
+			type: 'nkn/SWITCH_TO_CLIENT',
+			payload: {
+				client
+			},
+		});
+	} catch(e) {
+		originalAction.payload.error = __('Wrong password.');
+	}
+	return originalAction;
+};
+
+// Import and activate.
+const walletImport = originalAction => (dispatch, getState) => {
+	const existingWallets = getState().clients.map(c => c.wallet.Address);
+	const { walletJSON, username, password } = originalAction.payload;
+	if (existingWallets.includes(walletJSON.Address)) {
+		originalAction.payload.error = __('This wallet is already imported.');
+		return originalAction;
+	}
+
+	try {
+		log('About to import:', walletJSON, password, username);
+		const client = NKN.importClient(JSON.stringify(walletJSON), password, username);
+		dispatch(createNewClient(client));
+		dispatch(switchToClient(client.wallet.Address, username, password));
+	} catch (e) {
+		originalAction.payload.error = __('Wrong password.');
+	}
+	return originalAction;
+};
+
 export default {
 	'PUBLISH_MESSAGE_ALIAS': publishMessage,
 	'LOGIN_ALIAS': login,
@@ -271,4 +345,7 @@ export default {
 	'nkn/NEW_TRANSACTION_ALIAS': newTransaction,
 	'SUBSCRIBE_TO_CHAT_ALIAS': subscribeToChat,
 	'SEND_PRIVATE_MESSAGE_ALIAS': sendPrivateMessage,
+	'nkn/NEW_CLIENT_ALIAS': newClientHandler,
+	'nkn/SWITCH_TO_CLIENT_ALIAS': switchToClientHandler,
+	'nkn/IMPORT_WALLET_ALIAS': walletImport,
 };

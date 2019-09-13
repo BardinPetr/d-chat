@@ -93,10 +93,12 @@ export const parseAddr = addr => {
 	return [ formattedAddr, pubKey ];
 };
 
-export const getAddressFromPubKey = pubKey => {
+export const getAddressFromAddr = theAddr => {
+	// eslint-disable-next-line
+	const [_, pubkey] = parseAddr(theAddr);
 	const nknAddress = protocol.programHashStringToAddress(
 		protocol.hexStringToProgramHash(
-			protocol.publicKeyToSignatureRedeem(pubKey)
+			protocol.publicKeyToSignatureRedeem(pubkey)
 		)
 	);
 	return nknAddress;
@@ -137,3 +139,16 @@ export const log = (...args) => {
 };
 
 export const isReaction = message => message.contentType === 'reaction' || message.contentType === 'nkn/tip';
+
+export const importWallet = (file) => {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = e => {
+			resolve(e.target.result);
+		};
+		reader.onerror = reject;
+		reader.readAsText(file);
+	});
+};
+
+export const IS_SIDEBAR = window.location.href.includes('sidebar.html');

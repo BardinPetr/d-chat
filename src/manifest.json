@@ -1,54 +1,51 @@
 {
-  "version": "1.0",
-  "manifest_version": 2,
-  "name": "__MSG_extensionName__",
-  "description": "__MSG_extensionDescription__",
+	"version": "1.0",
+	"manifest_version": 2,
+	"name": "__MSG_extensionName__",
+	"description": "__MSG_extensionDescription__",
 	"default_locale": "en",
 	"author": "losnappas",
-  "background": {
-    "scripts": [
-      "lib/js/browser-polyfill.js",
-    	"lib/js/webextensions-lib-configs/Configs.js",
-      "background.js"
-    ]
-  },
-  "content_scripts": [
-	{
-		"matches": ["*://nkn-faucet.herokuapp.com/*"],
-		"js": ["content.js"],
-		"all_frames": true
+	"background": {
+		"scripts": [
+			"lib/js/browser-polyfill.js",
+			"lib/js/webextensions-lib-configs/Configs.js",
+			"background.js"
+		]
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://nkn-faucet.herokuapp.com/*"],
+			"js": ["content.js"],
+			"all_frames": true
+		}
+	],
+	"browser_action": {
+		"default_icon": "img/NKN_D-chat_blue-64cropped.png",
+		"default_popup": "./popup.html",
+		"theme_icons": [
+			{
+				"dark": "img/NKN_D-chat_blue-64cropped.png",
+				"light": "img/NKN_D-chat_white-64cropped.png",
+				"size": 32
+			}
+		]
+	},
+	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "notifications"],
+	"sidebar_action": {
+		"default_title": "__MSG_extensionName__",
+		"default_panel": "./sidebar.html",
+		"open_at_install": false,
+		"default_icon": "img/NKN_D-chat_blue-64cropped.png"
+	},
+	"icons": {
+		"64": "img/NKN_D-chat_blue-64cropped.png"
+	},
+	"options_ui": {
+		"page": "./options.html"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "dchat@losnappas"
+		}
 	}
-  ],
-  "browser_action": {
-    "default_icon": "img/NKN_D-chat_blue-64cropped.png",
-    "default_popup": "./popup.html",
-    "theme_icons": [{
-    	"dark": "img/NKN_D-chat_blue-64cropped.png",
-    	"light": "img/NKN_D-chat_white-64cropped.png",
-    	"size": 32
-    }]
-  },
-  "permissions": [
-    "<all_urls>",
-    "storage",
-    "unlimitedStorage",
-    "notifications"
-  ],
-  "sidebar_action": {
-  	"default_title": "__MSG_extensionName__",
-  	"default_panel": "./sidebar.html",
-  	"open_at_install": false,
-  	"default_icon": "img/NKN_D-chat_blue-64cropped.png"
-  },
-  "icons": {
-    "64": "img/NKN_D-chat_blue-64cropped.png"
-  },
-  "options_ui": {
-  	"page": "./options.html"
-  },
-  "browser_specific_settings": {
-  	"gecko": {
-  		"id": "dchat@losnappas"
-  	}
-  }
 }

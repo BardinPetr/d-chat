@@ -14,6 +14,7 @@ const mapStateToProps = (state, ownProps) => {
 		unreadMessages: state.chatSettings[topic]?.unread || [],
 		topic: topic,
 		subs: state.chatSettings[topic]?.subscribers || [],
+		client: state.clients.find(c => c.active),
 	});
 };
 

@@ -5,7 +5,9 @@ import PublicChatroom from 'Approot/UI/containers/Chatroom/Public';
 import PrivateChatroom from 'Approot/UI/containers/Chatroom/Private';
 import Header from 'Approot/UI/components/Header';
 import Sidebar from 'Approot/UI/components/Sidebar';
-import ClientRoutes from 'Approot/UI/components/Client/Routes';
+import Clients from 'Approot/UI/containers/Client/List';
+import WalletImporter from 'Approot/UI/containers/Client/WalletImporter';
+import NewWallet from 'Approot/UI/containers/Client/NewWallet';
 
 const Routes = () => (
 	<div className="columns is-gapless">
@@ -32,8 +34,18 @@ const Routes = () => (
 							component={PrivateChatroom}
 						/>
 						<Route
-							path="/wallet"
-							component={ClientRoutes}
+							exact
+							path="/wallets/import"
+							component={WalletImporter}
+						/>
+						<Route
+							exact
+							path="/wallets/new"
+							component={NewWallet}
+						/>
+						<Route
+							path="/wallets"
+							component={Clients}
 						/>
 						<Route
 							path="/"

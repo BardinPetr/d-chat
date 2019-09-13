@@ -100,16 +100,16 @@ class Header extends React.Component {
 							<TopicsList whispers />
 						</div>
 
-						<div className="navbar-item">
-							<p className="menu-label">{__('New view')}</p>
-							<Popout />
-						</div>
-
 						<div className="navbar-item is-hidden-desktop">
-							<label className="menu-label">
+							<p className="menu-label">
 								{__('Account')}
-							</label>
+							</p>
 							<ul className="menu-list">
+								<li>
+									<Link to="/wallets">
+										{__('Accounts')}
+									</Link>
+								</li>
 								<li>
 									<Logout>
 										{__('Log Out')}
@@ -118,6 +118,10 @@ class Header extends React.Component {
 							</ul>
 						</div>
 
+						<div className="navbar-item">
+							<p className="menu-label">{__('New view')}</p>
+							<Popout />
+						</div>
 
 					</div>
 

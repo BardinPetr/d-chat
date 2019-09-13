@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import WalletInfo from 'Approot/UI/components/Wallet/Info';
+import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info';
 import {
 	__,
@@ -31,12 +31,12 @@ const NewTopicForm = ({ privateChat }) => {
 const Home = ({ client }) => (
 	<div className="container">
 
-		<WalletInfo client={client}>
+		{client && <ClientInfo className="notification" client={client}>
 			<div className="field">
 				<p className="is-size-7">{__('D-Chat version')}</p>
 				<p>{runtime.getManifest().version}</p>
 			</div>
-		</WalletInfo>
+		</ClientInfo>}
 
 		<div className="section" style={{paddingTop: 0}}>
 			<div className="field">
@@ -61,7 +61,7 @@ const Home = ({ client }) => (
 );
 
 const mapStateToProps = state => ({
-	client: state.clients.find(i => i.dchat.active),
+	client: state.clients.find(i => i.active),
 });
 
 export default connect(mapStateToProps)(Home);

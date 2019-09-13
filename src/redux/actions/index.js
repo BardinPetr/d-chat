@@ -1,7 +1,6 @@
 import {
 	genPrivateChatName,
 	__,
-	getChatDisplayName,
 	getChatName,
 	setBadgeText,
 	isReaction,
@@ -9,6 +8,7 @@ import {
 import Message from 'Approot/background/Message';
 import { PayloadType } from 'nkn-client';
 import sleep from 'sleep-promise';
+import NKN from 'Approot/background/nknHandler';
 
 
 export const navigated = to => ({
@@ -48,22 +48,13 @@ export const sendPrivateMessage = (message) => ({
 	},
 });
 
-export const subscribe = (topic, transactionID) => (dispatch) => {
-	new Message({
-		topic,
-		contentType: 'dchat/subscribe',
-		content: __('Subscribing to') + ' ' + getChatDisplayName(topic) + '.',
-		isPrivate: true,
-	}).receive(dispatch);
-
-	return dispatch({
-		type: 'SUBSCRIBE',
-		payload: {
-			topic: getChatName( topic ),
-			transactionID
-		}
-	});
-};
+export const subscribe = (topic, transactionID) => ({
+	type: 'SUBSCRIBE',
+	payload: {
+		topic: getChatName( topic ),
+		transactionID
+	}
+});
 
 export const getSubscribers = topic => ({
 	type: 'chat/GET_SUBSCRIBERS_ALIAS',
@@ -180,7 +171,8 @@ export const receivingMessage = (src, payload, payloadType) => (dispatch, getSta
 
 		if ( message.topic && message.contentType === 'nkn/tip' && message.isPrivate ) {
 			const subs = getState().chatSettings[message.topic]?.subscribers || [];
-			if ( !subs.includes(window.nknClient.addr) ) {
+			// TODO hmmm...
+			if ( NKN.instance && !subs.includes(NKN.instance.addr) ) {
 				new Message({
 					contentType: 'dchat/subscribe',
 					topic: message.topic,

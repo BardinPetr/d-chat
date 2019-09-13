@@ -8,7 +8,6 @@ import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
 
 class LoginBox extends React.Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -36,128 +35,143 @@ class LoginBox extends React.Component {
 	handleLoginSubmit(e) {
 		e.preventDefault();
 		// See notes in reducer.
-		this.props.dispatch(login({
-			username: this.state.username,
-			password: this.state.password,
-			rememberMe: this.state.rememberMe,
-		}))
+		this.props
+			.dispatch(
+				login({
+					username: this.state.username,
+					password: this.state.password,
+					rememberMe: this.state.rememberMe,
+				}),
+			)
 			.then(msg => !msg.addr && this.setState({ error: __('Wrong password.') }))
 			.catch(console.warn);
 	}
 
-	clear (e) {
+	clear(e) {
 		e.preventDefault();
-		configs.walletJSON = configs.$default.walletJSON;
+		configs.walletJSON = null;
 		this.setState({ cleared: true });
 		this.props.dispatch(logout());
 	}
 
 	render() {
 		const { loggedIn, connecting } = this.props;
-		return (
-			loggedIn
-				? (
-					<LoadingScreen loading={connecting}>
-						<Redirect
-							to={{
-								pathname: '/'
-							}}
-						/>
-					</LoadingScreen>
-				) : (
-					<div className="hero is-primary">
-						<div className="hero-body" style={{height: '100vh'}}>
-							<h1 className="title has-text-centered is-size-2">
-								{ window.location.search.includes('register') ? __('Welcome!') : __('Welcome Back!') }
-							</h1>
-							<div className="columns is-centered">
-								<div className="column is-half">
-									<div className="notification is-light">
-										<figure className="image container is-64x64">
-											<DchatLogo />
-										</figure>
-										<p className="subtitle has-text-grey has-text-centered">
-											{ __('The decentralized chat awaits.') }
-										</p>
+		const isNew = !configs.walletJSON;
 
-										<form className="" onSubmit={this.handleLoginSubmit}>
-											<div className="field">
-												<label className="label">
-													{ __('Username')}
-													<span className="has-text-grey-light is-size-7">{' (' + __('optional') + ')' }</span>
-												</label>
-												<div className="control">
-													<input
-														type="username"
-														name="username"
-														value={this.state.username}
-														onChange={this.handleChange}
-														className="input"
-														placeholder="Username"
-														autoComplete="current-user"
-													/>
-												</div>
+		return loggedIn ? (
+			<LoadingScreen loading={connecting}>
+				<Redirect
+					to={{
+						pathname: '/',
+					}}
+				/>
+			</LoadingScreen>
+		) : (
+			<div className="hero is-primary">
+				<div className="hero-body" style={{ height: '100vh' }}>
+					<h1 className="title has-text-centered is-size-2">
+						{window.location.search.includes('register')
+							? __('Welcome!')
+							: __('Welcome Back!')}
+					</h1>
+					<div className="columns is-centered">
+						<div className="column is-half">
+							<div className="notification is-light">
+								<figure className="image container is-64x64">
+									<DchatLogo />
+								</figure>
+								<p className="subtitle has-text-grey has-text-centered">
+									{__('The decentralized chat awaits.')}
+								</p>
+
+								<form className="" onSubmit={this.handleLoginSubmit}>
+									{isNew && (
+										<div className="field">
+											<label className="label">
+												{__('Username')}
+												<span className="has-text-grey-light is-size-7">
+													{' (' + __('optional') + ')'}
+												</span>
+											</label>
+											<div className="control">
+												<input
+													type="username"
+													name="username"
+													value={this.state.username}
+													onChange={this.handleChange}
+													className="input"
+													placeholder="Username"
+													autoComplete="current-user"
+												/>
 											</div>
-											<div className="field">
-												<label className="label">
-													{ __('Password') }
-													<span className="help is-danger is-inline">
-														{ ' ' + this.state.error }
-													</span>
-												</label>
-												<div className="control">
-													<input
-														type="password"
-														name="password"
-														value={this.state.password}
-														onChange={this.handleChange}
-														className="input password"
-														placeholder="Password"
-														autoComplete="current-user"
-														required
-													/>
-												</div>
-											</div>
-											<div className="field">
-												<div className="control">
-													<label className="checkbox">
-														<input
-															type="checkbox"
-															checked={this.state.rememberMe}
-															onChange={this.handleCheckboxChange}
-															value="rememberMe"
-															name="rememberMe"
-															id="rememberMe"
-														/>
-														{ __('Store password') }
-													</label>
-												</div>
-											</div>
-											<div className="field">
-												<div className="control">
-													<button type="submit" className="button is-link">
-														{ window.location.search.includes('register') ? __('Create') :  __('Log In') }
-													</button>
-												</div>
-											</div>
-										</form>
-										<div style={{marginTop: '1em'}}>
-											{__('Forgot password?') + ' '}
-											<a style={
-												this.state.cleared ?
-													{ color: 'gray', cursor: 'auto' } :
-													{ color: 'blue', cursor: 'pointer' }
-											} onClick={this.clear}>
-												{this.state.cleared ? __('Done') : __('Create new')}
-											</a>
-											{', ' + __('and your old wallet will be removed.')}
+										</div>
+									)}
+									<div className="field">
+										<label className="label">
+											{__('Password')}
+											<span className="help is-danger is-inline">
+												{' ' + this.state.error}
+											</span>
+										</label>
+										<div className="control">
+											<input
+												type="password"
+												name="password"
+												value={this.state.password}
+												onChange={this.handleChange}
+												className="input password"
+												placeholder="Password"
+												autoComplete="current-user"
+												required
+											/>
 										</div>
 									</div>
+									<div className="field">
+										<div className="control">
+											<label className="checkbox">
+												<input
+													type="checkbox"
+													checked={this.state.rememberMe}
+													onChange={this.handleCheckboxChange}
+													value="rememberMe"
+													name="rememberMe"
+													id="rememberMe"
+												/>
+												{__('Store password')}
+											</label>
+										</div>
+									</div>
+									<div className="field">
+										<div className="control">
+											<button type="submit" className="button is-link">
+												{window.location.search.includes('register')
+													? __('Create')
+													: __('Log In')}
+											</button>
+										</div>
+									</div>
+								</form>
+								<div style={{ marginTop: '1em' }}>
+									{__('Forgot password?') + ' '}
+									<a
+										style={
+											this.state.cleared
+												? { color: 'gray', cursor: 'auto' }
+												: { color: 'blue', cursor: 'pointer' }
+										}
+										onClick={this.clear}
+									>
+										{this.state.cleared
+											? __('Wallet removed')
+											: __('Remove wallet')}
+										.
+									</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				)
+				</div>
+			</div>
 		);
 	}
 }
@@ -168,4 +182,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(LoginBox);
-
