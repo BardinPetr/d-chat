@@ -59,7 +59,7 @@ const messages = (state = configs.messages, action ) => {
 	switch (action.type) {
 		case 'chat/REMOVE':
 			initial = { ...state };
-			initial[topic] = initial[topic].slice(0, 10);
+			initial[topic] = initial[topic].slice(-10);
 			newState = initial;
 			configs.messages = newState;
 			break;
