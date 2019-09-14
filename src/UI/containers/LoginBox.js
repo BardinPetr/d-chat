@@ -16,12 +16,21 @@ class LoginBox extends React.Component {
 			error: '',
 			cleared: false,
 			rememberMe: false,
+			isNew: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.clear = this.clear.bind(this);
+	}
+
+	componentDidMount() {
+		configs.$loaded.then(() =>
+			this.setState({
+				isNew: !configs.walletJSON,
+			})
+		);
 	}
 
 	handleChange(e) {
@@ -50,13 +59,13 @@ class LoginBox extends React.Component {
 	clear(e) {
 		e.preventDefault();
 		configs.walletJSON = null;
-		this.setState({ cleared: true });
+		this.setState({ cleared: true, isNew: true });
 		this.props.dispatch(logout());
 	}
 
 	render() {
 		const { loggedIn, connecting } = this.props;
-		const isNew = !configs.walletJSON;
+		const isNew = this.state.isNew;
 
 		return loggedIn ? (
 			<LoadingScreen loading={connecting}>

@@ -75,6 +75,7 @@ class NKN extends nkn {
 		});
 
 		this.wallet = wallet;
+		this.on('message', log);
 	}
 
 	subscribe = async topic => {
@@ -112,7 +113,9 @@ class NKN extends nkn {
 	publishMessage = async (topic, message, options = { txPool: true }) => {
 		log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
-			return this.publish(genChatID(topic), JSON.stringify(message), options);
+			const x = this.publish(genChatID(topic), JSON.stringify(message), options);
+			log('publish', x);
+			return x;
 		} catch (e) {
 			console.error('Error when publishing', e);
 			throw e;
@@ -122,7 +125,9 @@ class NKN extends nkn {
 	sendMessage = async (to, message, options = {}) => {
 		log('Sending private message', message, 'to', to);
 		try {
-			return this.send(to, JSON.stringify(message), options);
+			const x = this.send(to, JSON.stringify(message), options);
+			log('send', x);
+			return x;
 		} catch (e) {
 			console.error('Error when sending', e);
 			throw e;

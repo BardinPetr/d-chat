@@ -1,4 +1,5 @@
 import NKN from './nkn';
+import FakeNKN from './FakeNKN';
 import configs from 'Approot/misc/configs';
 import nknWallet from 'nkn-wallet';
 import { log } from 'Approot/misc/util';
@@ -50,7 +51,7 @@ class NKNHandler {
 			username = targetClient.identifier;
 		}
 
-		const client = new NKN({
+		const client = new FakeNKN({
 			username,
 			wallet,
 		});
@@ -76,16 +77,15 @@ class NKNHandler {
 			const wallet = nknWallet.loadJsonWallet(walletJSON, this.#password);
 
 			this.#instance.close();
-			client = new NKN({
+			this.#instance = new NKN({
 				username: client.identifier,
 				wallet: wallet,
 			});
-			this.#instance = client;
 		} else {
 			throw 'No such client.';
 		}
 
-		const c = this.parseClient(client);
+		const c = this.parseClient(this.#instance);
 		configs.clients = configs.clients.map(client =>
 			client.wallet.Address === address ? c : client,
 		);
@@ -96,8 +96,7 @@ class NKNHandler {
 		// Let's make sure that password is the same.
 		const wallet = nknWallet.newWallet(this.#password);
 
-		const client = new NKN({ username, wallet });
-		client.close();
+		const client = new FakeNKN({ username, wallet });
 
 		const c = this.parseClient(client);
 		configs.clients = [...configs.clients, c];
@@ -109,11 +108,10 @@ class NKNHandler {
 		// Change password.
 		let wallet = nknWallet.loadJsonWallet(walletJSON, password);
 		wallet = nknWallet.restoreWalletBySeed(wallet.getSeed(), this.#password);
-		const client = new NKN({
+		const client = new FakeNKN({
 			username,
 			wallet,
 		});
-		client.close();
 
 		const c = this.parseClient(client);
 		configs.clients = [...configs.clients, c];

@@ -26,6 +26,9 @@ const reactions = (state = configs.reactions, action) => {
 			} else {
 				initial = state[topic]?.[targetID] || [];
 			}
+			if (initial.some(msg => msg.id === action.payload.message.id)) {
+				return state;
+			}
 			newState = {
 				...state,
 				[topic]: {
@@ -66,6 +69,9 @@ const messages = (state = configs.messages, action ) => {
 
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
+			if (initial.some(msg => msg.id === action.payload.message.id)) {
+				return state;
+			}
 			newState = {
 				...state,
 				[topic]: [ ...initial, action.payload.message ],

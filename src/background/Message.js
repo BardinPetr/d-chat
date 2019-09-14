@@ -154,9 +154,8 @@ class Message {
 			// Notify unless chat is open.
 			if ( views.length === 0 ) {
 				this.notify();
-
-				dispatch( markUnread(this.topic, [this.id]) );
 			}
+			dispatch( markUnread(this.topic, [this.id]) );
 		}
 
 		return dispatch(receiveMessage(this));
