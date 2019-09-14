@@ -98,6 +98,9 @@
   "Privatemessage": {
     "message": " Private message"
   },
+  "Resubscribedto": {
+    "message": " Re/subscribed to"
+  },
   "Reload": {
     "message": " Reload"
   },

@@ -63,6 +63,12 @@ const joinChat = originalAction => (dispatch) => {
 			// There will be a bunch of work when "hide chat" is implemented.
 			dispatch(subscribe(topic, txId));
 			dispatch(getSubscribers(topic));
+			new Message({
+				topic,
+				contentType: 'dchat/subscribe',
+				content: __('Re/subscribed to') + ' ' + getChatDisplayName(topic) + '.',
+				isPrivate: true,
+			}).receive(dispatch);
 		},
 		err => {
 			// Insufficient funds.
@@ -129,7 +135,7 @@ const login = originalAction => async (dispatch, getState) => {
 	try {
 		const nknClient = await NKN.start(credentials);
 		log('starting..', nknClient);
-		nknClient.close();
+		// nknClient.close();
 
 		if (getState().clients.every(client => client.wallet.Address !== nknClient.wallet.address)) {
 			const c = NKN.parseClient((nknClient));
