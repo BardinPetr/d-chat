@@ -56,6 +56,14 @@ export const subscribe = (topic, transactionID) => ({
 	}
 });
 
+export const getMessages = (topic, opts = {}) => ({
+	type: 'chat/GET_MESSAGES',
+	payload: {
+		topic: getChatName(topic),
+		howMany: opts.howMany || 15,
+	},
+});
+
 export const getSubscribers = topic => ({
 	type: 'chat/GET_SUBSCRIBERS_ALIAS',
 	payload: {
