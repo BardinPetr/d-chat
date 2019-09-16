@@ -24,6 +24,13 @@ onmessage = ({ data: action }) => {
 	switch (action.type) {
 		case 'nkn/SWITCH_TO_CLIENT_ALIAS':
 			client = NKN.activateClient(payload.address);
+			// TODO addNKNListeners
+			break;
+
+		case 'nkn/NEW_CLIENT_ALIAS':
+			break;
+
+		case 'nkn/IMPORT_WALLET_ALIAS':
 			break;
 
 		case 'LOGIN_ALIAS':
@@ -116,3 +123,36 @@ onmessage = ({ data: action }) => {
 			console.log('Unknown thingy in worker:', action, payload);
 	}
 };
+
+// TODO maybe dispatch block() ?
+function addNKNListeners (dispatch) {
+	const client = NKN.instance;
+
+	client.on('connect', async () => {
+		dispatch(connected());
+		dispatch(getBalance());
+		log('connected');
+	});
+
+	client.on('message', (...args) => {
+		log('Received message:', ...args);
+		dispatch(receivingMessage(...args));
+	});
+
+	// Pending value transfers handler.
+	client.on('block', async block => {
+		dispatch(getBalance());
+
+		// const transactions = getState().transactions;
+		// const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
+		// log('New block!!!', block, transactions);
+
+		// for ( let pendingTx of pendingTransactions ) {
+		// 	if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
+		// 		log('Transaction complete!');
+		// 		dispatch(transactionComplete(pendingTx));
+		// 	}
+		// }
+	});
+};
+

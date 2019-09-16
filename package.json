@@ -54,7 +54,8 @@
     "string-replace-loader": "^2.2.0",
     "style-loader": "^0.23.1",
     "web-ext": "^2.9.3",
-    "webpack-cli": "^3.3.8"
+    "webpack-cli": "^3.3.8",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "@babel/core": "7.2.2",
@@ -139,6 +140,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2",
+    "redux-worker-middleware": "^1.0.0",
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "shasum": "^1.0.2",
