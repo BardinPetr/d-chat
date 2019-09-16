@@ -19,7 +19,7 @@ import NKN from './nknHandler';
  *   Omit `topic` in whispers.
  *  Specify a unique ID so people can react to certain messages via `targetID`.
  *  Mark messages sent with `nknClient.send()` as private with `isPrivate = true`;
- *  `transactionID` should be set for tips, so client will get confirmation message.
+ *  `transactionID` should be set for tips, so client will get confirmation.
  *  `value` is value in satoshis.
  *  `timestamp` from toUTCString.
  * Rest of stuff is practically internal, didn't have the presence of mind to underscore them.

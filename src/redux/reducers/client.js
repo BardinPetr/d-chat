@@ -30,7 +30,7 @@ const clients = (state = configs.clientsMeta, action) => {
 			configs.clientsMeta = newState;
 			break;
 
-		case 'nkn/GET_BALANCE':
+		case 'nkn/SET_BALANCE':
 			address = action.payload.address;
 			newState = state.map(c => {
 				const client = {...c};
