@@ -118,6 +118,7 @@ module.exports = function (webpackEnv) {
 			doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
 			doesPopupHtmlExist && plugins.popupHtmlPlugin,
 			plugins.htmlIncAssetsPlugin,
+			plugins.scriptExtHtmlPlugin,
 			plugins.moduleNotFoundPlugin,
 			isEnvDevelopment && plugins.CaseSensitivePathsPlugin,
 			isEnvDevelopment && plugins.watchMissingNodeModulesPlugin,
