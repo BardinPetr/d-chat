@@ -1,6 +1,6 @@
 import nkn from 'nkn-multiclient';
 import nknWallet from 'nkn-wallet';
-import { log, genChatID } from 'Approot/misc/util';
+import { genChatID } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 // TODO should move nkn stuff into a worker?
@@ -75,7 +75,7 @@ class NKN extends nkn {
 		});
 
 		this.wallet = wallet;
-		this.on('message', log);
+		this.on('message', console.log);
 	}
 
 	subscribe = async topic => {
@@ -94,7 +94,7 @@ class NKN extends nkn {
 					return Promise.reject('Too soon.');
 				}
 
-				log(
+				console.log(
 					'Subscribing to',
 					topic,
 					'aka',
@@ -111,10 +111,10 @@ class NKN extends nkn {
 	};
 
 	publishMessage = async (topic, message, options = { txPool: true }) => {
-		log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
+		console.log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
 			const x = this.publish(genChatID(topic), JSON.stringify(message), options);
-			log('publish', x);
+			console.log('publish', x);
 			return x;
 		} catch (e) {
 			console.error('Error when publishing', e);
@@ -123,10 +123,10 @@ class NKN extends nkn {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
-		log('Sending private message', message, 'to', to);
+		console.log('Sending private message', message, 'to', to);
 		try {
 			const x = this.send(to, JSON.stringify(message), options);
-			log('send', x);
+			console.log('send', x);
 			return x;
 		} catch (e) {
 			console.error('Error when sending', e);
@@ -145,6 +145,25 @@ class NKN extends nkn {
 	) => {
 		return this.defaultClient.getSubscribers(genChatID(topic), options);
 	};
+
+	toJSON() {
+		return JSON.stringify(this.neutered());
+	}
+
+	neutered = () => {
+		const w = JSON.parse(this.wallet.toJSON());
+		w.address = w.Address;
+		const c = {
+			...this,
+			wallet: w,
+		};
+
+		const preservedKeys = [ 'addr', 'identifier', 'wallet' ];
+		for (let key in c) {
+			preservedKeys.includes(key) || delete c[key];
+		}
+		return c;
+	}
 }
 
 export default NKN;

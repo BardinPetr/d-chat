@@ -1,15 +1,13 @@
 import {
 	genPrivateChatName,
-	// createNotification,
-	// getChatDisplayName,
-	// formatAddr,
 	parseAddr,
-	log,
+	formatAddr,
 } from 'Approot/misc/util';
+import NKN from 'Approot/workers/nkn/nknHandler';
 import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
-// import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
-// import NKN from 'Approot/workers/';
+import { sanitize } from 'dompurify';
+import marked from 'marked';
 
 /**
  * Here lies the D-Chat NKN message schema.
@@ -31,7 +29,7 @@ class Message {
 		// TODO is.string() checks
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
-		this.content = message.content || '';
+		this.content = sanitize(marked(message.content || ''));
 		this.topic = message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
@@ -50,35 +48,25 @@ class Message {
 
 	from(src) {
 		if (src === 'me') {
-			// src = NKN.instance.addr;
+			src = NKN.instance.addr;
 		} else if (this.isPrivate && this.topic == null) {
-			log('Received private message', this, src);
 			this.topic = genPrivateChatName(src);
 		}
 
-		// if ( src === NKN.instance.addr ) {
-		// 	this.isMe = true;
-		// }
+		if ( src === NKN.instance.addr ) {
+			this.isMe = true;
+		}
 
 		const [ name, pubKey ] = parseAddr(src);
 		this.addr = src;
 		// Includes dot if identifier exists.
 		this.username = name;
 		this.pubKey = pubKey;
-		// this.refersToMe = this.content && this.content.includes(
-		// 	formatAddr( NKN.instance.addr )
-		// );
+		this.refersToMe = this.content && this.content.includes(
+			formatAddr( NKN.instance.addr )
+		);
 
 		return this;
-	}
-
-	async notify() {
-		// this.notified = true;
-		// let title = this.title || `D-Chat ${getChatDisplayName(this.topic)}, ${this.username}.${this.pubKey.slice(0, 8)}:`;
-		// return createNotification({
-		// 	message: this.content,
-		// 	title: title,
-		// });
 	}
 
 	whisper(to) {
@@ -87,10 +75,6 @@ class Message {
 	}
 
 	prepareSend(toAddr) {
-		// if ( toAddr === NKN.instance.addr ) {
-		// 	return;
-		// }
-
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -98,13 +82,11 @@ class Message {
 		this.refersToMe = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		this.notified = undefined;
+		this.isSeen = undefined;
 		this.ping = undefined;
 		this.isPrivate = true;
 		// Using an array so in future maybe private chatrooms?
 		this.recipients = [toAddr];
-
-		// return NKN.instance.sendMessage(toAddr, this);
 	}
 
 	preparePublish(topic) {
@@ -116,10 +98,9 @@ class Message {
 		this.isPrivate = undefined;
 		this.username = undefined;
 		this.title = undefined;
-		this.notified = undefined;
+		this.isSeen = undefined;
 		this.ping = undefined;
 		this.topic = topic;
-		// return NKN.instance.publishMessage(topic, this);
 	}
 
 	async receive(dispatch) {
@@ -134,12 +115,12 @@ class Message {
 						return;
 					}
 				}
-				this.notified = true;
+				this.isSeen = true;
 				break;
 
 			case 'reaction':
 				// Omit notifications for reactions.
-				this.notified = true;
+				this.isSeen = true;
 				break;
 
 			case 'dchat/subscribe':
@@ -149,15 +130,7 @@ class Message {
 				break;
 		}
 
-		// Create notification?
-		if ( !this.isMe && !this.notified ) {
-			// let views = extension.getViews({
-			// 	type: 'popup'
-			// });
-			// // Notify unless chat is open.
-			// if ( views.length === 0 ) {
-			// 	this.notify();
-			// }
+		if ( !this.isMe && !this.isSeen ) {
 			dispatch( markUnread(this.topic, [this.id]) );
 		}
 

@@ -3,7 +3,7 @@
  */
 
 export const switchedToClient = (address) => ({
-	type: 'nkn/SWITCH_TO_CLIENT',
+	type: 'nkn/SWITCHED_TO_CLIENT',
 	payload: {
 		address,
 	},
@@ -46,7 +46,7 @@ export const exportWallet = (address) => ({
 	},
 });
 
-export const setBalance = (address, balance) => ({
+export const setBalance = (address, balance) => console.log('setting balance') || ({
 	type: 'nkn/SET_BALANCE',
 	payload: {
 		balance: balance.toFixed(8),

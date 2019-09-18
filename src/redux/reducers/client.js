@@ -3,8 +3,8 @@ import configs from 'Approot/misc/configs';
 const clients = (state = configs.clientsMeta, action) => {
 	let newState, initial, address;
 	switch (action.type) {
-		case 'nkn/SWITCH_TO_CLIENT':
-			address = action.payload.client.wallet.Address;
+		case 'nkn/SWITCHED_TO_CLIENT':
+			address = action.payload.address;
 			newState = state.map(c => {
 				let client = {...c};
 				const isTarget = (client.wallet.Address === address);
@@ -25,8 +25,10 @@ const clients = (state = configs.clientsMeta, action) => {
 			initial = {
 				...action.payload.client,
 				createdAt: Date.now(),
+				active: true,
 			};
-			newState = [...state, initial];
+			newState = state.map(i => ({ ...i, active: false }));
+			newState = [...newState, initial];
 			configs.clientsMeta = newState;
 			break;
 

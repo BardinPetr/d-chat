@@ -4,7 +4,6 @@
 
 import React from 'react';
 import TimeAgo from 'react-timeago';
-import Markdown from './Markdown';
 import { __ } from 'Approot/misc/browser-util';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
@@ -61,7 +60,6 @@ class Message extends React.PureComponent {
 			isSubscribed,
 			className,
 			children,
-			imagesLoaded,
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
@@ -96,7 +94,7 @@ class Message extends React.PureComponent {
 					</div>
 				</div>
 				<div className="message-body x-is-small-padding">
-					<Markdown source={message.content} imagesLoaded={imagesLoaded} />
+					<div class="content">{message.content}</div>
 					{children}
 				</div>
 				{error && <div className="tag is-danger">{error}</div>}

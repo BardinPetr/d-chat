@@ -14,8 +14,11 @@ export const navigated = to => ({
 	},
 });
 
-export const getBalance = () => ({
-	type: 'GET_BALANCE_ALIAS',
+export const getBalance = (address) => ({
+	type: 'nkn/GET_BALANCE_ALIAS',
+	payload: {
+		address,
+	},
 });
 
 export const logout = () => ({
@@ -44,6 +47,7 @@ export const sendPrivateMessage = (message) => ({
 	},
 });
 
+// Subs after tx is complete.
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
@@ -169,7 +173,7 @@ export const newTransaction = ({ targetID, content, topic, to, value, contentTyp
 	}
 });
 
-const subscribeToChat = topic => ({
+export const subscribeToChat = topic => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
 		topic,

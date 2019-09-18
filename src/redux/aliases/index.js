@@ -1,6 +1,8 @@
 import nknWallet from 'nkn-wallet';
 import {
 	getUnreadMessages,
+	createChat,
+	subscribeToChat,
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -55,7 +57,7 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 			meta: {
 				...originalAction.meta,
 				WebWorker: true,
-				clients: getState().clientsMeta,
+				clients: originalAction.type === 'LOGIN_ALIAS' && (getState().clientsMeta || []),
 			},
 		});
 	} else {
@@ -80,13 +82,18 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 	}
 };
 
+const joinChat = originalAction => dispatch => {
+	const topic = originalAction.payload.topic;
+	dispatch(createChat(topic));
+	dispatch(subscribeToChat(topic));
+};
+
 export default {
 	'PUBLISH_MESSAGE_ALIAS': delegateToWorker,
 	'LOGIN_ALIAS': delegateToWorker,
-	'JOIN_CHAT_ALIAS': delegateToWorker,
 	'chat/GET_SUBSCRIBERS_ALIAS': delegateToWorker,
 	'LOGOUT_ALIAS': delegateToWorker,
-	'GET_BALANCE_ALIAS': delegateToWorker,
+	'nkn/GET_BALANCE_ALIAS': delegateToWorker,
 	'nkn/NEW_TRANSACTION_ALIAS': delegateToWorker,
 	'SUBSCRIBE_TO_CHAT_ALIAS': delegateToWorker,
 	'SEND_PRIVATE_MESSAGE_ALIAS': delegateToWorker,
@@ -97,4 +104,5 @@ export default {
 	'nkn/IMPORT_WALLET_ALIAS': walletImport,
 
 	'chat/MARK_READ_ALIAS': markRead,
+	'JOIN_CHAT_ALIAS': joinChat,
 };

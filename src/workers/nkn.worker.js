@@ -1,6 +1,5 @@
-import NKN from './nkn/nknHandler';
-import { PayloadType } from 'nkn-client';
-import Message from 'Approot/background/Message';
+import NKN from 'Approot/workers/nkn/nknHandler';
+import Message from 'Approot/workers/nkn/Message';
 import {
 	getAddressFromAddr,
 } from 'Approot/misc/util';
@@ -8,8 +7,6 @@ import {
 	setLoginStatus,
 	receiveMessage,
 	setSubscribers,
-	connected,
-	getBalance,
 } from 'Approot/redux/actions';
 import {
 	switchedToClient,
@@ -17,10 +14,6 @@ import {
 	createNewClient,
 	switchToClient,
 } from 'Approot/redux/actions/client';
-
-export const log = (...args) => {
-	console.log('d-chat: worker:', args);
-};
 
 onmessage = ({ data: action }) => {
 	const payload = action.payload;
@@ -31,30 +24,31 @@ onmessage = ({ data: action }) => {
 	switch (action.type) {
 		case 'nkn/SWITCH_TO_CLIENT_ALIAS':
 			client = NKN.activateClient(payload.address);
-			addNKNListeners(client);
-			postMessage(switchedToClient(client));
+			postMessage(switchedToClient( client.wallet.address ));
 			break;
 
 		case 'nkn/NEW_CLIENT_ALIAS':
 			client = NKN.createClient(payload.username);
-			postMessage(createNewClient(client));
+			postMessage(createNewClient( client.neutered() ));
 			postMessage(switchToClient(client.wallet.Address));
 			break;
 
 		case 'nkn/IMPORT_WALLETSEED':
 			client = NKN.importClient(payload.walletSeed, payload.username);
-			postMessage(createNewClient(client));
+			postMessage(createNewClient( client.neutered() ));
 			postMessage(switchToClient(client.wallet.Address, payload.username));
 			break;
 
 		case 'LOGIN_ALIAS':
 			try {
-				client = NKN.start(action.payload.credentials);
-				postMessage(switchedToClient(client));
-				log('logged in');
+				if (action.meta.clients.length > 0) {
+					// Previously active.
+					client = action.meta.clients.find(c => c.active);
+				}
+				client = NKN.start({...action.payload.credentials, client}, action.meta.clients);
 				status = { addr: client.addr };
 			} catch (e) {
-				log('Failed login.', e);
+				console.log('Failed login.', e);
 				status = { error: true };
 			}
 			postMessage(setLoginStatus(status));
@@ -65,12 +59,13 @@ onmessage = ({ data: action }) => {
 			postMessage({ type: 'LOGOUT' });
 			break;
 
-		case 'chat/PUBLISH_MESSAGE_ALIAS':
-			NKN.instance.publishMessage(payload.to, payload.message);
+		case 'PUBLISH_MESSAGE_ALIAS':
+			console.log('PUBLISHING!!!', payload.message);
+			NKN.instance.publishMessage(payload.topic, payload.message);
 			break;
 
-		case 'chat/SEND_PRIVATE_MESSAGE_ALIAS':
-			NKN.instance.sendMessage(payload.to, payload.message);
+		case 'SEND_PRIVATE_MESSAGE_ALIAS':
+			NKN.instance.sendMessage(payload.recipient, payload.message);
 			message = message.from('me');
 			postMessage(receiveMessage(message));
 			break;
@@ -93,10 +88,11 @@ onmessage = ({ data: action }) => {
 			});
 			break;
 
-		case 'nkn/SUBSCRIBE':
+		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
+			console.log('huh?', topic, NKN.instance);
 			NKN.instance.subscribe(topic).catch(err => {
-				log('Errored at subscribe. Already subscribed?', err);
+				console.log('Errored at subscribe. Already subscribed?', err);
 			});
 			break;
 
@@ -112,44 +108,12 @@ onmessage = ({ data: action }) => {
 			if (!NKN.instance) {
 				return;
 			}
-			NKN.instance.getBalance().then(balance => postMessage(
-				setBalance(payload.address, balance)
-			));
+			NKN.instance.wallet.getBalance().then(balance =>
+				postMessage( setBalance(payload.address, balance) )
+			);
 			break;
 
 		default:
 			console.log('Unknown thingy in worker:', action, payload);
 	}
 };
-
-function addNKNListeners (client) {
-	const dispatch = postMessage;
-
-	client.on('connect', async () => {
-		dispatch(connected());
-		dispatch(getBalance());
-		log('connected');
-	});
-
-	client.on('message', (...args) => {
-		log('Received message:', ...args);
-		handleIncomingMessage(...args);
-	});
-
-	// Pending value transfers handler.
-	client.on('block', async () => {
-		dispatch(getBalance());
-	});
-}
-
-function handleIncomingMessage(src, payload, payloadType) {
-	if ( payloadType === PayloadType.TEXT ) {
-		const data = JSON.parse(payload);
-		const message = new Message(data, {
-			from: src,
-		});
-
-		// message = message.from(src);
-		postMessage(receiveMessage(message));
-	}
-}

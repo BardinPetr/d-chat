@@ -1,7 +1,45 @@
-import NKN from './nkn';
-import FakeNKN from './FakeNKN';
+import { PayloadType } from 'nkn-client';
+import Message from 'Approot/workers/nkn/Message';
+import NKN from 'Approot/workers/nkn/nkn';
+import FakeNKN from 'Approot/workers/nkn/FakeNKN';
 import nknWallet from 'nkn-wallet';
 import { createNewClient } from 'Approot/redux/actions/client';
+import {
+	connected,
+	getBalance,
+	receiveMessage,
+} from 'Approot/redux/actions';
+
+function addNKNListeners (client) {
+	console.log('adding nkn listeners to:', client);
+	const dispatch = postMessage;
+
+	client.on('connect', async () => {
+		dispatch(connected());
+		dispatch(getBalance(client.wallet.address));
+		console.log('connected');
+	});
+
+	client.on('message', (...args) => {
+		console.log('Received message:', ...args);
+		handleIncomingMessage(...args);
+	});
+
+	// Pending value transfers handler.
+	client.on('block', async () => {
+		console.log('NEW BLOCK');
+		dispatch(getBalance());
+	});
+}
+
+function handleIncomingMessage(src, payload, payloadType) {
+	if ( payloadType === PayloadType.TEXT ) {
+		const data = JSON.parse(payload);
+		const message = new Message(data).from(src);
+
+		postMessage(receiveMessage(message));
+	}
+}
 
 class NKNHandler {
 	// Static private.
@@ -20,15 +58,16 @@ class NKNHandler {
 		this.#password = null;
 	}
 
-	static start({ username, password }, clients) {
+	static start({ username, password, client }, clients) {
 		if (this.#instance != null) {
-			throw 'Already started! Why call this twice?';
+			throw 'Already started! Use switchToClient?';
 		}
-		let wallet, isNewWallet;
-		const walletJSON = clients.find(c => c.active);
+		this.#clients = clients;
 
-		if (walletJSON) {
-			wallet = nknWallet.loadJsonWallet(walletJSON, password);
+		let wallet, isNewWallet = client == null;
+
+		if (client) {
+			wallet = nknWallet.loadJsonWallet(JSON.stringify(client.wallet), password);
 
 			if (!wallet || !wallet.getPrivateKey) {
 				throw 'Invalid credentials.';
@@ -40,33 +79,23 @@ class NKNHandler {
 
 		this.#password = password;
 
-		const targetClient = clients.some(
-			storedClient => storedClient.wallet.Address === wallet.address,
-		);
-
-		if (targetClient) {
-			// Use existing username.
-			username = targetClient.identifier;
-		}
-
-		const client = new FakeNKN({
+		const realClient = new NKN({
 			username,
 			wallet,
 		});
 
+
 		if (isNewWallet) {
-			postMessage(createNewClient(client));
+			const c = this.parseClient(realClient);
+			postMessage(createNewClient(c));
+			this.#clients = [...this.#clients, c];
 		}
 
-		if (!targetClient) {
-			// New client? Add to list. This only happens the first time.
-			const c = this.parseClient(client);
-			this.#clients = [...clients, c];
-		}
+		this.#instance = realClient;
 
-		this.#instance = client;
+		addNKNListeners(realClient);
 
-		return client;
+		return realClient;
 	}
 
 	// Activates client with specified wallet address. Messages will be sent from that client.
@@ -83,6 +112,7 @@ class NKNHandler {
 				username: client.identifier,
 				wallet: wallet,
 			});
+			addNKNListeners(this.#instance);
 		} else {
 			throw 'No such client.';
 		}
@@ -91,7 +121,7 @@ class NKNHandler {
 		this.#clients = this.#clients.map(client =>
 			client.wallet.Address === address ? c : client,
 		);
-		return c;
+		return this.#instance;
 	}
 
 	static createClient(username) {
