@@ -5,7 +5,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 import Markdown from './Markdown';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 

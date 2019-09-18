@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info';
 import {
-	__,
 	getChatURL,
 	getWhisperURL,
 } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import { runtime } from 'webextension-polyfill';
 import history from 'Approot/UI/history';
 

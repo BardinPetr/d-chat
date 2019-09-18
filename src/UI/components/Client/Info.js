@@ -1,5 +1,5 @@
 import React from 'react';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 
 const ClientInfo = ({ client, className, children }) => (
 	<div className={className} style={{overflowWrap: 'anywhere', wordBreak: 'all'}}>

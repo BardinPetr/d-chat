@@ -81,6 +81,7 @@ module.exports = {
 	appSidebarJs: resolveModule(resolveApp, 'src/sidebar/index'),
 	appBackgroundJs: resolveModule(resolveApp, 'src/background/index'),
 	appContentJs: resolveModule(resolveApp, 'src/content_scripts/index'),
+	appNknWorkerJs: resolveModule(resolveApp, 'src/workers/nkn-worker'),
 	appPackageJson: resolveApp('package.json'),
 	appSrc: resolveApp('src'),
 	appTsConfig: resolveApp('tsconfig.json'),

@@ -54,7 +54,7 @@
     "string-replace-loader": "^2.2.0",
     "style-loader": "^0.23.1",
     "web-ext": "^2.9.3",
-    "webpack-cli": "^3.3.8",
+    "webpack-cli": "^3.3.9",
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
@@ -111,9 +111,9 @@
     "jest-pnp-resolver": "1.0.1",
     "jest-resolve": "23.6.0",
     "mini-css-extract-plugin": "0.4.3",
-    "nkn-client": "^0.6.6",
+    "nkn-client": "^0.6.8",
     "nkn-multiclient": "0.0.7",
-    "nkn-wallet": "^0.4.4",
+    "nkn-wallet": "^0.4.6",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "ora": "^3.4.0",
     "pnp-webpack-plugin": "1.1.0",

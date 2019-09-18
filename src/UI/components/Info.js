@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { IoMdArrowDropleftCircle, IoMdArrowDropdownCircle } from 'react-icons/io';
 import TopicLink from 'Approot/UI/components/TopicLink';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 
 const Info = () => {
 	const [active, setActive] = useState(false);

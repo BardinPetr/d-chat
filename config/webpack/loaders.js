@@ -7,6 +7,7 @@ const paths = require('../paths');
 const nknClientJsLibProtocolRegex = /(messages|payloads|transaction|sigchain)_pb\.js/;
 const cssRegex = /\.s?css$/;
 const cssModuleRegex = /\.module\.s?css$/;
+const workerRegex = /\.worker\.js$/;
 
 
 
@@ -168,7 +169,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		loader: require.resolve('string-replace-loader'),
 		options: {
 			search: 'Function(\'return this\')()',
-			replace: 'window'
+			replace: 'function() { return this }.call(null)'
 		}
 	};
 
@@ -180,6 +181,12 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		},
 	};
 
+	const workerLoader = {
+		test: workerRegex,
+		loader: require.resolve('worker-loader'),
+		options: { name: 'nkn.worker.js' }
+	};
+
 	return {
 		eslintLoader,
 		urlLoader,
@@ -188,6 +195,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		styleLoader,
 		cssModuleLoader,
 		stringReplaceLoader,
+		workerLoader,
 		fileLoader
 	};
 };

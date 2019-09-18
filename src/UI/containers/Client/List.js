@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Client from 'Approot/UI/components/Client';
 import classnames from 'classnames';
-import { __, IS_SIDEBAR } from 'Approot/misc/util';
+import { __, IS_SIDEBAR } from 'Approot/misc/browser-util';
 import { navigated } from 'Approot/redux/actions';
 import { switchToClient } from 'Approot/redux/actions/client';
 import { runtime, windows } from 'webextension-polyfill';

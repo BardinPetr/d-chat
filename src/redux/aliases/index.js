@@ -1,105 +1,40 @@
-import NKN from 'Approot/background/nknHandler';
+import nknWallet from 'nkn-wallet';
 import {
-	transactionComplete,
-	connected,
-	receivingMessage,
-	getBalance,
 	getUnreadMessages,
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
 	setBadgeText,
-	log,
-} from 'Approot/misc/util';
+	__,
+} from 'Approot/misc/browser-util';
+import { importWalletSeed } from 'Approot/redux/actions/client';
 
-// TODO move to own file
+// TODO maybe remove auto-login?
 const password = 'd-chat!!!';
 
-const addNKNListeners = async (dispatch, getState) => {
-	const client = NKN.instance;
+const walletImport = originalAction => (dispatch, getState) => {
+	const existingWallets = getState().clients.map(c => c.wallet.Address);
+	const { walletJSON, username, password } = originalAction.payload;
+	if (existingWallets.includes(walletJSON.Address)) {
+		originalAction.payload.error = __('This wallet is already imported.');
+		return originalAction;
+	}
 
-	client.on('connect', async () => {
-		dispatch(connected());
-		dispatch(getBalance());
-		log('connected');
-	});
+	try {
+		// Using seed to change password.
+		const wallet = nknWallet.loadJsonWallet(JSON.stringify(walletJSON), password);
+		const walletSeed = wallet.getSeed();
 
-	client.on('message', (...args) => {
-		log('Received message:', ...args);
-		dispatch(receivingMessage(...args));
-	});
-
-	// Pending value transfers handler.
-	client.on('block', async block => {
-		dispatch(getBalance());
-
-		const transactions = getState().transactions;
-		const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
-		log('New block!!!', block, transactions);
-
-		for ( let pendingTx of pendingTransactions ) {
-			if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
-				log('Transaction complete!');
-				dispatch(transactionComplete(pendingTx));
-			}
-		}
-	});
+		// Worker will do the rest.
+		dispatch(importWalletSeed({
+			walletSeed,
+			username,
+		}));
+	} catch (e) {
+		originalAction.payload.error = __('Wrong password.');
+	}
+	return originalAction;
 };
-
-// const newClientHandler = originalAction => dispatch => {
-// 	const { username } = originalAction.payload;
-
-// 	try {
-// 		const client = NKN.createClient(username);
-// 		log('Created client:', client);
-// 		dispatch(createNewClient(client));
-// 		dispatch(switchToClient(client.wallet.Address));
-// 	} catch (e) {
-// 		originalAction.payload.error = __('Wrong password.');
-// 	}
-// 	return originalAction;
-// };
-
-// const switchToClientHandler = originalAction => (dispatch, getState) => {
-// 	const { address } = originalAction.payload;
-
-// 	log('Switching to client:', address);
-// 	try {
-// 		const client = NKN.activateClient(address);
-// 		addNKNListeners(dispatch, getState);
-// 		log('Switching to client:', client);
-
-// 		dispatch({
-// 			type: 'nkn/SWITCH_TO_CLIENT',
-// 			payload: {
-// 				client
-// 			},
-// 		});
-// 	} catch(e) {
-// 		originalAction.payload.error = __('Wrong password.');
-// 	}
-// 	return originalAction;
-// };
-
-// Import and activate.
-// const walletImport = originalAction => (dispatch, getState) => {
-// 	const existingWallets = getState().clients.map(c => c.wallet.Address);
-// 	const { walletJSON, username, password } = originalAction.payload;
-// 	if (existingWallets.includes(walletJSON.Address)) {
-// 		originalAction.payload.error = __('This wallet is already imported.');
-// 		return originalAction;
-// 	}
-
-// 	try {
-// 		log('About to import:', walletJSON, password, username);
-// 		const client = NKN.importClient(JSON.stringify(walletJSON), password, username);
-// 		dispatch(createNewClient(client));
-// 		dispatch(switchToClient(client.wallet.Address, username, password));
-// 	} catch (e) {
-// 		originalAction.payload.error = __('Wrong password.');
-// 	}
-// 	return originalAction;
-// };
 
 const markRead = originalAction => async (dispatch, getState) => {
 	const ids = originalAction.payload.ids.length;
@@ -113,14 +48,19 @@ const markRead = originalAction => async (dispatch, getState) => {
 	});
 };
 
-const delegateToWorker = originalAction => (dispatch) => {
-	dispatch({
-		...originalAction,
-		meta: {
-			...originalAction.meta,
-			WebWorker: true,
-		}
-	});
+const delegateToWorker = originalAction => (dispatch, getState) => {
+	if (!originalAction.meta?.WebWorker) {
+		dispatch({
+			...originalAction,
+			meta: {
+				...originalAction.meta,
+				WebWorker: true,
+				clients: getState().clientsMeta,
+			},
+		});
+	} else {
+		return;
+	}
 
 	let credentials;
 	switch (originalAction.type) {
@@ -152,7 +92,9 @@ export default {
 	'SEND_PRIVATE_MESSAGE_ALIAS': delegateToWorker,
 	'nkn/NEW_CLIENT_ALIAS': delegateToWorker,
 	'nkn/SWITCH_TO_CLIENT_ALIAS': delegateToWorker,
-	'nkn/IMPORT_WALLET_ALIAS': delegateToWorker,
+	'nkn/IMPORT_WALLETSEED': delegateToWorker,
+
+	'nkn/IMPORT_WALLET_ALIAS': walletImport,
 
 	'chat/MARK_READ_ALIAS': markRead,
 };

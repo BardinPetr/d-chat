@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { __ } from '../../misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import configs from '../../misc/configs';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';

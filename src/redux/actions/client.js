@@ -53,3 +53,11 @@ export const setBalance = (address, balance) => ({
 		address,
 	}
 });
+
+export const importWalletSeed = ({walletSeed, username}) => ({
+	type: 'nkn/IMPORT_WALLETSEED',
+	payload: {
+		walletSeed,
+		username
+	},
+});

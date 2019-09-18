@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import Logout from 'Approot/UI/containers/Logout';
 import Popout from 'Approot/UI/components/Popout';

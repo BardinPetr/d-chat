@@ -1,36 +1,50 @@
-import NKN from './nknHandler';
+import NKN from './nkn/nknHandler';
+import { PayloadType } from 'nkn-client';
 import Message from 'Approot/background/Message';
 import {
-	log,
 	getAddressFromAddr,
-	__,
-	getChatDisplayName,
 } from 'Approot/misc/util';
 import {
 	setLoginStatus,
 	receiveMessage,
 	setSubscribers,
+	connected,
+	getBalance,
 } from 'Approot/redux/actions';
 import {
 	switchedToClient,
 	setBalance,
+	createNewClient,
+	switchToClient,
 } from 'Approot/redux/actions/client';
+
+export const log = (...args) => {
+	console.log('d-chat: worker:', args);
+};
 
 onmessage = ({ data: action }) => {
 	const payload = action.payload;
+	console.log('from worker:', action);
 
 	let status, client, topic, message;
 	// postMessage works like dispatch.
 	switch (action.type) {
 		case 'nkn/SWITCH_TO_CLIENT_ALIAS':
 			client = NKN.activateClient(payload.address);
-			// TODO addNKNListeners
+			addNKNListeners(client);
+			postMessage(switchedToClient(client));
 			break;
 
 		case 'nkn/NEW_CLIENT_ALIAS':
+			client = NKN.createClient(payload.username);
+			postMessage(createNewClient(client));
+			postMessage(switchToClient(client.wallet.Address));
 			break;
 
-		case 'nkn/IMPORT_WALLET_ALIAS':
+		case 'nkn/IMPORT_WALLETSEED':
+			client = NKN.importClient(payload.walletSeed, payload.username);
+			postMessage(createNewClient(client));
+			postMessage(switchToClient(client.wallet.Address, payload.username));
 			break;
 
 		case 'LOGIN_ALIAS':
@@ -81,23 +95,7 @@ onmessage = ({ data: action }) => {
 
 		case 'nkn/SUBSCRIBE':
 			topic = payload.topic;
-			NKN.instance.subscribe(topic).then(() => {
-				const message = new Message({
-					topic,
-					contentType: 'dchat/subscribe',
-					content: __('Re/subscribed to') + ' ' + getChatDisplayName(topic) + '.',
-					isPrivate: true,
-				});
-				postMessage(receiveMessage(message));
-			}).catch(err => {
-				if (err.data?.includes('funds')) {
-					const message = new Message({
-						topic,
-						contentType: 'dchat/subscribe',
-						content: __('Insufficient funds to subscribe. Send a message so someone can tip you. You will not see the message because you are not subscribed yet, so no panic.'),
-					});
-					postMessage(receiveMessage(message));
-				}
+			NKN.instance.subscribe(topic).catch(err => {
 				log('Errored at subscribe. Already subscribed?', err);
 			});
 			break;
@@ -124,9 +122,8 @@ onmessage = ({ data: action }) => {
 	}
 };
 
-// TODO maybe dispatch block() ?
-function addNKNListeners (dispatch) {
-	const client = NKN.instance;
+function addNKNListeners (client) {
+	const dispatch = postMessage;
 
 	client.on('connect', async () => {
 		dispatch(connected());
@@ -136,23 +133,23 @@ function addNKNListeners (dispatch) {
 
 	client.on('message', (...args) => {
 		log('Received message:', ...args);
-		dispatch(receivingMessage(...args));
+		handleIncomingMessage(...args);
 	});
 
 	// Pending value transfers handler.
-	client.on('block', async block => {
+	client.on('block', async () => {
 		dispatch(getBalance());
-
-		// const transactions = getState().transactions;
-		// const pendingTransactions = transactions.unconfirmed.map(i => i.transactionID);
-		// log('New block!!!', block, transactions);
-
-		// for ( let pendingTx of pendingTransactions ) {
-		// 	if ( block.transactions.find(tx => pendingTx === tx.hash ) ) {
-		// 		log('Transaction complete!');
-		// 		dispatch(transactionComplete(pendingTx));
-		// 	}
-		// }
 	});
-};
+}
 
+function handleIncomingMessage(src, payload, payloadType) {
+	if ( payloadType === PayloadType.TEXT ) {
+		const data = JSON.parse(payload);
+		const message = new Message(data, {
+			from: src,
+		});
+
+		// message = message.from(src);
+		postMessage(receiveMessage(message));
+	}
+}

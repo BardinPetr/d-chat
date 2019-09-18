@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { wrapStore, alias } from 'webext-redux';
+import createWorkerMiddleware from 'redux-worker-middleware';
 import rootReducer from '../redux/reducers';
 import aliases from '../redux/aliases';
 import configs from '../misc/configs';
@@ -8,8 +9,13 @@ import { login } from '../redux/actions';
 // Even a bit of obfuscation is better than none for "remember me".
 import passworder from 'browser-passworder';
 import { log } from 'Approot/misc/util';
+import NKNWorker from 'Approot/workers/nkn.worker.js';
 
 const password = 'd-chat!!!';
+
+const nknWorker = new NKNWorker();
+
+const workerMiddleware = createWorkerMiddleware(nknWorker);
 
 let credentials = localStorage.getItem('credentials');
 log('Credentials?', credentials != null);
@@ -25,6 +31,7 @@ configs.$loaded.then(() => {
 	const store = createStore(
 		rootReducer,
 		applyMiddleware(
+			workerMiddleware,
 			alias(aliases),
 			thunkMiddleware
 		)

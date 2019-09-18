@@ -4,7 +4,7 @@ import Tippy from '@tippy.js/react';
 import 'tippy.js/themes/light-border.css';
 import classnames from 'classnames';
 import { IoMdHappy } from 'react-icons/io';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 
 const EmojiPicker = ({ isHidden, id, topic, addr }) => {
 	const [ariaExpanded, setAriaExpanded] = useState('false');

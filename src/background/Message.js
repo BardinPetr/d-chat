@@ -1,15 +1,15 @@
 import {
 	genPrivateChatName,
-	createNotification,
-	getChatDisplayName,
-	formatAddr,
+	// createNotification,
+	// getChatDisplayName,
+	// formatAddr,
 	parseAddr,
 	log,
 } from 'Approot/misc/util';
 import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
-import { extension } from 'webextension-polyfill';
+// import { extension } from 'webextension-polyfill';
 import uuidv1 from 'uuid/v1';
-import NKN from './nknHandler';
+// import NKN from 'Approot/workers/';
 
 /**
  * Here lies the D-Chat NKN message schema.
@@ -50,35 +50,35 @@ class Message {
 
 	from(src) {
 		if (src === 'me') {
-			src = NKN.instance.addr;
+			// src = NKN.instance.addr;
 		} else if (this.isPrivate && this.topic == null) {
 			log('Received private message', this, src);
 			this.topic = genPrivateChatName(src);
 		}
 
-		if ( src === NKN.instance.addr ) {
-			this.isMe = true;
-		}
+		// if ( src === NKN.instance.addr ) {
+		// 	this.isMe = true;
+		// }
 
 		const [ name, pubKey ] = parseAddr(src);
 		this.addr = src;
 		// Includes dot if identifier exists.
 		this.username = name;
 		this.pubKey = pubKey;
-		this.refersToMe = this.content && this.content.includes(
-			formatAddr( NKN.instance.addr )
-		);
+		// this.refersToMe = this.content && this.content.includes(
+		// 	formatAddr( NKN.instance.addr )
+		// );
 
 		return this;
 	}
 
 	async notify() {
-		this.notified = true;
-		let title = this.title || `D-Chat ${getChatDisplayName(this.topic)}, ${this.username}.${this.pubKey.slice(0, 8)}:`;
-		return createNotification({
-			message: this.content,
-			title: title,
-		});
+		// this.notified = true;
+		// let title = this.title || `D-Chat ${getChatDisplayName(this.topic)}, ${this.username}.${this.pubKey.slice(0, 8)}:`;
+		// return createNotification({
+		// 	message: this.content,
+		// 	title: title,
+		// });
 	}
 
 	async whisper(to) {
@@ -86,10 +86,10 @@ class Message {
 		return this.send(to);
 	}
 
-	async send(toAddr) {
-		if ( toAddr === NKN.instance.addr ) {
-			return;
-		}
+	async send() {
+		// if ( toAddr === NKN.instance.addr ) {
+		// 	return;
+		// }
 
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
@@ -102,10 +102,10 @@ class Message {
 		this.ping = undefined;
 		this.isPrivate = true;
 
-		return NKN.instance.sendMessage(toAddr, this);
+		// return NKN.instance.sendMessage(toAddr, this);
 	}
 
-	async publish(topic) {
+	async publish() {
 		// Let's delete some useless data before sending.
 		this.isMe = undefined;
 		this.addr = undefined;
@@ -116,7 +116,7 @@ class Message {
 		this.title = undefined;
 		this.notified = undefined;
 		this.ping = undefined;
-		return NKN.instance.publishMessage(topic, this);
+		// return NKN.instance.publishMessage(topic, this);
 	}
 
 	async receive(dispatch) {
@@ -148,13 +148,13 @@ class Message {
 
 		// Create notification?
 		if ( !this.isMe && !this.notified ) {
-			let views = extension.getViews({
-				type: 'popup'
-			});
-			// Notify unless chat is open.
-			if ( views.length === 0 ) {
-				this.notify();
-			}
+			// let views = extension.getViews({
+			// 	type: 'popup'
+			// });
+			// // Notify unless chat is open.
+			// if ( views.length === 0 ) {
+			// 	this.notify();
+			// }
 			dispatch( markUnread(this.topic, [this.id]) );
 		}
 
