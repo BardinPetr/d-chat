@@ -43,6 +43,7 @@ export const sendPrivateMessage = (message) => ({
 		message: {
 			...message,
 			isPrivate: true,
+			isWhisper: true,
 		},
 	},
 });
@@ -111,6 +112,7 @@ export const publishMessage = message => ({
 });
 
 export const receiveMessage = message => {
+	console.log('RECEIVE MESSAGE', message);
 	let type = 'chat/RECEIVE_MESSAGE';
 	if ( isReaction( message ) ) {
 		type = 'chat/RECEIVE_REACTION';

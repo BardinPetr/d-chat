@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import classnames from 'classnames';
-import debounce from 'debounce';
+import { debounce } from 'debounce';
 
 import TextareaAutosize from 'react-autosize-textarea';
 import TextareaAutoCompleter from './TextareaAutoCompleter';

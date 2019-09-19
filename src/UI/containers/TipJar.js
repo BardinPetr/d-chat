@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
-import classnames from 'classnames';
+import React from 'react';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 import { matchPath } from 'react-router-dom';
+import { IoLogoBitcoin } from 'react-icons/io';
+import { __ } from 'Approot/misc/browser-util';
 
-const emojis = [['👍', 1], ['🖤', 50], ['🏴‍☠️', 500]];
-
-const TipJar = ({ topic, className, addr, dispatch, messageID, setText }) => {
-	const [status, setStatus] = useState(['','','']);
-	const [disabled, setDisabled] = useState(false);
-
+const TipJar = ({ topic, addr, dispatch, messageID }) => {
 
 	// React cries memory leak - doubt it.
-	const send = (content, value, index) => {
+	const send = (value) => {
 		if ( !addr ) {
 			return;
 		}
@@ -21,45 +17,24 @@ const TipJar = ({ topic, className, addr, dispatch, messageID, setText }) => {
 			path: '/whisper/:topic',
 		})?.url;
 
-		let e = status.slice();
-		e[index] = '';
-		setStatus(e);
 		dispatch(newTransaction({
 			to: addr,
+			content: '',
 			value,
 			topic: whisper ? whisper : topic,
 			targetID: messageID,
 			contentType: 'nkn/tip',
-			content,
-		}))
-			.then(payload => {
-				if (payload.error) {
-					let e = status.slice();
-					// TODO make the popup not spaz out on long strings.
-					e[index] = payload.error.slice(0, 12);
-					setStatus(e);
-				}
-				setDisabled(false);
-			});
+		}));
 	};
 
 	return (
-		<div className={`buttons are-small has-addons ${className}`}>
-			{emojis.map((items, idx) => (
-				<a
-					className={classnames('button', {
-						'is-danger': status[idx],
-					})}
-					onClick={() => send(...items, idx)}
-					disabled={disabled}
-					onMouseOver={() => setText(status[idx] || `${items[1]}sats`)}
-					onMouseOut={() => setText(null)}
-					key={idx}
-				>
-					{items[0]}
-				</a>
-			))}
-		</div>
+		<a
+			className="button tooltip is-tooltip-left"
+			data-tooltip={__('Tip 50 sats')}
+			onClick={() => send(50)}
+		>
+			<span className="icon is-small"><IoLogoBitcoin /></span>
+		</a>
 	);
 };
 

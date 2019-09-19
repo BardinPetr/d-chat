@@ -1,5 +1,6 @@
 import NKN from 'Approot/workers/nkn/nknHandler';
-import Message from 'Approot/workers/nkn/Message';
+import OutgoingMessage from 'Approot/workers/nkn/OutgoingMessage';
+import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import {
 	getAddressFromAddr,
 } from 'Approot/misc/util';
@@ -30,13 +31,13 @@ onmessage = ({ data: action }) => {
 		case 'nkn/NEW_CLIENT_ALIAS':
 			client = NKN.createClient(payload.username);
 			postMessage(createNewClient( client.neutered() ));
-			postMessage(switchToClient(client.wallet.Address));
+			postMessage(switchToClient(client.wallet.address));
 			break;
 
 		case 'nkn/IMPORT_WALLETSEED':
 			client = NKN.importClient(payload.walletSeed, payload.username);
 			postMessage(createNewClient( client.neutered() ));
-			postMessage(switchToClient(client.wallet.Address, payload.username));
+			postMessage(switchToClient(client.wallet.address, payload.username));
 			break;
 
 		case 'LOGIN_ALIAS':
@@ -60,22 +61,32 @@ onmessage = ({ data: action }) => {
 			break;
 
 		case 'PUBLISH_MESSAGE_ALIAS':
-			console.log('PUBLISHING!!!', payload.message);
-			NKN.instance.publishMessage(payload.topic, payload.message);
+			message = new OutgoingMessage(payload.message);
+			console.log('PUBLISHING!!!', payload.message, 'OutgoingMessage:', message);
+			NKN.instance.publishMessage(payload.topic, message);
 			break;
 
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
-			NKN.instance.sendMessage(payload.recipient, payload.message);
-			message = message.from('me');
+			// Send it out.
+			message = new OutgoingMessage(payload.message);
+			NKN.instance.sendMessage(payload.recipient, message);
+			// Receive it locally.
+			message = new IncomingMessage(payload.message);
+			message = message.from('me', { toChat: payload.recipient });
+			console.log('Want to receive a PM!!', payload.message, 'msg', message);
 			postMessage(receiveMessage(message));
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':
+			console.log('VALUE TRANSFER:::', payload,
+				getAddressFromAddr(payload.to),
+				payload.value);
 			NKN.instance.wallet.transferTo(
 				getAddressFromAddr(payload.to),
 				payload.value
 			).then(() => {
-				const message = new Message({
+				console.log('VALUE TRANSFERRED:::', payload);
+				const message = new OutgoingMessage({
 					contentType: 'nkn/tip',
 					value: payload.value,
 					content: payload.content,
@@ -85,12 +96,11 @@ onmessage = ({ data: action }) => {
 					payload.to,
 					message
 				);
-			});
+			}).catch(console.error);
 			break;
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
-			console.log('huh?', topic, NKN.instance);
 			NKN.instance.subscribe(topic).catch(err => {
 				console.log('Errored at subscribe. Already subscribed?', err);
 			});

@@ -94,7 +94,8 @@ class Message extends React.PureComponent {
 					</div>
 				</div>
 				<div className="message-body x-is-small-padding">
-					<div class="content">{message.content}</div>
+					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
+					<div className="content" dangerouslySetInnerHTML={{__html: message.content}}></div>
 					{children}
 				</div>
 				{error && <div className="tag is-danger">{error}</div>}

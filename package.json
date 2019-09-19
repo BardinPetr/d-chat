@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",
@@ -88,7 +88,6 @@
     "copy-webpack-plugin": "^4.6.0",
     "crx": "^3.2.1",
     "debounce": "^1.2.0",
-    "dompurify": "^2.0.0",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
     "eslint": "5.6.0",
@@ -144,6 +143,7 @@
     "redux-webext": "^1.1.2",
     "redux-worker-middleware": "^1.0.0",
     "resolve": "1.8.1",
+    "sanitize-html": "^1.20.1",
     "sass-loader": "7.1.0",
     "shasum": "^1.0.2",
     "sleep-promise": "^8.0.1",

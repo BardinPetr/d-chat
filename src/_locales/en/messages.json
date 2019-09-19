@@ -20,9 +20,6 @@
   "Addreaction": {
     "message": " Add reaction"
   },
-  "Automatedmessage": {
-    "message": " Automated message."
-  },
   "Channels": {
     "message": " Channels"
   },
@@ -98,9 +95,6 @@
   "Privatemessage": {
     "message": " Private message"
   },
-  "Resubscribedto": {
-    "message": " Re/subscribed to"
-  },
   "Reload": {
     "message": " Reload"
   },
@@ -119,9 +113,6 @@
   "Submit": {
     "message": " Submit"
   },
-  "Subscribedto": {
-    "message": " Subscribed to"
-  },
   "Subscribers": {
     "message": " Subscribers"
   },
@@ -137,14 +128,14 @@
   "Thiswalletisalreadyimported": {
     "message": " This wallet is already imported."
   },
+  "Tipsats": {
+    "message": " Tip 50 sats"
+  },
   "TipNKN": {
     "message": " Tip NKN"
   },
   "Topic": {
     "message": " Topic"
-  },
-  "TriedtosubscribebuthadnocoinsSomeonepleasetiptosubscribethem": {
-    "message": " Tried to subscribe, but had no coins. Someone, please, tip to subscribe them."
   },
   "Username": {
     "message": " Username"
@@ -169,12 +160,6 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
-  },
-  "YouhavebeentippedSubscribingoncetxisconfirmed": {
-    "message": " You have been tipped. Subscribing once tx is confirmed."
-  },
-  "YouhavenocoinstosubscribeSentoutarequest": {
-    "message": " You have no coins to subscribe. Sent out a request."
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."

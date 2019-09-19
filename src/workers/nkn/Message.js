@@ -4,10 +4,7 @@ import {
 	formatAddr,
 } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
-import { createTransaction, receiveMessage, markUnread } from 'Approot/redux/actions';
 import uuidv1 from 'uuid/v1';
-import { sanitize } from 'dompurify';
-import marked from 'marked';
 
 /**
  * Here lies the D-Chat NKN message schema.
@@ -29,12 +26,12 @@ class Message {
 		// TODO is.string() checks
 		this.contentType = message.contentType || 'text';
 		this.id = message.id || uuidv1();
-		this.content = sanitize(marked(message.content || ''));
+
 		this.topic = message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
 		this.transactionID = message.transactionID;
-		// A message's ID.
+		// Another message's ID.
 		// Useful for reactions, tips, etc. Anything you use on a specific message.
 		this.targetID = message.targetID;
 		this.isPrivate = Boolean(message.isPrivate);
@@ -44,12 +41,20 @@ class Message {
 		} else {
 			this.ping = 0;
 		}
+
+		if (message.isWhisper) {
+			this.topic = undefined;
+		}
 	}
 
-	from(src) {
+	from(src, opts = {}) {
 		if (src === 'me') {
 			src = NKN.instance.addr;
-		} else if (this.isPrivate && this.topic == null) {
+			// Locally received.
+			if (this.isPrivate && this.topic == null) {
+				this.topic = genPrivateChatName(opts.toChat || '');
+			}
+		} else  if (this.isPrivate && this.topic == null) {
 			this.topic = genPrivateChatName(src);
 		}
 
@@ -69,73 +74,6 @@ class Message {
 		return this;
 	}
 
-	whisper(to) {
-		this.topic = undefined;
-		return this.prepareSend(to);
-	}
-
-	prepareSend(toAddr) {
-		// Let's delete some useless data before sending.
-		this.isMe = undefined;
-		this.addr = undefined;
-		this.pubKey = undefined;
-		this.refersToMe = undefined;
-		this.username = undefined;
-		this.title = undefined;
-		this.isSeen = undefined;
-		this.ping = undefined;
-		this.isPrivate = true;
-		// Using an array so in future maybe private chatrooms?
-		this.recipients = [toAddr];
-	}
-
-	preparePublish(topic) {
-		// Let's delete some useless data before sending.
-		this.isMe = undefined;
-		this.addr = undefined;
-		this.pubKey = undefined;
-		this.refersToMe = undefined;
-		this.isPrivate = undefined;
-		this.username = undefined;
-		this.title = undefined;
-		this.isSeen = undefined;
-		this.ping = undefined;
-		this.topic = topic;
-	}
-
-	async receive(dispatch) {
-		switch (this.contentType) {
-			case 'nkn/tip':
-				if (this.isPrivate) {
-					dispatch(
-						createTransaction(this.transactionID, this)
-					);
-					if (!this.topic?.startsWith('/whisper/')) {
-						// We are going to receive this as a public message.
-						return;
-					}
-				}
-				this.isSeen = true;
-				break;
-
-			case 'reaction':
-				// Omit notifications for reactions.
-				this.isSeen = true;
-				break;
-
-			case 'dchat/subscribe':
-				if ( !this.addr ) {
-					this.isMe = true;
-				}
-				break;
-		}
-
-		if ( !this.isMe && !this.isSeen ) {
-			dispatch( markUnread(this.topic, [this.id]) );
-		}
-
-		return dispatch(receiveMessage(this));
-	}
 }
 
 export default Message;

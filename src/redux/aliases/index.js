@@ -57,7 +57,7 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 			meta: {
 				...originalAction.meta,
 				WebWorker: true,
-				clients: originalAction.type === 'LOGIN_ALIAS' && (getState().clientsMeta || []),
+				clients: originalAction.type === 'LOGIN_ALIAS' && (getState().clients || []),
 			},
 		});
 	} else {

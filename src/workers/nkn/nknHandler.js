@@ -1,5 +1,6 @@
 import { PayloadType } from 'nkn-client';
-import Message from 'Approot/workers/nkn/Message';
+import { debounce } from 'debounce';
+import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN from 'Approot/workers/nkn/nkn';
 import FakeNKN from 'Approot/workers/nkn/FakeNKN';
 import nknWallet from 'nkn-wallet';
@@ -11,10 +12,10 @@ import {
 } from 'Approot/redux/actions';
 
 function addNKNListeners (client) {
-	console.log('adding nkn listeners to:', client);
+	// console.log('adding nkn listeners to:', client);
 	const dispatch = postMessage;
 
-	client.on('connect', async () => {
+	client.on('connect', () => {
 		dispatch(connected());
 		dispatch(getBalance(client.wallet.address));
 		console.log('connected');
@@ -25,17 +26,18 @@ function addNKNListeners (client) {
 		handleIncomingMessage(...args);
 	});
 
-	// Pending value transfers handler.
-	client.on('block', async () => {
+	// Often node doesn't give block events on defaultClient, so listen on all and debounce to one.
+	const blockListener = debounce(() => {
 		console.log('NEW BLOCK');
 		dispatch(getBalance());
-	});
+	}, 5000, true);
+	Object.values(client.clients).forEach(c => c.on('block', blockListener));
 }
 
 function handleIncomingMessage(src, payload, payloadType) {
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
-		const message = new Message(data).from(src);
+		const message = new IncomingMessage(data).from(src);
 
 		postMessage(receiveMessage(message));
 	}
@@ -86,7 +88,7 @@ class NKNHandler {
 
 
 		if (isNewWallet) {
-			const c = this.parseClient(realClient);
+			const c = realClient.neutered();
 			postMessage(createNewClient(c));
 			this.#clients = [...this.#clients, c];
 		}
@@ -117,7 +119,7 @@ class NKNHandler {
 			throw 'No such client.';
 		}
 
-		const c = this.parseClient(this.#instance);
+		const c = this.#instance.neutered();
 		this.#clients = this.#clients.map(client =>
 			client.wallet.Address === address ? c : client,
 		);
@@ -130,10 +132,9 @@ class NKNHandler {
 
 		const client = new FakeNKN({ username, wallet });
 
-		const c = this.parseClient(client);
-		this.#clients = [...this.#clients, c];
+		this.#clients = [...this.#clients, client.neutered()];
 
-		return c;
+		return client;
 	}
 
 	static importClient(walletSeed, username) {
@@ -144,17 +145,9 @@ class NKNHandler {
 			wallet,
 		});
 
-		const c = this.parseClient(client);
-		this.#clients = [...this.#clients, c];
+		this.#clients = [...this.#clients, client.neutered()];
 
-		return c;
-	}
-
-	static parseClient(client) {
-		const c = JSON.parse(JSON.stringify(client));
-		// Wallet becomes double stringified. Undo.
-		c.wallet = JSON.parse(c.wallet);
-		return c;
+		return client;
 	}
 }
 

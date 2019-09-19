@@ -226,6 +226,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 			configs.chatSettings = newState;
 			break;
 
+		case 'chat/RECEIVE_MESSAGE':
 		case 'chat/CREATE_CHAT':
 			newState = {
 				...state,
