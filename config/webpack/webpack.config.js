@@ -96,12 +96,12 @@ module.exports = function (webpackEnv) {
 			rules: [
 				{ parser: { requireEnsure: false } },
 				loaders.eslintLoader,
+				loaders.workerLoader,
 				{
 					// "oneOf" will traverse all following loaders until one will match the requirements.
 					// When no loader matches it will fall back to the "file" loader at the end of the loader list.
 					oneOf: [
 						loaders.stringReplaceLoader,
-						loaders.workerLoader,
 						loaders.urlLoader,
 						loaders.insideBabelLoader,
 						loaders.outsideBabelLoader,
