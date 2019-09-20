@@ -22,14 +22,13 @@ function addNKNListeners (client) {
 	});
 
 	client.on('message', (...args) => {
-		console.log('Received message:', ...args);
 		handleIncomingMessage(...args);
 	});
 
 	// Often node doesn't give block events on defaultClient, so listen on all and debounce to one.
 	const blockListener = debounce(() => {
 		console.log('NEW BLOCK');
-		dispatch(getBalance());
+		dispatch(getBalance(client.wallet.address));
 	}, 5000, true);
 	Object.values(client.clients).forEach(c => c.on('block', blockListener));
 }

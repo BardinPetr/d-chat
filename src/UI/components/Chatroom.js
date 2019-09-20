@@ -71,6 +71,7 @@ class Chatroom extends React.Component {
 
 		if (this.refs.lastRead && this.props.unreadMessages.length) {
 			this.refs.lastRead.scrollIntoView();
+			this.messages.scrollTop -= 25;
 			this.wasScrolledToBottom =
 				this.messages.scrollHeight - this.messages.scrollTop ===
 				this.messages.clientHeight;

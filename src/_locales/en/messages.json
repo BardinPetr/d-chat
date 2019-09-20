@@ -17,9 +17,6 @@
   "Add": {
     "message": " Add"
   },
-  "Addreaction": {
-    "message": " Add reaction"
-  },
   "Channels": {
     "message": " Channels"
   },
@@ -83,6 +80,9 @@
   "Nickname": {
     "message": " Nickname"
   },
+  "Nosubscriptionorabouttoexpire": {
+    "message": " No subscription, or about to expire."
+  },
   "Panel": {
     "message": " Panel"
   },
@@ -113,6 +113,9 @@
   "Submit": {
     "message": " Submit"
   },
+  "Subscribe": {
+    "message": " Subscribe"
+  },
   "Subscribers": {
     "message": " Subscribers"
   },
@@ -127,12 +130,6 @@
   },
   "Thiswalletisalreadyimported": {
     "message": " This wallet is already imported."
-  },
-  "Tipsats": {
-    "message": " Tip 50 sats"
-  },
-  "TipNKN": {
-    "message": " Tip NKN"
   },
   "Topic": {
     "message": " Topic"

@@ -113,8 +113,9 @@ export const publishMessage = message => ({
 
 export const receiveMessage = message => {
 	console.log('RECEIVE MESSAGE', message);
+	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';
-	if ( isReaction( message ) ) {
+	if ( message.contentType === 'reaction' ) {
 		type = 'chat/RECEIVE_REACTION';
 	}
 
@@ -128,31 +129,20 @@ export const receiveMessage = message => {
 };
 
 export const markRead = (topic, ids) => ({
-	type: 'chat/MARK_READ_ALIAS',
+	type: 'chat/MARK_READ',
 	payload: {
 		topic,
 		ids,
 	}
 });
 
-// Helper. Not an action.
-export const getUnreadMessages = async state => {
-	const chats = Object.values(state.chatSettings);
-	return chats.reduce((acc, settings) => acc + (settings.unread?.length || 0), 0);
-};
-
-export const markUnread = (topic, ids) => (dispatch) => {
-	if (ids.length > 0) {
-		// getUnreadMessages(getState()).then(count => setBadgeText( count + ids.length ));
-	}
-	return dispatch({
-		type: 'chat/MARK_UNREAD',
-		payload: {
-			topic,
-			ids,
-		}
-	});
-};
+export const markUnread = (topic, message) => ({
+	type: 'chat/MARK_UNREAD',
+	payload: {
+		topic,
+		message,
+	},
+});
 
 export const createTransaction = (id, data) => ({
 	type: 'nkn/CREATE_TRANSACTION',
@@ -224,3 +214,10 @@ export const modifyMessage = (id, topic, modifiedMessage) => {
 		},
 	});
 };
+
+export const maybeOfferSubscribeToChat = topic => ({
+	type: 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS',
+	payload: {
+		topic: getChatName( topic ),
+	},
+});

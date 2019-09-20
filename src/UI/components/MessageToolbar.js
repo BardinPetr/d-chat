@@ -13,6 +13,13 @@ const Toolbar = ({ id, topic, addr }) => {
 				messageID={id}
 				topic={topic}
 				addr={addr}
+				value={5}
+			/>
+			<TipJar
+				messageID={id}
+				topic={topic}
+				value={500}
+				addr={addr}
 			/>
 			<Link to={getWhisperURL(addr)} className="button tooltip is-tooltip-left" data-tooltip={__('Start a private conversation')}>
 				<span className="icon is-small">

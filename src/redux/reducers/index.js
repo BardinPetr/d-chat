@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs';
 import clients from './client';
+import { isNotice } from 'Approot/misc/util';
 
 const replaceMessage = (from, whatId, withWhat) => from.reduce((acc, item) => {
 	if ( whatId === item.id ) {
@@ -69,7 +70,11 @@ const messages = (state = configs.messages, action ) => {
 
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
-			if (initial.some(msg => msg.id === action.payload.message.id)) {
+			// Already exists, or we're spamming "not subscribed" messages.
+			if (initial.some(msg => msg.id === action.payload.message.id) ||
+					(isNotice(action.payload.message) &&
+				initial[initial.length - 1]?.contentType === action.payload.message.contentType)
+			) {
 				return state;
 			}
 			newState = {
@@ -206,7 +211,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				...state,
 				[topic]: {
 					...state[topic],
-					unread: [ ...initial, ...action.payload.ids ],
+					unread: [ ...initial, action.payload.message.id ],
 				},
 			};
 			configs.chatSettings = newState;

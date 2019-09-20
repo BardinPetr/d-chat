@@ -115,3 +115,6 @@ export const importWallet = (file) => {
 		reader.readAsText(file);
 	});
 };
+
+export const isNotice = msg => (['dchat/subscribe', 'dchat/offerSubscribe'].includes(msg.contentType));
+

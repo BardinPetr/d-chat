@@ -3,12 +3,9 @@ import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 import { matchPath } from 'react-router-dom';
-import { IoLogoBitcoin } from 'react-icons/io';
-import { __ } from 'Approot/misc/browser-util';
 
-const TipJar = ({ topic, addr, dispatch, messageID }) => {
+const TipJar = ({ value, topic, addr, dispatch, messageID }) => {
 
-	// React cries memory leak - doubt it.
 	const send = (value) => {
 		if ( !addr ) {
 			return;
@@ -19,7 +16,7 @@ const TipJar = ({ topic, addr, dispatch, messageID }) => {
 
 		dispatch(newTransaction({
 			to: addr,
-			content: '',
+			content: `Tipped you ${value}sats.`,
 			value,
 			topic: whisper ? whisper : topic,
 			targetID: messageID,
@@ -30,10 +27,10 @@ const TipJar = ({ topic, addr, dispatch, messageID }) => {
 	return (
 		<a
 			className="button tooltip is-tooltip-left"
-			data-tooltip={__('Tip 50 sats')}
-			onClick={() => send(50)}
+			data-tooltip={`Tip ${value} sats.`}
+			onClick={() => send(value)}
 		>
-			<span className="icon is-small"><IoLogoBitcoin /></span>
+			{'' + value}
 		</a>
 	);
 };

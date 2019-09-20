@@ -16,7 +16,9 @@ import {
 	switchToClient,
 } from 'Approot/redux/actions/client';
 
-onmessage = ({ data: action }) => {
+// TODO figure i18n for this. Can't from tl from web worker.
+
+onmessage = async ({ data: action }) => {
 	const payload = action.payload;
 	console.log('from worker:', action);
 
@@ -90,19 +92,49 @@ onmessage = ({ data: action }) => {
 					contentType: 'nkn/tip',
 					value: payload.value,
 					content: payload.content,
+					topic: payload.topic,
+					isPrivate: true,
 				});
 
 				NKN.instance.sendMessage(
 					payload.to,
 					message
 				);
+
+				const incMessage = new IncomingMessage({
+					contentType: 'nkn/tip',
+					value: payload.value,
+					content: `Tipped ${payload.to} ${payload.value?.toFixed?.(8)} NKN.`,
+					isMe: true,
+					topic: payload.topic,
+					isPrivate: true,
+				});
+				postMessage(receiveMessage(incMessage));
 			}).catch(console.error);
 			break;
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
-			NKN.instance.subscribe(topic).catch(err => {
-				console.log('Errored at subscribe. Already subscribed?', err);
+			NKN.instance.subscribe(topic).then(() => {
+				message = new IncomingMessage({
+					contentType: 'dchat/subscribe',
+					topic,
+					isPrivate: true,
+					// TODO i18n
+					content: 'Subscribed.',
+				});
+				postMessage(receiveMessage(message));
+			}).catch(err => {
+				if (err.code === 1 || err.msg?.data?.includes('funds')) {
+					message = new IncomingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						isPrivate: true,
+						// TODO i18n
+						content: 'Insufficient funds. Send a message and beg for tips, then once transaction confirms and your coin balance increases, try again.\nNobody tipping? Use the faucet on the home page.',
+					});
+					postMessage(receiveMessage(message));
+				}
 			});
 			break;
 
@@ -121,6 +153,19 @@ onmessage = ({ data: action }) => {
 			NKN.instance.wallet.getBalance().then(balance =>
 				postMessage( setBalance(payload.address, balance) )
 			);
+			break;
+
+		case 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS':
+			topic = payload.topic;
+			status = await NKN.instance.isSubscribed(topic);
+			if (!status) {
+				message = new IncomingMessage({
+					contentType: 'dchat/offerSubscribe',
+					topic,
+					isPrivate: true,
+				});
+				postMessage(receiveMessage(message));
+			}
 			break;
 
 		default:

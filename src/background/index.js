@@ -11,6 +11,7 @@ import passworder from 'browser-passworder';
 import { log } from 'Approot/misc/util';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
 import semver from 'semver';
+import notifierMiddleware from 'Approot/redux/middleware/notifier';
 
 const password = 'd-chat!!!';
 
@@ -34,6 +35,7 @@ configs.$loaded.then(() => {
 		applyMiddleware(
 			workerMiddleware,
 			alias(aliases),
+			notifierMiddleware,
 			thunkMiddleware
 		)
 	);

@@ -12,8 +12,10 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	submit: async (credentials) => dispatch(newClient(credentials.username, credentials.password)),
-	afterSubmit: () => history.push('/wallets'),
+	submit: async (credentials) => {
+		dispatch(newClient(credentials.username, credentials.password));
+		history.push('/wallets');
+	},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProvideCredentials);

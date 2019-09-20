@@ -1,12 +1,10 @@
 import nknWallet from 'nkn-wallet';
 import {
-	getUnreadMessages,
 	createChat,
-	subscribeToChat,
+	maybeOfferSubscribeToChat,
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
-	setBadgeText,
 	__,
 } from 'Approot/misc/browser-util';
 import { importWalletSeed } from 'Approot/redux/actions/client';
@@ -36,18 +34,6 @@ const walletImport = originalAction => (dispatch, getState) => {
 		originalAction.payload.error = __('Wrong password.');
 	}
 	return originalAction;
-};
-
-const markRead = originalAction => async (dispatch, getState) => {
-	const ids = originalAction.payload.ids.length;
-	if (ids > 0) {
-		getUnreadMessages(getState()).then(count => setBadgeText( count - ids ));
-	}
-
-	return dispatch({
-		type: 'chat/MARK_READ',
-		payload: originalAction.payload,
-	});
 };
 
 const delegateToWorker = originalAction => (dispatch, getState) => {
@@ -85,7 +71,7 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
 	dispatch(createChat(topic));
-	dispatch(subscribeToChat(topic));
+	dispatch(maybeOfferSubscribeToChat(topic));
 };
 
 export default {
@@ -100,9 +86,9 @@ export default {
 	'nkn/NEW_CLIENT_ALIAS': delegateToWorker,
 	'nkn/SWITCH_TO_CLIENT_ALIAS': delegateToWorker,
 	'nkn/IMPORT_WALLETSEED': delegateToWorker,
+	'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS': delegateToWorker,
 
 	'nkn/IMPORT_WALLET_ALIAS': walletImport,
 
-	'chat/MARK_READ_ALIAS': markRead,
 	'JOIN_CHAT_ALIAS': joinChat,
 };

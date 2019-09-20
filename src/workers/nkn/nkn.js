@@ -80,8 +80,16 @@ class NKN extends nkn {
 
 	subscribe = async topic => {
 		const topicID = genChatID(topic);
+		const isSubbed = await this.isSubscribed(topic);
+		if (!isSubbed) {
+			return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
+				fee: FEE,
+			});
+		}
+	};
 
-		// TODO check only once per session?
+	isSubscribed = topic => {
+		const topicID = genChatID(topic);
 		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
@@ -89,33 +97,23 @@ class NKN extends nkn {
 		);
 
 		return Promise.all([subInfo, latestBlockHeight]).then(
-			([info, blockHeight]) => {
-				if (info.expiresAt - blockHeight > 5000) {
-					return Promise.reject('Too soon.');
+			async ([info, blockHeight]) => {
+				if (blockHeight === 0) {
+					throw 'Block height 0.';
 				}
-
-				console.log(
-					'Subscribing to',
-					topic,
-					'aka',
-					genChatID(topic),
-					'with fee',
-					FEE,
-					'NKN',
-				);
-				return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
-					fee: FEE,
-				});
-			},
+				if (info.expiresAt - blockHeight > 5000) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		);
-	};
+	}
 
 	publishMessage = async (topic, message, options = { txPool: true }) => {
 		console.log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
-			const x = this.publish(genChatID(topic), JSON.stringify(message), options);
-			console.log('publish', x);
-			return x;
+			return this.publish(genChatID(topic), JSON.stringify(message), options);
 		} catch (e) {
 			console.error('Error when publishing', e);
 			throw e;
@@ -125,9 +123,7 @@ class NKN extends nkn {
 	sendMessage = async (to, message, options = {}) => {
 		console.log('Sending private message', message, 'to', to);
 		try {
-			const x = this.send(to, JSON.stringify(message), options);
-			console.log('send', x);
-			return x;
+			return this.send(to, JSON.stringify(message), options);
 		} catch (e) {
 			console.error('Error when sending', e);
 			throw e;
