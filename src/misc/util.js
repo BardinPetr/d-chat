@@ -98,7 +98,7 @@ export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
 export const getWhisperURL = (recipient) => `/whisper/${recipient}`;
 
 export const log = (...args) => {
-	if (localStorage && localStorage.getItem('debug')) {
+	if (localStorage.getItem('debug')) {
 		console.log('d-chat:', args);
 	}
 };

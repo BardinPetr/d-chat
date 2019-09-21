@@ -1,6 +1,13 @@
 import sanitize from 'sanitize-html';
 import marked from 'marked';
 import Message from './Message';
+import highlight from 'highlight.js';
+
+marked.setOptions({
+	highlight: code => highlight.highlightAuto(code).value,
+});
+
+const allowedTags = sanitize.defaults.allowedTags.concat([ 'img' ]);
 
 class IncomingMessage extends Message {
 	constructor(message) {
@@ -8,7 +15,9 @@ class IncomingMessage extends Message {
 		this.messageClass = 'IncomingMessage';
 
 		// Sanitize data when message arrives.
-		this.content = sanitize(marked(message.content || '')).trim();
+		this.content = sanitize(marked(message.content || ''), {
+			allowedTags,
+		}).trim();
 	}
 }
 
