@@ -8,14 +8,16 @@ const ImageUploader = ({className, children, onUploaded}) => {
 			reader.onload = e => {
 				onUploaded(e.target.result);
 			};
-			reader.readAsDataURL(e.target.files[0]);
+			if (e.target.files[0].size <= 4194304) {
+				reader.readAsDataURL(e.target.files[0]);
+			}
 		}
 	};
 
 	return (
 		<label className={className}>
 			<input type="file" className="is-sr-only" onChange={upload} />
-			{children}
+			{children} (max. 4MB)
 		</label>
 	);
 };

@@ -3,11 +3,27 @@ import marked from 'marked';
 import Message from './Message';
 import highlight from 'highlight.js';
 
+const renderer = new marked.Renderer();
+renderer.image = (href, title, text) => {
+	if (href.startsWith('data:video/')) {
+		return `<video src="${href}" decoding="async" preload="metadata" controls loop playsinline></video>`;
+	} else if (href.startsWith('data:audio/')) {
+		return `<audio src="${href}" decoding="async" controls loop></audio>`;
+	} else {
+		return `<img src="${href}" decoding="async" alt=${text}>`;
+	}
+};
 marked.setOptions({
 	highlight: code => highlight.highlightAuto(code).value,
+	renderer,
 });
 
-const allowedTags = sanitize.defaults.allowedTags.concat([ 'img' ]);
+const allowedTags = sanitize.defaults.allowedTags.concat([ 'img', 'audio', 'video' ]);
+const allowedSchemes = ['http', 'https', 'data', 'file'];
+let allowedAttributes = sanitize.defaults.allowedAttributes;
+allowedAttributes.video = ['src', 'controls', 'loop', 'preload', 'playsinline'];
+allowedAttributes.audio = ['src', 'controls', 'loop', 'decoding'];
+allowedAttributes.image = ['src', 'decoding'];
 
 class IncomingMessage extends Message {
 	constructor(message) {
@@ -17,6 +33,7 @@ class IncomingMessage extends Message {
 		// Sanitize data when message arrives.
 		this.content = sanitize(marked(message.content || ''), {
 			allowedTags,
+			allowedSchemes,
 		}).trim();
 	}
 }

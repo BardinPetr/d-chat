@@ -12,7 +12,7 @@ import { __ } from 'Approot/misc/browser-util';
 import { formatAddr } from 'Approot/misc/util';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 import InfiniteScroller from 'react-infinite-scroller';
-// import Uploader from 'Approot/UI/components/Uploader';
+import Uploader from 'Approot/UI/components/Uploader';
 
 const mention = addr => '@' + formatAddr(addr);
 
@@ -146,19 +146,18 @@ class Chatroom extends React.Component {
 		this.textarea.focus();
 	};
 
-	// // TODO rethink this one.
-	// submitUpload = (data) => {
-	// 	if (!data.includes('image/')) {
-	// 		return;
-	// 	}
-	// 	const content = data.includes('image/') ? `![](${data})` : `[File](${data})`;
-	// 	const message = {
-	// 		content: content,
-	// 		contentType: 'text',
-	// 		topic: this.props.topic,
-	// 	};
-	// 	this.props.createMessage(message);
-	// }
+	submitUpload = (data) => {
+		// if (!data.test(/^(data:video\/|data:audio\/|data:image\/)/)) {
+		// 	return;
+		// }
+		const content = `![](${data})`;
+		const message = {
+			content: content,
+			contentType: 'text',
+			topic: this.props.topic,
+		};
+		this.props.createMessage(message);
+	}
 
 	/**
 	 * Makes enter submit, shift enter insert newline.
@@ -336,16 +335,16 @@ class Chatroom extends React.Component {
 
 								<div className="level-right">
 									<div className="level-item">
-										<p className="has-text-grey">
+										<p className="has-text-grey is-size-7">
 											{this.props.client.balance || '?'} NKN
 										</p>
 									</div>
-									{/* <Uploader
-										className="button is-text level-item"
+									<Uploader
+										className="button is-text level-item is-size-7"
 										onUploaded={this.submitUpload}
 									>
 										{__('Image')}
-									</Uploader> */}
+									</Uploader>
 									<input
 										type="submit"
 										className="button is-small is-primary level-item"
