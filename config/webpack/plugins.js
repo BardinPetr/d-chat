@@ -11,6 +11,7 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const paths = require('../paths');
 const staticFiles = require('./static-files');
@@ -30,6 +31,10 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			}
 		)
 	);
+
+	const scriptExtHtmlPlugin = new ScriptExtHtmlWebpackPlugin({
+		defaultAttribute: 'async',
+	});
 
 	const popupHtmlPlugin = new HtmlWebpackPlugin(
 		Object.assign(
@@ -128,6 +133,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		moduleScopePlugin,
 		copyPlugin,
 		htmlIncAssetsPlugin,
+		scriptExtHtmlPlugin,
 		friendlyErrorsWebpackPlugin
 	};
 };

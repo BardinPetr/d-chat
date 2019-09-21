@@ -10,7 +10,7 @@ const Markdown = ({source, imagesLoaded, ...props}) => (
 			renderers={{
 				code: CodeBlock,
 				image: (props) =>
-					<img {...props} onLoad={imagesLoaded} />,
+					<img decoding="async" {...props} onLoad={imagesLoaded} />,
 			}}
 			{...props}
 		/>
