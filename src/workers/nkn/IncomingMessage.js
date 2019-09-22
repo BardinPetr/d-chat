@@ -6,9 +6,9 @@ import highlight from 'highlight.js';
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
 	if (href.startsWith('data:video/')) {
-		return `<video src="${href}" decoding="async" preload="metadata" controls loop playsinline></video>`;
+		return `<video src="${href}" preload="metadata" controls loop playsinline></video>`;
 	} else if (href.startsWith('data:audio/')) {
-		return `<audio src="${href}" decoding="async" controls loop></audio>`;
+		return `<audio src="${href}" controls loop></audio>`;
 	} else {
 		return `<img src="${href}" decoding="async" alt=${text}>`;
 	}
@@ -19,10 +19,10 @@ marked.setOptions({
 });
 
 const allowedTags = sanitize.defaults.allowedTags.concat([ 'img', 'audio', 'video' ]);
-const allowedSchemes = ['http', 'https', 'data', 'file'];
+const allowedSchemes = ['http', 'https', 'data'];
 let allowedAttributes = sanitize.defaults.allowedAttributes;
 allowedAttributes.video = ['src', 'controls', 'loop', 'preload', 'playsinline'];
-allowedAttributes.audio = ['src', 'controls', 'loop', 'decoding'];
+allowedAttributes.audio = ['src', 'controls', 'loop'];
 allowedAttributes.image = ['src', 'decoding'];
 
 class IncomingMessage extends Message {
