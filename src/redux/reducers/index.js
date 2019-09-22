@@ -54,6 +54,14 @@ const reactions = (state = configs.reactions, action) => {
 			configs.reactions = newState;
 			break;
 
+		case 'chat/REMOVE':
+			newState = {
+				...state,
+				[topic]: {},
+			};
+			configs.reactions = newState;
+			break;
+
 		case 'chat/MODIFY_REACTION':
 		default:
 			newState = state;
@@ -74,7 +82,7 @@ const messages = (state = {}, action) => {
 		case 'chat/REMOVE':
 			newState = {
 				...state,
-				[topic]: state[topic]?.slice(-10) || [],
+				[topic]: [],
 			};
 			configs.messages = newState;
 			break;

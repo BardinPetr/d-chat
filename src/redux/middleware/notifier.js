@@ -9,6 +9,7 @@ import {
 import {
 	markUnread,
 } from 'Approot/redux/actions';
+import { extension } from 'webextension-polyfill';
 
 const getUnreadMessages = state => {
 	const chats = Object.values(state.chatSettings);
@@ -17,10 +18,18 @@ const getUnreadMessages = state => {
 
 const notifier = store => next => action => {
 	let message = action.payload?.message;
+	let w;
 	switch (action.type) {
 		case 'chat/RECEIVE_MESSAGE':
-			if (!isNotice(message) && !message.isMe && !message.isSeen) {
-				store.dispatch(markUnread(message.topic, message));
+			w = extension.getViews({
+				type: 'popup',
+			})?.[0];
+			console.log(w.location.hash, message);
+			// Only mark unread if chat isn't currently open in popup.
+			if (!w?.location.hash.includes(message.topic)) {
+				if (!isNotice(message) && !message.isMe && !message.isSeen) {
+					store.dispatch(markUnread(message.topic, message));
+				}
 			}
 			break;
 
