@@ -6,7 +6,7 @@ import highlight from 'highlight.js';
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
 	if (href.startsWith('data:video/')) {
-		return `<video src="${href}" preload="metadata" controls loop playsinline></video>`;
+		return `<video src="${href}" preload controls loop playsinline></video>`;
 	} else if (href.startsWith('data:audio/')) {
 		return `<audio src="${href}" controls loop></audio>`;
 	} else {
