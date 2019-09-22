@@ -1,5 +1,4 @@
-import { genPrivateChatName, getChatName, isReaction } from 'Approot/misc/util';
-import sleep from 'sleep-promise';
+import { genPrivateChatName, getChatName } from 'Approot/misc/util';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
