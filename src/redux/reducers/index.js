@@ -21,6 +21,11 @@ const reactions = (state = configs.reactions, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/CLEAN_ALL':
+			newState = {};
+			configs.messages = {};
+			break;
+
 		case 'chat/RECEIVE_REACTION':
 			targetID = action.payload.message.targetID;
 			if (!targetID) {
@@ -61,6 +66,11 @@ const messages = (state = {}, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/CLEAN_ALL':
+			newState = {};
+			configs.messages = {};
+			break;
+
 		case 'chat/REMOVE':
 			newState = {
 				...state,
