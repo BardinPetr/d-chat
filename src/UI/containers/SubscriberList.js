@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import classnames from 'classnames';
 
 // Not the most reusable container.

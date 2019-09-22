@@ -1,7 +1,7 @@
 import React from 'react';
 import NknLoading from 'Approot/UI/components/NknLoading';
 import { runtime } from 'webextension-polyfill';
-import { __ } from '../../misc/util';
+import { __ } from 'Approot/misc/browser-util';
 
 const LoadingScreen = ({ loading, children }) => (
 	loading ?

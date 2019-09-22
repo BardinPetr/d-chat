@@ -1,7 +1,8 @@
 import React from 'react';
 import { matchPath, Link } from 'react-router-dom';
 import classnames from 'classnames';
-import { __, getChatDisplayName } from '../../misc/util';
+import { getChatDisplayName } from '../../misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import history from 'Approot/UI/history';
 
 import DchatLogo from 'Approot/UI/components/DchatLogo';

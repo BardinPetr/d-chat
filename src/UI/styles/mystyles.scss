@@ -117,6 +117,10 @@ $accordion-header-padding: 1rem 0.75rem;
 		margin-bottom: 0.5rem;
 		background-color: white;
 		word-wrap: break-word;
+
+		img, video {
+			height: 300px;
+		}
 	}
 	
 	.message-header {

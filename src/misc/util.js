@@ -1,9 +1,5 @@
-import shasum	from 'shasum';
-import { i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
-import isNumber from 'is-number';
+import shasum from 'shasum';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
-import configs from 'Approot/misc/configs';
-import debounce from 'debounce';
 
 function unleadingHashIt(str){
 	return str.replace(/^#*/, '');
@@ -62,12 +58,6 @@ export function getChatName(topic) {
 	return topic;
 }
 
-export function __(str, ...placeholders) {
-	// The i18n generator has a bug with empty prefix, so trim.
-	// Chrome doesn't want things in the keys.
-	return i18n.getMessage(str.replace(/[^a-zA-Z_]/g, ''), placeholders).trim();
-}
-
 export const formatAddr = addr => {
 	const lastDotPosition = addr.lastIndexOf('.');
 	let formattedAddr = '';
@@ -104,31 +94,6 @@ export const getAddressFromAddr = theAddr => {
 	return nknAddress;
 };
 
-export const setBadgeText = txt => {
-	if (isNumber(txt)) {
-		if (+txt < 0) {
-			console.warn('Badge text was negative:', txt);
-		}
-		txt = (+txt <= 0) ? '' : txt;
-	}
-	browserAction.setBadgeText({
-		text: String(txt)
-	});
-};
-
-export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
-
-export const createNotification = debounce((options) => {
-	if (configs.showNotifications) {
-		return notifications.create( 'd-chat', {
-			type: 'basic',
-			title: options.title || '',
-			message: options.message || '',
-			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
-		});
-	}
-}, 1000, true);
-
 export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
 export const getWhisperURL = (recipient) => `/whisper/${recipient}`;
 
@@ -151,4 +116,5 @@ export const importWallet = (file) => {
 	});
 };
 
-export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
+export const isNotice = msg => (['dchat/subscribe', 'dchat/offerSubscribe'].includes(msg.contentType));
+

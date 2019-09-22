@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { __ } from '../../misc/util';
-import configs from '../../misc/configs';
+import { __ } from 'Approot/misc/browser-util';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
@@ -13,24 +12,14 @@ class LoginBox extends React.Component {
 		this.state = {
 			username: '',
 			password: '',
-			error: '',
 			cleared: false,
 			rememberMe: false,
-			isNew: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.clear = this.clear.bind(this);
-	}
-
-	componentDidMount() {
-		configs.$loaded.then(() =>
-			this.setState({
-				isNew: !configs.walletJSON,
-			})
-		);
 	}
 
 	handleChange(e) {
@@ -51,21 +40,17 @@ class LoginBox extends React.Component {
 					password: this.state.password,
 					rememberMe: this.state.rememberMe,
 				}),
-			)
-			.then(msg => !msg.addr && this.setState({ error: __('Wrong password.') }))
-			.catch(console.warn);
+			);
 	}
 
 	clear(e) {
 		e.preventDefault();
-		configs.walletJSON = null;
-		this.setState({ cleared: true, isNew: true });
+		this.setState({ cleared: true });
 		this.props.dispatch(logout());
 	}
 
 	render() {
-		const { loggedIn, connecting } = this.props;
-		const isNew = this.state.isNew;
+		const { loggedIn, connecting, error } = this.props;
 
 		return loggedIn ? (
 			<LoadingScreen loading={connecting}>
@@ -94,32 +79,30 @@ class LoginBox extends React.Component {
 								</p>
 
 								<form className="" onSubmit={this.handleLoginSubmit}>
-									{isNew && (
-										<div className="field">
-											<label className="label">
-												{__('Username')}
-												<span className="has-text-grey-light is-size-7">
-													{' (' + __('optional') + ')'}
-												</span>
-											</label>
-											<div className="control">
-												<input
-													type="username"
-													name="username"
-													value={this.state.username}
-													onChange={this.handleChange}
-													className="input"
-													placeholder="Username"
-													autoComplete="current-user"
-												/>
-											</div>
+									<div className="field">
+										<label className="label">
+											{__('Username')}
+											<span className="has-text-grey-light is-size-7">
+												{' (' + __('optional') + ')'}
+											</span>
+										</label>
+										<div className="control">
+											<input
+												type="username"
+												name="username"
+												value={this.state.username}
+												onChange={this.handleChange}
+												className="input"
+												placeholder="Username"
+												autoComplete="current-user"
+											/>
 										</div>
-									)}
+									</div>
 									<div className="field">
 										<label className="label">
 											{__('Password')}
 											<span className="help is-danger is-inline">
-												{' ' + this.state.error}
+												{error && __('Wrong password.')}
 											</span>
 										</label>
 										<div className="control">
@@ -188,6 +171,7 @@ class LoginBox extends React.Component {
 const mapStateToProps = state => ({
 	loggedIn: state.login?.addr != null,
 	connecting: !state.login?.connected,
+	wrongPassword: state.login?.error,
 });
 
 export default connect(mapStateToProps)(LoginBox);

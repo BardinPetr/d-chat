@@ -2,6 +2,13 @@
  * Contains actions for /wallets/*
  */
 
+export const switchedToClient = (address) => ({
+	type: 'nkn/SWITCHED_TO_CLIENT',
+	payload: {
+		address,
+	},
+});
+
 export const switchToClient = (address) => ({
 	type: 'nkn/SWITCH_TO_CLIENT_ALIAS',
 	payload: {
@@ -36,5 +43,21 @@ export const exportWallet = (address) => ({
 	type: 'nkn/EXPORT_WALLET_ALIAS',
 	payload: {
 		address,
+	},
+});
+
+export const setBalance = (address, balance) => console.log('setting balance') || ({
+	type: 'nkn/SET_BALANCE',
+	payload: {
+		balance: balance.toFixed(8),
+		address,
+	}
+});
+
+export const importWalletSeed = ({walletSeed, username}) => ({
+	type: 'nkn/IMPORT_WALLETSEED',
+	payload: {
+		walletSeed,
+		username
 	},
 });

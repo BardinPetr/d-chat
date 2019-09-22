@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
-import { __ } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 
-const ProvideCredentials = ({ noPassword, submit, afterSubmit, children, callToAction }) => {
+const ProvideCredentials = ({ noPassword, submit, children, callToAction }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(null);
 
 	const onClick = () => {
-		submit({username, password})
-			.then((res) => {
-				if (res.error) {
-					setError(res.error);
-				} else {
-					afterSubmit();
-				}
-			});
+		const isError = submit({username, password});
+		if (isError?.error) {
+			setError(__('Wrong password.'));
+		}
 	};
 
 	return (

@@ -1,14 +1,9 @@
 import {
 	genPrivateChatName,
-	__,
 	getChatName,
-	setBadgeText,
 	isReaction,
 } from 'Approot/misc/util';
-import Message from 'Approot/background/Message';
-import { PayloadType } from 'nkn-client';
 import sleep from 'sleep-promise';
-import NKN from 'Approot/background/nknHandler';
 
 
 export const navigated = to => ({
@@ -18,8 +13,11 @@ export const navigated = to => ({
 	},
 });
 
-export const getBalance = () => ({
-	type: 'GET_BALANCE_ALIAS',
+export const getBalance = (address) => ({
+	type: 'nkn/GET_BALANCE_ALIAS',
+	payload: {
+		address,
+	},
 });
 
 export const logout = () => ({
@@ -44,16 +42,26 @@ export const sendPrivateMessage = (message) => ({
 		message: {
 			...message,
 			isPrivate: true,
+			isWhisper: true,
 		},
 	},
 });
 
+// Subs after tx is complete.
 export const subscribe = (topic, transactionID) => ({
 	type: 'SUBSCRIBE',
 	payload: {
 		topic: getChatName( topic ),
 		transactionID
 	}
+});
+
+export const getMessages = (topic, opts = {}) => ({
+	type: 'chat/GET_MESSAGES',
+	payload: {
+		topic: getChatName(topic),
+		howMany: opts.howMany || 15,
+	},
 });
 
 export const getSubscribers = topic => ({
@@ -111,8 +119,10 @@ export const publishMessage = message => ({
 });
 
 export const receiveMessage = message => {
+	console.log('RECEIVE MESSAGE', message);
+	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';
-	if ( isReaction( message ) ) {
+	if ( message.contentType === 'reaction' ) {
 		type = 'chat/RECEIVE_REACTION';
 	}
 
@@ -126,31 +136,20 @@ export const receiveMessage = message => {
 };
 
 export const markRead = (topic, ids) => ({
-	type: 'chat/MARK_READ_ALIAS',
+	type: 'chat/MARK_READ',
 	payload: {
 		topic,
 		ids,
 	}
 });
 
-// Helper. Not an action.
-export const getUnreadMessages = async state => {
-	const chats = Object.values(state.chatSettings);
-	return chats.reduce((acc, settings) => acc + (settings.unread?.length || 0), 0);
-};
-
-export const markUnread = (topic, ids) => (dispatch, getState) => {
-	if (ids.length > 0) {
-		getUnreadMessages(getState()).then(count => setBadgeText( count + ids.length ));
-	}
-	return dispatch({
-		type: 'chat/MARK_UNREAD',
-		payload: {
-			topic,
-			ids,
-		}
-	});
-};
+export const markUnread = (topic, message) => ({
+	type: 'chat/MARK_UNREAD',
+	payload: {
+		topic,
+		message,
+	},
+});
 
 export const createTransaction = (id, data) => ({
 	type: 'nkn/CREATE_TRANSACTION',
@@ -159,35 +158,6 @@ export const createTransaction = (id, data) => ({
 		data,
 	},
 });
-
-/**
- * Called by .on('message') listener.
- */
-export const receivingMessage = (src, payload, payloadType) => (dispatch, getState) => {
-	let message = {};
-	if ( payloadType === PayloadType.TEXT ) {
-		const data = JSON.parse(payload);
-		message = new Message(data);
-
-		if ( message.topic && message.contentType === 'nkn/tip' && message.isPrivate ) {
-			const subs = getState().chatSettings[message.topic]?.subscribers || [];
-			// TODO hmmm...
-			if ( NKN.instance && !subs.includes(NKN.instance.addr) ) {
-				new Message({
-					contentType: 'dchat/subscribe',
-					topic: message.topic,
-					content: __('You have been tipped. Subscribing once tx is confirmed.')
-				}).receive(dispatch);
-			}
-		}
-
-		message = message.from(src);
-	} else {
-		return;
-	}
-
-	return message.receive(dispatch);
-};
 
 export const newTransaction = ({ targetID, content, topic, to, value, contentType, ...rest }) => ({
 	type: 'nkn/NEW_TRANSACTION_ALIAS',
@@ -202,7 +172,7 @@ export const newTransaction = ({ targetID, content, topic, to, value, contentTyp
 	}
 });
 
-const subscribeToChat = topic => ({
+export const subscribeToChat = topic => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
 		topic,
@@ -251,3 +221,10 @@ export const modifyMessage = (id, topic, modifiedMessage) => {
 		},
 	});
 };
+
+export const maybeOfferSubscribeToChat = topic => ({
+	type: 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS',
+	payload: {
+		topic: getChatName( topic ),
+	},
+});

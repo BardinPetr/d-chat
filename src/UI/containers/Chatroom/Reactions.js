@@ -20,7 +20,6 @@ const Reactions = ({ topic, reactions, myAddr, createMessage }) => {
 
 	const haveReacted = reactions.some(r => r.addr === myAddr);
 
-	// You can spam the emoji as many times as you want now. TODO?
 	return (
 		<div className="buttons are-small x-are-very-rounded x-reactions">
 			{countedReactions.map((reaction, idx) => (
@@ -29,15 +28,18 @@ const Reactions = ({ topic, reactions, myAddr, createMessage }) => {
 					className={classnames('button is-primary is-outlined', {
 						'has-background-info': haveReacted,
 					})}
+					disabled={haveReacted}
 					onClick={() => createMessage({
 						topic,
 						targetID: reaction.targetID,
 						contentType: 'reaction',
 						content: reaction.content,
 					})}
+					style={{opacity: 1}}
 					key={idx}
 				>
-					<span>{reaction.content}</span>
+					{/* Content is sanitized on arrival. See workers/nkn/IncomingMessage.js. */}
+					<span dangerouslySetInnerHTML={{__html: reaction.content}}></span>
 					<span className="x-is-padding-left">{reaction._count}</span>
 				</a>
 			))}

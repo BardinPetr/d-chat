@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
-import { getChatURL, getChatDisplayName, __ } from 'Approot/misc/util';
+import { getChatURL, getChatDisplayName } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util';
 import { removeChat } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 

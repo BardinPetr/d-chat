@@ -1,9 +1,7 @@
 import nkn from 'nkn-multiclient';
 import nknWallet from 'nkn-wallet';
-import { log, genChatID } from 'Approot/misc/util';
+import { genChatID } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
-
-// TODO should move nkn stuff into a worker?
 
 const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
@@ -75,13 +73,21 @@ class NKN extends nkn {
 		});
 
 		this.wallet = wallet;
-		this.on('message', log);
+		this.on('message', console.log);
 	}
 
 	subscribe = async topic => {
 		const topicID = genChatID(topic);
+		const isSubbed = await this.isSubscribed(topic);
+		if (!isSubbed) {
+			return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
+				fee: FEE,
+			});
+		}
+	};
 
-		// TODO check only once per session?
+	isSubscribed = topic => {
+		const topicID = genChatID(topic);
 		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
@@ -89,33 +95,23 @@ class NKN extends nkn {
 		);
 
 		return Promise.all([subInfo, latestBlockHeight]).then(
-			([info, blockHeight]) => {
-				if (info.expiresAt - blockHeight > 5000) {
-					return Promise.reject('Too soon.');
+			async ([info, blockHeight]) => {
+				if (blockHeight === 0) {
+					throw 'Block height 0.';
 				}
-
-				log(
-					'Subscribing to',
-					topic,
-					'aka',
-					genChatID(topic),
-					'with fee',
-					FEE,
-					'NKN',
-				);
-				return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
-					fee: FEE,
-				});
-			},
+				if (info.expiresAt - blockHeight > 5000) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		);
-	};
+	}
 
 	publishMessage = async (topic, message, options = { txPool: true }) => {
-		log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
+		console.log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
-			const x = this.publish(genChatID(topic), JSON.stringify(message), options);
-			log('publish', x);
-			return x;
+			return this.publish(genChatID(topic), JSON.stringify(message), options);
 		} catch (e) {
 			console.error('Error when publishing', e);
 			throw e;
@@ -123,11 +119,12 @@ class NKN extends nkn {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
-		log('Sending private message', message, 'to', to);
+		console.log('Sending private message', message, 'to', to);
+		if (to === this.addr) {
+			return;
+		}
 		try {
-			const x = this.send(to, JSON.stringify(message), options);
-			log('send', x);
-			return x;
+			return this.send(to, JSON.stringify(message), options);
 		} catch (e) {
 			console.error('Error when sending', e);
 			throw e;
@@ -145,6 +142,25 @@ class NKN extends nkn {
 	) => {
 		return this.defaultClient.getSubscribers(genChatID(topic), options);
 	};
+
+	toJSON() {
+		return JSON.stringify(this.neutered());
+	}
+
+	neutered = () => {
+		const w = JSON.parse(this.wallet.toJSON());
+		w.address = w.Address;
+		const c = {
+			...this,
+			wallet: w,
+		};
+
+		const preservedKeys = [ 'addr', 'identifier', 'wallet' ];
+		for (let key in c) {
+			preservedKeys.includes(key) || delete c[key];
+		}
+		return c;
+	}
 }
 
 export default NKN;

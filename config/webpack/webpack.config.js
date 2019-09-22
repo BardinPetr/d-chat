@@ -18,7 +18,7 @@ const doesSidebarExist = fs.existsSync(paths.appSidebarJs);
 const doesSidebarHtmlExist = fs.existsSync(paths.sidebarTemplate);
 const doesBackgroundExist = fs.existsSync(paths.appBackgroundJs);
 const doesContentExist = fs.existsSync(paths.appContentJs);
-
+const doesNknWorkerExist = fs.existsSync(paths.appNknWorkerJs);
 
 
 module.exports = function (webpackEnv) {
@@ -40,6 +40,7 @@ module.exports = function (webpackEnv) {
 		doesContentExist && { 'content': paths.appContentJs },
 		doesSidebarExist && { 'sidebar': paths.appSidebarJs },
 		doesOptionsExist && { 'options': paths.appOptionsJs },
+		doesNknWorkerExist && { 'nkn-worker': paths.appNknWorkerJs },
 	].filter(Boolean);
 
 	const entry = {};
@@ -95,6 +96,7 @@ module.exports = function (webpackEnv) {
 			rules: [
 				{ parser: { requireEnsure: false } },
 				loaders.eslintLoader,
+				loaders.workerLoader,
 				{
 					// "oneOf" will traverse all following loaders until one will match the requirements.
 					// When no loader matches it will fall back to the "file" loader at the end of the loader list.
@@ -118,6 +120,7 @@ module.exports = function (webpackEnv) {
 			doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
 			doesPopupHtmlExist && plugins.popupHtmlPlugin,
 			plugins.htmlIncAssetsPlugin,
+			plugins.scriptExtHtmlPlugin,
 			plugins.moduleNotFoundPlugin,
 			isEnvDevelopment && plugins.CaseSensitivePathsPlugin,
 			isEnvDevelopment && plugins.watchMissingNodeModulesPlugin,

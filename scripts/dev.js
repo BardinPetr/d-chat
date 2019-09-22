@@ -23,7 +23,7 @@ console.log('\n-----------------------------------------------------\n'.yellow.b
 const webpackConfig = webpackConfigFactory('development');
 
 let spinner = new Ora({
-	text: 'Bundling files and asstes using Webpack'.blue,
+	text: 'Bundling files and assets using Webpack'.blue,
 	stream: process.stdout
 });
 spinner.start();
@@ -34,7 +34,9 @@ compiler.watch({}, (err, stats) => {
 	spinner.succeed();
 	let messages;
 	if (err) {
+		console.log(err.message);
 		if (!err.message) {
+			console.log('what');
 			throw new Error(err);
 		}
 		messages = formatWebpackMessages({
