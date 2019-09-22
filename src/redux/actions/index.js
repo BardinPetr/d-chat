@@ -60,7 +60,7 @@ export const getMessages = (topic, opts = {}) => ({
 	type: 'chat/GET_MESSAGES',
 	payload: {
 		topic: getChatName(topic),
-		howMany: opts.howMany || 15,
+		howMany: opts.howMany || 10,
 	},
 });
 

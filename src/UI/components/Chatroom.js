@@ -37,7 +37,7 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		this.wasScrolledToBottom = false;
-		const howMany = this.props.messages.length + 15;
+		const howMany = this.props.messages.length + 10;
 		this.props.getMessages(this.props.topic, { howMany });
 	};
 
@@ -137,9 +137,9 @@ class Chatroom extends React.Component {
 	};
 
 	submitUpload = (data) => {
-		// if (!data.test(/^(data:video\/|data:audio\/|data:image\/)/)) {
-		// 	return;
-		// }
+		if (!/^(data:video|data:audio|data:image)/.test(data)) {
+			return;
+		}
 		const content = `![](${data})`;
 		const message = {
 			content: content,
@@ -323,7 +323,7 @@ class Chatroom extends React.Component {
 
 								<div className="level-right">
 									<div className="level-item">
-										<p className="has-text-grey is-size-7">
+										<p className="has-text-grey">
 											{this.props.client.balance || '?'} NKN
 										</p>
 									</div>
@@ -331,7 +331,7 @@ class Chatroom extends React.Component {
 										className="button is-text level-item is-size-7"
 										onUploaded={this.submitUpload}
 									>
-										{__('Image')}
+										{__('Upload')}
 									</Uploader>
 									<input
 										type="submit"

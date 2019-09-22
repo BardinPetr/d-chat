@@ -16,7 +16,7 @@ const ImageUploader = ({className, children, onUploaded}) => {
 
 	return (
 		<label className={className}>
-			<input type="file" className="is-sr-only" onChange={upload} />
+			<input type="file" accept="image/*,audio/*,video/*" className="is-sr-only" onChange={upload} />
 			{children} (max. 4MB)
 		</label>
 	);

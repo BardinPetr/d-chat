@@ -3,8 +3,6 @@ import nknWallet from 'nkn-wallet';
 import { genChatID } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-// TODO should move nkn stuff into a worker?
-
 const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
@@ -122,6 +120,9 @@ class NKN extends nkn {
 
 	sendMessage = async (to, message, options = {}) => {
 		console.log('Sending private message', message, 'to', to);
+		if (to === this.addr) {
+			return;
+		}
 		try {
 			return this.send(to, JSON.stringify(message), options);
 		} catch (e) {

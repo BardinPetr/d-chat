@@ -1,5 +1,4 @@
 import React from 'react';
-import 'tippy.js/themes/light-border.css';
 import { Link } from 'react-router-dom';
 import { getWhisperURL } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util';

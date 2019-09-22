@@ -113,7 +113,6 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/GET_MESSAGES':
-			// Add 15 new messages.
 			initial = configs.messages[topic]?.slice(-(action.payload.howMany)) || [];
 			newState = {
 				...state,
@@ -269,8 +268,8 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				[topic]: {
 					unread: [],
 					subscribers: [],
-					messages: configs.messages[topic]?.length || 0,
 					...state[topic],
+					messages: configs.messages[topic]?.length || state[topic]?.messages || 0,
 				},
 			};
 			configs.chatSettings = newState;

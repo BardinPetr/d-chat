@@ -47,9 +47,6 @@
   "Identity": {
     "message": " Identity"
   },
-  "Image": {
-    "message": " Image"
-  },
   "Import": {
     "message": " Import"
   },
@@ -133,6 +130,9 @@
   },
   "Topic": {
     "message": " Topic"
+  },
+  "Upload": {
+    "message": " Upload"
   },
   "Username": {
     "message": " Username"
