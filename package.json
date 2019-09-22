@@ -1,6 +1,6 @@
 {
   "name": "react-extension-boilerplate",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Modern React boilerplate for Firefox and Chrome extensions",
   "repository": {
     "type": "git",

@@ -24,7 +24,6 @@ const notifier = store => next => action => {
 			w = extension.getViews({
 				type: 'popup',
 			})?.[0];
-			console.log(w.location.hash, message);
 			// Only mark unread if chat isn't currently open in popup.
 			if (!w?.location.hash.includes(message.topic)) {
 				if (!isNotice(message) && !message.isMe && !message.isSeen) {
