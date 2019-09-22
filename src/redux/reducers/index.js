@@ -4,18 +4,6 @@ import configs from '../../misc/configs';
 import clients from './client';
 import { isNotice } from 'Approot/misc/util';
 
-const replaceMessage = (from, whatId, withWhat) =>
-	from.reduce((acc, item) => {
-		if (whatId === item.id) {
-			if (withWhat) {
-				return acc.concat(withWhat);
-			} else {
-				return acc;
-			}
-		}
-		return acc.concat(item);
-	}, []);
-
 const reactions = (state = configs.reactions, action) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
@@ -62,7 +50,6 @@ const reactions = (state = configs.reactions, action) => {
 			configs.reactions = newState;
 			break;
 
-		case 'chat/MODIFY_REACTION':
 		default:
 			newState = state;
 	}
@@ -118,18 +105,6 @@ const messages = (state = {}, action) => {
 			};
 			break;
 
-		case 'chat/MODIFY_MESSAGE':
-			initial = state[topic];
-			newState = {
-				...state,
-				[topic]: replaceMessage(
-					initial,
-					action.payload.id,
-					action.payload.message,
-				),
-			};
-			break;
-
 		case 'chat/GET_MESSAGES':
 			initial = configs.messages[topic]?.slice(-(action.payload.howMany)) || [];
 			newState = {
@@ -139,45 +114,6 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/PUBLISH_MESSAGE':
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
-const transactions = (
-	state = {
-		unconfirmed: [],
-		confirmed: configs.transactions.confirmed,
-	},
-	action,
-) => {
-	let newState, removed, initial;
-
-	switch (action.type) {
-		case 'nkn/CREATE_TRANSACTION':
-			// Sending tx to yourself makes it dupe, but whatever.
-			newState = {
-				...state,
-				unconfirmed: [...state.unconfirmed, action.payload],
-			};
-			break;
-
-		case 'nkn/TRANSACTION_COMPLETE':
-			initial = [...state.unconfirmed];
-			removed = initial.splice(
-				state.unconfirmed.findIndex(
-					i => i.transactionID === action.payload.transactionID,
-				),
-				1,
-			);
-			newState = {
-				unconfirmed: [...initial],
-				confirmed: [...state.confirmed.concat(removed)],
-			};
-			configs.transactions.confirmed = newState.confirmed;
-			break;
-
 		default:
 			newState = state;
 	}
@@ -334,7 +270,6 @@ export default combineReducers({
 	reactions,
 	draftMessage,
 	chatSettings,
-	transactions,
 	// UI
 	navigation,
 });
