@@ -109,7 +109,6 @@ class NKN extends nkn {
 	}
 
 	publishMessage = async (topic, message, options = { txPool: true }) => {
-		console.log('Publishing message', message, 'to', topic, 'aka', genChatID(topic));
 		try {
 			return this.publish(genChatID(topic), JSON.stringify(message), options);
 		} catch (e) {
@@ -119,7 +118,6 @@ class NKN extends nkn {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
-		console.log('Sending private message', message, 'to', to);
 		if (to === this.addr) {
 			return;
 		}

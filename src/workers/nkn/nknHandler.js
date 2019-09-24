@@ -12,28 +12,26 @@ import {
 } from 'Approot/redux/actions';
 
 function addNKNListeners (client) {
-	// console.log('adding nkn listeners to:', client);
-	const dispatch = postMessage;
 
-	client.on('connect', () => {
-		dispatch(connected());
-		dispatch(getBalance(client.wallet.address));
-		console.log('connected');
+	client.on('message', async (...args) => {
+		handleIncomingMessage(...args);
 	});
 
-	client.on('message', (...args) => {
-		handleIncomingMessage(...args);
+	client.on('connect', async () => {
+		postMessage(connected());
+		postMessage(getBalance(client.wallet.address));
+		console.log('connected');
 	});
 
 	// Often node doesn't give block events on defaultClient, so listen on all and debounce to one.
 	const blockListener = debounce(() => {
 		console.log('NEW BLOCK');
-		dispatch(getBalance(client.wallet.address));
+		postMessage(getBalance(client.wallet.address));
 	}, 5000, true);
 	Object.values(client.clients).forEach(c => c.on('block', blockListener));
 }
 
-function handleIncomingMessage(src, payload, payloadType) {
+async function handleIncomingMessage(src, payload, payloadType) {
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = JSON.parse(payload);
 		const message = new IncomingMessage(data).from(src);

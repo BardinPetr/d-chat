@@ -59,22 +59,20 @@ class Chatroom extends React.Component {
 	}
 
 	mounter = () => {
-		this.props.getMessages(this.props.topic);
+		const howMany = 10 + (this.props.unreadMessages?.length || 0);
+		this.props.getMessages(this.props.topic, { howMany });
 		this.getSubsInterval = setInterval(
 			() => this.props.getSubscribers(this.props.topic),
 			25000,
 		);
 		this.props.getSubscribers(this.props.topic);
 
+		// Pretty bugged right now, as messages aren't there when this is called.
 		if (this.refs.lastRead && this.props.unreadMessages.length) {
 			this.refs.lastRead.scrollIntoView();
 			this.wasScrolledToBottom =
 				this.messages.scrollHeight - this.messages.scrollTop ===
 				this.messages.clientHeight;
-			if (!this.wasScrolledToBottom) {
-				// Scroll the 'new msgs below' into view when not scrolled to bot.
-				this.messages.scrollTop -= 25;
-			}
 		} else {
 			this.scrollToBot();
 		}

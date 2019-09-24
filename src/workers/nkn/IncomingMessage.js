@@ -18,7 +18,6 @@ renderer.image = (href, title, text) => {
 			console.error(e);
 			return '';
 		}
-		console.log('hola', data);
 		if (href.startsWith('data:video/')) {
 			return `<video src="${data}" controls loop playsinline></video>`;
 		} else if (href.startsWith('data:audio/')) {
