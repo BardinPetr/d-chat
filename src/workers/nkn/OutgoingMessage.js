@@ -5,7 +5,6 @@ class OutgoingMessage extends Message {
 		super(message);
 
 		this.content = message.content;
-		this.messageClass = 'OutgoingMessage';
 
 		// Let's delete some useless, internal, data.
 		this.isMe = undefined;
@@ -16,6 +15,7 @@ class OutgoingMessage extends Message {
 		this.title = undefined;
 		this.isSeen = undefined;
 		this.ping = undefined;
+		this.messageClass = undefined;
 	}
 }
 

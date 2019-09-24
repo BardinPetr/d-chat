@@ -77,10 +77,9 @@ const messages = (state = {}, action) => {
 		case 'chat/RECEIVE_MESSAGE':
 			// First add new msg to state, for displaying.
 			initial = state[topic] || [];
-			// Already exists, or we're spamming "not subscribed" messages.
-			if (initial.some(msg => msg.id === action.payload.message.id) ||
-					(isNotice(action.payload.message) &&
-				initial[initial.length - 1]?.contentType === action.payload.message.contentType)
+			// We're spamming "not subscribed" messages.
+			if (isNotice(action.payload.message) &&
+				initial[initial.length - 1]?.contentType === action.payload.message.contentType
 			) {
 				return state;
 			}
@@ -88,13 +87,8 @@ const messages = (state = {}, action) => {
 				...state,
 				[topic]: [...initial, action.payload.message],
 			};
-			// Then add to storage.
-			initial = configs.messages[topic] || [];
-			initial = {
-				...configs.messages,
-				[topic]: [...initial, action.payload.message],
-			};
-			configs.messages = initial;
+			// Doing complicated stuff to `configs.messages` is a no-go.
+			configs.messages = newState;
 			break;
 
 		// This one is for displaying all rooms in the chatlist.

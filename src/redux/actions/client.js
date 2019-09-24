@@ -46,7 +46,7 @@ export const exportWallet = (address) => ({
 	},
 });
 
-export const setBalance = (address, balance) => console.log('setting balance') || ({
+export const setBalance = (address, balance) => ({
 	type: 'nkn/SET_BALANCE',
 	payload: {
 		balance: balance.toFixed(8),

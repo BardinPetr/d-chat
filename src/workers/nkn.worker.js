@@ -64,7 +64,6 @@ onmessage = async ({ data: action }) => {
 
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
-			console.log('PUBLISHING!!!', payload.message, 'OutgoingMessage:', message);
 			NKN.instance.publishMessage(payload.topic, message);
 			break;
 
@@ -75,19 +74,14 @@ onmessage = async ({ data: action }) => {
 			// Receive it locally.
 			message = new IncomingMessage(payload.message);
 			message = message.from('me', { toChat: payload.recipient });
-			console.log('Want to receive a PM!!', payload.message, 'msg', message);
 			postMessage(receiveMessage(message));
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':
-			console.log('VALUE TRANSFER:::', payload,
-				getAddressFromAddr(payload.to),
-				payload.value);
 			NKN.instance.wallet.transferTo(
 				getAddressFromAddr(payload.to),
 				payload.value
 			).then(() => {
-				console.log('VALUE TRANSFERRED:::', payload);
 				const message = new OutgoingMessage({
 					contentType: 'nkn/tip',
 					value: payload.value,
@@ -131,7 +125,7 @@ onmessage = async ({ data: action }) => {
 						topic,
 						isPrivate: true,
 						// TODO i18n
-						content: 'Insufficient funds. Send a message and beg for tips, then once transaction confirms and your coin balance increases, try again.\nNobody tipping? Use the faucet on the home page.',
+						content: 'Insufficient funds. Send a message and ask for a tip.\nOnce You have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
 					});
 					postMessage(receiveMessage(message));
 				}

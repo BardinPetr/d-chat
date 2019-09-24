@@ -4,7 +4,7 @@ import {
 	formatAddr,
 } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
-import uuidv1 from 'uuid/v1';
+import uuidv4 from 'uuid/v4';
 
 /**
  * Here lies the D-Chat NKN message schema.
@@ -25,7 +25,7 @@ class Message {
 
 		// TODO is.string() checks
 		this.contentType = message.contentType || 'text';
-		this.id = message.id || uuidv1();
+		this.id = message.id || uuidv4();
 
 		this.topic = message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
