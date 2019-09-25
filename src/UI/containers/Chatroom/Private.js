@@ -3,12 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Chatroom from 'Approot/UI/components/Chatroom';
-import {
-	getMessages,
-	markRead,
-	sendPrivateMessage,
-	saveDraft,
-} from 'Approot/redux/actions';
+import { markRead, sendPrivateMessage, saveDraft } from 'Approot/redux/actions';
 import { genPrivateChatName } from 'Approot/misc/util';
 
 const mapStateToProps = (state, ownProps) => {
@@ -22,7 +17,6 @@ const mapStateToProps = (state, ownProps) => {
 		topic: recipient,
 		subs: [recipient, state.login?.addr],
 		client: state.clients.find(c => c.active),
-		hasMore: (state.chatSettings[topic]?.messages || 0) > (state.messages[topic]?.length || 0),
 	};
 };
 
@@ -32,7 +26,6 @@ const mapDispatchToProps = dispatch => ({
 	markAsRead: (recipient, ids) =>
 		dispatch(markRead(genPrivateChatName(recipient), ids)),
 	getSubscribers: () => {},
-	getMessages: (topic, opts) => dispatch(getMessages(genPrivateChatName(topic), opts)),
 });
 
 export default connect(

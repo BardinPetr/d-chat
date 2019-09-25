@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import Chatroom from 'Approot/UI/components/Chatroom';
 import {
-	getMessages,
 	getSubscribers,
 	markRead,
 	publishMessage,
@@ -21,7 +20,6 @@ const mapStateToProps = (state, ownProps) => {
 		topic: topic,
 		subs: state.chatSettings[topic]?.subscribers || [],
 		client: state.clients.find(c => c.active),
-		hasMore: (state.chatSettings[topic]?.messages || 0) > (state.messages[topic]?.length || 0),
 	};
 };
 
@@ -30,7 +28,6 @@ const mapDispatchToProps = dispatch => ({
 	saveDraft: draft => dispatch(saveDraft(draft)),
 	markAsRead: (topic, ids) => dispatch(markRead(topic, ids)),
 	getSubscribers: topic => dispatch(getSubscribers(topic)),
-	getMessages: (topic, opts) => dispatch(getMessages(topic, opts)),
 });
 
 export default connect(
