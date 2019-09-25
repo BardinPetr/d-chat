@@ -56,7 +56,13 @@ const reactions = (state = configs.reactions, action) => {
 	return newState;
 };
 
-const messages = (state = {}, action) => {
+/**
+ * Lazy loading doesn't make sense, because saving history gets bugged.
+ * configs.messages = {...} is an async operation, and so
+ * if not keeping the history in memory, we will get bad updates.
+ * Then we have to load the history from storage.local all the time, so why not just keep it.
+ */
+const messages = (state = configs.messages, action) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
@@ -75,11 +81,12 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/RECEIVE_MESSAGE':
-			// First add new msg to state, for displaying.
 			initial = state[topic] || [];
 			// We're spamming "not subscribed" messages.
-			if (isNotice(action.payload.message) &&
-				initial[initial.length - 1]?.contentType === action.payload.message.contentType
+			if (
+				isNotice(action.payload.message) &&
+				initial[initial.length - 1]?.contentType ===
+					action.payload.message.contentType
 			) {
 				return state;
 			}
@@ -87,7 +94,6 @@ const messages = (state = {}, action) => {
 				...state,
 				[topic]: [...initial, action.payload.message],
 			};
-			// Doing complicated stuff to `configs.messages` is a no-go.
 			configs.messages = newState;
 			break;
 
@@ -97,14 +103,7 @@ const messages = (state = {}, action) => {
 				...state,
 				[topic]: state[topic] || [],
 			};
-			break;
-
-		case 'chat/GET_MESSAGES':
-			initial = configs.messages[topic]?.slice(-(action.payload.howMany)) || [];
-			newState = {
-				...state,
-				[topic]: initial,
-			};
+			configs.messages = newState;
 			break;
 
 		case 'chat/PUBLISH_MESSAGE':
@@ -167,16 +166,6 @@ const chatSettings = (state = configs.chatSettings, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
-		case 'chat/RECEIVE_MESSAGE':
-			newState = {
-				...state,
-				[topic]: {
-					...state[topic],
-					messages: 1 + (state[topic]?.messages || 0),
-				},
-			};
-			break;
-
 		case 'chat/REMOVE':
 			initial = { ...state };
 			delete initial[topic];
@@ -190,7 +179,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				...state,
 				[topic]: {
 					...state[topic],
-					unread: [ ...initial, action.payload.message.id ],
+					unread: [...initial, action.payload.message.id],
 				},
 			};
 			configs.chatSettings = newState;
@@ -217,7 +206,6 @@ const chatSettings = (state = configs.chatSettings, action) => {
 					unread: [],
 					subscribers: [],
 					...state[topic],
-					messages: configs.messages[topic]?.length || state[topic]?.messages || 0,
 				},
 			};
 			configs.chatSettings = newState;

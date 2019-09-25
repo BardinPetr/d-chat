@@ -26,6 +26,7 @@ class Chatroom extends React.Component {
 		super(props);
 
 		this.state = {
+			count: 15 + props.unreadMessages.length,
 			showingPreview: false,
 		};
 
@@ -37,8 +38,11 @@ class Chatroom extends React.Component {
 
 	loadMoreMessages = () => {
 		this.wasScrolledToBottom = false;
-		const howMany = this.props.messages.length + 10;
-		this.props.getMessages(this.props.topic, { howMany });
+		if (this.props.messages.length > this.state.count) {
+			this.setState({
+				count: this.state.count + 5,
+			});
+		}
 	};
 
 	componentDidMount() {
@@ -59,8 +63,6 @@ class Chatroom extends React.Component {
 	}
 
 	mounter = () => {
-		const howMany = 10 + (this.props.unreadMessages?.length || 0);
-		this.props.getMessages(this.props.topic, { howMany });
 		this.getSubsInterval = setInterval(
 			() => this.props.getSubscribers(this.props.topic),
 			25000,
@@ -100,18 +102,25 @@ class Chatroom extends React.Component {
 			this.unmounter();
 			this.mounter();
 			this.wasScrolledToBottom = true;
+			this.setState({
+				count: 15 + this.props.unreadMessages.length,
+			});
+		} else if (
+			prevProps.topic === this.props.topic &&
+			prevProps.messages.length < this.props.messages.length
+		) {
+			this.setState({
+				count:
+					this.state.count +
+					(this.props.messages.length - prevProps.messages.length),
+			});
 		}
 		this.scrollToBot();
 	}
 
 	scrollToBot() {
 		if (this.wasScrolledToBottom) {
-			const offset = 5;
-			const el = this.messages;
-			// Don't scroll if we're already almost there.
-			if (el.scrollHeight - el.scrollTop > (el.clientHeight) + offset) {
-				this.messages.scrollTop = this.messages.scrollHeight;
-			}
+			this.messages.scrollTop = this.messages.scrollHeight;
 			this.wasScrolledToBottom = true;
 		}
 	}
@@ -137,7 +146,7 @@ class Chatroom extends React.Component {
 		this.textarea.focus();
 	};
 
-	submitUpload = (data) => {
+	submitUpload = data => {
 		if (!/^(data:video|data:audio|data:image)/.test(data)) {
 			return;
 		}
@@ -148,7 +157,7 @@ class Chatroom extends React.Component {
 			topic: this.props.topic,
 		};
 		this.props.createMessage(message);
-	}
+	};
 
 	/**
 	 * Makes enter submit, shift enter insert newline.
@@ -157,6 +166,7 @@ class Chatroom extends React.Component {
 		if (e.keyCode === 13 && e.ctrlKey === false && e.shiftKey === false) {
 			e.preventDefault();
 			this.submitText(e);
+			this.msg.setState({ value: '' });
 		}
 	};
 
@@ -190,10 +200,10 @@ class Chatroom extends React.Component {
 	};
 
 	onScroll = el => {
-		this.wasScrolledToBottom = false;
 		const offset = 15;
-		// Bot. 15 unit offset.
-		if (el.scrollHeight - el.scrollTop <= (el.clientHeight) + offset) {
+		this.wasScrolledToBottom = false;
+		// Bot
+		if (el.scrollHeight - el.scrollTop <= el.clientHeight + offset) {
 			this.markAllMessagesRead();
 			this.wasScrolledToBottom = true;
 		}
@@ -203,13 +213,15 @@ class Chatroom extends React.Component {
 	 * TODO Should split this thing up a bit. It's HUGE. Probably separate textfield and chatlist.
 	 */
 	render() {
-		const { hasMore, messages, topic, reactions, client } = this.props;
+		const { messages, topic, reactions, client } = this.props;
 		let placeholder = `${__('Message as')} ${client.addr}`;
 		placeholder = `${placeholder.slice(0, 30)}...${placeholder.slice(-5)}`;
 
+		const visibleMessages = messages.slice(-this.state.count);
+
 		// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 		let didNotMarkYet = true;
-		const messageList = messages.reduce((acc, message, idx) => {
+		const messageList = visibleMessages.reduce((acc, message, idx) => {
 			if (didNotMarkYet && message.id === this.lastReadId) {
 				// Insert last read message thing.
 				acc.push(
@@ -261,7 +273,7 @@ class Chatroom extends React.Component {
 						pageStart={0}
 						isReverse
 						loadMore={this.loadMoreMessages}
-						hasMore={hasMore}
+						hasMore={visibleMessages.length < messages.length}
 						loader={<div className="is-loader" key={0} />}
 						initialLoad={false}
 						useWindow={false}
@@ -276,7 +288,6 @@ class Chatroom extends React.Component {
 				<div className="hero-foot">
 					<form className="card" onSubmit={e => this.submitText(e)}>
 						<div className="card-content x-is-small-padding field">
-
 							<div className={classnames('control')}>
 								<TextareaAutoCompleter
 									topic={topic}
@@ -299,7 +310,6 @@ class Chatroom extends React.Component {
 
 							<div className="level is-mobile">
 								<div className="level-left">
-
 									<div className="tabs is-small x-tabs-has-bigger-border">
 										<ul>
 											<li
@@ -341,7 +351,6 @@ class Chatroom extends React.Component {
 									/>
 								</div>
 							</div>
-
 						</div>
 					</form>
 				</div>
