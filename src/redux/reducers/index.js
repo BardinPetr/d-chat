@@ -9,9 +9,10 @@ const reactions = (state = configs.reactions, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/CLEAN_REACTIONS':
 		case 'chat/CLEAN_ALL':
 			newState = {};
-			configs.messages = {};
+			configs.reactions = {};
 			break;
 
 		case 'chat/RECEIVE_REACTION':
