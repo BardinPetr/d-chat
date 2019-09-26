@@ -73,7 +73,6 @@ class NKN extends nkn {
 		});
 
 		this.wallet = wallet;
-		this.on('message', console.log);
 	}
 
 	subscribe = async topic => {
