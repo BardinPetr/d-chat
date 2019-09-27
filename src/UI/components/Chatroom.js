@@ -137,7 +137,11 @@ class Chatroom extends React.Component {
 		const message = {
 			content: inputValue,
 			contentType: 'text',
-			topic: this.props.topic, // TODO Deprecate and use topicHash instead
+			// About transmitting the hashed topic: that will make UI between different apps bad.
+			// One app will get messages to "topichash" and have "hash -> topic clearname" map interanally,
+			// But other apps will not have the mapping, and will have to have something to work around that.
+			// Maybe do it anyways? Maybe it is worth it privacy-wise.?
+			topic: this.props.topic,
 		};
 
 		this.props.createMessage(message);
