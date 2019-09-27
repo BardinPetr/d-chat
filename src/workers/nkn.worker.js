@@ -17,10 +17,13 @@ import {
 } from 'Approot/redux/actions/client';
 
 // TODO figure i18n for this. Can't from tl from web worker.
+// Receivin a lot of messages in short time causes UI to lag.
+// It is probably because each message is transmitted to state separately.
+// Might want to throttle receiveMessage and receive chunks of multiple messages.
+// Or maybe deep diff between store and proxy store will fix it?
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
-	console.log('from worker:', action);
 
 	let status, client, topic, message;
 	// postMessage works like dispatch.

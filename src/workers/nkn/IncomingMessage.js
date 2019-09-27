@@ -11,10 +11,10 @@ renderer.image = (href, title, text) => {
 		let mime, data;
 		try {
 			mime = base64Mime(href);
-			data = href.slice(href.indexOf(',')+1);
+			data = href.slice(href.indexOf(',') + 1);
 			data = base64ToBlob(data, mime);
 			data = URL.createObjectURL(data);
-		} catch(e) {
+		} catch (e) {
 			console.error(e);
 			return '';
 		}
@@ -32,16 +32,49 @@ renderer.image = (href, title, text) => {
 	}
 };
 marked.setOptions({
-	highlight: code => highlight.highlightAuto(code).value,
+	highlight: (code, lang) => highlight.highlightAuto(code, [lang]).value,
 	renderer,
 });
 
-const allowedTags = sanitize.defaults.allowedTags.concat([ 'img', 'audio', 'video' ]);
+const allowedTags = [
+	'a',
+	'audio',
+	'b',
+	'blockquote',
+	'br',
+	'caption',
+	'code',
+	'em',
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'h6',
+	'i',
+	'img',
+	'li',
+	'ol',
+	'p',
+	'pre',
+	'span',
+	'strike',
+	'strong',
+	'table',
+	'tbody',
+	'td',
+	'th',
+	'thead',
+	'tr',
+	'ul',
+	'video',
+];
 const allowedSchemes = ['http', 'https', 'blob'];
 let allowedAttributes = sanitize.defaults.allowedAttributes;
 allowedAttributes.video = ['src', 'controls', 'loop', 'playsinline'];
 allowedAttributes.audio = ['src', 'controls', 'loop'];
 allowedAttributes.image = ['src', 'alt'];
+allowedAttributes.span = ['class'];
 
 class IncomingMessage extends Message {
 	constructor(message) {
@@ -52,6 +85,7 @@ class IncomingMessage extends Message {
 		this.content = sanitize(marked(message.content || ''), {
 			allowedTags,
 			allowedSchemes,
+			allowedAttributes,
 		}).trim();
 	}
 }

@@ -9,9 +9,10 @@ const reactions = (state = configs.reactions, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/CLEAN_REACTIONS':
 		case 'chat/CLEAN_ALL':
 			newState = {};
-			configs.messages = {};
+			configs.reactions = {};
 			break;
 
 		case 'chat/RECEIVE_REACTION':
@@ -82,11 +83,12 @@ const messages = (state = configs.messages, action) => {
 
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
-			// We're spamming "not subscribed" messages.
+			// Each id once, "would you like to sub" once.
 			if (
-				isNotice(action.payload.message) &&
+				initial.some(msg => msg.id === action.payload.message.id) ||
+				(isNotice(action.payload.message) &&
 				initial[initial.length - 1]?.contentType ===
-					action.payload.message.contentType
+					action.payload.message.contentType)
 			) {
 				return state;
 			}
