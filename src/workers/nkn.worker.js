@@ -128,7 +128,7 @@ onmessage = async ({ data: action }) => {
 						topic,
 						isPrivate: true,
 						// TODO i18n
-						content: 'Insufficient funds. Send a message and ask for a tip.\nOnce You have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
+						content: 'Insufficient funds. Send a message and ask for a tip.\nOnce you have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
 					});
 					postMessage(receiveMessage(message));
 				}

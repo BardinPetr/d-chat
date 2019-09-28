@@ -12,7 +12,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		draft: state.draftMessage,
 		messages: state.messages[topic] || [],
-		reactions: state.reactions[topic] || {},
+		// reactions: state.reactions[topic] || {},
 		unreadMessages: state.chatSettings[topic]?.unread || [],
 		topic: recipient,
 		subs: [recipient, state.login?.addr],
