@@ -131,7 +131,7 @@ class Chatroom extends React.Component {
 		const content = `![](${data})`;
 		const message = {
 			content: content,
-			contentType: 'text',
+			contentType: 'media',
 			topic: this.props.topic,
 		};
 		this.props.createMessage(message);
