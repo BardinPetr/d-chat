@@ -68,6 +68,14 @@ const messages = (state = configs.messages, action) => {
 	const topic = action.payload?.topic;
 
 	switch (action.type) {
+		case 'chat/REMOVE_MESSAGE_BY_ID':
+			newState = {
+				...state,
+				[topic]: state[topic].filter(msg => msg.id !== action.payload.id),
+			};
+			configs.messages = newState;
+			break;
+
 		case 'chat/CLEAN_ALL':
 			newState = {};
 			configs.messages = {};
@@ -207,6 +215,7 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				[topic]: {
 					unread: [],
 					subscribers: [],
+					subscribersMeta: [],
 					...state[topic],
 				},
 			};
@@ -219,6 +228,19 @@ const chatSettings = (state = configs.chatSettings, action) => {
 				[topic]: {
 					...state[topic],
 					subscribers: action.payload.subscribers,
+				},
+			};
+			break;
+
+		case 'chat/SET_SUBSCRIPTION_INFOS':
+			newState = {
+				...state,
+				[topic]: {
+					// We need to set these just for the public topics list.
+					unread: [],
+					subscribers: [],
+					...state[topic],
+					subscribersMeta: action.payload.data,
 				},
 			};
 			break;

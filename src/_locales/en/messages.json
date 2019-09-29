@@ -17,6 +17,9 @@
   "Add": {
     "message": " Add"
   },
+  "Channelnamelikedchatforexample": {
+    "message": " Channel name, like \"#d-chat\", for example."
+  },
   "Channels": {
     "message": " Channels"
   },
@@ -31,6 +34,9 @@
   },
   "DChatversion": {
     "message": " D-Chat version"
+  },
+  "Description": {
+    "message": " Description"
   },
   "Export": {
     "message": " Export"
@@ -47,14 +53,26 @@
   "Identity": {
     "message": " Identity"
   },
+  "Ifyourfreesubscriptionneverresolvesthenuseafee": {
+    "message": " If your free subscription never resolves, then use a fee."
+  },
   "Import": {
     "message": " Import"
+  },
+  "Infewwordsexplainwhatyourchannelisabout": {
+    "message": " In few words, explain what your channel is about."
   },
   "Joinachatroom": {
     "message": " Join a chatroom"
   },
   "Joinchannel": {
     "message": " Join channel"
+  },
+  "Keepitshort": {
+    "message": " Keep it short."
+  },
+  "ListofSomeChannels": {
+    "message": " List of Some Channels"
   },
   "LogIn": {
     "message": " Log In"
@@ -64,6 +82,9 @@
   },
   "Messageas": {
     "message": " Message as"
+  },
+  "Name": {
+    "message": " Name"
   },
   "New": {
     "message": " New"
@@ -80,6 +101,9 @@
   "Nosubscriptionorabouttoexpire": {
     "message": " No subscription, or about to expire."
   },
+  "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
+    "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
+  },
   "Panel": {
     "message": " Panel"
   },
@@ -91,6 +115,9 @@
   },
   "Privatemessage": {
     "message": " Private message"
+  },
+  "Public": {
+    "message": " Public"
   },
   "Reload": {
     "message": " Reload"
@@ -110,8 +137,17 @@
   "Submit": {
     "message": " Submit"
   },
+  "SubmitYourOwn": {
+    "message": " Submit Your Own"
+  },
+  "SubmittedItwillshowupsoonyouwillhavetorefresh": {
+    "message": " Submitted. It will show up soon, you will have to refresh."
+  },
   "Subscribe": {
     "message": " Subscribe"
+  },
+  "Subscribewithfee": {
+    "message": " Subscribe with fee"
   },
   "Subscribers": {
     "message": " Subscribers"

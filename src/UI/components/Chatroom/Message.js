@@ -3,22 +3,11 @@
  */
 
 import React from 'react';
-import TimeAgo from 'react-timeago';
 import { __ } from 'Approot/misc/browser-util';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 import SubscribeOffer from 'Approot/UI/containers/SubscribeOfferMessage';
-
-const formatTime = (n, unit, ago, _, defaultFormatter) => {
-	if (unit === 'second') {
-		if (n < 30) {
-			return `${__('< 30 s')} ${ago}`;
-		} else {
-			return `${__('< 1 min')} ${ago}`;
-		}
-	}
-	return defaultFormatter();
-};
+import TimeAgo from './TimeAgo';
 
 const Nickname = ({
 	addr,
@@ -42,12 +31,7 @@ const Nickname = ({
 			</i>{' '}
 		</span>
 		<span className="has-text-grey is-size-7 x-is-padding-left">
-			<TimeAgo
-				formatter={formatTime}
-				title={new Date(timestamp).toLocaleString()}
-				date={timestamp}
-				minPeriod={30}
-			/>
+			<TimeAgo date={timestamp} />
 		</span>
 	</span>
 );
@@ -64,8 +48,14 @@ class Message extends React.PureComponent {
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
-		const isGreyed = ['dchat/subscribe', 'dchat/offerSubscribe', 'nkn/tip'].includes(message.contentType);
-		const isOfferSubscribe = ['dchat/offerSubscribe'].includes(message.contentType);
+		const isGreyed = [
+			'dchat/subscribe',
+			'dchat/offerSubscribe',
+			'nkn/tip',
+		].includes(message.contentType);
+		const isOfferSubscribe = ['dchat/offerSubscribe'].includes(
+			message.contentType,
+		);
 		const { error } = message;
 
 		return (
@@ -73,9 +63,12 @@ class Message extends React.PureComponent {
 				className={classnames(`message ${className}`, {
 					'has-background-grey-lighter': isGreyed,
 					'x-notice': isGreyed,
+					'box': isOfferSubscribe,
 				})}
 			>
-				{isOfferSubscribe ? <SubscribeOffer topic={topic} timestamp={message.timestamp} /> : (
+				{isOfferSubscribe ? (
+					<SubscribeOffer topic={topic} timestamp={message.timestamp} id={message.id} content={message.content} />
+				) : (
 					<React.Fragment>
 						<div className="message-header is-paddingless has-text-weight-light">
 							<span>
@@ -99,7 +92,10 @@ class Message extends React.PureComponent {
 						</div>
 						<div className="message-body x-is-small-padding">
 							{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-							<div className="content" dangerouslySetInnerHTML={{__html: message.content}}></div>
+							<div
+								className="content"
+								dangerouslySetInnerHTML={{ __html: message.content }}
+							></div>
 							{children}
 						</div>
 						{error && <div className="tag is-danger">{error}</div>}

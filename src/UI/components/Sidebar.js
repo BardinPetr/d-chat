@@ -11,6 +11,9 @@ const Sidebar = () => (
 			<li>
 				<Link to="/">{__('Home')}</Link>
 			</li>
+			<li>
+				<Link to="/topics/">{__('Public')}</Link>
+			</li>
 		</ul>
 
 		<p className="menu-label">{__('Channels')}</p>
