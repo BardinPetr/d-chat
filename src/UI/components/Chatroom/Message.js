@@ -3,7 +3,6 @@
  */
 
 import React from 'react';
-import { __ } from 'Approot/misc/browser-util';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 import SubscribeOffer from 'Approot/UI/containers/SubscribeOfferMessage';

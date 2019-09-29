@@ -98,8 +98,7 @@ class NKN extends nkn {
 
 	/**
 	 * There is no "memPool: true" argument for this one.
-	 * Don't feel like chasing that bug away by getting subs in txpool separately, just yet.
-	 * TODO First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
+	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
 	 */
 	isSubscribed = topic => {
 		const topicID = genChatID(topic);
@@ -108,13 +107,17 @@ class NKN extends nkn {
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
 		);
+		const subs = this.getSubs(topic);
 
-		return Promise.all([subInfo, latestBlockHeight]).then(
-			async ([info, blockHeight]) => {
+		return Promise.all([subInfo, latestBlockHeight, subs]).then(
+			async ([info, blockHeight, subs]) => {
 				if (blockHeight === 0) {
 					throw 'Block height 0.';
 				}
-				if (info.expiresAt - blockHeight > 5000) {
+				if (
+					info.expiresAt - blockHeight > 5000 ||
+					subs.subscribersInTxPool.some(sub => sub === this.addr)
+				) {
 					return info;
 				} else {
 					return false;
@@ -148,10 +151,7 @@ class NKN extends nkn {
 		}
 	};
 
-	getSubs = (
-		topic,
-		options = {},
-	) => {
+	getSubs = (topic, options = {}) => {
 		options = {
 			offset: 0,
 			limit: 1000,
@@ -188,12 +188,14 @@ class NKN extends nkn {
 			}
 
 			// If this is for the list of public chats, then get sub counts.
-			if ( topic === DCHAT_PUBLIC_TOPICS && subscriberData.name ) {
+			if (topic === DCHAT_PUBLIC_TOPICS && subscriberData.name) {
 				promises.push(
-					this.defaultClient.getSubscribersCount(genChatID(subscriberData.name))
+					this.defaultClient
+						.getSubscribersCount(genChatID(subscriberData.name))
 						.then(count => {
 							subscriberData.subscribersCount = count;
-						}).catch(console.error)
+						})
+						.catch(console.error),
 				);
 			}
 

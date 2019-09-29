@@ -20,6 +20,9 @@ import {
 // It is probably because each message is transmitted to state separately.
 // Might want to throttle receiveMessage and receive chunks of multiple messages.
 // Or maybe deep diff between store and proxy store will fix it?
+// TODO need to do a 'was message published' check.
+// Right now there's potential that you just message yourself and get connection errors.
+// No error messages displayed, then.
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
@@ -70,6 +73,11 @@ onmessage = async ({ data: action }) => {
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.publishMessage(payload.topic, message);
+			data = new IncomingMessage(payload.message);
+			// Overwrite id so when we receive it again, it will be ignored.
+			data.id = message.id;
+			data.from('me');
+			postMessage(receiveMessage(data));
 			break;
 
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
