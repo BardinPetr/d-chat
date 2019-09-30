@@ -59,6 +59,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/runtime": "^7.6.2",
     "@jukben/emoji-search": "^1.1.7",
+    "@rooks/use-timeout": "^3.3.0",
     "@svgr/webpack": "2.4.1",
     "@webscopeio/react-textarea-autocomplete": "^4.6.1",
     "b64-to-blob": "^1.2.19",

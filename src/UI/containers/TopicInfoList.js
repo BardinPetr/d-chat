@@ -7,6 +7,8 @@ import { DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util';
 import { getChatDisplayName, getChatURL } from 'Approot/misc/util';
 import Table from 'rc-table';
+import { IoMdRefreshCircle } from 'react-icons/io';
+import useTimeout from '@rooks/use-timeout';
 
 const defaults = {
 	name: '',
@@ -14,8 +16,10 @@ const defaults = {
 };
 
 const TopicInfoList = ({ dispatch, topics }) => {
-	const [formData, setFormData] = useState({...defaults});
+	const [formData, setFormData] = useState({ ...defaults });
 	const [status, setStatus] = useState('');
+	const [disabled, setDisabled] = useState(false);
+	const { start } = useTimeout(() => setDisabled(false), 1000);
 	// Maybe make the link in sidebar do this action, instead?
 	// Could refresh by clicking it (not useful, though).
 	useEffect(() => {
@@ -25,12 +29,13 @@ const TopicInfoList = ({ dispatch, topics }) => {
 	// User adds topic to list.
 	const onSubmit = event => {
 		event.preventDefault();
-		dispatch(subscribeToChat(
-			DCHAT_PUBLIC_TOPICS,
-			formData,
-		));
-		setFormData({...defaults});
-		setStatus(__('Submitted. It will show up soon, you will have to refresh.'));
+		dispatch(
+			subscribeToChat(DCHAT_PUBLIC_TOPICS, {
+				metadata: formData,
+			}),
+		);
+		setFormData({ ...defaults });
+		setStatus(__('Submitted. It will show up soon, usually under a minute.'));
 	};
 
 	const columns = [
@@ -49,7 +54,6 @@ const TopicInfoList = ({ dispatch, topics }) => {
 			title: __('Description'),
 			key: 'description',
 			dataIndex: 'description',
-			colSpan: 5,
 		},
 	];
 
@@ -61,57 +65,96 @@ const TopicInfoList = ({ dispatch, topics }) => {
 	}));
 
 	return (
-		<div className="section">
-			<h4 className="title is-size-4">{__('List of Some Channels')}</h4>
-			<Table data={data} columns={columns} className="table" />
+		<div className="section container">
+			<div className="tile is-ancestor">
+				<div className="tile is-vertical is-parent container">
+					<div className="tile is-child">
+						<div className="container">
+							<h4 className="title is-inline-flex is-size-4">{__('List of Public Channels')}</h4>
+							<button
+								className="button is-pulled-right"
+								disabled={disabled}
+								onClick={() => {
+									setDisabled(true);
+									start();
+									dispatch(fetchSubscriptionInfos(DCHAT_PUBLIC_TOPICS));
+								}}
+							>
+								<span className="icon is-small">
+									<IoMdRefreshCircle />
+								</span>
+							</button>
+						</div>
+						<div className="table-container">
+							<Table data={data} columns={columns} className="table" />
+						</div>
+					</div>
 
-			<form className="container" onSubmit={onSubmit}>
-				<h4 className="title is-size-4">{__('Submit Your Own')}</h4>
-				<div className="field">
-					<p className="label">{__('Name')}</p>
-					<p>{__('Channel name, like "#d-chat", for example.')}</p>
-					<div className="control">
-						<input
-							name="name"
-							value={formData.name}
-							onChange={e => setFormData({ ...formData, [e.target.name]: e.target.value})}
-							className="input"
-							type="text"
-							required
-							placeholder={__('Name')}
-						/>
+					<div className="tile is-child">
+						<form className="container" onSubmit={onSubmit}>
+							<h4 className="title is-size-4">{__('Submit Your Own')}</h4>
+							<p className="has-text-success">{status}</p>
+							<div className="field">
+								<p className="label">{__('Name')}</p>
+								<p>{__('Channel name, like "#d-chat", for example.')}</p>
+								<div className="control">
+									<input
+										name="name"
+										value={formData.name}
+										onChange={e =>
+											setFormData({
+												...formData,
+												[e.target.name]: e.target.value,
+											})
+										}
+										className="input"
+										type="text"
+										required
+										placeholder={__('Name')}
+									/>
+								</div>
+							</div>
+							<div className="field">
+								<p className="label">{__('Description')}</p>
+								<p>{__('In few words, explain what your channel is about.')}</p>
+								<div className="control">
+									<input
+										name="description"
+										value={formData.description}
+										onChange={e =>
+											setFormData({
+												...formData,
+												[e.target.name]: e.target.value,
+											})
+										}
+										className="input"
+										type="text"
+										placeholder={__('Keep it short.')}
+									/>
+								</div>
+							</div>
+							<p>
+								{__(
+									'One recommended channel per address. If you have already listed a channel, it will be overwritten.',
+								)}
+							</p>
+							<div className="field">
+								<div className="control">
+									<button type="submit" className="button is-link">
+										{__('Submit')}
+									</button>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
-				<div className="field">
-					<p className="label">{__('Description')}</p>
-					<p>{__('In few words, explain what your channel is about.')}</p>
-					<div className="control">
-						<input
-							name="description"
-							value={formData.description}
-							onChange={e => setFormData({ ...formData, [e.target.name]: e.target.value})}
-							className="input"
-							type="text"
-							placeholder={__('Keep it short.')}
-						/>
-					</div>
-				</div>
-				<p>{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}</p>
-				<div className="field">
-					<div className="control">
-						<button type="submit" className="button is-link">
-							{__('Submit')}
-						</button>
-					</div>
-					<p className="control">{status}</p>
-				</div>
-			</form>
+			</div>
 		</div>
 	);
 };
 
 const mapStateToProps = state => ({
-	topics: state.chatSettings[DCHAT_PUBLIC_TOPICS].subscribersMeta || [],
+	topics: state.chatSettings[DCHAT_PUBLIC_TOPICS]?.subscribersMeta || [],
 });
 
 export default connect(mapStateToProps)(TopicInfoList);

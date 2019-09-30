@@ -68,8 +68,8 @@
   "Keepitshort": {
     "message": " Keep it short."
   },
-  "ListofSomeChannels": {
-    "message": " List of Some Channels"
+  "ListofPublicChannels": {
+    "message": " List of Public Channels"
   },
   "LogIn": {
     "message": " Log In"
@@ -97,9 +97,6 @@
   },
   "Nosubscriptionorabouttoexpire": {
     "message": " No subscription, or about to expire."
-  },
-  "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
-    "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
   },
   "Panel": {
     "message": " Panel"
@@ -137,8 +134,8 @@
   "SubmitYourOwn": {
     "message": " Submit Your Own"
   },
-  "SubmittedItwillshowupsoonyouwillhavetorefresh": {
-    "message": " Submitted. It will show up soon, you will have to refresh."
+  "SubmittedItwillshowupsoonusuallyunderaminute": {
+    "message": " Submitted. It will show up soon, usually under a minute."
   },
   "Subscribe": {
     "message": " Subscribe"
