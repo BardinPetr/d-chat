@@ -4,18 +4,18 @@ import WalletImporter from 'Approot/UI/containers/Client/WalletImporter';
 import NewWallet from 'Approot/UI/containers/Client/NewWallet';
 import Clients from 'Approot/UI/containers/Client/List';
 
-const WalletRoutes = () => (
+const WalletRoutes = ({ match }) => (
 	<Switch>
 		<Route
-			path="/import"
+			path={`${match.path}/import`}
 			component={WalletImporter}
 		/>
 		<Route
-			path="/new"
+			path={`${match.path}/new`}
 			component={NewWallet}
 		/>
 		<Route
-			path="/"
+			path={`${match.path}`}
 			component={Clients}
 		/>
 	</Switch>

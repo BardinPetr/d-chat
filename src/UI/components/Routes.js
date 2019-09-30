@@ -33,11 +33,11 @@ const Routes = () => (
 							component={PrivateChatroom}
 						/>
 						<Route
-							path="/topics/"
+							path="/topics"
 							component={TopicInfoList}
 						/>
 						<Route
-							path="/wallets/"
+							path="/wallets"
 							component={WalletRoutes}
 						/>
 						<Route

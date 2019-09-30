@@ -70,7 +70,9 @@ const TopicInfoList = ({ dispatch, topics }) => {
 				<div className="tile is-vertical is-parent container">
 					<div className="tile is-child">
 						<div className="container">
-							<h4 className="title is-inline-flex is-size-4">{__('List of Public Channels')}</h4>
+							<h4 className="title is-inline-flex is-size-4">
+								{__('List of Public Channels')}
+							</h4>
 							<button
 								className="button is-pulled-right"
 								disabled={disabled}
@@ -134,9 +136,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 								</div>
 							</div>
 							<p>
-								{__(
-									'One recommended channel per address. If you have already listed a channel, it will be overwritten.',
-								)}
+								{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
 							</p>
 							<div className="field">
 								<div className="control">

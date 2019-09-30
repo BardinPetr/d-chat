@@ -98,6 +98,9 @@
   "Nosubscriptionorabouttoexpire": {
     "message": " No subscription, or about to expire."
   },
+  "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
+    "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
+  },
   "Panel": {
     "message": " Panel"
   },
