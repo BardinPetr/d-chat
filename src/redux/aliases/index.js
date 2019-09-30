@@ -70,8 +70,10 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 
 const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
-	dispatch(createChat(topic));
-	dispatch(maybeOfferSubscribeToChat(topic));
+	if ( topic ) {
+		dispatch(createChat(topic));
+		dispatch(maybeOfferSubscribeToChat(topic));
+	}
 };
 
 export default {

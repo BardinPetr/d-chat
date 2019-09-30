@@ -131,7 +131,7 @@ onmessage = async ({ data: action }) => {
 						isPrivate: true,
 						// TODO i18n
 						content: 'Subscribed.',
-					});
+					}).from('me');
 					postMessage(receiveMessage(message));
 				})
 				.catch(err => {
@@ -143,7 +143,7 @@ onmessage = async ({ data: action }) => {
 							// TODO i18n
 							content:
 								'Insufficient funds. Send a message and ask for a tip.\nOnce you have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
-						});
+						}).from('me');
 						postMessage(receiveMessage(message));
 					}
 				});
@@ -176,7 +176,7 @@ onmessage = async ({ data: action }) => {
 					contentType: 'dchat/offerSubscribe',
 					topic,
 					isPrivate: true,
-				});
+				}).from('me');
 				postMessage(receiveMessage(message));
 			}
 			break;

@@ -10,7 +10,7 @@ const LastRead = () => {
 	useEffect(() => {
 		lastReadRef.current.scrollIntoView();
 	}, []);
-	// The extra div makes the divider be fully in view.
+	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (<React.Fragment>
 		<div
 			style={{marginTop: '1rem'}}
