@@ -1,9 +1,8 @@
 import nkn from 'nkn-multiclient';
 import nknWallet from 'nkn-wallet';
-import { genChatID } from 'Approot/misc/util';
+import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-const FEE = 0.00000001; // 1 satoshi
 const FORBLOCKS = 50000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
@@ -75,16 +74,32 @@ class NKN extends nkn {
 		this.wallet = wallet;
 	}
 
-	subscribe = async topic => {
+	subscribe = async (topic, options = {}) => {
+		const metadata = options.metadata;
 		const topicID = genChatID(topic);
 		const isSubbed = await this.isSubscribed(topic);
-		if (!isSubbed) {
-			return this.wallet.subscribe(topicID, FORBLOCKS, this.identifier, '', {
-				fee: FEE,
-			});
+
+		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
+			return;
 		}
+
+		const fee = options.fee || 0;
+
+		return this.wallet.subscribe(
+			topicID,
+			FORBLOCKS,
+			this.identifier,
+			JSON.stringify(metadata),
+			{
+				fee,
+			},
+		);
 	};
 
+	/**
+	 * There is no "memPool: true" argument for this one.
+	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
+	 */
 	isSubscribed = topic => {
 		const topicID = genChatID(topic);
 		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
@@ -92,22 +107,30 @@ class NKN extends nkn {
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
 		);
+		const subs = this.getSubs(topic);
 
-		return Promise.all([subInfo, latestBlockHeight]).then(
-			async ([info, blockHeight]) => {
+		return Promise.all([subInfo, latestBlockHeight, subs]).then(
+			async ([info, blockHeight, subs]) => {
 				if (blockHeight === 0) {
 					throw 'Block height 0.';
 				}
-				if (info.expiresAt - blockHeight > 5000) {
-					return true;
+				if (
+					info.expiresAt - blockHeight > 5000 ||
+					subs.subscribersInTxPool.some(sub => sub === this.addr)
+				) {
+					return info;
 				} else {
 					return false;
 				}
-			}
+			},
 		);
-	}
+	};
 
-	publishMessage = async (topic, message, options = { txPool: true }) => {
+	publishMessage = async (topic, message, options = {}) => {
+		options = {
+			txPool: true,
+			...options,
+		};
 		try {
 			return this.publish(genChatID(topic), JSON.stringify(message), options);
 		} catch (e) {
@@ -128,16 +151,61 @@ class NKN extends nkn {
 		}
 	};
 
-	getSubs = (
-		topic,
+	getSubs = (topic, options = {}) => {
 		options = {
 			offset: 0,
 			limit: 1000,
 			meta: false,
 			txPool: true,
-		},
-	) => {
-		return this.defaultClient.getSubscribers(genChatID(topic), options);
+			...options,
+		};
+		topic = genChatID(topic);
+		return this.defaultClient.getSubscribers(topic, options);
+	};
+
+	/**
+	 * Gets subscription metadata for all subscribers in a channel.
+	 *
+	 * @return [{user, data}]
+	 */
+	fetchSubscriptions = async topic => {
+		const subs = await this.getSubs(topic, {
+			meta: true,
+		});
+
+		const promises = [];
+
+		const data = Object.entries(subs.subscribers).reduce((acc, sub) => {
+			let subscriberData;
+			if (sub[1] && typeof sub[1] === 'string' && sub[1] !== '') {
+				try {
+					subscriberData = JSON.parse(sub[1]);
+				} catch (e) {
+					return acc;
+				}
+			} else {
+				return acc;
+			}
+
+			// If this is for the list of public chats, then get sub counts.
+			if (topic === DCHAT_PUBLIC_TOPICS && subscriberData.name) {
+				promises.push(
+					this.defaultClient
+						.getSubscribersCount(genChatID(subscriberData.name))
+						.then(count => {
+							subscriberData.subscribersCount = count;
+						})
+						.catch(console.error),
+				);
+			}
+
+			subscriberData._user = sub[0];
+			return acc.concat(subscriberData);
+		}, []);
+
+		await Promise.all(promises);
+
+		return data;
 	};
 
 	toJSON() {
@@ -152,12 +220,12 @@ class NKN extends nkn {
 			wallet: w,
 		};
 
-		const preservedKeys = [ 'addr', 'identifier', 'wallet' ];
+		const preservedKeys = ['addr', 'identifier', 'wallet'];
 		for (let key in c) {
 			preservedKeys.includes(key) || delete c[key];
 		}
 		return c;
-	}
+	};
 }
 
 export default NKN;

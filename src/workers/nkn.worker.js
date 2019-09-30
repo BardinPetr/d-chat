@@ -1,13 +1,12 @@
 import NKN from 'Approot/workers/nkn/nknHandler';
 import OutgoingMessage from 'Approot/workers/nkn/OutgoingMessage';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
-import {
-	getAddressFromAddr,
-} from 'Approot/misc/util';
+import { getAddressFromAddr } from 'Approot/misc/util';
 import {
 	setLoginStatus,
 	receiveMessage,
 	setSubscribers,
+	setSubscriptionInfos,
 } from 'Approot/redux/actions';
 import {
 	switchedToClient,
@@ -21,27 +20,30 @@ import {
 // It is probably because each message is transmitted to state separately.
 // Might want to throttle receiveMessage and receive chunks of multiple messages.
 // Or maybe deep diff between store and proxy store will fix it?
+// TODO need to do a 'was message published' check.
+// Right now there's potential that you just message yourself and get connection errors.
+// No error messages displayed, then.
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
 
-	let status, client, topic, message;
+	let status, client, topic, message, data;
 	// postMessage works like dispatch.
 	switch (action.type) {
 		case 'nkn/SWITCH_TO_CLIENT_ALIAS':
 			client = NKN.activateClient(payload.address);
-			postMessage(switchedToClient( client.wallet.address ));
+			postMessage(switchedToClient(client.wallet.address));
 			break;
 
 		case 'nkn/NEW_CLIENT_ALIAS':
 			client = NKN.createClient(payload.username);
-			postMessage(createNewClient( client.neutered() ));
+			postMessage(createNewClient(client.neutered()));
 			postMessage(switchToClient(client.wallet.address));
 			break;
 
 		case 'nkn/IMPORT_WALLETSEED':
 			client = NKN.importClient(payload.walletSeed, payload.username);
-			postMessage(createNewClient( client.neutered() ));
+			postMessage(createNewClient(client.neutered()));
 			postMessage(switchToClient(client.wallet.address, payload.username));
 			break;
 
@@ -51,7 +53,10 @@ onmessage = async ({ data: action }) => {
 					// Previously active.
 					client = action.meta.clients.find(c => c.active);
 				}
-				client = NKN.start({...action.payload.credentials, client}, action.meta.clients);
+				client = NKN.start(
+					{ ...action.payload.credentials, client },
+					action.meta.clients,
+				);
 				status = { addr: client.addr };
 			} catch (e) {
 				console.log('Failed login.', e);
@@ -68,6 +73,11 @@ onmessage = async ({ data: action }) => {
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.publishMessage(payload.topic, message);
+			data = new IncomingMessage(payload.message);
+			// Overwrite id so when we receive it again, it will be ignored.
+			data.id = message.id;
+			data.from('me');
+			postMessage(receiveMessage(data));
 			break;
 
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
@@ -81,75 +91,81 @@ onmessage = async ({ data: action }) => {
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':
-			NKN.instance.wallet.transferTo(
-				getAddressFromAddr(payload.to),
-				payload.value
-			).then(() => {
-				const message = new OutgoingMessage({
-					contentType: 'nkn/tip',
-					value: payload.value,
-					content: payload.content,
-					topic: payload.topic,
-					isPrivate: true,
-				});
+			NKN.instance.wallet
+				.transferTo(getAddressFromAddr(payload.to), payload.value)
+				.then(() => {
+					const message = new OutgoingMessage({
+						contentType: 'nkn/tip',
+						value: payload.value,
+						content: payload.content,
+						topic: payload.topic,
+						isPrivate: true,
+					});
 
-				NKN.instance.sendMessage(
-					payload.to,
-					message
-				);
+					NKN.instance.sendMessage(payload.to, message);
 
-				const incMessage = new IncomingMessage({
-					contentType: 'nkn/tip',
-					value: payload.value,
-					content: `Tipped ${payload.to} ${payload.value?.toFixed?.(8)} NKN.`,
-					isMe: true,
-					topic: payload.topic,
-					isPrivate: true,
-				});
-				postMessage(receiveMessage(incMessage));
-			}).catch(console.error);
+					const incMessage = new IncomingMessage({
+						contentType: 'nkn/tip',
+						value: payload.value,
+						content: `Tipped ${payload.to} ${payload.value?.toFixed?.(8)} NKN.`,
+						isMe: true,
+						topic: payload.topic,
+						isPrivate: true,
+					});
+					postMessage(receiveMessage(incMessage));
+				})
+				.catch(console.error);
 			break;
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
-			NKN.instance.subscribe(topic).then(() => {
-				message = new IncomingMessage({
-					contentType: 'dchat/subscribe',
-					topic,
-					isPrivate: true,
-					// TODO i18n
-					content: 'Subscribed.',
-				});
-				postMessage(receiveMessage(message));
-			}).catch(err => {
-				if (err.code === 1 || err.msg?.data?.includes('funds')) {
+			NKN.instance
+				.subscribe(topic, {
+					metadata: action.payload.options.metadata,
+					fee: action.payload.options.fee,
+				})
+				.then(() => {
 					message = new IncomingMessage({
 						contentType: 'dchat/subscribe',
 						topic,
 						isPrivate: true,
 						// TODO i18n
-						content: 'Insufficient funds. Send a message and ask for a tip.\nOnce You have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
-					});
+						content: 'Subscribed.',
+					}).from('me');
 					postMessage(receiveMessage(message));
-				}
-			});
+				})
+				.catch(err => {
+					if (err.code === 1 || err.msg?.data?.includes('funds')) {
+						message = new IncomingMessage({
+							contentType: 'dchat/offerSubscribe',
+							topic,
+							isPrivate: true,
+							// TODO i18n
+							content:
+								'Insufficient funds. Send a message and ask for a tip.\nOnce you have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
+						}).from('me');
+						postMessage(receiveMessage(message));
+					}
+				});
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
 			topic = payload.topic;
-			NKN.instance.getSubs(topic).then(({ subscribers, subscribersInTxPool }) => {
-				subscribers = subscribers.concat(subscribersInTxPool);
-				postMessage(setSubscribers(topic, subscribers));
-			});
+			NKN.instance
+				.getSubs(topic)
+				.then(({ subscribers, subscribersInTxPool }) => {
+					subscribers = subscribers.concat(subscribersInTxPool);
+					postMessage(setSubscribers(topic, subscribers));
+				});
 			break;
 
 		case 'nkn/GET_BALANCE_ALIAS':
 			if (!NKN.instance) {
 				return;
 			}
-			NKN.instance.wallet.getBalance().then(balance =>
-				postMessage( setBalance(payload.address, balance) )
-			);
+			NKN.instance.wallet
+				.getBalance()
+				.then(balance => postMessage(setBalance(payload.address, balance)));
 			break;
 
 		case 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS':
@@ -160,9 +176,15 @@ onmessage = async ({ data: action }) => {
 					contentType: 'dchat/offerSubscribe',
 					topic,
 					isPrivate: true,
-				});
+				}).from('me');
 				postMessage(receiveMessage(message));
 			}
+			break;
+
+		case 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS':
+			topic = payload.topic;
+			data = await NKN.instance.fetchSubscriptions(topic);
+			postMessage(setSubscriptionInfos(topic, data));
 			break;
 
 		default:

@@ -149,10 +149,11 @@ export const newTransaction = ({
 	},
 });
 
-export const subscribeToChat = topic => ({
+export const subscribeToChat = (topic, options = {}) => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
 		topic,
+		options,
 	},
 });
 
@@ -168,4 +169,27 @@ export const maybeOfferSubscribeToChat = topic => ({
 	payload: {
 		topic: getChatName(topic),
 	},
+});
+
+export const fetchSubscriptionInfos = topic => ({
+	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',
+	payload: {
+		topic,
+	},
+});
+
+export const setSubscriptionInfos = (topic, data) => ({
+	type: 'chat/SET_SUBSCRIPTION_INFOS',
+	payload: {
+		topic,
+		data,
+	},
+});
+
+export const removeMessageById = (topic, id) => ({
+	type: 'chat/REMOVE_MESSAGE_BY_ID',
+	payload: {
+		topic,
+		id,
+	}
 });

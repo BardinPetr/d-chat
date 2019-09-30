@@ -70,8 +70,10 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 
 const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
-	dispatch(createChat(topic));
-	dispatch(maybeOfferSubscribeToChat(topic));
+	if ( topic ) {
+		dispatch(createChat(topic));
+		dispatch(maybeOfferSubscribeToChat(topic));
+	}
 };
 
 export default {
@@ -87,6 +89,7 @@ export default {
 	'nkn/SWITCH_TO_CLIENT_ALIAS': delegateToWorker,
 	'nkn/IMPORT_WALLETSEED': delegateToWorker,
 	'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS': delegateToWorker,
+	'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS': delegateToWorker,
 
 	'nkn/IMPORT_WALLET_ALIAS': walletImport,
 

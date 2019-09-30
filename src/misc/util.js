@@ -118,3 +118,7 @@ export const importWallet = (file) => {
 
 export const isNotice = msg => (['dchat/subscribe', 'dchat/offerSubscribe'].includes(msg.contentType));
 
+// This is the topic for the list of public topics.
+export const DCHAT_PUBLIC_TOPICS = '__dchat';
+
+export const ONE_SATOSHI = 0.00000001;
