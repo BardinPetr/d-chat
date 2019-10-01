@@ -6,9 +6,9 @@ import {
 	getChatURL,
 	getWhisperURL,
 } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util';
-import { runtime } from 'webextension-polyfill';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
+import Version from 'Approot/UI/components/Version';
 
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
@@ -32,10 +32,7 @@ const Home = ({ client }) => (
 	<div className="container">
 
 		{client && <ClientInfo className="notification" client={client}>
-			<div className="field">
-				<p className="is-size-7">{__('D-Chat version')}</p>
-				<p>{runtime.getManifest().version}</p>
-			</div>
+			<Version />
 		</ClientInfo>}
 
 		<div className="section" style={{paddingTop: 0}}>

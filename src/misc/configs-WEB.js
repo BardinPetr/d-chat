@@ -1,4 +1,5 @@
 export default {
+	$loaded: Promise.resolve(),
 	// Wallets. 1-to-1 client:wallet.
 	clientsMeta: [],
 

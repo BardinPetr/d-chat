@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchSubscriptionInfos, subscribeToChat } from 'Approot/redux/actions';
 import { DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { getChatDisplayName, getChatURL } from 'Approot/misc/util';
 import Table from 'rc-table';
 import { IoMdRefreshCircle } from 'react-icons/io';

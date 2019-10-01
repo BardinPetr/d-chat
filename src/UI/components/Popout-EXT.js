@@ -1,6 +1,6 @@
 import React from 'react';
 import { runtime, tabs, windows } from 'webextension-polyfill';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const popout = type => {
 	switch (type) {

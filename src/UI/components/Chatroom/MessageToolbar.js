@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getWhisperURL } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TipJar from 'Approot/UI/containers/TipJar';
 import { IoMdChatboxes } from 'react-icons/io';
 

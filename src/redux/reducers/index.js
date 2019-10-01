@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
-import configs from '../../misc/configs';
+import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 import { isNotice } from 'Approot/misc/util';
 

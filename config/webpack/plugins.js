@@ -16,7 +16,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const paths = require('../paths');
 const staticFiles = require('./static-files');
 // 'WEB' || 'EXT'.
-const appTarget = process.env.APP_TARGET || 'EXT';
+const appTarget = process.env.APP_TARGET || 'WEB';
 
 
 // eslint-disable-next-line

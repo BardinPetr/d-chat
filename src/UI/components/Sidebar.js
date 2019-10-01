@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import Logout from 'Approot/UI/containers/Logout';
-import Popout from 'Approot/UI/components/Popout';
+import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 
 const Sidebar = () => (
 	<aside className="menu section is-hidden-mobile x-is-fullheight x-is-small-padding" style={{overflowX: 'hidden'}}>
@@ -38,7 +38,6 @@ const Sidebar = () => (
 			</li>
 		</ul>
 
-		<p className="menu-label">{__('New view')}</p>
 		<Popout />
 
 	</aside>

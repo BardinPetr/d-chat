@@ -122,3 +122,5 @@ export const isNotice = msg => (['dchat/subscribe', 'dchat/offerSubscribe'].incl
 export const DCHAT_PUBLIC_TOPICS = '__dchat';
 
 export const ONE_SATOSHI = 0.00000001;
+
+export const IS_EXTENSION = APP_TARGET === 'EXT';

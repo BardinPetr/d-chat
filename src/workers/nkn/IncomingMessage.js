@@ -81,12 +81,15 @@ class IncomingMessage extends Message {
 		super(message);
 		this.messageClass = 'IncomingMessage';
 
-		// Sanitize data when message arrives.
-		this.content = sanitize(marked(message.content || ''), {
+		// Sanitize first so we ONLY get markdown stuff.
+		const sanitized = sanitize(message.content || '');
+		const markdowned = marked(sanitized);
+		const handled = sanitize(markdowned, {
 			allowedTags,
 			allowedSchemes,
 			allowedAttributes,
 		}).trim();
+		this.content = handled;
 	}
 }
 

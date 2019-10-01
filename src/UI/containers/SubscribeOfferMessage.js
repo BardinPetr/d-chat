@@ -1,5 +1,5 @@
 import React from 'react';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { connect } from 'react-redux';
 import { subscribeToChat, removeMessageById } from 'Approot/redux/actions';
 import { ONE_SATOSHI } from 'Approot/misc/util';

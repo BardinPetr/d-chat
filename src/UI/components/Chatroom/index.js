@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import TextareaAutosize from 'react-autosize-textarea';
 import TextareaAutoCompleter from './TextareaAutoCompleter';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { formatAddr } from 'Approot/misc/util';
 import Uploader from './Uploader';
 import Messages from './Messages';

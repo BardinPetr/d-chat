@@ -7,6 +7,9 @@ module.exports = {
     jest: true,
     webextensions: true
   },
+  globals: {
+	  'APP_TARGET': 'readonly',
+  },
   extends: 'eslint:recommended',
   parser: 'babel-eslint',
   parserOptions: {

@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Client from 'Approot/UI/components/Client';
 import classnames from 'classnames';
-import { __, IS_SIDEBAR } from 'Approot/misc/browser-util';
-import { navigated } from 'Approot/redux/actions';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { switchToClient } from 'Approot/redux/actions/client';
-import { runtime, windows } from 'webextension-polyfill';
 
 const ClientList = ({ clients, dispatch }) => {
 	const [expanded, setExpanded] = useState([]);
@@ -37,18 +35,7 @@ const ClientList = ({ clients, dispatch }) => {
 						</div>
 					))}
 					<div className="container">
-						<Link to="/wallets/import" className="button" onClick={(e) => {
-							if (!IS_SIDEBAR) {
-								e.preventDefault();
-								dispatch(navigated('/wallets/import'));
-								windows.create({
-									url: runtime.getURL('sidebar.html#/wallets/import'),
-									type: 'popup',
-									height: 860,
-									width: 680,
-								});
-							}
-						}}>
+						<Link to="/wallets/import" className="button">
 							{__('Import')}
 						</Link>
 						<Link to="/wallets/new" className="button">

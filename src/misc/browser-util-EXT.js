@@ -1,7 +1,7 @@
-import { i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
+import { extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
 import debounce from 'debounce';
-import configs from 'Approot/misc/configs';
+import configs from 'Approot/misc/configs-APP_TARGET';
 
 export function __(str, ...placeholders) {
 	// The i18n generator has a bug with empty prefix, so trim.
@@ -35,3 +35,16 @@ export const createNotification = debounce((options) => {
 }, 1000, true);
 
 export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
+
+export const VERSION = runtime.getManifest().version;
+
+/**
+ * Checks if popup view is open, returns path or false.
+ */
+export const getPopupURL = () => {
+	const w = extension.getViews({
+		type: 'popup',
+	})?.[0];
+	// Only mark unread if chat isn't currently open in popup.
+	return !w?.location.hash;
+};
