@@ -1,4 +1,10 @@
-# Src folder structure
+# Src folder
+
+## About -EXT and -WEB in filenames
+
+-EXT means the file is used for browser extension, -WEB is web version.
+
+## Structure
 
 UI: all the code for UI. Popup and sidebar both use the same code.
 

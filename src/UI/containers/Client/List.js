@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Client from 'Approot/UI/components/Client';
 import classnames from 'classnames';
-import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { __, IS_SIDEBAR, popout } from 'Approot/misc/browser-util-APP_TARGET';
+import { navigated } from 'Approot/redux/actions';
 import { switchToClient } from 'Approot/redux/actions/client';
 
 const ClientList = ({ clients, dispatch }) => {
 	const [expanded, setExpanded] = useState([]);
 
 	return (
-		<section className="section x-is-small-padding x-is-fullwidth">
+		<section className="section x-is-fullwidth">
+			<p className="title is-4">{__('These are your wallets.')}</p>
 			<div className="container">
 				<div className="accordions">
 					{ clients.map((client, i) => (
@@ -35,7 +37,13 @@ const ClientList = ({ clients, dispatch }) => {
 						</div>
 					))}
 					<div className="container">
-						<Link to="/wallets/import" className="button">
+						<Link to="/wallets/import" className="button" onClick={(e) => {
+							if (!IS_SIDEBAR) {
+								e.preventDefault();
+								dispatch(navigated('/wallets/import'));
+								popout('wallets/import');
+							}
+						}}>
 							{__('Import')}
 						</Link>
 						<Link to="/wallets/new" className="button">

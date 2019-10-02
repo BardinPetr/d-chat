@@ -32,8 +32,15 @@ if (IS_EXTENSION) {
 
 let store;
 export default configs.$loaded.then(() => {
+	const persistedState = {
+		clients: configs.clientsMeta,
+		messages: configs.messages,
+		reactions: configs.reactions,
+		chatSettings: configs.chatSettings,
+	};
 	store = createStore(
 		rootReducer,
+		persistedState,
 		applyMiddleware(
 			workerMiddleware,
 			alias(aliases),

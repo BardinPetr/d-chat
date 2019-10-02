@@ -274,8 +274,9 @@ export default combineReducers({
 	// Chat.
 	messages,
 	reactions,
-	draftMessage,
 	chatSettings,
+
 	// UI
+	draftMessage,
 	navigation,
 });

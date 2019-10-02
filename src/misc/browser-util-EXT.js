@@ -1,4 +1,4 @@
-import { extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
+import { windows, extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
 import debounce from 'debounce';
 import configs from 'Approot/misc/configs-APP_TARGET';
@@ -36,8 +36,6 @@ export const createNotification = debounce((options) => {
 
 export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
 
-export const VERSION = runtime.getManifest().version;
-
 /**
  * Checks if popup view is open, returns path or false.
  */
@@ -48,3 +46,15 @@ export const getPopupURL = () => {
 	// Only mark unread if chat isn't currently open in popup.
 	return !w?.location.hash;
 };
+
+/**
+ * Pops out a window.
+ */
+export const popout = url => windows.create({
+	url: runtime.getURL(`sidebar.html#/${url}`),
+	type: 'popup',
+	height: 860,
+	width: 680,
+});
+
+export const reload = () => runtime.reload();

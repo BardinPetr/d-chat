@@ -29,6 +29,8 @@ build_zip:
     expire_in: '1 hour'
     paths:
       - web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
+  only:
+    - master
 
 publish:
   image: inetprocess/gitlab-release
@@ -37,3 +39,16 @@ publish:
     - tags
   script:
     - gitlab-release --message 'Extension zip:' web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
+  only:
+    - master
+
+pages:
+  stage: deploy
+  script:
+    - npm run build:web
+    - mv extension public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

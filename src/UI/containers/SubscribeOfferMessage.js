@@ -37,7 +37,7 @@ const SubscribeOfferMessage = ({ id, content, dispatch, topic }) => (
 						dispatch(removeMessageById(topic, id));
 					}}
 				>
-					{__('Subscribe with fee')}
+					{__('Subscribe with 1sat fee')}
 				</a>
 			</div>
 		</div>

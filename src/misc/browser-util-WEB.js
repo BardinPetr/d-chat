@@ -9,7 +9,8 @@ export const createNotification = () => {};
 
 export const IS_SIDEBAR = true;
 
-export const VERSION = '?'; // TODO
-
-// TODO history.pathname?
 export const getPopupURL = () => '';
+
+export const popout = () => {};
+
+export const reload = () => {};
