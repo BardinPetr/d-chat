@@ -24,13 +24,10 @@ build_zip:
   stage: build
   script:
     - npm install --silent
-    - npm run build:pack
   artifacts:
     expire_in: '1 hour'
     paths:
       - web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
-  only:
-    - master
 
 publish:
   image: inetprocess/gitlab-release
@@ -38,11 +35,11 @@ publish:
   only:
     - tags
   script:
+    - npm run build:pack
     - gitlab-release --message 'Extension zip:' web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
-  only:
-    - master
 
 pages:
+  stage: publish
   script:
     - npm install --silent
     - npm run build:web
