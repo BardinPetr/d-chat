@@ -45,10 +45,11 @@ publish:
 pages:
   stage: deploy
   script:
+    - npm install --silent
     - npm run build:web
     - mv extension public
   artifacts:
     paths:
       - public
   only:
-    - master
+    - webpage
