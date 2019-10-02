@@ -6,7 +6,7 @@ import {
 import passworder from 'browser-passworder';
 import {
 	__,
-} from 'Approot/misc/browser-util';
+} from 'Approot/misc/browser-util-APP_TARGET';
 import { importWalletSeed } from 'Approot/redux/actions/client';
 
 // TODO maybe remove auto-login?

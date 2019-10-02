@@ -7,7 +7,7 @@ import {
 	getChatDisplayName,
 	DCHAT_PUBLIC_TOPICS,
 } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { removeChat } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 

@@ -1,3 +1,8 @@
+/**
+ * Is a simple placeholder for an NKN (nkn.js) object.
+ *
+ * There is no option for creating an nkn-client without connecting it, so this is to get around that.
+ */
 class FakeNKN {
 	constructor({ wallet, username }) {
 		this.wallet = wallet;

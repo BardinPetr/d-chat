@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
@@ -69,7 +69,7 @@ class LoginBox extends React.Component {
 							: __('Welcome Back!')}
 					</h1>
 					<div className="columns is-centered">
-						<div className="column is-half">
+						<div className="column is-half is-4-desktop">
 							<div className="notification is-light">
 								<figure className="image container is-64x64">
 									<DchatLogo />
@@ -136,9 +136,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{window.location.search.includes('register')
-													? __('Create')
-													: __('Log In')}
+												{ __('Log In / Create') }
 											</button>
 										</div>
 									</div>
@@ -171,7 +169,7 @@ class LoginBox extends React.Component {
 const mapStateToProps = state => ({
 	loggedIn: state.login?.addr != null,
 	connecting: !state.login?.connected,
-	wrongPassword: state.login?.error,
+	error: state.login?.error,
 });
 
 export default connect(mapStateToProps)(LoginBox);

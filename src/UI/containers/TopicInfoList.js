@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchSubscriptionInfos, subscribeToChat } from 'Approot/redux/actions';
 import { DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { getChatDisplayName, getChatURL } from 'Approot/misc/util';
 import Table from 'rc-table';
-import { IoMdRefreshCircle } from 'react-icons/io';
 import useTimeout from '@rooks/use-timeout';
 
 const defaults = {
@@ -18,12 +17,16 @@ const defaults = {
 const TopicInfoList = ({ dispatch, topics }) => {
 	const [formData, setFormData] = useState({ ...defaults });
 	const [status, setStatus] = useState('');
-	const [disabled, setDisabled] = useState(false);
-	const { start } = useTimeout(() => setDisabled(false), 1000);
+	const { start } = useTimeout(() => {
+		dispatch(fetchSubscriptionInfos(DCHAT_PUBLIC_TOPICS));
+		start();
+	}, 10000);
+
 	// Maybe make the link in sidebar do this action, instead?
 	// Could refresh by clicking it (not useful, though).
 	useEffect(() => {
 		dispatch(fetchSubscriptionInfos(DCHAT_PUBLIC_TOPICS));
+		start();
 	}, []);
 
 	// User adds topic to list.
@@ -69,23 +72,13 @@ const TopicInfoList = ({ dispatch, topics }) => {
 			<div className="tile is-ancestor">
 				<div className="tile is-vertical is-parent container">
 					<div className="tile is-child">
-						<div className="container">
-							<h4 className="title is-inline-flex is-size-4">
+						<div className="content">
+							<h4>
 								{__('List of Public Channels')}
 							</h4>
-							<button
-								className="button is-pulled-right"
-								disabled={disabled}
-								onClick={() => {
-									setDisabled(true);
-									start();
-									dispatch(fetchSubscriptionInfos(DCHAT_PUBLIC_TOPICS));
-								}}
-							>
-								<span className="icon is-small">
-									<IoMdRefreshCircle />
-								</span>
-							</button>
+							<p>
+								{__('Here are channels that people have listed. You can submit your own channel to the list, so others can find you.')}
+							</p>
 						</div>
 						<div className="table-container">
 							<Table data={data} columns={columns} className="table" />

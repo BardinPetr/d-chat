@@ -115,6 +115,7 @@ module.exports = function (webpackEnv) {
 			],
 		},
 		plugins: [
+			process.env.APP_TARGET !== 'EXT' && plugins.extIgnorePlugin,
 			plugins.friendlyErrorsWebpackPlugin,
 			doesOptionsHtmlExist && plugins.optionsHtmlPlugin,
 			doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
@@ -127,6 +128,8 @@ module.exports = function (webpackEnv) {
 			isEnvProduction && plugins.miniCssExtractPlugin,
 			plugins.ignorePlugin,
 			plugins.copyPlugin,
+			plugins.normalModuleReplacementPlugin,
+			plugins.appTargetPlugin,
 		].filter(Boolean),
 		node: {
 			dgram: 'empty',

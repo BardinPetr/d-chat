@@ -5,11 +5,11 @@ import {
 import {
 	setBadgeText,
 	createNotification,
-} from 'Approot/misc/browser-util';
+	getPopupURL,
+} from 'Approot/misc/browser-util-APP_TARGET';
 import {
 	markUnread,
 } from 'Approot/redux/actions';
-import { extension } from 'webextension-polyfill';
 
 const getUnreadMessages = state => {
 	const chats = Object.values(state.chatSettings);
@@ -21,11 +21,9 @@ const notifier = store => next => action => {
 	let w;
 	switch (action.type) {
 		case 'chat/RECEIVE_MESSAGE':
-			w = extension.getViews({
-				type: 'popup',
-			})?.[0];
+			w = getPopupURL();
 			// Only mark unread if chat isn't currently open in popup.
-			if (!w?.location.hash.includes(message.topic)) {
+			if (!w?.includes(message.topic)) {
 				if (!isNotice(message) && !message.isMe && !message.isSeen) {
 					store.dispatch(markUnread(message.topic, message));
 				}

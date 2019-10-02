@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const ProvideCredentials = ({ noPassword, submit, children, callToAction }) => {
 	const [username, setUsername] = useState('');

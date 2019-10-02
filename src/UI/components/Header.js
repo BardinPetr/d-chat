@@ -2,11 +2,11 @@ import React from 'react';
 import { matchPath, Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { getChatDisplayName } from '../../misc/util';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import Popout from 'Approot/UI/components/Popout';
+import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import SubscriberList from 'Approot/UI/containers/SubscriberList';
 import Logout from 'Approot/UI/containers/Logout';
@@ -120,7 +120,6 @@ class Header extends React.Component {
 						</div>
 
 						<div className="navbar-item">
-							<p className="menu-label">{__('New view')}</p>
 							<Popout />
 						</div>
 

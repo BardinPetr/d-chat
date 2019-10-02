@@ -26,11 +26,11 @@
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
-  "Create": {
-    "message": " Create"
-  },
   "DChat": {
     "message": " D-Chat"
+  },
+  "DChatisalsoabrowserextension": {
+    "message": " D-Chat is also a browser extension."
   },
   "DChatversion": {
     "message": " D-Chat version"
@@ -41,11 +41,20 @@
   "Export": {
     "message": " Export"
   },
+  "ForChromiumbasedbrowsersChromewebstore": {
+    "message": " For Chromium based browsers, Chrome webstore"
+  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
-  "GetsomeNKNforfreefromthefaucet": {
-    "message": " Get some NKN for free, from the faucet"
+  "GettheaddonforChrome": {
+    "message": " Get the add-on for Chrome"
+  },
+  "GettheaddonforFirefox": {
+    "message": " Get the add-on for Firefox"
+  },
+  "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
+    "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
   "Home": {
     "message": " Home"
@@ -71,8 +80,8 @@
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
-  "LogIn": {
-    "message": " Log In"
+  "LogInCreate": {
+    "message": " Log In / Create"
   },
   "LogOut": {
     "message": " Log Out"
@@ -86,11 +95,11 @@
   "New": {
     "message": " New"
   },
+  "NewView": {
+    "message": " New View"
+  },
   "Newmessagesbelow": {
     "message": " New messages below"
-  },
-  "Newview": {
-    "message": " New view"
   },
   "Nickname": {
     "message": " Nickname"
@@ -143,8 +152,8 @@
   "Subscribe": {
     "message": " Subscribe"
   },
-  "Subscribewithfee": {
-    "message": " Subscribe with fee"
+  "Subscribewithsatfee": {
+    "message": " Subscribe with 1sat fee"
   },
   "Subscribers": {
     "message": " Subscribers"
@@ -157,6 +166,9 @@
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Theseareyourwallets": {
+    "message": " These are your wallets."
   },
   "Thiswalletisalreadyimported": {
     "message": " This wallet is already imported."

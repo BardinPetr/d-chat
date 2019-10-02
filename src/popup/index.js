@@ -1,3 +1,3 @@
-import renderApp from '../UI';
+import renderApp from '../UI/index-APP_TARGET';
 
 renderApp();

@@ -3,7 +3,7 @@ import Message from './Message';
 import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
 import classnames from 'classnames';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const LastRead = () => {
 	const lastReadRef = useRef();
@@ -26,7 +26,8 @@ const LastRead = () => {
 const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, subs, markAllMessagesRead }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, scrollBottom, isScrolled } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
+		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
 
@@ -36,9 +37,6 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 
 	useLayoutEffect(() => {
 		stayScrolled();
-		if ( !lastRead ) {
-			scrollBottom();
-		}
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}

@@ -1,4 +1,4 @@
-import configs from 'Approot/misc/configs';
+import configs from 'Approot/misc/configs-APP_TARGET';
 
 const clients = (state = configs.clientsMeta, action) => {
 	let newState, initial, address;
