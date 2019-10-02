@@ -43,7 +43,6 @@ publish:
     - master
 
 pages:
-  stage: deploy
   script:
     - npm install --silent
     - npm run build:web
