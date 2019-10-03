@@ -5,6 +5,8 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
+import { deactivateClients } from '../../redux/actions/client';
+import { IS_EXTENSION } from 'Approot/misc/util';
 
 class LoginBox extends React.Component {
 	constructor(props) {
@@ -47,6 +49,7 @@ class LoginBox extends React.Component {
 		e.preventDefault();
 		this.setState({ cleared: true });
 		this.props.dispatch(logout());
+		this.props.dispatch(deactivateClients());
 	}
 
 	render() {
@@ -79,6 +82,7 @@ class LoginBox extends React.Component {
 								</p>
 
 								<form className="" onSubmit={this.handleLoginSubmit}>
+									{IS_EXTENSION && // Want to remove identifier usernames later.
 									<div className="field">
 										<label className="label">
 											{__('Username')}
@@ -98,6 +102,7 @@ class LoginBox extends React.Component {
 											/>
 										</div>
 									</div>
+									}
 									<div className="field">
 										<label className="label">
 											{__('Password')}
@@ -114,7 +119,6 @@ class LoginBox extends React.Component {
 												className="input password"
 												placeholder="Password"
 												autoComplete="current-user"
-												required
 											/>
 										</div>
 									</div>
@@ -136,7 +140,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{ __('Log In / Create') }
+												{ __('Create / Log In') }
 											</button>
 										</div>
 									</div>

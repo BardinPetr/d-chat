@@ -12,7 +12,10 @@ const ClientList = ({ clients, dispatch }) => {
 
 	return (
 		<section className="section x-is-fullwidth">
-			<p className="title is-4">{__('These are your wallets.')}</p>
+			<div className="content">
+				<h4>{__('These are your wallets.')}</h4>
+				<p>{__('They expand on click.')}</p>
+			</div>
 			<div className="container">
 				<div className="accordions">
 					{ clients.map((client, i) => (

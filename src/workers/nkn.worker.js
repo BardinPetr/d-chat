@@ -191,3 +191,6 @@ onmessage = async ({ data: action }) => {
 			console.log('Unknown thingy in worker:', action, payload);
 	}
 };
+
+onerror = e => console.error('NKN worker error:', e);
+onmessageerror = e => console.error('NKN worker messageerror:', e);

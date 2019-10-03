@@ -17,12 +17,20 @@ const LoadingScreen = ({ loading, children }) => (
 								<p className="subtitle has-text-centered">
 									{ __('Connecting to the blockchain...') }
 								</p>
-								{IS_EXTENSION &&
+								{IS_EXTENSION ? (
 									<div className="field">
 										<button className="button is-text" type="button" onClick={() => reload()}>
 											{__('Reload')}
 										</button>
 									</div>
+								) : (
+									(window.location.protocol !== 'http:') &&
+									<div className="content">
+										<p>{__('HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead.')}</p>
+										<p>{__('Your messages will be encrypted, anyways.')}</p>
+										<p>{__('If you are using HTTPS Everywhere, you can disable it on this site via the browser action.')}</p>
+									</div>
+								)
 								}
 							</div>
 						</div>

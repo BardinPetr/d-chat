@@ -14,7 +14,7 @@ export const DeleteMessageButton = connect()(Del);
 
 const SubscribeOfferMessage = ({ id, content, dispatch, topic }) => (
 	<div className="message-body x-is-small-padding">
-		{!content && <p>{__('No subscription, or about to expire.')}</p>}
+		{!content && <p>{__('No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free, just click on the button.')}</p>}
 		{/* This is generated locally, as well as sanitized. */}
 		{content && <div dangerouslySetInnerHTML={{ __html: content }}></div>}
 		<div className="field is-grouped">

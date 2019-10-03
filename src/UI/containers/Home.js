@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
-import Info from 'Approot/UI/components/Info';
+import Info from 'Approot/UI/components/Info-APP_TARGET';
 import {
 	getChatURL,
 	getWhisperURL,

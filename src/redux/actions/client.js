@@ -61,3 +61,7 @@ export const importWalletSeed = ({walletSeed, username}) => ({
 		username
 	},
 });
+
+export const deactivateClients = () => ({
+	type: 'nkn/DEACTIVATE_CLIENTS',
+});
