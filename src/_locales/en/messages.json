@@ -23,6 +23,9 @@
   "Channels": {
     "message": " Channels"
   },
+  "Clearyourbrowsercacheifyoukeepgettingredirected": {
+    "message": " Clear your browser cache if you keep getting redirected."
+  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
@@ -71,8 +74,8 @@
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
-  "IfyoucareaboutyouwalletthenexportitfromtheaccountstabItwillbeencryptedwithyourpassword": {
-    "message": " If you care about you wallet, then export it from the accounts tab. It will be encrypted with your password."
+  "IfyoucareaboutyouwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
+    "message": " If you care about you wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
   },
   "Import": {
     "message": " Import"
@@ -113,8 +116,8 @@
   "Nickname": {
     "message": " Nickname"
   },
-  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfreejustclickonthebutton": {
-    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free, just click on the button."
+  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfreejustasimpleclick": {
+    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free, just a simple click."
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -220,6 +223,9 @@
   },
   "Yourmessageswillbeencryptedanyways": {
     "message": " Your messages will be encrypted, anyways."
+  },
+  "andsayhi": {
+    "message": " and say hi!"
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."

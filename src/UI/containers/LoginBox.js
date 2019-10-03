@@ -81,6 +81,14 @@ class LoginBox extends React.Component {
 									{__('The decentralized chat awaits.')}
 								</p>
 
+								{(!IS_EXTENSION && window.location.protocol !== 'http:') &&
+								<div className="content">
+									<p>{__('HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead.')}</p>
+									<p>{__('Your messages will be encrypted, anyways.')}</p>
+									<p>{__('If you are using HTTPS Everywhere, you can disable it on this site via the browser action.')}</p>
+									<p>{__('Clear your browser cache if you keep getting redirected.')}</p>
+								</div>}
+
 								<form className="" onSubmit={this.handleLoginSubmit}>
 									{IS_EXTENSION && // Want to remove identifier usernames later.
 									<div className="field">
