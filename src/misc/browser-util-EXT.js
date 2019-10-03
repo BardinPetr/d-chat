@@ -44,7 +44,7 @@ export const getPopupURL = () => {
 		type: 'popup',
 	})?.[0];
 	// Only mark unread if chat isn't currently open in popup.
-	return !w?.location.hash;
+	return w?.location.hash;
 };
 
 /**
