@@ -140,6 +140,7 @@ class LoginBox extends React.Component {
 													value="rememberMe"
 													name="rememberMe"
 													id="rememberMe"
+													disabled={!IS_EXTENSION}
 												/>
 												{__('Store password')}
 											</label>
