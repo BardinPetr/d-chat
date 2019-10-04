@@ -4,9 +4,19 @@ A decentralized chat on NKN as an extension for Chrome and Firefox.
 
 Join *#d-chat* on d-chat!
 
+http://losnappas.gitlab.io/d-chat/
+
 https://addons.mozilla.org/en-US/firefox/addon/d-chat/
 
 https://chrome.google.com/webstore/detail/d-chat/glnmkakdjcognfgonjfcklpmjiobijii
+
+## What is D-Chat and NKN
+
+NKN is a decentralized network of more than 10k nodes, incentivised by the NKN coin.
+
+D-Chat is a chat that uses NKN for transmitting messages and subscribing to topics.
+
+D-Chat is free to use.
 
 ## Installation
 

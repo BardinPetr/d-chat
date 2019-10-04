@@ -7,6 +7,7 @@ import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
 import { deactivateClients } from '../../redux/actions/client';
 import { IS_EXTENSION } from 'Approot/misc/util';
+import { HTTPSInfo } from 'Approot/UI/components/Info-APP_TARGET';
 
 class LoginBox extends React.Component {
 	constructor(props) {
@@ -67,9 +68,7 @@ class LoginBox extends React.Component {
 			<div className="hero is-primary">
 				<div className="hero-body" style={{ height: '100vh' }}>
 					<h1 className="title has-text-centered is-size-2">
-						{window.location.search.includes('register')
-							? __('Welcome!')
-							: __('Welcome Back!')}
+						{__('Welcome!')}
 					</h1>
 					<div className="columns is-centered">
 						<div className="column is-half is-4-desktop">
@@ -81,13 +80,7 @@ class LoginBox extends React.Component {
 									{__('The decentralized chat awaits.')}
 								</p>
 
-								{(!IS_EXTENSION && window.location.protocol !== 'http:') &&
-								<div className="content">
-									<p>{__('HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead.')}</p>
-									<p>{__('Your messages will be encrypted, anyways.')}</p>
-									<p>{__('If you are using HTTPS Everywhere, you can disable it on this site via the browser action.')}</p>
-									<p>{__('Clear your browser cache if you keep getting redirected.')}</p>
-								</div>}
+								<HTTPSInfo />
 
 								<form className="" onSubmit={this.handleLoginSubmit}>
 									{IS_EXTENSION && // Want to remove identifier usernames later.

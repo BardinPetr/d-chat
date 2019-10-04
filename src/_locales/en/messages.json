@@ -116,8 +116,8 @@
   "Nickname": {
     "message": " Nickname"
   },
-  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfreejustasimpleclick": {
-    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free, just a simple click."
+  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfree": {
+    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free."
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -208,9 +208,6 @@
   },
   "Walletremoved": {
     "message": " Wallet removed"
-  },
-  "WelcomeBack": {
-    "message": " Welcome Back!"
   },
   "Welcome": {
     "message": " Welcome!"
