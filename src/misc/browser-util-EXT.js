@@ -1,6 +1,6 @@
 import { windows, extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
-import debounce from 'debounce';
+import throttle from 'lodash.throttle';
 import configs from 'Approot/misc/configs-APP_TARGET';
 
 export function __(str, ...placeholders) {
@@ -23,7 +23,7 @@ export const setBadgeText = txt => {
 	});
 };
 
-export const createNotification = debounce((options) => {
+export const createNotification = throttle((options) => {
 	if (configs.showNotifications) {
 		return notifications.create( 'd-chat', {
 			type: 'basic',
@@ -32,7 +32,7 @@ export const createNotification = debounce((options) => {
 			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
 		});
 	}
-}, 1000, true);
+}, 250, { trailing: false });
 
 export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
 
