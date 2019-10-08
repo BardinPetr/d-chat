@@ -12,6 +12,7 @@ export const HTTPSInfo = () => (
 	</div>
 );
 
+// TODO Gotta fix the i18n script to allow placeholders.
 const Info = () => {
 	return (
 		<div className="container">
