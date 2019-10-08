@@ -21,7 +21,7 @@ const NewTopicForm = ({ privateChat }) => {
 	return (
 		<form className="field" onSubmit={submit}>
 			<div className="control">
-				<input placeholder={privateChat ? __('Identity') : __('Topic')} value={target} className="input is-small is-rounded" onChange={e => setTarget(e.target.value)} />
+				<input placeholder={privateChat ? __('Identity') : __('Topic')} value={target} className="input is-small is-rounded" onChange={e => setTarget(e.target.value)} pattern="[^\/]*" />
 			</div>
 		</form>
 	);

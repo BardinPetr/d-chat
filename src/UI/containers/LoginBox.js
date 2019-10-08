@@ -36,14 +36,13 @@ class LoginBox extends React.Component {
 	handleLoginSubmit(e) {
 		e.preventDefault();
 		// See notes in reducer.
-		this.props
-			.dispatch(
-				login({
-					username: this.state.username,
-					password: this.state.password,
-					rememberMe: this.state.rememberMe,
-				}),
-			);
+		this.props.dispatch(
+			login({
+				username: this.state.username,
+				password: this.state.password,
+				rememberMe: this.state.rememberMe,
+			}),
+		);
 	}
 
 	clear(e) {
@@ -54,13 +53,16 @@ class LoginBox extends React.Component {
 	}
 
 	render() {
-		const { loggedIn, connecting, error } = this.props;
+		const { loggedIn, connecting, error, location } = this.props;
+		const redir = location?.search && new URL(
+			`http://example.org/${location.search}`,
+		)?.searchParams?.get('returnUrl');
 
 		return loggedIn ? (
 			<LoadingScreen loading={connecting}>
 				<Redirect
 					to={{
-						pathname: '/',
+						pathname: redir || '/',
 					}}
 				/>
 			</LoadingScreen>
@@ -83,27 +85,28 @@ class LoginBox extends React.Component {
 								<HTTPSInfo />
 
 								<form className="" onSubmit={this.handleLoginSubmit}>
-									{IS_EXTENSION && // Want to remove identifier usernames later.
-									<div className="field">
-										<label className="label">
-											{__('Username')}
-											<span className="has-text-grey-light is-size-7">
-												{' (' + __('optional') + ')'}
-											</span>
-										</label>
-										<div className="control">
-											<input
-												type="username"
-												name="username"
-												value={this.state.username}
-												onChange={this.handleChange}
-												className="input"
-												placeholder="Username"
-												autoComplete="current-user"
-											/>
+									{IS_EXTENSION && ( // Want to remove identifier usernames later.
+										<div className="field">
+											<label className="label">
+												{__('Username')}
+												<span className="has-text-grey-light is-size-7">
+													{' (' + __('optional') + ')'}
+												</span>
+											</label>
+											<div className="control">
+												<input
+													type="username"
+													name="username"
+													value={this.state.username}
+													onChange={this.handleChange}
+													className="input"
+													placeholder="Username"
+													pattern="[^\/]*"
+													autoComplete="current-user"
+												/>
+											</div>
 										</div>
-									</div>
-									}
+									)}
 									<div className="field">
 										<label className="label">
 											{__('Password')}
@@ -142,7 +145,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{ __('Create / Log In') }
+												{__('Create / Log In')}
 											</button>
 										</div>
 									</div>

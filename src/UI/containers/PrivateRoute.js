@@ -5,7 +5,6 @@ import ReactPrivateRoute from '@sharyn/react-router.privateroute';
 const PrivateRoute = ({ path, component, authStatus }) => (
 	<ReactPrivateRoute
 		path={path}
-		withReturnUrl={false}
 		redirectPath="/login"
 		component={component}
 		loggedIn={!!authStatus}
