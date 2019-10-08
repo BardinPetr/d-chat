@@ -57,10 +57,9 @@ class Message extends React.PureComponent {
 		const isOfferSubscribe = ['dchat/offerSubscribe'].includes(
 			message.contentType,
 		);
-		const isNotice = [
-			'dchat/subscribe',
-			'dchat/offerSubscribe',
-		].includes(message.contentType);
+		const isNotice = ['dchat/subscribe', 'dchat/offerSubscribe'].includes(
+			message.contentType,
+		);
 
 		return (
 			<div
@@ -80,7 +79,7 @@ class Message extends React.PureComponent {
 							pubKey={message.pubKey || ''}
 						/>
 					</span>
-					{(isOfferSubscribe || isNotice) ? (
+					{isOfferSubscribe || isNotice ? (
 						<DeleteMessageButton id={message.id} topic={topic} />
 					) : (
 						<div className="is-pulled-right">

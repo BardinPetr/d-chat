@@ -26,7 +26,6 @@ class Chatroom extends React.Component {
 			count: 15 + props.unreadMessages.length,
 			showingPreview: false,
 		};
-
 	}
 
 	loadMoreMessages = () => {
@@ -72,7 +71,6 @@ class Chatroom extends React.Component {
 		this.msg.setState({
 			value: this.props.draft,
 		});
-
 	};
 
 	unmounter = () => {
@@ -181,7 +179,6 @@ class Chatroom extends React.Component {
 
 		return (
 			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
-
 				<Messages
 					className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height"
 					messages={visibleMessages}

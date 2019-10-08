@@ -34,7 +34,10 @@ async function handleIncomingMessage(src, payload, payloadType) {
 		const data = JSON.parse(payload);
 		const message = new IncomingMessage(data).from(src);
 
-		postMessage(receiveMessage(message));
+		console.log('receive', message);
+		if (!message.unreceivable) {
+			postMessage(receiveMessage(message));
+		}
 	}
 }
 

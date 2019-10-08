@@ -11,19 +11,24 @@ const LastRead = () => {
 		lastReadRef.current.scrollIntoView();
 	}, []);
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
-	return (<React.Fragment>
-		<div
-			style={{marginTop: '1rem'}}
-			ref={lastReadRef}
-		/>
-		<div
-			className="is-divider"
-			data-content={__('New messages below')}
-		/>
-	</React.Fragment>);
+	return (
+		<React.Fragment>
+			<div style={{ marginTop: '1rem' }} ref={lastReadRef} />
+			<div className="is-divider" data-content={__('New messages below')} />
+		</React.Fragment>
+	);
 };
 
-const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, subs, markAllMessagesRead }) => {
+const Messages = ({
+	messages,
+	className,
+	hasMore,
+	loadMore,
+	refer,
+	lastReadId,
+	subs,
+	markAllMessagesRead,
+}) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
 	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
@@ -31,7 +36,7 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 		inaccuracy: 15,
 	});
 
-	if ( lastReadId && lastReadId !== lastRead ) {
+	if (lastReadId && lastReadId !== lastRead) {
 		setLastRead(lastReadId);
 	}
 
@@ -46,11 +51,7 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 	let didNotMarkYet = true;
 	const messageList = messages.reduce((acc, message, idx) => {
 		if (didNotMarkYet && message.id === lastRead) {
-			acc.push(
-				<LastRead
-					key={'lastRead'}
-				/>
-			);
+			acc.push(<LastRead key={'lastRead'} />);
 			didNotMarkYet = false;
 		}
 
@@ -70,12 +71,8 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 		);
 	}, []);
 
-
 	return (
-		<div
-			className={className}
-			ref={listRef}
-		>
+		<div className={className} ref={listRef}>
 			<InfiniteScroller
 				pageStart={0}
 				isReverse
