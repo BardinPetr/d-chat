@@ -73,7 +73,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 				<div className="tile is-vertical is-parent container">
 					<div className="tile is-child">
 						<div className="content">
-							<h4>
+							<h4 className="is-size-4 title">
 								{__('List of Public Channels')}
 							</h4>
 							<p>
