@@ -1,7 +1,8 @@
 import React from 'react';
 import NknLoading from 'Approot/UI/components/NknLoading';
-import { runtime } from 'webextension-polyfill';
-import { __ } from 'Approot/misc/browser-util';
+import { __, reload } from 'Approot/misc/browser-util-APP_TARGET';
+import { IS_EXTENSION } from 'Approot/misc/util';
+import { HTTPSInfo } from 'Approot/UI/components/Info-APP_TARGET';
 
 const LoadingScreen = ({ loading, children }) => (
 	loading ?
@@ -17,11 +18,14 @@ const LoadingScreen = ({ loading, children }) => (
 								<p className="subtitle has-text-centered">
 									{ __('Connecting to the blockchain...') }
 								</p>
-								<div className="field">
-									<button className="button is-text" type="button" onClick={() => runtime.reload()}>
-										{__('Reload')}
-									</button>
-								</div>
+								{IS_EXTENSION ? (
+									<div className="field">
+										<button className="button is-text" type="button" onClick={() => reload()}>
+											{__('Reload')}
+										</button>
+									</div>
+								) : (<HTTPSInfo />)
+								}
 							</div>
 						</div>
 					</div>

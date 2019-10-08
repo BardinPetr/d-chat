@@ -1,5 +1,5 @@
 import React from 'react';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import ClientInfo from './Info';
 
 const Client = ({ activate, client }) => {

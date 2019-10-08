@@ -28,7 +28,7 @@ renderer.image = (href, title, text) => {
 			return '';
 		}
 	} else {
-		return `<img src="${href}" decoding="async" alt=${text}>`;
+		return `<img src="${href}" alt=${text}>`;
 	}
 };
 marked.setOptions({
@@ -70,7 +70,7 @@ const allowedTags = [
 	'video',
 ];
 const allowedSchemes = ['http', 'https', 'blob'];
-let allowedAttributes = sanitize.defaults.allowedAttributes;
+const allowedAttributes = { ...sanitize.defaults.allowedAttributes };
 allowedAttributes.video = ['src', 'controls', 'loop', 'playsinline'];
 allowedAttributes.audio = ['src', 'controls', 'loop'];
 allowedAttributes.image = ['src', 'alt'];
@@ -81,12 +81,23 @@ class IncomingMessage extends Message {
 		super(message);
 		this.messageClass = 'IncomingMessage';
 
-		// Sanitize data when message arrives.
-		this.content = sanitize(marked(message.content || ''), {
+		// Heartbeats should not be received as messages.
+		if (
+			['heartbeat', 'background'].includes(this.contentType) ||
+			(!this.topic && !this.isPrivate)
+		) {
+			this.unreceivable = true;
+		}
+
+		// Sanitize first so we only use markdown stuff.
+		const sanitized = sanitize(message.content || '');
+		const markdowned = marked(sanitized);
+		const handled = sanitize(markdowned, {
 			allowedTags,
 			allowedSchemes,
 			allowedAttributes,
 		}).trim();
+		this.content = handled;
 	}
 }
 

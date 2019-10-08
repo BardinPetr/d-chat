@@ -1,8 +1,12 @@
-import configs from 'Approot/misc/configs';
+import configs from 'Approot/misc/configs-APP_TARGET';
 
-const clients = (state = configs.clientsMeta, action) => {
+const clients = (state = {}, action) => {
 	let newState, initial, address;
 	switch (action.type) {
+		case 'nkn/DEACTIVATE_CLIENTS':
+			newState = state.map(c => ({ ...c, active: false }));
+			break;
+
 		case 'nkn/SWITCHED_TO_CLIENT':
 			address = action.payload.address;
 			newState = state.map(c => {

@@ -1,8 +1,4 @@
-import {
-	genPrivateChatName,
-	parseAddr,
-	formatAddr,
-} from 'Approot/misc/util';
+import { genPrivateChatName, parseAddr, formatAddr } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import uuidv4 from 'uuid/v4';
 
@@ -54,26 +50,24 @@ class Message {
 			if (this.isPrivate && this.topic == null) {
 				this.topic = genPrivateChatName(opts.toChat || '');
 			}
-		} else  if (this.isPrivate && this.topic == null) {
+		} else if (this.isPrivate && this.topic == null) {
 			this.topic = genPrivateChatName(src);
 		}
 
-		if ( src === NKN.instance.addr ) {
+		if (src === NKN.instance.addr) {
 			this.isMe = true;
 		}
 
-		const [ name, pubKey ] = parseAddr(src);
+		const [name, pubKey] = parseAddr(src);
 		this.addr = src;
 		// Includes dot if identifier exists.
 		this.username = name;
 		this.pubKey = pubKey;
-		this.refersToMe = this.content && this.content.includes(
-			formatAddr( NKN.instance.addr )
-		);
+		this.refersToMe =
+			this.content && this.content.includes(formatAddr(NKN.instance.addr));
 
 		return this;
 	}
-
 }
 
 export default Message;

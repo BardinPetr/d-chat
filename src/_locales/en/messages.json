@@ -23,14 +23,17 @@
   "Channels": {
     "message": " Channels"
   },
+  "Clearyourbrowsercacheifyoukeepgettingredirected": {
+    "message": " Clear your browser cache if you keep getting redirected."
+  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
-  "Create": {
-    "message": " Create"
-  },
   "DChat": {
     "message": " D-Chat"
+  },
+  "DChatisalsoabrowserextension": {
+    "message": " D-Chat is also a browser extension."
   },
   "DChatversion": {
     "message": " D-Chat version"
@@ -41,17 +44,35 @@
   "Export": {
     "message": " Export"
   },
+  "ForChromiumbasedbrowsersChromewebstore": {
+    "message": " For Chromium based browsers, Chrome webstore"
+  },
   "Forgotpassword": {
     "message": " Forgot password?"
   },
-  "GetsomeNKNforfreefromthefaucet": {
-    "message": " Get some NKN for free, from the faucet"
+  "GettheaddonforChrome": {
+    "message": " Get the add-on for Chrome"
+  },
+  "GettheaddonforFirefox": {
+    "message": " Get the add-on for Firefox"
+  },
+  "HTTPSiscentralizedandthisappmightnotworkonitbecauseofmixedcontentrestrictionsYoushouldconnecttoHTTPversionofthissiteinstead": {
+    "message": " HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead."
+  },
+  "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
+    "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
   "Home": {
     "message": " Home"
   },
   "Identity": {
     "message": " Identity"
+  },
+  "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
+    "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
+  },
+  "IfyoucareaboutyouwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
+    "message": " If you care about you wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
   },
   "Import": {
     "message": " Import"
@@ -71,9 +92,6 @@
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
-  "LogIn": {
-    "message": " Log In"
-  },
   "LogOut": {
     "message": " Log Out"
   },
@@ -86,17 +104,17 @@
   "New": {
     "message": " New"
   },
+  "NewView": {
+    "message": " New View"
+  },
   "Newmessagesbelow": {
     "message": " New messages below"
-  },
-  "Newview": {
-    "message": " New view"
   },
   "Nickname": {
     "message": " Nickname"
   },
-  "Nosubscriptionorabouttoexpire": {
-    "message": " No subscription, or about to expire."
+  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfree": {
+    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free."
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -125,6 +143,12 @@
   "Removewallet": {
     "message": " Remove wallet"
   },
+  "SourcecodeonGitLab": {
+    "message": " Source code on GitLab."
+  },
+  "Start": {
+    "message": " Start"
+  },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
   },
@@ -143,8 +167,8 @@
   "Subscribe": {
     "message": " Subscribe"
   },
-  "Subscribewithfee": {
-    "message": " Subscribe with fee"
+  "Subscribewithsatfee": {
+    "message": " Subscribe with 1sat fee"
   },
   "Subscribers": {
     "message": " Subscribers"
@@ -157,6 +181,12 @@
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Theseareyourwallets": {
+    "message": " These are your wallets."
+  },
+  "Theyexpandonclick": {
+    "message": " They expand on click."
   },
   "Thiswalletisalreadyimported": {
     "message": " This wallet is already imported."
@@ -179,9 +209,6 @@
   "Walletremoved": {
     "message": " Wallet removed"
   },
-  "WelcomeBack": {
-    "message": " Welcome Back!"
-  },
   "Welcome": {
     "message": " Welcome!"
   },
@@ -190,6 +217,12 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
+  },
+  "Yourmessageswillbeencryptedanyways": {
+    "message": " Your messages will be encrypted, anyways."
+  },
+  "andsayhi": {
+    "message": " and say hi!"
   },
   "andsayhiSomeonewilltipyoucoins": {
     "message": " and say hi! Someone will tip you coins."

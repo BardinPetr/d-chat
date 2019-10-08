@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
-import configs from '../../misc/configs';
+import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 import { isNotice } from 'Approot/misc/util';
 
-const reactions = (state = configs.reactions, action) => {
+const reactions = (state = {}, action) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
 
@@ -63,7 +63,7 @@ const reactions = (state = configs.reactions, action) => {
  * if not keeping the history in memory, we will get bad updates.
  * Then we have to load the history from storage.local all the time, so why not just keep it.
  */
-const messages = (state = configs.messages, action) => {
+const messages = (state = {}, action) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
@@ -171,7 +171,7 @@ const draftMessage = (state = '', action) => {
 /**
  * Handles individual chat (topic) settings.
  */
-const chatSettings = (state = configs.chatSettings, action) => {
+const chatSettings = (state = {}, action) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
@@ -274,8 +274,9 @@ export default combineReducers({
 	// Chat.
 	messages,
 	reactions,
-	draftMessage,
 	chatSettings,
+
 	// UI
+	draftMessage,
 	navigation,
 });

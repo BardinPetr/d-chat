@@ -4,12 +4,17 @@ import { logout } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 import sleep from 'sleep-promise';
 
-const Logout = ({ className, children, dispatch }) => (
-	<a className={className} onClick={() => {
-		dispatch(logout()).then(() => sleep(100)).then(() => history.push('/login'));
-	}}>
+const Logout = ({ className, children, logout }) => (
+	<a className={className} onClick={logout}>
 		{children}
 	</a>
 );
 
-export default connect()(Logout);
+const mapDispatchToProps = dispatch => ({
+	logout: () => {
+		dispatch(logout());
+		sleep(100).then(() => history.push('/login'));
+	},
+});
+
+export default connect(null, mapDispatchToProps)(Logout);

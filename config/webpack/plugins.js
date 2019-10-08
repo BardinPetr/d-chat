@@ -1,4 +1,4 @@
-const { IgnorePlugin } = require('webpack');
+const { DefinePlugin, IgnorePlugin, NormalModuleReplacementPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -15,6 +15,8 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const paths = require('../paths');
 const staticFiles = require('./static-files');
+// 'WEB' || 'EXT'.
+const appTarget = process.env.APP_TARGET || 'WEB';
 
 
 // eslint-disable-next-line
@@ -119,6 +121,15 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 	const copyPlugin = new CopyPlugin(staticFiles.copyPatterns);
 	const friendlyErrorsWebpackPlugin = new FriendlyErrorsWebpackPlugin();
 
+	const normalModuleReplacementPlugin = new NormalModuleReplacementPlugin(
+		/(.*)-APP_TARGET(\.*)/, function(resource) {
+			resource.request = resource.request.replace(/-APP_TARGET/, `-${appTarget}`);
+		});
+
+	const appTargetPlugin = new DefinePlugin({
+		APP_TARGET: JSON.stringify(appTarget),
+	});
+
 	return {
 		optionsHtmlPlugin,
 		popupHtmlPlugin,
@@ -134,7 +145,9 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		copyPlugin,
 		htmlIncAssetsPlugin,
 		scriptExtHtmlPlugin,
-		friendlyErrorsWebpackPlugin
+		friendlyErrorsWebpackPlugin,
+		normalModuleReplacementPlugin,
+		appTargetPlugin,
 	};
 };
 

@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ReactPrivateRoute from 'react-router-private';
+import ReactPrivateRoute from '@sharyn/react-router.privateroute';
 
-const PrivateRoute = ({ path, exact, component, authStatus }) => (
+const PrivateRoute = ({ path, component, authStatus }) => (
 	<ReactPrivateRoute
-		redirectURL="/login"
 		path={path}
-		exact={exact}
+		redirectPath="/login"
 		component={component}
-		authStatus={!!authStatus}
+		loggedIn={!!authStatus}
 	/>
 );
 

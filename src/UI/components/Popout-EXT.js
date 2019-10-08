@@ -1,6 +1,6 @@
 import React from 'react';
 import { runtime, tabs, windows } from 'webextension-polyfill';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const popout = type => {
 	switch (type) {
@@ -22,14 +22,17 @@ const popout = type => {
 };
 
 const Popout = () => (
-	<ul className="menu-list">
-		<li onClick={() => popout('panel')} key="1">
-			<a>{__('Panel')}</a>
-		</li>
-		<li onClick={() => popout('tab')} key="2">
-			<a>{__('Tab')}</a>
-		</li>
-	</ul>
+	<React.Fragment>
+		<p className="menu-label">{__('New View')}</p>
+		<ul className="menu-list">
+			<li onClick={() => popout('panel')} key="1">
+				<a>{__('Panel')}</a>
+			</li>
+			<li onClick={() => popout('tab')} key="2">
+				<a>{__('Tab')}</a>
+			</li>
+		</ul>
+	</React.Fragment>
 );
 
 export default Popout;

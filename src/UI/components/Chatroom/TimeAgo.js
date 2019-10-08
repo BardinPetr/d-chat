@@ -1,6 +1,6 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const formatTime = (n, unit, ago, _, defaultFormatter) => {
 	if (unit === 'second') {

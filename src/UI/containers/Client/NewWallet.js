@@ -4,7 +4,7 @@ import ProvideCredentials from 'Approot/UI/components/ProvideCredentials';
 import { connect } from 'react-redux';
 import { newClient } from 'Approot/redux/actions/client';
 import history from 'Approot/UI/history';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const mapStateToProps = () => ({
 	callToAction: __('Add'),

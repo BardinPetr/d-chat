@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
+import { deactivateClients } from '../../redux/actions/client';
+import { IS_EXTENSION } from 'Approot/misc/util';
+import { HTTPSInfo } from 'Approot/UI/components/Info-APP_TARGET';
 
 class LoginBox extends React.Component {
 	constructor(props) {
@@ -33,30 +36,33 @@ class LoginBox extends React.Component {
 	handleLoginSubmit(e) {
 		e.preventDefault();
 		// See notes in reducer.
-		this.props
-			.dispatch(
-				login({
-					username: this.state.username,
-					password: this.state.password,
-					rememberMe: this.state.rememberMe,
-				}),
-			);
+		this.props.dispatch(
+			login({
+				username: this.state.username,
+				password: this.state.password,
+				rememberMe: this.state.rememberMe,
+			}),
+		);
 	}
 
 	clear(e) {
 		e.preventDefault();
 		this.setState({ cleared: true });
 		this.props.dispatch(logout());
+		this.props.dispatch(deactivateClients());
 	}
 
 	render() {
-		const { loggedIn, connecting, error } = this.props;
+		const { loggedIn, connecting, error, location } = this.props;
+		const redir = location?.search && new URL(
+			`http://example.org/${location.search}`,
+		)?.searchParams?.get('returnUrl');
 
 		return loggedIn ? (
 			<LoadingScreen loading={connecting}>
 				<Redirect
 					to={{
-						pathname: '/',
+						pathname: redir || '/',
 					}}
 				/>
 			</LoadingScreen>
@@ -64,12 +70,10 @@ class LoginBox extends React.Component {
 			<div className="hero is-primary">
 				<div className="hero-body" style={{ height: '100vh' }}>
 					<h1 className="title has-text-centered is-size-2">
-						{window.location.search.includes('register')
-							? __('Welcome!')
-							: __('Welcome Back!')}
+						{__('Welcome!')}
 					</h1>
 					<div className="columns is-centered">
-						<div className="column is-half">
+						<div className="column is-half is-4-desktop">
 							<div className="notification is-light">
 								<figure className="image container is-64x64">
 									<DchatLogo />
@@ -78,26 +82,31 @@ class LoginBox extends React.Component {
 									{__('The decentralized chat awaits.')}
 								</p>
 
+								<HTTPSInfo />
+
 								<form className="" onSubmit={this.handleLoginSubmit}>
-									<div className="field">
-										<label className="label">
-											{__('Username')}
-											<span className="has-text-grey-light is-size-7">
-												{' (' + __('optional') + ')'}
-											</span>
-										</label>
-										<div className="control">
-											<input
-												type="username"
-												name="username"
-												value={this.state.username}
-												onChange={this.handleChange}
-												className="input"
-												placeholder="Username"
-												autoComplete="current-user"
-											/>
+									{IS_EXTENSION && ( // Want to remove identifier usernames later.
+										<div className="field">
+											<label className="label">
+												{__('Username')}
+												<span className="has-text-grey-light is-size-7">
+													{' (' + __('optional') + ')'}
+												</span>
+											</label>
+											<div className="control">
+												<input
+													type="username"
+													name="username"
+													value={this.state.username}
+													onChange={this.handleChange}
+													className="input"
+													placeholder="Username"
+													pattern="[^\/]*"
+													autoComplete="current-user"
+												/>
+											</div>
 										</div>
-									</div>
+									)}
 									<div className="field">
 										<label className="label">
 											{__('Password')}
@@ -114,7 +123,6 @@ class LoginBox extends React.Component {
 												className="input password"
 												placeholder="Password"
 												autoComplete="current-user"
-												required
 											/>
 										</div>
 									</div>
@@ -128,6 +136,7 @@ class LoginBox extends React.Component {
 													value="rememberMe"
 													name="rememberMe"
 													id="rememberMe"
+													disabled={!IS_EXTENSION}
 												/>
 												{__('Store password')}
 											</label>
@@ -136,9 +145,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{window.location.search.includes('register')
-													? __('Create')
-													: __('Log In')}
+												{__('Start')}
 											</button>
 										</div>
 									</div>
@@ -171,7 +178,7 @@ class LoginBox extends React.Component {
 const mapStateToProps = state => ({
 	loggedIn: state.login?.addr != null,
 	connecting: !state.login?.connected,
-	wrongPassword: state.login?.error,
+	error: state.login?.error,
 });
 
 export default connect(mapStateToProps)(LoginBox);

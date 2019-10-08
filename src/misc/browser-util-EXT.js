@@ -1,7 +1,7 @@
-import { i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
+import { windows, extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
-import debounce from 'debounce';
-import configs from 'Approot/misc/configs';
+import throttle from 'lodash.throttle';
+import configs from 'Approot/misc/configs-APP_TARGET';
 
 export function __(str, ...placeholders) {
 	// The i18n generator has a bug with empty prefix, so trim.
@@ -23,7 +23,7 @@ export const setBadgeText = txt => {
 	});
 };
 
-export const createNotification = debounce((options) => {
+export const createNotification = throttle((options) => {
 	if (configs.showNotifications) {
 		return notifications.create( 'd-chat', {
 			type: 'basic',
@@ -32,6 +32,29 @@ export const createNotification = debounce((options) => {
 			iconUrl: runtime.getURL('/img/NKN_D-chat_blue-64cropped.png'),
 		});
 	}
-}, 1000, true);
+}, 250, { trailing: false });
 
 export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
+
+/**
+ * Checks if popup view is open, returns path or false.
+ */
+export const getPopupURL = () => {
+	const w = extension.getViews({
+		type: 'popup',
+	})?.[0];
+	// Only mark unread if chat isn't currently open in popup.
+	return w?.location.hash;
+};
+
+/**
+ * Pops out a window.
+ */
+export const popout = url => windows.create({
+	url: runtime.getURL(`sidebar.html#/${url}`),
+	type: 'popup',
+	height: 860,
+	width: 680,
+});
+
+export const reload = () => runtime.reload();

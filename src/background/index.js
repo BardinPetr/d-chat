@@ -1,18 +1,16 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { wrapStore, alias } from 'webext-redux';
+import { wrapStore, alias, onInstalled } from './operations-APP_TARGET';
 import createWorkerMiddleware from 'redux-worker-middleware';
 import rootReducer from '../redux/reducers';
 import aliases from '../redux/aliases';
-import configs from '../misc/configs';
+import configs from '../misc/configs-APP_TARGET';
 import { login } from '../redux/actions';
 // Even a bit of obfuscation is better than none for "remember me".
 import passworder from 'browser-passworder';
-import { log } from 'Approot/misc/util';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
-import semver from 'semver';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
-import sleep from 'sleep-promise';
+import { IS_EXTENSION } from 'Approot/misc/util';
 
 const password = 'd-chat!!!';
 
@@ -20,20 +18,29 @@ const nknWorker = new NKNWorker();
 
 const workerMiddleware = createWorkerMiddleware(nknWorker);
 
-let credentials = localStorage.getItem('credentials');
-log('Credentials?', credentials != null);
-if (credentials) {
-	try {
-		credentials = JSON.parse(credentials);
-	} catch(e) {
-		credentials = undefined;
+let credentials;
+if (IS_EXTENSION) {
+	credentials = localStorage.getItem('credentials');
+	if (credentials) {
+		try {
+			credentials = JSON.parse(credentials);
+		} catch(e) {
+			credentials = undefined;
+		}
 	}
 }
 
 let store;
-configs.$loaded.then(() => {
+export default configs.$loaded.then(() => {
+	const persistedState = {
+		clients: configs.clientsMeta,
+		messages: configs.messages,
+		reactions: configs.reactions,
+		chatSettings: configs.chatSettings,
+	};
 	store = createStore(
 		rootReducer,
+		persistedState,
 		applyMiddleware(
 			workerMiddleware,
 			alias(aliases),
@@ -44,30 +51,11 @@ configs.$loaded.then(() => {
 
 	wrapStore( store );
 
-	if ( credentials ) {
-		log('Using existing credentials');
+	if ( IS_EXTENSION && credentials ) {
 		passworder.decrypt(password, credentials)
 			.then(creds => store.dispatch(login(creds)));
 	}
-
+	return store;
 });
 
-browser.runtime.onInstalled.addListener(async details => {
-	if (!store) {
-		await sleep(200);
-	}
-	if (details.previousVersion) {
-		// From v4.0.0, we parse messages when we receive them, instead of when they're displayed. Older messages will be bad, so remove them.
-		if (semver.lt(details.previousVersion, '4.0.0')) {
-			store.dispatch({type: 'chat/CLEAN_ALL'});
-		}
-		// There was an error in 4.0.0.
-		if (semver.lt(details.previousVersion, '4.0.4')) {
-			store.dispatch({type: 'chat/CLEAN_REACTIONS'});
-		}
-	}
-
-	setTimeout(() => details.reason === 'install' && browser.tabs.create({
-		url: browser.runtime.getURL('sidebar.html?register')
-	}), 250); // Sometimes the register screen would bug out.
-});
+onInstalled(store);

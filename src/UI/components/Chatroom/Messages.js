@@ -3,7 +3,7 @@ import Message from './Message';
 import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
 import classnames from 'classnames';
-import { __ } from 'Approot/misc/browser-util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const LastRead = () => {
 	const lastReadRef = useRef();
@@ -11,34 +11,37 @@ const LastRead = () => {
 		lastReadRef.current.scrollIntoView();
 	}, []);
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
-	return (<React.Fragment>
-		<div
-			style={{marginTop: '1rem'}}
-			ref={lastReadRef}
-		/>
-		<div
-			className="is-divider"
-			data-content={__('New messages below')}
-		/>
-	</React.Fragment>);
+	return (
+		<React.Fragment>
+			<div style={{ marginTop: '1rem' }} ref={lastReadRef} />
+			<div className="is-divider" data-content={__('New messages below')} />
+		</React.Fragment>
+	);
 };
 
-const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, subs, markAllMessagesRead }) => {
+const Messages = ({
+	messages,
+	className,
+	hasMore,
+	loadMore,
+	refer,
+	lastReadId,
+	subs,
+	markAllMessagesRead,
+}) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, scrollBottom, isScrolled } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
+		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
 
-	if ( lastReadId && lastReadId !== lastRead ) {
+	if (lastReadId && lastReadId !== lastRead) {
 		setLastRead(lastReadId);
 	}
 
 	useLayoutEffect(() => {
 		stayScrolled();
-		if ( !lastRead ) {
-			scrollBottom();
-		}
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
@@ -48,11 +51,7 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 	let didNotMarkYet = true;
 	const messageList = messages.reduce((acc, message, idx) => {
 		if (didNotMarkYet && message.id === lastRead) {
-			acc.push(
-				<LastRead
-					key={'lastRead'}
-				/>
-			);
+			acc.push(<LastRead key={'lastRead'} />);
 			didNotMarkYet = false;
 		}
 
@@ -72,12 +71,8 @@ const Messages = ({ messages, className, hasMore, loadMore, refer, lastReadId, s
 		);
 	}, []);
 
-
 	return (
-		<div
-			className={className}
-			ref={listRef}
-		>
+		<div className={className} ref={listRef}>
 			<InfiniteScroller
 				pageStart={0}
 				isReverse

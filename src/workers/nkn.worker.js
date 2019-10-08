@@ -72,6 +72,7 @@ onmessage = async ({ data: action }) => {
 
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
+			// Should we confirm that messages have been sent? We could, by `.then(confirm)`.
 			NKN.instance.publishMessage(payload.topic, message);
 			data = new IncomingMessage(payload.message);
 			// Overwrite id so when we receive it again, it will be ignored.
@@ -191,3 +192,6 @@ onmessage = async ({ data: action }) => {
 			console.log('Unknown thingy in worker:', action, payload);
 	}
 };
+
+onerror = e => console.error('NKN worker error:', e);
+onmessageerror = e => console.error('NKN worker messageerror:', e);
