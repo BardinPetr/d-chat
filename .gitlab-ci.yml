@@ -29,6 +29,10 @@ build_zip:
   stage: build
   script:
     - npm run build:pack
+  artifacts:
+    expire_in: '1 hour'
+    paths:
+      - web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
   only:
     - tags
 
@@ -37,10 +41,6 @@ publish:
   stage: publish
   script:
     - gitlab-release --message 'Extension zip:' web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
-  artifacts:
-    expire_in: '1 hour'
-    paths:
-      - web-ext-artifacts/d-chat-$CI_BUILD_TAG.zip
   only:
     - tags
 
