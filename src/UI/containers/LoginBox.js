@@ -145,7 +145,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{__('Create / Log In')}
+												{__('Start')}
 											</button>
 										</div>
 									</div>

@@ -29,9 +29,6 @@
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
-  "CreateLogIn": {
-    "message": " Create / Log In"
-  },
   "DChat": {
     "message": " D-Chat"
   },
@@ -148,6 +145,9 @@
   },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
+  },
+  "Start": {
+    "message": " Start"
   },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
