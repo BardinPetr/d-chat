@@ -154,6 +154,10 @@ $accordion-header-padding: 1rem 0.75rem;
 		border-left-color: $primary;
 		border-left-width: 3px;
 		border-radius: 0;
+
+		.content {
+			white-space: initial;
+		}
 	}
 
 	.x-refers-to-me .message-body {

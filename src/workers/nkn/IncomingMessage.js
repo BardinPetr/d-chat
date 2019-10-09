@@ -91,7 +91,9 @@ class IncomingMessage extends Message {
 
 		// Sanitize first so we only use markdown stuff.
 		const sanitized = sanitize(message.content || '');
-		const markdowned = marked(sanitized);
+		const markdowned = marked(sanitized, {
+			breaks: true,
+		});
 		const handled = sanitize(markdowned, {
 			allowedTags,
 			allowedSchemes,
