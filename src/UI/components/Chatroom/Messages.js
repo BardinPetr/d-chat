@@ -1,4 +1,5 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import { ResizeReporter } from 'react-resize-reporter/scroll';
 import Message from './Message';
 import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
@@ -31,7 +32,7 @@ const Messages = ({
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
@@ -72,7 +73,8 @@ const Messages = ({
 	}, []);
 
 	return (
-		<div className={className} ref={listRef}>
+		<div className={`${className} is-relative`} ref={listRef}>
+			<ResizeReporter onSizeChanged={() => scrollBottom()} />
 			<InfiniteScroller
 				pageStart={0}
 				isReverse
