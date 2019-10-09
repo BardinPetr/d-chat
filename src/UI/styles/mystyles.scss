@@ -5,6 +5,8 @@ $accordion-background-color: transparent;
 $accordion-header-background-color: white;
 $accordion-header-color: black;
 $accordion-header-padding: 1rem 0.75rem;
+$content-blockquote-padding: 0.5em 1em;
+$content-pre-padding: 0.5em 1em;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -71,7 +73,6 @@ $accordion-header-padding: 1rem 0.75rem;
 }
 .message-body .content {
     margin-bottom: 0;
-    white-space: pre-wrap;
     font-size: 0.9375rem;
 }
 
@@ -157,6 +158,10 @@ $accordion-header-padding: 1rem 0.75rem;
 
 		.content {
 			white-space: initial;
+
+			pre, code {
+				background-color: $grey-lighter;
+			}
 		}
 	}
 
