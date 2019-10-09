@@ -32,7 +32,7 @@ const Messages = ({
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
@@ -74,7 +74,7 @@ const Messages = ({
 
 	return (
 		<div className={`${className} is-relative`} ref={listRef}>
-			<ResizeReporter onSizeChanged={() => scrollBottom()} />
+			<ResizeReporter onSizeChanged={() => stayScrolled()} />
 			<InfiniteScroller
 				pageStart={0}
 				isReverse
