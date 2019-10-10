@@ -142,7 +142,7 @@ class LoginBox extends React.Component {
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">
-												{__('Start')}
+												{__('Continue')}
 											</button>
 										</div>
 									</div>
