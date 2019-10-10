@@ -5,6 +5,7 @@ import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { debounce } from 'debounce';
 
 const LastRead = () => {
 	const lastReadRef = useRef();
@@ -50,7 +51,7 @@ const Messages = ({
 
 	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 	let didNotMarkYet = true;
-	const messageList = messages.reduce((acc, message, idx) => {
+	const messageList = messages.reduce((acc, message) => {
 		if (didNotMarkYet && message.id === lastRead) {
 			acc.push(<LastRead key={'lastRead'} />);
 			didNotMarkYet = false;
@@ -65,16 +66,19 @@ const Messages = ({
 				refer={refer}
 				message={message}
 				isSubscribed={subs.includes(message.addr)}
-				key={message.id + idx}
+				key={message.id}
 				isNotice={['dchat/subscribe'].includes(message.contentType)}
 				topic={message.topic}
 			/>,
 		);
 	}, []);
 
+	// Does it work correctly if the function is created here?
+	const stay = debounce(stayScrolled, 50, true);
+
 	return (
 		<div className={`${className} is-relative`} ref={listRef}>
-			<ResizeReporter onSizeChanged={() => stayScrolled()} />
+			<ResizeReporter onSizeChanged={() => stay()} />
 			<InfiniteScroller
 				pageStart={0}
 				isReverse

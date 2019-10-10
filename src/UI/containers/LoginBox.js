@@ -123,6 +123,7 @@ class LoginBox extends React.Component {
 											/>
 										</div>
 									</div>
+									{IS_EXTENSION && (
 									<div className="field">
 										<div className="control">
 											<label className="checkbox">
@@ -133,12 +134,12 @@ class LoginBox extends React.Component {
 													value="rememberMe"
 													name="rememberMe"
 													id="rememberMe"
-													disabled={!IS_EXTENSION}
 												/>
 												{__('Store password')}
 											</label>
 										</div>
 									</div>
+									)}
 									<div className="field">
 										<div className="control">
 											<button type="submit" className="button is-link">

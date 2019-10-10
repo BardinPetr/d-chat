@@ -16,7 +16,7 @@ $content-pre-padding: 0.5em 1em;
 
 .textarea:not([rows]) {
     max-height: 6rem;
-    min-height: unset;
+    min-height: 3rem;
 }
 @media (max-width: 768px) {
     .x-fix-mobile.navbar-brand {
