@@ -90,7 +90,7 @@ const Textarea = forwardRef(
 								<div className="x-emoji-mart-container">
 									<Picker
 										autoFocus
-										title={__('It is magic')}
+										title={__('Emojis')}
 										native={true}
 										backgroundImageFn={() => {}}
 										onSelect={emoji => {
