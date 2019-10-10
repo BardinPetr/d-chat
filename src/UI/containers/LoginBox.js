@@ -7,7 +7,6 @@ import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login, logout } from '../../redux/actions';
 import { deactivateClients } from '../../redux/actions/client';
 import { IS_EXTENSION } from 'Approot/misc/util';
-import { HTTPSInfo } from 'Approot/UI/components/Info-APP_TARGET';
 
 class LoginBox extends React.Component {
 	constructor(props) {
@@ -81,8 +80,6 @@ class LoginBox extends React.Component {
 								<p className="subtitle has-text-grey has-text-centered">
 									{__('The decentralized chat awaits.')}
 								</p>
-
-								<HTTPSInfo />
 
 								<form className="" onSubmit={this.handleLoginSubmit}>
 									{IS_EXTENSION && ( // Want to remove identifier usernames later.
