@@ -124,21 +124,21 @@ class LoginBox extends React.Component {
 										</div>
 									</div>
 									{IS_EXTENSION && (
-									<div className="field">
-										<div className="control">
-											<label className="checkbox">
-												<input
-													type="checkbox"
-													checked={this.state.rememberMe}
-													onChange={this.handleCheckboxChange}
-													value="rememberMe"
-													name="rememberMe"
-													id="rememberMe"
-												/>
-												{__('Store password')}
-											</label>
+										<div className="field">
+											<div className="control">
+												<label className="checkbox">
+													<input
+														type="checkbox"
+														checked={this.state.rememberMe}
+														onChange={this.handleCheckboxChange}
+														value="rememberMe"
+														name="rememberMe"
+														id="rememberMe"
+													/>
+													{__('Store password')}
+												</label>
+											</div>
 										</div>
-									</div>
 									)}
 									<div className="field">
 										<div className="control">
