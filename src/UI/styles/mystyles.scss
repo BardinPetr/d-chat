@@ -16,6 +16,7 @@ $content-pre-padding: 0.5em 1em;
 
 .textarea:not([rows]) {
     max-height: 6rem;
+    /* Without min-height, stayScrolled gets bugged. */
     min-height: 3rem;
 }
 @media (max-width: 768px) {
