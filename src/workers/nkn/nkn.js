@@ -21,7 +21,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0014.nkn.org:30003',
 	'http://mainnet-seed-0015.nkn.org:30003',
 	'http://mainnet-seed-0016.nkn.org:30003',
-	'http://mainnet-seed-0017.nkn.org:30003',
+	// 'http://mainnet-seed-0017.nkn.org:30003',
 	'http://mainnet-seed-0018.nkn.org:30003',
 	'http://mainnet-seed-0019.nkn.org:30003',
 	'http://mainnet-seed-0020.nkn.org:30003',

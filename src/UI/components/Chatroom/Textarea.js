@@ -5,10 +5,13 @@ import Markdown from './Markdown';
 import TextareaAutosize from 'react-textarea-autosize';
 import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Uploader from './Uploader';
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
 
 const Textarea = forwardRef(
 	(
 		{
+			addToDraftMessage,
 			children,
 			innerRef,
 			mention,
@@ -22,10 +25,11 @@ const Textarea = forwardRef(
 		ref,
 	) => {
 		const [showingPreview, setShowingPreview] = useState(false);
+		const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 		return (
 			<form className="card" onSubmit={e => submitText(e)}>
 				<div className="card-content x-is-small-padding field">
-					<div className={classnames('control')}>
+					<div className={classnames('control')} onClick={() => setEmojiPickerVisible(false)}>
 						<TextareaAutoCompleter
 							className={classnames('textarea', {
 								'is-hidden': showingPreview,
@@ -76,6 +80,27 @@ const Textarea = forwardRef(
 
 						<div className="level-right">
 							{children}
+
+							<a className="level-item icon button is-white has-text-grey-dark" onClick={() => {
+								setEmojiPickerVisible(!emojiPickerVisible);
+							}}>
+								😄
+							</a>
+							{emojiPickerVisible && (
+								<div className="x-emoji-mart-container">
+									<Picker
+										autoFocus
+										title={__('It is magic')}
+										native={true}
+										backgroundImageFn={() => {}}
+										onSelect={emoji => {
+											addToDraftMessage(emoji.native);
+										}}
+										emoji="droplet"
+									/>
+								</div>
+							)}
+
 							<Uploader
 								className="button is-text level-item is-size-7"
 								onUploaded={submitUpload}

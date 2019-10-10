@@ -19,6 +19,16 @@ $content-pre-padding: 0.5em 1em;
     /* Without min-height, stayScrolled gets bugged. */
     min-height: 3rem;
 }
+.x-emoji-mart-container {
+    position:absolute;
+    bottom: 2.5rem;
+    left: 57%;
+    z-index: 30;
+
+    .emoji-mart-scroll {
+        overflow-x: hidden;
+    }
+}
 @media (max-width: 768px) {
     .x-fix-mobile.navbar-brand {
         max-width: inherit !important;

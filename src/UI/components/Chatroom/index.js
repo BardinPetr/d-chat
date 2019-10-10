@@ -144,12 +144,12 @@ class Chatroom extends React.Component {
 	};
 
 	/**
-	 * Click on name -> add @mention.
+	 * Add to textarea.
 	 */
-	refer = addr => {
+	addToDraftMessage = text => {
 		const caretPosition = this.msg.getCaretPosition();
 		const currentValue = this.msg.state.value;
-		const referral = mention(addr) + ' ';
+		const referral = text + ' ';
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
 		const value = [
 			currentValue.slice(0, caretPosition),
@@ -181,7 +181,7 @@ class Chatroom extends React.Component {
 					messages={visibleMessages}
 					hasMore={visibleMessages.length < messages.length}
 					loadMore={this.loadMoreMessages}
-					refer={this.refer}
+					refer={addr => this.addToDraftMessage(mention(addr))}
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
@@ -198,6 +198,7 @@ class Chatroom extends React.Component {
 						submitUpload={this.submitUpload}
 						subs={this.props.subs}
 						source={this.msg?.state.value || ''}
+						addToDraftMessage={text => this.addToDraftMessage(text)}
 					>
 						<div className="level-item">
 							<p className="has-text-grey">

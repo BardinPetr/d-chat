@@ -1,11 +1,11 @@
 import React, { forwardRef } from 'react';
 import Autocomplete from '@webscopeio/react-textarea-autocomplete';
 import '@webscopeio/react-textarea-autocomplete/style.css';
-import emoji from '@jukben/emoji-search';
+import { emojiIndex } from 'emoji-mart';
 import { formatAddr } from 'Approot/misc/util';
 
-const AutofillEmojiItem = ({ entity: { name, char } }) => (
-	<div>{`${name}: ${char}`}</div>
+const AutofillEmojiItem = ({ entity: { id, native } }) => (
+	<div>{`${id}: ${native}`}</div>
 );
 
 const AutofillMentionItem = ({ entity: { char } }) => (
@@ -21,9 +21,9 @@ const TextareaAutoCompleter = forwardRef(
 			{...props}
 			trigger={{
 				':': {
-					dataProvider: async token => emoji(token).slice(0, 5),
+					dataProvider: async token => emojiIndex.search(token).slice(0, 5),
 					component: AutofillEmojiItem,
-					output: _outputCaretEnd,
+					output: i => _outputCaretEnd({char: i.native}),
 				},
 				// Grab matching subs, grab 5, sort, filter duplicates, map to format.
 				'@': {
