@@ -23,8 +23,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(sendPrivateMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
-	markAsRead: (recipient, ids) =>
-		dispatch(markRead(genPrivateChatName(recipient), ids)),
+	markAsRead: (topic, ids) =>
+		dispatch(markRead(topic, ids)),
 	getSubscribers: () => {},
 });
 

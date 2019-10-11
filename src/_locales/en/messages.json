@@ -17,6 +17,9 @@
   "Add": {
     "message": " Add"
   },
+  "Addreaction": {
+    "message": " Add reaction"
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -43,6 +46,12 @@
   },
   "Description": {
     "message": " Description"
+  },
+  "Emojipickerdialog": {
+    "message": " Emoji picker dialog"
+  },
+  "Emojis": {
+    "message": " Emojis"
   },
   "Export": {
     "message": " Export"

@@ -1,3 +1,6 @@
+/**
+ * Handles #/topics/, which is the public channels list page.
+ */
 // eslint-disable-next-line
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -130,6 +133,9 @@ const TopicInfoList = ({ dispatch, topics }) => {
 							</div>
 							<p>
 								{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
+							</p>
+							<p>
+								{__('Listing stays for about 2 weeks.')}
 							</p>
 							<div className="field">
 								<div className="control">

@@ -14,11 +14,11 @@ const Toolbar = ({ id, topic, addr, addReaction }) => {
 	const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 	return (
 		<div className="x-is-hover buttons are-small are-white">
-			<TipJar messageID={id} topic={topic} addr={addr} value={50} />
+			<TipJar messageID={id} topic={topic} addr={addr} value={5} />
 			<a
-				className="button"
+				className="button tooltip is-tooltip-left"
 				onClick={() => setEmojiPickerVisible(true)}
-				aria-label={__('Add reaction')}
+				data-tooltip={__('Add reaction')}
 			>
 				😄
 			</a>

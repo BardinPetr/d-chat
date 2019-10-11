@@ -10,14 +10,14 @@ const Reactions = ({ reactions, addReaction }) => {
 		const same = acc.findIndex(r => r.content == reaction.content);
 		if (same !== -1) {
 			acc[same]._count += 1;
-			acc[same]._title += `, ${reaction.username || 'anon'}`;
+			acc[same]._title += `, ${reaction.username || 'Anonymous'}`;
 			return acc;
 		}
 
 		return acc.concat({
 			...reaction,
 			_count: 1,
-			_title: `${reaction.username || 'anon'}`
+			_title: `${reaction.username || 'Anonymous'}`
 		});
 	}, []);
 
