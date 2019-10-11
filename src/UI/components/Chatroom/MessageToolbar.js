@@ -1,4 +1,9 @@
+/**
+ * Contains the buttons that appear on level with username, when message is hovered.
+ */
+
 import React, { useState } from 'react';
+// TODO there is a cascade of ReactModalPortals created. 1 for each toolbar, but should we make them all work from a single portal?
 import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
 import { getWhisperURL } from 'Approot/misc/util';
