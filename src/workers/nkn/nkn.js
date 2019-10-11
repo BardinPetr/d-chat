@@ -140,9 +140,9 @@ class NKN extends nkn {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
-		if (to === this.addr) {
-			return;
-		}
+		// if (to === this.addr) {
+		// 	return;
+		// }
 		try {
 			return this.send(to, JSON.stringify(message), options);
 		} catch (e) {

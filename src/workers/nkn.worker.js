@@ -86,9 +86,10 @@ onmessage = async ({ data: action }) => {
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.sendMessage(payload.recipient, message);
 			// Receive it locally.
-			message = new IncomingMessage(payload.message);
-			message = message.from('me', { toChat: payload.recipient });
-			postMessage(receiveMessage(message));
+			data = new IncomingMessage(payload.message);
+			data.id = message.id;
+			data = data.from('me', { toChat: payload.recipient });
+			postMessage(receiveMessage(data));
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':

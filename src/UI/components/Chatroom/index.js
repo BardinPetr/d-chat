@@ -168,7 +168,7 @@ class Chatroom extends React.Component {
 		});
 
 	render() {
-		const { messages, client, subs } = this.props;
+		const { messages, client, subs, createMessage, topic, reactions } = this.props;
 		let placeholder = `${__('Message as')} ${client.addr}`;
 		placeholder = `${placeholder.slice(0, 30)}...${placeholder.slice(-5)}`;
 
@@ -177,6 +177,7 @@ class Chatroom extends React.Component {
 		return (
 			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
 				<Messages
+					reactions={reactions}
 					className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height"
 					messages={visibleMessages}
 					hasMore={visibleMessages.length < messages.length}
@@ -185,6 +186,11 @@ class Chatroom extends React.Component {
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
+					createReaction={msg => createMessage({
+						...msg,
+						contentType: 'reaction',
+						topic,
+					})}
 				/>
 
 				<div className="hero-foot">

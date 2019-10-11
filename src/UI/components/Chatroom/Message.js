@@ -40,6 +40,7 @@ const Nickname = ({
 class Message extends React.PureComponent {
 	render() {
 		const {
+			addReaction,
 			topic,
 			refer,
 			message,
@@ -88,6 +89,9 @@ class Message extends React.PureComponent {
 										topic={topic}
 										addr={message.addr}
 										topic={topic}
+										addReaction={content => addReaction({
+											content,
+										})}
 									/>
 								</div>
 							)}

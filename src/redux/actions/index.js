@@ -32,9 +32,13 @@ export const connected = () => ({
 export const sendPrivateMessage = message => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
-		recipient: message.topic,
+		recipient:
+			message.topic.startsWith('/whisper/')
+				? message.topic.slice('/whisper/'.length)
+				: message.topic,
 		message: {
 			...message,
+			topic: undefined,
 			isPrivate: true,
 			isWhisper: true,
 		},
@@ -191,5 +195,5 @@ export const removeMessageById = (topic, id) => ({
 	payload: {
 		topic,
 		id,
-	}
+	},
 });

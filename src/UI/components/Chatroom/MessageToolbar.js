@@ -10,22 +10,21 @@ import { Picker } from 'emoji-mart';
 
 Modal.setAppElement('#root');
 
-const Toolbar = ({ id, topic, addr }) => {
+const Toolbar = ({ id, topic, addr, addReaction }) => {
 	const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 	return (
 		<div className="x-is-hover buttons are-small are-white">
-			<TipJar
-				messageID={id}
-				topic={topic}
-				addr={addr}
-				value={50}
-			/>
-			<a className="level-item icon button is-white has-text-grey-dark" onClick={() => setEmojiPickerVisible(true)}>
+			<TipJar messageID={id} topic={topic} addr={addr} value={50} />
+			<a
+				className="button"
+				onClick={() => setEmojiPickerVisible(true)}
+				aria-label={__('Add reaction')}
+			>
 				😄
 			</a>
 			<Modal
 				isOpen={!!emojiPickerVisible}
-				onRequestClose={() => setEmojiPickerVisible(null)}
+				onRequestClose={() => setEmojiPickerVisible(false)}
 				contentLabel={__('Emoji picker dialog')}
 				overlayClassName="x-modal-overlay"
 				className="x-modal"
@@ -37,15 +36,18 @@ const Toolbar = ({ id, topic, addr }) => {
 						native={true}
 						backgroundImageFn={() => {}}
 						onSelect={emoji => {
-							// TODO
-							console.log(emoji);
-							setEmojiPickerVisible(null);
+							addReaction(emoji.native);
+							setEmojiPickerVisible(false);
 						}}
 						emoji="droplet"
 					/>
 				</div>
 			</Modal>
-			<Link to={getWhisperURL(addr)} className="button tooltip is-tooltip-left" data-tooltip={__('Start a private conversation')}>
+			<Link
+				to={getWhisperURL(addr)}
+				className="button tooltip is-tooltip-left"
+				data-tooltip={__('Start a private conversation')}
+			>
 				<span className="icon is-small">
 					<IoMdChatboxes />
 				</span>

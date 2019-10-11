@@ -1,6 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
 import Message from './Message';
+import Reactions from './Reactions';
 import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
 import classnames from 'classnames';
@@ -29,7 +30,9 @@ const Messages = ({
 	refer,
 	lastReadId,
 	subs,
+	reactions,
 	markAllMessagesRead,
+	createReaction,
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
@@ -57,6 +60,12 @@ const Messages = ({
 			didNotMarkYet = false;
 		}
 
+		const messageReactions = reactions[message.id];
+		const addReaction = msg => createReaction({
+			...msg,
+			targetID: message.id,
+		});
+
 		return acc.concat(
 			<Message
 				className={classnames('', {
@@ -69,7 +78,12 @@ const Messages = ({
 				key={message.id}
 				isNotice={['dchat/subscribe'].includes(message.contentType)}
 				topic={message.topic}
-			/>,
+				addReaction={addReaction}
+			>
+				{messageReactions && (
+					<Reactions addReaction={addReaction} reactions={messageReactions} />
+				)}
+			</Message>,
 		);
 	}, []);
 
