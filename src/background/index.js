@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 import { wrapStore, alias, onInstalled } from './operations-APP_TARGET';
 import createWorkerMiddleware from 'redux-worker-middleware';
@@ -41,11 +42,13 @@ export default configs.$loaded.then(() => {
 	store = createStore(
 		rootReducer,
 		persistedState,
-		applyMiddleware(
-			workerMiddleware,
-			alias(aliases),
-			notifierMiddleware,
-			thunkMiddleware
+		composeWithDevTools(
+			applyMiddleware(
+				workerMiddleware,
+				alias(aliases),
+				notifierMiddleware,
+				thunkMiddleware
+			)
 		)
 	);
 

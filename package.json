@@ -136,6 +136,7 @@
     "react-textarea-autosize": "^7.1.0",
     "react-timeago": "^4.4.0",
     "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2",
     "redux-worker-middleware": "^1.0.0",
