@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 // Sayonara, true pure functions.
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
-import { isNotice } from 'Approot/misc/util';
 
 const reactions = (state = {}, action) => {
 	let newState, initial, targetID;
@@ -17,14 +16,7 @@ const reactions = (state = {}, action) => {
 
 		case 'chat/RECEIVE_REACTION':
 			targetID = action.payload.message.targetID;
-			if (!targetID) {
-				return state;
-			} else {
-				initial = state[topic]?.[targetID] || [];
-			}
-			if (initial.some(msg => msg.id === action.payload.message.id)) {
-				return state;
-			}
+			initial = state[topic]?.[targetID] || [];
 			newState = {
 				...state,
 				[topic]: {
@@ -91,15 +83,6 @@ const messages = (state = {}, action) => {
 
 		case 'chat/RECEIVE_MESSAGE':
 			initial = state[topic] || [];
-			// Each id once, "would you like to sub" once.
-			if (
-				initial.some(msg => msg.id === action.payload.message.id) ||
-				(isNotice(action.payload.message) &&
-				initial[initial.length - 1]?.contentType ===
-					action.payload.message.contentType)
-			) {
-				return state;
-			}
 			newState = {
 				...state,
 				[topic]: [...initial, action.payload.message],
