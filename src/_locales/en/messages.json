@@ -32,6 +32,9 @@
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
+  "Contactaddress": {
+    "message": " Contact address"
+  },
   "Continue": {
     "message": " Continue"
   },
@@ -52,6 +55,9 @@
   },
   "Emojis": {
     "message": " Emojis"
+  },
+  "Expandsonclick": {
+    "message": " Expands on click"
   },
   "Export": {
     "message": " Export"
@@ -77,9 +83,6 @@
   "Home": {
     "message": " Home"
   },
-  "Identity": {
-    "message": " Identity"
-  },
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
@@ -104,11 +107,17 @@
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
+  "Listingstaysforaboutweeks": {
+    "message": " Listing stays for about 2 weeks."
+  },
   "LogOut": {
     "message": " Log Out"
   },
   "Messageas": {
     "message": " Message as"
+  },
+  "More": {
+    "message": " More..."
   },
   "Name": {
     "message": " Name"
@@ -121,12 +130,6 @@
   },
   "Newmessagesbelow": {
     "message": " New messages below"
-  },
-  "Nickname": {
-    "message": " Nickname"
-  },
-  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfree": {
-    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free."
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -172,12 +175,6 @@
   },
   "SubmittedItwillshowupsoonusuallyunderaminute": {
     "message": " Submitted. It will show up soon, usually under a minute."
-  },
-  "Subscribe": {
-    "message": " Subscribe"
-  },
-  "Subscribewithsatfee": {
-    "message": " Subscribe with 1sat fee"
   },
   "Subscribers": {
     "message": " Subscribers"
