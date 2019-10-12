@@ -14,6 +14,9 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-accordion/src/sass/index.sass";
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 
+.emoji-mart-emoji-native {
+    font-family: inherit;
+}
 .textarea:not([rows]) {
     max-height: 6rem;
     /* Without min-height, stayScrolled gets bugged. */

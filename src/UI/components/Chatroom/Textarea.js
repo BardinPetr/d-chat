@@ -95,6 +95,7 @@ const Textarea = forwardRef(
 										backgroundImageFn={() => {}}
 										onSelect={emoji => {
 											addToDraftMessage(emoji.native);
+											setEmojiPickerVisible(false);
 										}}
 										emoji="droplet"
 									/>

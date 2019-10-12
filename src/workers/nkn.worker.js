@@ -132,7 +132,7 @@ onmessage = async ({ data: action }) => {
 						topic,
 						isPrivate: true,
 						// TODO i18n
-						content: 'Subscribed.',
+						content: 'Joined channel.',
 					}).from('me');
 					postMessage(receiveMessage(message));
 				});

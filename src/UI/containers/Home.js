@@ -31,9 +31,13 @@ const NewTopicForm = ({ privateChat }) => {
 const Home = ({ client }) => (
 	<div className="container">
 
-		{client && <ClientInfo className="notification" client={client}>
-			<Version />
-		</ClientInfo>}
+		{client && (
+			<div className="notification">
+				<ClientInfo client={client}>
+					<Version />
+				</ClientInfo>
+			</div>
+		)}
 
 		<div className="section" style={{paddingTop: 0}}>
 			<div className="field">
