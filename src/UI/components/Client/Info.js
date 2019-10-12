@@ -15,7 +15,7 @@ const ClientInfo = ({ client, children }) => {
 						<p style={{ userSelect: 'all' }}>{client.addr}</p>
 						{!expanded && (
 							<a
-								className="button is-text is-size-7"
+								className="button is-light is-size-7"
 								title={__('Expands on click')}
 								onClick={() => setExpanded(true)}
 							>

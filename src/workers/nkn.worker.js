@@ -135,7 +135,7 @@ onmessage = async ({ data: action }) => {
 						content: 'Joined channel.',
 					}).from('me');
 					postMessage(receiveMessage(message));
-				});
+				}).catch(() => {});
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
