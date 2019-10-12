@@ -80,7 +80,7 @@ class NKN extends nkn {
 		const isSubbed = await this.isSubscribed(topic);
 
 		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
-			return;
+			throw 'Too soon';
 		}
 
 		const fee = options.fee || 0;
@@ -140,9 +140,9 @@ class NKN extends nkn {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
-		// if (to === this.addr) {
-		// 	return;
-		// }
+		if (to === this.addr) {
+			return;
+		}
 		try {
 			return this.send(to, JSON.stringify(message), options);
 		} catch (e) {

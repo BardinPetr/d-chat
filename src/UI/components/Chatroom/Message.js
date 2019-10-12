@@ -5,9 +5,6 @@
 import React from 'react';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
-import SubscribeOffer, {
-	DeleteMessageButton,
-} from 'Approot/UI/containers/SubscribeOfferMessage';
 import TimeAgo from './TimeAgo';
 
 const Nickname = ({
@@ -52,13 +49,9 @@ class Message extends React.PureComponent {
 
 		const isGreyed = [
 			'dchat/subscribe',
-			'dchat/offerSubscribe',
 			'nkn/tip',
 		].includes(message.contentType);
-		const isOfferSubscribe = ['dchat/offerSubscribe'].includes(
-			message.contentType,
-		);
-		const isNotice = ['dchat/subscribe', 'dchat/offerSubscribe'].includes(
+		const isNotice = ['dchat/subscribe'].includes(
 			message.contentType,
 		);
 
@@ -82,7 +75,7 @@ class Message extends React.PureComponent {
 									pubKey={message.pubKey || ''}
 								/>
 							</div>
-							{!(isOfferSubscribe || isNotice) && (
+							{!isNotice && (
 								<div className="level-item">
 									<Toolbar
 										id={message.id}
@@ -97,27 +90,16 @@ class Message extends React.PureComponent {
 							)}
 						</div>
 					</div>
-					{(isOfferSubscribe || isNotice) && (
-						<DeleteMessageButton id={message.id} topic={topic} />
-					)}
 				</div>
-				{isOfferSubscribe ? (
-					<SubscribeOffer
-						topic={topic}
-						timestamp={message.timestamp}
-						content={message.content}
-						id={message.id}
-					/>
-				) : (
-					<div className="message-body x-is-small-padding">
-						{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-						<div
-							className="content"
-							dangerouslySetInnerHTML={{ __html: message.content }}
-						></div>
-						{children}
-					</div>
-				)}
+
+				<div className="message-body x-is-small-padding">
+					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
+					<div
+						className="content"
+						dangerouslySetInnerHTML={{ __html: message.content }}
+					></div>
+					{children}
+				</div>
 			</div>
 		);
 	}

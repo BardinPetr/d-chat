@@ -168,13 +168,6 @@ export const removeChat = topic => ({
 	},
 });
 
-export const maybeOfferSubscribeToChat = topic => ({
-	type: 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS',
-	payload: {
-		topic: getChatName(topic),
-	},
-});
-
 export const fetchSubscriptionInfos = topic => ({
 	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',
 	payload: {
