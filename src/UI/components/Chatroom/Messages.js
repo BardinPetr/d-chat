@@ -24,7 +24,6 @@ const LastRead = () => {
 
 const Messages = ({
 	messages,
-	className,
 	hasMore,
 	loadMore,
 	refer,
@@ -91,7 +90,7 @@ const Messages = ({
 	const stay = debounce(stayScrolled, 50, true);
 
 	return (
-		<div className={`${className} is-relative`} ref={listRef}>
+		<div className={`x-is-fullwidth is-scrollable is-relative x-chatroom-messages`} ref={listRef}>
 			<ResizeReporter onSizeChanged={() => stay()} />
 			<InfiniteScroller
 				pageStart={0}
@@ -104,9 +103,7 @@ const Messages = ({
 				threshold={100}
 				className="x-is-fullwidth"
 			>
-				<div className="container">
-					<div className="x-chat">{messageList}</div>
-				</div>
+				<div className="x-chat">{messageList}</div>
 			</InfiniteScroller>
 		</div>
 	);

@@ -27,7 +27,7 @@ const Textarea = forwardRef(
 		const [showingPreview, setShowingPreview] = useState(false);
 		const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 		return (
-			<form className="card" onSubmit={e => submitText(e)}>
+			<form className="card x-is-fullwidth" onSubmit={e => submitText(e)}>
 				<div className="card-content x-is-small-padding field">
 					<div className={classnames('control')} onClick={() => setEmojiPickerVisible(false)}>
 						<TextareaAutoCompleter

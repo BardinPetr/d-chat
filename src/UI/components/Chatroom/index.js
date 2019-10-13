@@ -168,17 +168,24 @@ class Chatroom extends React.Component {
 		});
 
 	render() {
-		const { messages, client, subs, createMessage, topic, reactions } = this.props;
+		const {
+			messages,
+			client,
+			subs,
+			createMessage,
+			topic,
+			reactions,
+		} = this.props;
 		let placeholder = `${__('Message as')} ${client.addr}`;
 		placeholder = `${placeholder.slice(0, 30)}...${placeholder.slice(-5)}`;
 
 		const visibleMessages = messages.slice(-this.state.count);
 
 		return (
-			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
+			<div className="hero-body is-paddingless x-chatroom">
 				<Messages
 					reactions={reactions}
-					className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height"
+					className=""
 					messages={visibleMessages}
 					hasMore={visibleMessages.length < messages.length}
 					loadMore={this.loadMoreMessages}
@@ -186,34 +193,33 @@ class Chatroom extends React.Component {
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
-					createReaction={msg => createMessage({
-						...msg,
-						contentType: 'reaction',
-						topic,
-					})}
+					createReaction={msg =>
+						createMessage({
+							...msg,
+							contentType: 'reaction',
+							topic,
+						})
+					}
 				/>
 
-				<div className="hero-foot">
-					<Textarea
-						innerRef={ref => (this.textarea = ref)}
-						mention={mention}
-						onEnterPress={this.onEnterPress}
-						placeholder={placeholder}
-						ref={ref => (this.msg = ref)}
-						submitText={this.submitText}
-						submitUpload={this.submitUpload}
-						subs={this.props.subs}
-						source={this.msg?.state.value || ''}
-						addToDraftMessage={text => this.addToDraftMessage(text)}
-					>
-						<div className="level-item">
-							<p className="has-text-grey">
-								{this.props.client.balance || '?'} NKN
-							</p>
-						</div>
-					</Textarea>
-				</div>
-
+				<Textarea
+					innerRef={ref => (this.textarea = ref)}
+					mention={mention}
+					onEnterPress={this.onEnterPress}
+					placeholder={placeholder}
+					ref={ref => (this.msg = ref)}
+					submitText={this.submitText}
+					submitUpload={this.submitUpload}
+					subs={this.props.subs}
+					source={this.msg?.state.value || ''}
+					addToDraftMessage={text => this.addToDraftMessage(text)}
+				>
+					<div className="level-item">
+						<p className="has-text-grey">
+							{this.props.client.balance || '?'} NKN
+						</p>
+					</div>
+				</Textarea>
 			</div>
 		);
 	}

@@ -9,45 +9,25 @@ import TopicInfoList from 'Approot/UI/containers/TopicInfoList';
 import WalletRoutes from 'Approot/UI/components/WalletRoutes';
 
 const Routes = () => (
-	<div className="columns is-gapless">
-		<div className="column is-one-fifth">
-			<Route
-				path="/"
-				component={Sidebar}
-			/>
+	<div className="dashboard">
+		<div className="dashboard-panel is-one-quarter is-scrollable">
+			<Route path="/" component={Sidebar} />
 		</div>
-		<div className="column is-four-fifths x-is-fullheight">
-			<Route
-				path="/"
-				component={Header}
-			/>
-			<section className="hero is-fullheight-with-navbar">
-				<div className="hero-body is-paddingless x-is-align-start">
+		<div className="dashboard-main">
+			<div className="">
+				<Route path="/" component={Header} />
+				<section className="hero is-fullheight-with-navbar">
 					<Switch>
-						<Route
-							path="/chat/:topic"
-							component={PublicChatroom}
-						/>
-						<Route
-							path="/whisper/:recipient"
-							component={PrivateChatroom}
-						/>
-						<Route
-							path="/topics"
-							component={TopicInfoList}
-						/>
-						<Route
-							path="/wallets"
-							component={WalletRoutes}
-						/>
-						<Route
-							path="/"
-							component={Home}
-						/>
+						<Route path="/chat/:topic" component={PublicChatroom} />
+						<Route path="/whisper/:recipient" component={PrivateChatroom} />
+						<Route path="/topics" component={TopicInfoList} />
+						<Route path="/wallets" component={WalletRoutes} />
+						<Route path="/" component={Home} />
 					</Switch>
-				</div>
-			</section>
+				</section>
+			</div>
 		</div>
+		<div className="dashboard-panel is-small is-scrollable"></div>
 	</div>
 );
 
