@@ -90,6 +90,7 @@ class Header extends React.Component {
 					<div className="navbar-start is-hidden-tablet">
 
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
+						<Link className="navbar-item" to="/topics">{__('public')}</Link>
 
 						<div className="navbar-item">
 							<p className="menu-label">{__('Channels')}</p>

@@ -12,7 +12,7 @@ const Sidebar = () => (
 				<Link to="/">{__('Home')}</Link>
 			</li>
 			<li>
-				<Link to="/topics/">{__('Public')}</Link>
+				<Link to="/topics">{__('Public')}</Link>
 			</li>
 		</ul>
 
