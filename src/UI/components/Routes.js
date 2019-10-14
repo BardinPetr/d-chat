@@ -7,16 +7,17 @@ import Header from 'Approot/UI/components/Header';
 import Sidebar from 'Approot/UI/components/Sidebar';
 import TopicInfoList from 'Approot/UI/containers/TopicInfoList';
 import WalletRoutes from 'Approot/UI/components/WalletRoutes';
+import ChatroomSidebar from 'Approot/UI/containers/Chatroom/Sidebar';
 
 const Routes = () => (
 	<div className="dashboard">
-		<div className="dashboard-panel is-one-quarter is-scrollable">
+		<div className="dashboard-panel is-one-quarter is-paddingless is-scrollable">
 			<Route path="/" component={Sidebar} />
 		</div>
-		<div className="dashboard-main">
-			<div className="">
-				<Route path="/" component={Header} />
-				<section className="hero is-fullheight-with-navbar">
+		<main className="dashboard-main x-main">
+			<Route path="/" component={Header} />
+			<section className="hero is-fullheight-with-navbar">
+				<div className="hero-body is-paddingless x-is-align-start">
 					<Switch>
 						<Route path="/chat/:topic" component={PublicChatroom} />
 						<Route path="/whisper/:recipient" component={PrivateChatroom} />
@@ -24,10 +25,10 @@ const Routes = () => (
 						<Route path="/wallets" component={WalletRoutes} />
 						<Route path="/" component={Home} />
 					</Switch>
-				</section>
-			</div>
-		</div>
-		<div className="dashboard-panel is-small is-scrollable"></div>
+				</div>
+			</section>
+		</main>
+		<Route path="/(chat|whisper)/:topic" component={ChatroomSidebar} />
 	</div>
 );
 

@@ -27,7 +27,7 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 						>
 							<span
 								title={__('Remove')}
-								className="delete is-small is-inline-block-mobile x-is-hover-hidden"
+								className="delete is-small x-is-hover-hidden"
 								onClick={e => {
 									e.preventDefault();
 									// Navigate away from closing chat first.

@@ -182,7 +182,7 @@ class Chatroom extends React.Component {
 		const visibleMessages = messages.slice(-this.state.count);
 
 		return (
-			<div className="hero-body is-paddingless x-chatroom">
+			<div className="x-chatroom">
 				<Messages
 					reactions={reactions}
 					className=""
@@ -214,11 +214,9 @@ class Chatroom extends React.Component {
 					source={this.msg?.state.value || ''}
 					addToDraftMessage={text => this.addToDraftMessage(text)}
 				>
-					<div className="level-item">
-						<p className="has-text-grey">
-							{this.props.client.balance || '?'} NKN
-						</p>
-					</div>
+					<p className="has-text-grey">
+						{this.props.client.balance || '?'} NKN
+					</p>
 				</Textarea>
 			</div>
 		);

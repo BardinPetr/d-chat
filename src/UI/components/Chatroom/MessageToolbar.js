@@ -34,7 +34,7 @@ const Toolbar = ({ id, topic, addr, addReaction }) => {
 				overlayClassName="x-modal-overlay"
 				className="x-modal"
 			>
-				<div className="x-emoji-mart-container">
+				<div className="x-emoji-mart-container x-is-reactions-mart">
 					<Picker
 						autoFocus
 						title={__('Emojis')}

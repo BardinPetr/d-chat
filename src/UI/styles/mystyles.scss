@@ -1,6 +1,6 @@
 $primary: #1791f2;
 $info: rgba(29,155,209,.1);
-$navbar-breakpoint: 769px;
+$navbar-breakpoint: 679px;
 $navbar-height: 3rem;
 $section-padding: 0.5rem;
 $section-padding-medium: 3rem 1.5rem;
@@ -19,107 +19,116 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
-$chatroom-footer-height: 26%;
-
 .emoji-mart-emoji-native {
-    font-family: inherit;
+	font-family: inherit;
 }
 .textarea:not([rows]) {
-    max-height: 6rem;
-    /* Without min-height, stayScrolled gets bugged. */
-    min-height: 3rem;
+	max-height: 6rem;
+	/* Without min-height, stayScrolled gets bugged. */
+	min-height: 3rem;
+}
+.rta__textarea {
+	box-shadow: none !important;
 }
 .x-emoji-mart-container {
-    position:absolute;
-    bottom: 2.5rem;
-    left: 57%;
-    z-index: 30;
+	position:absolute;
+	bottom: 2.5rem;
+	z-index: 30;
+
+	&.x-is-reactions-mart {
+		left: 45%;
+	}
 }
 .x-is-fullwidth {
 	width: 100%;
 }
 .x-modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
 }
 .ReactModal__Overlay {
-    z-index: 30;
-    background-color: transparent !important;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    .ReactModal__Content {
-        border: 0;
-        background-color: transparent;
-    }
+	z-index: 30;
+	background-color: transparent !important;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	.ReactModal__Content {
+		border: 0;
+		background-color: transparent;
+	}
 }
 .emoji-mart-scroll {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
 @media (max-width: 768px) {
-    .x-fix-mobile.navbar-brand {
-        max-width: inherit !important;
-        .navbar-item {
-            max-width: 70% !important;
-        }
-    }
+	.x-fix-mobile.navbar-brand {
+		max-width: inherit !important;
+		.navbar-item {
+			max-width: 70% !important;
+		}
+	}
 }
 .accordions .accordion {
-    background: linear-gradient(white, $grey-lighter);
+	background: linear-gradient(white, $grey-lighter);
 }
 .x-white-space {
-    white-space: pre-wrap;
+	white-space: pre-wrap;
 }
 .x-topic-link {
-    .x-is-hover-hidden {
-        display: none;
-    }
-    &:hover .x-is-hover-hidden {
-        display: inline-block;
-    }
+	.x-is-hover-hidden {
+		display: none;
+	}
+	&:hover .x-is-hover-hidden {
+		display: inline-block;
+	}
 }
 .x-fix-mobile.navbar-brand {
-    max-width: 60%;
-    .navbar-item {
-        max-width: 100%;
-        .image {
-            flex-shrink: 0;
-        }
-    }
+	max-width: 60%;
+	.navbar-item {
+		max-width: 100%;
+		.image {
+			flex-shrink: 0;
+		}
+	}
 }
 .x-truncate {
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	white-space: nowrap;
+}
+.x-are-truncated * {
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	white-space: nowrap;
 }
 .x-has-max-height {
-    max-height: 300px;
-    overflow-y: auto !important;
+	max-height: 300px;
+	overflow-y: auto !important;
 }
 .x-has-max-width {
-    max-width: 500px;
+	max-width: 500px;
 }
 .x-reactions {
-    margin-top: 0.5rem;
+	margin-top: 0.5rem;
 }
 .x-reactions .button {
-    width: 2.7rem;
-    height: 1.4rem;
+	width: 2.7rem;
+	height: 1.4rem;
 }
 .x-is-hover {
-    visibility: hidden;
+	visibility: hidden;
 }
 .message-body .content {
-    margin-bottom: 0;
-    font-size: 0.9375rem;
+	margin-bottom: 0;
+	font-size: 0.9375rem;
 }
 
 .buttons.x-are-very-rounded .button {
-    border-radius: 25px !important;
+	border-radius: 25px !important;
 }
 .x-is-align-start {
 	align-items: flex-start !important;
@@ -136,11 +145,10 @@ $chatroom-footer-height: 26%;
 }
 .x-tabs-has-bigger-border a {
 	border-bottom-width: 2px;
-	
+
 }
 .x-chat {
-	padding-bottom: 1rem;
-	padding-left: 0.4em;
+	padding: 0.4em;
 
 	.message {
 		&:hover {
@@ -158,7 +166,7 @@ $chatroom-footer-height: 26%;
 			height: 300px;
 		}
 	}
-	
+
 	.message-header {
 		background-color: transparent;
 		color: $primary;
@@ -200,17 +208,34 @@ $chatroom-footer-height: 26%;
 		background-color: rgba(242,199,68,.2);
 	}
 }
+.x-main {
+	height: calc(100vh - #{$navbar-height});
+	flex-flow: column;
+	overflow-x: hidden;
+}
 .x-chatroom {
-    height: calc(100vh - #{$navbar-height});
-    flex-flow: column;
+	display: flex;
+	flex-flow: column;
+	flex: 1;
+	max-width: 100%;
+	align-self: stretch;
+	max-height: calc(100vh - #{$navbar-height});
 
-    &-messages {
-        height: 100%;
-    }
+	&-messages {
+		height: 100%;
+	}
 }
 body, html, #root {
 	overflow-y: auto !important;
 }
 .x-navbar-height {
-    height: $navbar-height;
+	height: $navbar-height;
+}
+.dashboard-panel {
+	&.is-small {
+		flex: 0 0 12rem;
+	}
+	&.is-medium {
+		flex: 0 0 15rem;
+	}
 }

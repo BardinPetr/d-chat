@@ -31,17 +31,17 @@ const NewTopicForm = ({ privateChat }) => {
 };
 
 const Home = ({ client }) => (
-	<div className="container">
-		{client && (
+	<section className="section">
+		<div className="container">{client && (
 			<div className="notification">
 				<ClientInfo client={client}>
 					<Version />
 				</ClientInfo>
 			</div>
-		)}
+		)}</div>
 
-		<section className="section" style={{ paddingTop: 0 }}>
-			<div className="columns container">
+		<div className="container" style={{ paddingTop: 0 }}>
+			<div className="columns">
 				<div className="column">
 					<div className="columns">
 						<div className="column">
@@ -68,8 +68,8 @@ const Home = ({ client }) => (
 					<Info />
 				</div>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 );
 
 const mapStateToProps = state => ({

@@ -236,6 +236,9 @@
   "optional": {
     "message": " optional"
   },
+  "peoplechatting": {
+    "message": " people chatting"
+  },
   "extensionName": {
     "message": "D-Chat"
   },

@@ -25,8 +25,8 @@ const ClientInfo = ({ client, children }) => {
 					</div>
 				</div>
 				{expanded && (
-					<div className="tile">
-						<div className="tile is-child is-7">
+					<div className="tile is-vertical">
+						<div className="tile is-child">
 							<div className="field">
 								<p className="is-size-7">{__('Wallet address')}</p>
 								<p style={{ userSelect: 'all' }}>{client.wallet.Address}</p>

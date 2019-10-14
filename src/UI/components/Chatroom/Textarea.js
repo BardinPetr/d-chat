@@ -28,7 +28,7 @@ const Textarea = forwardRef(
 		const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 		return (
 			<form className="card x-is-fullwidth" onSubmit={e => submitText(e)}>
-				<div className="card-content x-is-small-padding field">
+				<div className="card-content is-paddingless field">
 					<div className={classnames('control')} onClick={() => setEmojiPickerVisible(false)}>
 						<TextareaAutoCompleter
 							className={classnames('textarea', {
@@ -79,7 +79,9 @@ const Textarea = forwardRef(
 						</div>
 
 						<div className="level-right">
-							{children}
+							<div className="level-item is-hidden-touch">
+								{children}
+							</div>
 
 							<a className="level-item icon button is-white has-text-grey-dark" onClick={() => {
 								setEmojiPickerVisible(!emojiPickerVisible);
@@ -110,7 +112,7 @@ const Textarea = forwardRef(
 							</Uploader>
 							<input
 								type="submit"
-								className="button is-small is-primary level-item"
+								className="button is-small is-primary level-item is-hidden-mobile"
 								value={__('Submit')}
 							/>
 						</div>

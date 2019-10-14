@@ -63,7 +63,7 @@ class Message extends React.PureComponent {
 				})}
 			>
 				<div className="message-header is-paddingless has-text-weight-light">
-					<div className="level is-marginless is-paddingless">
+					<div className="level is-mobile is-marginless is-paddingless">
 						<div className="level-left">
 							<div className="level-item">
 								<Nickname

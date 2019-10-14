@@ -49,12 +49,12 @@ class Header extends React.Component {
 
 		return (
 			<nav className="navbar is-primary has-text-white x-navbar-height">
-				<div className="x-fix-mobile navbar-brand" aria-label="menu navigation" role="navigation">
+				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
 					<Link to="/" className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
-						<h5 title={getChatDisplayName(topic)} className="x-truncate title is-5 has-text-white x-is-padding-left" style={{width: '15em'}}>{getChatDisplayName(topic) || __('D-Chat')}</h5>
+						<h5 title={getChatDisplayName(topic)} className="x-truncate title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
 					</Link>
 
 					<a
@@ -87,10 +87,10 @@ class Header extends React.Component {
 							topic={topic}
 						/>
 					</div>
-					<div className="navbar-start is-hidden-tablet">
+					<div className="navbar-start is-hidden-mobile">
 
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
-						<Link className="navbar-item" to="/topics">{__('public')}</Link>
+						<Link className="navbar-item" to="/topics">{__('Public')}</Link>
 
 						<div className="navbar-item">
 							<p className="menu-label">{__('Channels')}</p>

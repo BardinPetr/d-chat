@@ -49,7 +49,7 @@ const Messages = ({
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
-	}, [messages.length, messages[0]?.topic]);
+	}, [messages.length, messages[0]?.topic, Object.keys(reactions).length]);
 
 	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 	let didNotMarkYet = true;
