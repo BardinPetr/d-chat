@@ -3,7 +3,7 @@ import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-const FORBLOCKS = 50000;
+const FORBLOCKS = 400000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
