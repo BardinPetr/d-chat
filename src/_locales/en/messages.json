@@ -29,6 +29,9 @@
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
   },
+  "Comeandsayhionchannel": {
+    "message": " Come and say hi on channel"
+  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
   },
@@ -106,9 +109,6 @@
   },
   "ListofPublicChannels": {
     "message": " List of Public Channels"
-  },
-  "Listingstaysforaboutweeks": {
-    "message": " Listing stays for about 2 weeks."
   },
   "LogOut": {
     "message": " Log Out"
@@ -229,9 +229,6 @@
   },
   "andsayhi": {
     "message": " and say hi!"
-  },
-  "andsayhiSomeonewilltipyoucoins": {
-    "message": " and say hi! Someone will tip you coins."
   },
   "optional": {
     "message": " optional"

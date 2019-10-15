@@ -134,13 +134,10 @@ const TopicInfoList = ({ dispatch, topics }) => {
 							<p>
 								{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
 							</p>
-							<p>
-								{__('Listing stays for about 2 weeks.')}
-							</p>
 							<div className="field">
 								<div className="control">
 									<button type="submit" className="button is-link">
-										{__('Submit')}
+										{__('Add')}
 									</button>
 								</div>
 							</div>

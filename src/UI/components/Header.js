@@ -79,7 +79,7 @@ class Header extends React.Component {
 					role="navigation"
 					aria-label="main navigation"
 				>
-					<div className="navbar-end">
+					<div className="navbar-end is-hidden-desktop">
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
 								'is-hidden': topic == null || isPrivateChat,
@@ -87,8 +87,8 @@ class Header extends React.Component {
 							topic={topic}
 						/>
 					</div>
-					<div className="navbar-start is-hidden-mobile">
 
+					<div className="navbar-start is-hidden-desktop is-hidden-tablet">
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
 						<Link className="navbar-item" to="/topics">{__('Public')}</Link>
 

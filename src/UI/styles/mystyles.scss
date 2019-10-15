@@ -1,5 +1,6 @@
 $primary: #1791f2;
 $info: rgba(29,155,209,.1);
+$tablet: 680px;
 $navbar-breakpoint: 679px;
 $navbar-height: 3rem;
 $section-padding: 0.5rem;
@@ -144,11 +145,12 @@ $content-pre-padding: 0.5em 1em;
 	width: 80%;
 }
 .x-tabs-has-bigger-border a {
-	border-bottom-width: 2px;
+	border-bottom-width: 3px;
 
 }
 .x-chat {
 	padding: 0.4em;
+	padding-bottom: 1em;
 
 	.message {
 		&:hover {
@@ -238,4 +240,12 @@ body, html, #root {
 	&.is-medium {
 		flex: 0 0 15rem;
 	}
+}
+.x-address {
+    &-container {
+        overflow-x: hidden;
+        display: flex;
+        flex-flow: column;
+        aling-items: flex-start;
+    }
 }
