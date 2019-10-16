@@ -11,7 +11,7 @@ import ChatroomSidebar from 'Approot/UI/containers/Chatroom/Sidebar';
 
 const Routes = () => (
 	<div className="dashboard">
-		<div className="dashboard-panel is-one-quarter is-paddingless is-scrollable">
+		<div className="dashboard-panel is-one-quarter x-is-small-padding is-scrollable">
 			<Route path="/" component={Sidebar} />
 		</div>
 		<main className="dashboard-main x-main">

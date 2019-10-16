@@ -226,6 +226,7 @@ $content-pre-padding: 0.5em 1em;
 
 	&-messages {
 		height: 100%;
+		overflow-x: hidden;
 	}
 }
 body, html, #root {
@@ -234,21 +235,30 @@ body, html, #root {
 .x-navbar-height {
 	height: $navbar-height;
 }
-.dashboard-panel {
-	&.is-small {
-		flex: 0 0 12rem;
-	}
-	&.is-medium {
-		flex: 0 0 15rem;
+.dashboard {
+	height: 100vh;
+	&-panel {
+		&.is-small {
+			flex: 0 0 12rem;
+		}
+		&.is-medium {
+			flex: 0 0 15rem;
+		}
 	}
 }
 .x-address {
-    &-container {
-        overflow-x: hidden;
-        display: flex;
-        flex-flow: column;
-        aling-items: flex-start;
-    }
+	user-select: all;
+
+	&-broken {
+		word-break: break-all;
+	}
+
+	&-container {
+		overflow-x: hidden;
+		display: flex;
+		flex-flow: column;
+		align-items: flex-start;
+	}
 }
 .x-toolbar {
     position: absolute;

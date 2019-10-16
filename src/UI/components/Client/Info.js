@@ -13,7 +13,7 @@ const ClientInfo = ({ client, children }) => {
 					<div className="field">
 						<div className="field">
 							<p className="is-size-7">{__('Contact address')}</p>
-							<p style={{ userSelect: 'all' }}>{client.addr}</p>
+							<p className="x-address-broken">{client.addr}</p>
 						</div>
 						{!expanded && (
 							<a
@@ -31,7 +31,7 @@ const ClientInfo = ({ client, children }) => {
 						<div className="tile is-child">
 							<div className="field">
 								<p className="is-size-7">{__('Wallet address')}</p>
-								<p style={{ userSelect: 'all' }}>{client.wallet.Address}</p>
+								<p className="x-address-broken">{client.wallet.Address}</p>
 							</div>
 						</div>
 						<div className="tile is-child">

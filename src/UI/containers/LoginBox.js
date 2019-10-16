@@ -72,7 +72,7 @@ class LoginBox extends React.Component {
 						{__('Welcome!')}
 					</h1>
 					<div className="columns is-centered">
-						<div className="column is-half is-4-desktop">
+						<div className="column is-9 is-4-desktop">
 							<div className="notification is-light">
 								<figure className="image container is-64x64">
 									<DchatLogo />
