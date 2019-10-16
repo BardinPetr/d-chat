@@ -9,7 +9,8 @@ import Version from 'Approot/UI/components/Version';
 
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
-	const submit = () => {
+	const submit = e => {
+		e.preventDefault();
 		let t = privateChat ? getWhisperURL(target) : getChatURL(target);
 		history.push(t);
 		setTarget('');
@@ -32,13 +33,15 @@ const NewTopicForm = ({ privateChat }) => {
 
 const Home = ({ client }) => (
 	<section className="section">
-		<div className="container">{client && (
-			<div className="notification">
-				<ClientInfo client={client}>
-					<Version />
-				</ClientInfo>
-			</div>
-		)}</div>
+		<div className="container">
+			{client && (
+				<div className="notification">
+					<ClientInfo client={client}>
+						<Version />
+					</ClientInfo>
+				</div>
+			)}
+		</div>
 
 		<div className="container" style={{ paddingTop: 0 }}>
 			<div className="columns">
