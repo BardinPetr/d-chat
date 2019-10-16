@@ -11,8 +11,10 @@ const ClientInfo = ({ client, children }) => {
 			<div className="tile is-parent is-vertical">
 				<div className="tile is-child">
 					<div className="field">
-						<p className="is-size-7">{__('Contact address')}</p>
-						<p style={{ userSelect: 'all' }}>{client.addr}</p>
+						<div className="field">
+							<p className="is-size-7">{__('Contact address')}</p>
+							<p style={{ userSelect: 'all' }}>{client.addr}</p>
+						</div>
 						{!expanded && (
 							<a
 								className="button is-light is-size-7"
@@ -32,7 +34,7 @@ const ClientInfo = ({ client, children }) => {
 								<p style={{ userSelect: 'all' }}>{client.wallet.Address}</p>
 							</div>
 						</div>
-						<div class="tile is-child">
+						<div className="tile is-child">
 							<div className="field">
 								<p className="is-size-7">{__('Wallet balance')}</p>
 								<p>{client.balance || '?'} NKN</p>

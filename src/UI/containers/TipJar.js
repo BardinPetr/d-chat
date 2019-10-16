@@ -4,7 +4,7 @@ import { newTransaction } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 import { matchPath } from 'react-router-dom';
 
-const TipJar = ({ value, topic, addr, dispatch, messageID }) => {
+const TipJar = ({ className, value, topic, addr, dispatch, messageID }) => {
 
 	const send = (value) => {
 		if ( !addr ) {
@@ -26,7 +26,7 @@ const TipJar = ({ value, topic, addr, dispatch, messageID }) => {
 
 	return (
 		<a
-			className="button tooltip is-tooltip-left"
+			className={`button tooltip is-tooltip-left ${className}`}
 			data-tooltip={`Tip ${value} sats`}
 			onClick={() => send(value)}
 		>

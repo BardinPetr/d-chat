@@ -1,6 +1,7 @@
 $primary: #1791f2;
 $info: rgba(29,155,209,.1);
 $tablet: 680px;
+$desktop: 800px;
 $navbar-breakpoint: 679px;
 $navbar-height: 3rem;
 $section-padding: 0.5rem;
@@ -114,11 +115,11 @@ $content-pre-padding: 0.5em 1em;
 	max-width: 500px;
 }
 .x-reactions {
-	margin-top: 0.5rem;
-}
-.x-reactions .button {
-	width: 2.7rem;
-	height: 1.4rem;
+	margin-top: 0.2rem;
+	.button {
+		width: 2.6rem;
+		height: 1.2rem;
+	}
 }
 .x-is-hover {
 	visibility: hidden;
@@ -160,7 +161,7 @@ $content-pre-padding: 0.5em 1em;
 				visibility: visible;
 			}
 		}
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.25rem;
 		background-color: white;
 		word-wrap: break-word;
 
@@ -247,5 +248,13 @@ body, html, #root {
         display: flex;
         flex-flow: column;
         aling-items: flex-start;
+    }
+}
+.x-toolbar {
+    position: absolute;
+    right: 1rem;
+
+    .button {
+        background-color: hsl(0, 1.8%, 88.8%);
     }
 }

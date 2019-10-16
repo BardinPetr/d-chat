@@ -50,12 +50,12 @@ class Header extends React.Component {
 		return (
 			<nav className="navbar is-primary has-text-white x-navbar-height">
 				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
-					<Link to="/" className="navbar-item">
+					<span className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
 						<h5 title={getChatDisplayName(topic)} className="x-truncate title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
-					</Link>
+					</span>
 
 					<a
 						className={classnames('navbar-burger burger', {

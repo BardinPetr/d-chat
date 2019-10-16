@@ -32,7 +32,7 @@ const WalletImporter = ({ dispatch }) => {
 		<section className="section">
 			<ProvideCredentials submit={onSubmit}>
 				<div className="field">
-					{importError && <div class="help is-danger">{importError}</div>}
+					{importError && <div className="help is-danger">{importError}</div>}
 					<div className="control">
 						<input
 							type="file"

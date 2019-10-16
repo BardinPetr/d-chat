@@ -7,6 +7,7 @@ import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Uploader from './Uploader';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
+import { IoMdHappy } from 'react-icons/io';
 
 const Textarea = forwardRef(
 	(
@@ -83,10 +84,12 @@ const Textarea = forwardRef(
 								{children}
 							</div>
 
-							<a className="level-item icon button is-white has-text-grey-dark" onClick={() => {
+							<a className="level-item button is-white has-text-grey-dark" onClick={() => {
 								setEmojiPickerVisible(!emojiPickerVisible);
 							}}>
-								😄
+								<span className="icon is-small">
+									<IoMdHappy />
+								</span>
 							</a>
 							{emojiPickerVisible && (
 								<div className="x-emoji-mart-container">

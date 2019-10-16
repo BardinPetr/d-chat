@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { getWhisperURL } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TipJar from 'Approot/UI/containers/TipJar';
-import { IoMdChatboxes } from 'react-icons/io';
+import { IoMdChatboxes, IoMdHappy } from 'react-icons/io';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 
@@ -18,14 +18,16 @@ Modal.setAppElement('#root');
 const Toolbar = ({ id, topic, addr, addReaction }) => {
 	const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 	return (
-		<div className="x-is-hover buttons are-small are-white">
-			<TipJar messageID={id} topic={topic} addr={addr} value={5} />
+		<div className="x-is-hover buttons are-small">
+			<TipJar className="" messageID={id} topic={topic} addr={addr} value={5} />
 			<a
 				className="button tooltip is-tooltip-left"
 				onClick={() => setEmojiPickerVisible(true)}
 				data-tooltip={__('Add reaction')}
 			>
-				😄
+				<span className="icon is-small">
+					<IoMdHappy />
+				</span>
 			</a>
 			<Modal
 				isOpen={!!emojiPickerVisible}

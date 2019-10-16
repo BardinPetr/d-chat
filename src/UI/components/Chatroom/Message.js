@@ -43,15 +43,13 @@ class Message extends React.PureComponent {
 			message,
 			isSubscribed,
 			className,
+			includeHeader,
 			children,
+			isNotice,
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
-		const isGreyed = [
-			'dchat/subscribe',
-			'nkn/tip',
-		].includes(message.contentType);
-		const isNotice = ['dchat/subscribe'].includes(
+		const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
 			message.contentType,
 		);
 
@@ -62,35 +60,40 @@ class Message extends React.PureComponent {
 					'x-notice': isGreyed,
 				})}
 			>
-				<div className="message-header is-paddingless has-text-weight-light">
-					<div className="level is-mobile is-marginless is-paddingless">
-						<div className="level-left">
-							<div className="level-item">
-								<Nickname
-									refer={refer}
-									addr={message.addr}
-									username={message.username}
-									timestamp={message.timestamp}
-									unsubscribed={unsubscribed}
-									pubKey={message.pubKey || ''}
-								/>
-							</div>
-							{!isNotice && (
+				{(includeHeader || isNotice) && (
+					<div className="message-header is-paddingless has-text-weight-light">
+						<div className="level is-mobile is-marginless is-paddingless">
+							<div className="level-left">
 								<div className="level-item">
-									<Toolbar
-										id={message.id}
-										topic={topic}
+									<Nickname
+										refer={refer}
 										addr={message.addr}
-										topic={topic}
-										addReaction={content => addReaction({
-											content,
-										})}
+										username={message.username}
+										timestamp={message.timestamp}
+										unsubscribed={unsubscribed}
+										pubKey={message.pubKey || ''}
 									/>
 								</div>
-							)}
+							</div>
 						</div>
 					</div>
-				</div>
+				)}
+
+				{!isNotice && (
+					<div className="x-toolbar">
+						<Toolbar
+							id={message.id}
+							topic={topic}
+							addr={message.addr}
+							topic={topic}
+							addReaction={content =>
+								addReaction({
+									content,
+								})
+							}
+						/>
+					</div>
+				)}
 
 				<div className="message-body x-is-small-padding">
 					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}

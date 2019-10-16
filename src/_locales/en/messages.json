@@ -89,8 +89,8 @@
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
-  "IfyoucareaboutyouwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
-    "message": " If you care about you wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
+  "IfyoucareaboutyourwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
+    "message": " If you care about your wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
   },
   "Import": {
     "message": " Import"
