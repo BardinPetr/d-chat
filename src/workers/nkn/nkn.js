@@ -3,7 +3,7 @@ import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
-const FORBLOCKS = 50000;
+const FORBLOCKS = 400000;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -21,7 +21,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0014.nkn.org:30003',
 	'http://mainnet-seed-0015.nkn.org:30003',
 	'http://mainnet-seed-0016.nkn.org:30003',
-	'http://mainnet-seed-0017.nkn.org:30003',
+	// 'http://mainnet-seed-0017.nkn.org:30003',
 	'http://mainnet-seed-0018.nkn.org:30003',
 	'http://mainnet-seed-0019.nkn.org:30003',
 	'http://mainnet-seed-0020.nkn.org:30003',
@@ -46,7 +46,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0039.nkn.org:30003',
 	'http://mainnet-seed-0040.nkn.org:30003',
 	'http://mainnet-seed-0041.nkn.org:30003',
-	'http://mainnet-seed-0042.nkn.org:30003',
+	// 'http://mainnet-seed-0042.nkn.org:30003',
 	'http://mainnet-seed-0043.nkn.org:30003',
 	'http://mainnet-seed-0044.nkn.org:30003',
 ];
@@ -80,7 +80,7 @@ class NKN extends nkn {
 		const isSubbed = await this.isSubscribed(topic);
 
 		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
-			return;
+			throw 'Too soon';
 		}
 
 		const fee = options.fee || 0;

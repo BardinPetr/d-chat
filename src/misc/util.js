@@ -1,16 +1,16 @@
 import shasum from 'shasum';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
 
-function unleadingHashIt(str){
+function unleadingHashIt(str) {
 	return str.replace(/^#*/, '');
 }
 
-function leadingHashIt(str){
+function leadingHashIt(str) {
 	return '#' + unleadingHashIt(str);
 }
 
 export function genChatID(topic) {
-	if (!topic){
+	if (!topic) {
 		return null;
 	}
 	topic = unleadingHashIt(String(topic));
@@ -19,7 +19,7 @@ export function genChatID(topic) {
 }
 
 export function getChatDisplayName(topic) {
-	if (!topic){
+	if (!topic) {
 		return '';
 	}
 	if (topic.startsWith('/whisper/')) {
@@ -62,9 +62,9 @@ export const formatAddr = addr => {
 	const lastDotPosition = addr.lastIndexOf('.');
 	let formattedAddr = '';
 	if (lastDotPosition !== -1) {
-		formattedAddr =  addr.substring(0, lastDotPosition + 7);
+		formattedAddr = addr.substring(0, lastDotPosition + 7);
 	} else {
-		formattedAddr = addr.substring(0,6);
+		formattedAddr = addr.substring(0, 6);
 	}
 	return formattedAddr;
 };
@@ -77,10 +77,10 @@ export const parseAddr = addr => {
 	let pubKey = addr;
 	let formattedAddr = '';
 	if (lastDotPosition !== -1) {
-		formattedAddr =  addr.substring(0, lastDotPosition);
+		formattedAddr = addr.substring(0, lastDotPosition);
 		pubKey = addr.slice(lastDotPosition + 1);
 	}
-	return [ formattedAddr, pubKey ];
+	return [formattedAddr, pubKey];
 };
 
 export const getAddressFromAddr = theAddr => {
@@ -88,14 +88,14 @@ export const getAddressFromAddr = theAddr => {
 	const [_, pubkey] = parseAddr(theAddr);
 	const nknAddress = protocol.programHashStringToAddress(
 		protocol.hexStringToProgramHash(
-			protocol.publicKeyToSignatureRedeem(pubkey)
-		)
+			protocol.publicKeyToSignatureRedeem(pubkey),
+		),
 	);
 	return nknAddress;
 };
 
-export const genPrivateChatName = (recipient) => `/whisper/${recipient}`;
-export const getWhisperURL = (recipient) => `/whisper/${recipient}`;
+export const genPrivateChatName = recipient => `/whisper/${recipient}`;
+export const getWhisperURL = recipient => `/whisper/${recipient}`;
 
 export const log = (...args) => {
 	if (localStorage.getItem('debug')) {
@@ -103,9 +103,10 @@ export const log = (...args) => {
 	}
 };
 
-export const isReaction = message => message.contentType === 'reaction' || message.contentType === 'nkn/tip';
+export const isReaction = message =>
+	message.contentType === 'reaction' || message.contentType === 'nkn/tip';
 
-export const importWallet = (file) => {
+export const importWallet = file => {
 	return new Promise((resolve, reject) => {
 		const reader = new FileReader();
 		reader.onload = e => {
@@ -116,7 +117,7 @@ export const importWallet = (file) => {
 	});
 };
 
-export const isNotice = msg => (['dchat/subscribe', 'dchat/offerSubscribe'].includes(msg.contentType));
+export const isNotice = msg => ['dchat/subscribe'].includes(msg.contentType);
 
 // This is the topic for the list of public topics.
 export const DCHAT_PUBLIC_TOPICS = '__dchat';

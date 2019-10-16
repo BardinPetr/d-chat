@@ -1,3 +1,6 @@
+/**
+ * Handles #/topics/, which is the public channels list page.
+ */
 // eslint-disable-next-line
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -128,13 +131,15 @@ const TopicInfoList = ({ dispatch, topics }) => {
 									/>
 								</div>
 							</div>
-							<p>
-								{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
-							</p>
+							<div className="field">
+								<p>
+									{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
+								</p>
+							</div>
 							<div className="field">
 								<div className="control">
 									<button type="submit" className="button is-link">
-										{__('Submit')}
+										{__('Add')}
 									</button>
 								</div>
 							</div>

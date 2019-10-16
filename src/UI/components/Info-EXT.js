@@ -8,9 +8,7 @@ const Info = () => {
 	return (
 		<div className="container">
 			<p className="field" style={{wordBreak: 'keep-all'}}>
-				{__('Join channel')}
-				{' '}<TopicLink topic="d-chat" />{' '}
-				{__('and say hi! Someone will tip you coins.')}
+				{__('Come and say hi on channel')} <TopicLink topic="d-chat" />.
 			</p>
 		</div>
 	);

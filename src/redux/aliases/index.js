@@ -1,7 +1,7 @@
 import nknWallet from 'nkn-wallet';
 import {
 	createChat,
-	maybeOfferSubscribeToChat,
+	subscribeToChat,
 } from '../actions';
 import passworder from 'browser-passworder';
 import {
@@ -72,7 +72,7 @@ const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
 	if ( topic ) {
 		dispatch(createChat(topic));
-		dispatch(maybeOfferSubscribeToChat(topic));
+		dispatch(subscribeToChat(topic));
 	}
 };
 

@@ -48,14 +48,14 @@ class Header extends React.Component {
 		const isPrivateChat = topic?.startsWith('/whisper/');
 
 		return (
-			<nav className="navbar is-primary has-text-white">
-				<div className="x-fix-mobile navbar-brand" aria-label="menu navigation" role="navigation">
-					<Link to="/" className="navbar-item">
+			<nav className="navbar is-primary has-text-white x-navbar-height">
+				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
+					<span className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
 						<h5 title={getChatDisplayName(topic)} className="x-truncate title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
-					</Link>
+					</span>
 
 					<a
 						className={classnames('navbar-burger burger', {
@@ -79,7 +79,7 @@ class Header extends React.Component {
 					role="navigation"
 					aria-label="main navigation"
 				>
-					<div className="navbar-end">
+					<div className="navbar-end is-hidden-desktop">
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
 								'is-hidden': topic == null || isPrivateChat,
@@ -87,9 +87,10 @@ class Header extends React.Component {
 							topic={topic}
 						/>
 					</div>
-					<div className="navbar-start is-hidden-tablet">
 
+					<div className="navbar-start is-hidden-desktop is-hidden-tablet">
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
+						<Link className="navbar-item" to="/topics">{__('Public')}</Link>
 
 						<div className="navbar-item">
 							<p className="menu-label">{__('Channels')}</p>

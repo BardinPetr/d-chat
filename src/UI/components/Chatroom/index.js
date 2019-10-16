@@ -2,14 +2,11 @@
  * Contains messages list + submit box.
  */
 import React from 'react';
-import classnames from 'classnames';
 
-import TextareaAutosize from 'react-autosize-textarea';
-import TextareaAutoCompleter from './TextareaAutoCompleter';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { formatAddr } from 'Approot/misc/util';
-import Uploader from './Uploader';
 import Messages from './Messages';
+import Textarea from './Textarea';
 
 const mention = addr => '@' + formatAddr(addr);
 
@@ -147,12 +144,12 @@ class Chatroom extends React.Component {
 	};
 
 	/**
-	 * Click on name -> add @mention.
+	 * Add to textarea.
 	 */
-	refer = addr => {
+	addToDraftMessage = text => {
 		const caretPosition = this.msg.getCaretPosition();
 		const currentValue = this.msg.state.value;
-		const referral = mention(addr) + ' ';
+		const referral = text + ' ';
 		// https://stackoverflow.com/questions/4364881/inserting-string-at-position-x-of-another-string
 		const value = [
 			currentValue.slice(0, caretPosition),
@@ -171,93 +168,56 @@ class Chatroom extends React.Component {
 		});
 
 	render() {
-		const { messages, topic, client, subs } = this.props;
+		const {
+			messages,
+			client,
+			subs,
+			createMessage,
+			topic,
+			reactions,
+		} = this.props;
 		let placeholder = `${__('Message as')} ${client.addr}`;
 		placeholder = `${placeholder.slice(0, 30)}...${placeholder.slice(-5)}`;
 
 		const visibleMessages = messages.slice(-this.state.count);
 
 		return (
-			<div className="hero is-fullheight-with-navbar x-is-fullwidth">
+			<div className="x-chatroom">
 				<Messages
-					className="hero-body x-is-align-start x-is-small-padding x-is-fixed-height"
+					reactions={reactions}
+					className=""
 					messages={visibleMessages}
 					hasMore={visibleMessages.length < messages.length}
 					loadMore={this.loadMoreMessages}
-					refer={this.refer}
+					refer={addr => this.addToDraftMessage(mention(addr))}
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
+					createReaction={msg =>
+						createMessage({
+							...msg,
+							contentType: 'reaction',
+							topic,
+						})
+					}
 				/>
 
-				<div className="hero-foot">
-					<form className="card" onSubmit={e => this.submitText(e)}>
-						<div className="card-content x-is-small-padding field">
-							<div className={classnames('control')}>
-								<TextareaAutoCompleter
-									topic={topic}
-									innerRef={ref => (this.textarea = ref)}
-									ref={ref => (this.msg = ref)}
-									onKeyDown={this.onEnterPress}
-									autoFocus
-									textAreaComponent={{
-										component: TextareaAutosize,
-										ref: 'innerRef',
-									}}
-									placeholder={placeholder}
-									subs={this.props.subs}
-									mention={mention}
-									showingPreview={this.state.showingPreview}
-									source={this.msg?.state.value || ''}
-								/>
-							</div>
-
-							<div className="level is-mobile">
-								<div className="level-left">
-									<div className="tabs is-small x-tabs-has-bigger-border">
-										<ul>
-											<li
-												className={classnames('', {
-													'is-active': !this.state.showingPreview,
-												})}
-												onClick={() => this.togglePreview({ showing: false })}
-											>
-												<a>{__('Text')}</a>
-											</li>
-											<li
-												className={classnames('', {
-													'is-active': this.state.showingPreview,
-												})}
-												onClick={() => this.togglePreview({ showing: true })}
-											>
-												<a>{__('Preview')}</a>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-								<div className="level-right">
-									<div className="level-item">
-										<p className="has-text-grey">
-											{this.props.client.balance || '?'} NKN
-										</p>
-									</div>
-									<Uploader
-										className="button is-text level-item is-size-7"
-										onUploaded={this.submitUpload}
-									>
-										{__('Upload')}
-									</Uploader>
-									<input
-										type="submit"
-										className="button is-small is-primary level-item"
-										value={__('Submit')}
-									/>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
+				<Textarea
+					innerRef={ref => (this.textarea = ref)}
+					mention={mention}
+					onEnterPress={this.onEnterPress}
+					placeholder={placeholder}
+					ref={ref => (this.msg = ref)}
+					submitText={this.submitText}
+					submitUpload={this.submitUpload}
+					subs={this.props.subs}
+					source={this.msg?.state.value || ''}
+					addToDraftMessage={text => this.addToDraftMessage(text)}
+				>
+					<p className="has-text-grey">
+						{this.props.client.balance || '?'} NKN
+					</p>
+				</Textarea>
 			</div>
 		);
 	}

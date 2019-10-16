@@ -89,15 +89,22 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
-		// Sanitize first so we only use markdown stuff.
-		const sanitized = sanitize(message.content || '');
-		const markdowned = marked(sanitized);
-		const handled = sanitize(markdowned, {
-			allowedTags,
-			allowedSchemes,
-			allowedAttributes,
-		}).trim();
-		this.content = handled;
+		let content = message.content || '';
+		if (this.contentType === 'reaction') {
+			this.content = sanitize(content);
+		} else {
+			// Sanitize first so we only use markdown stuff.
+			const sanitized = sanitize(content).replace(/&gt;/g, '>');
+			const markdowned = marked(sanitized, {
+				breaks: true,
+			});
+			const handled = sanitize(markdowned, {
+				allowedTags,
+				allowedSchemes,
+				allowedAttributes,
+			}).trim();
+			this.content = handled;
+		}
 	}
 }
 

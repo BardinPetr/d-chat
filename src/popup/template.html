@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="shortcut icon" href="img/NKN_D-chat_blue-64cropped.png">
 	<title>D-Chat</title>
 	<!-- There is something wrong with the webpack configs.
 	Things get included twice in either popup or sidebar.
@@ -9,9 +11,12 @@
 	<script src="lib/js/browser-polyfill.js"></script>
 	<script src="lib/js/webextensions-lib-configs/Configs.js"></script>
 	<style>
+	html {
+		overflow: hidden;
+	}
 	body, html, #root {
 		height: 600px;
-		width: 780px;
+		width: 680px;
 		min-width: 100%;
 		min-height: 100%;
 		font-size: 100%;

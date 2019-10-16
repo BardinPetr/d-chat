@@ -32,9 +32,13 @@ export const connected = () => ({
 export const sendPrivateMessage = message => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
-		recipient: message.topic,
+		recipient:
+			message.topic.startsWith('/whisper/')
+				? message.topic.slice('/whisper/'.length)
+				: message.topic,
 		message: {
 			...message,
+			topic: undefined,
 			isPrivate: true,
 			isWhisper: true,
 		},
@@ -164,13 +168,6 @@ export const removeChat = topic => ({
 	},
 });
 
-export const maybeOfferSubscribeToChat = topic => ({
-	type: 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS',
-	payload: {
-		topic: getChatName(topic),
-	},
-});
-
 export const fetchSubscriptionInfos = topic => ({
 	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',
 	payload: {
@@ -191,5 +188,5 @@ export const removeMessageById = (topic, id) => ({
 	payload: {
 		topic,
 		id,
-	}
+	},
 });

@@ -17,6 +17,9 @@
   "Add": {
     "message": " Add"
   },
+  "Addreaction": {
+    "message": " Add reaction"
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -26,8 +29,17 @@
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
   },
+  "Comeandsayhionchannel": {
+    "message": " Come and say hi on channel"
+  },
   "Connectingtotheblockchain": {
     "message": " Connecting to the blockchain..."
+  },
+  "Contactaddress": {
+    "message": " Contact address"
+  },
+  "Continue": {
+    "message": " Continue"
   },
   "DChat": {
     "message": " D-Chat"
@@ -40,6 +52,15 @@
   },
   "Description": {
     "message": " Description"
+  },
+  "Emojipickerdialog": {
+    "message": " Emoji picker dialog"
+  },
+  "Emojis": {
+    "message": " Emojis"
+  },
+  "Expandsonclick": {
+    "message": " Expands on click"
   },
   "Export": {
     "message": " Export"
@@ -65,14 +86,11 @@
   "Home": {
     "message": " Home"
   },
-  "Identity": {
-    "message": " Identity"
-  },
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
-  "IfyoucareaboutyouwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
-    "message": " If you care about you wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
+  "IfyoucareaboutyourwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
+    "message": " If you care about your wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
   },
   "Import": {
     "message": " Import"
@@ -98,6 +116,9 @@
   "Messageas": {
     "message": " Message as"
   },
+  "More": {
+    "message": " More..."
+  },
   "Name": {
     "message": " Name"
   },
@@ -109,12 +130,6 @@
   },
   "Newmessagesbelow": {
     "message": " New messages below"
-  },
-  "Nickname": {
-    "message": " Nickname"
-  },
-  "NosubscriptionorabouttoexpireYouMUSTbesubscribedinorderreceivemessagesSubscribingisfree": {
-    "message": " No subscription, or about to expire. You MUST be subscribed in order receive messages. Subscribing is free."
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -146,9 +161,6 @@
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
   },
-  "Start": {
-    "message": " Start"
-  },
   "Startaprivateconversation": {
     "message": " Start a private conversation"
   },
@@ -163,12 +175,6 @@
   },
   "SubmittedItwillshowupsoonusuallyunderaminute": {
     "message": " Submitted. It will show up soon, usually under a minute."
-  },
-  "Subscribe": {
-    "message": " Subscribe"
-  },
-  "Subscribewithsatfee": {
-    "message": " Subscribe with 1sat fee"
   },
   "Subscribers": {
     "message": " Subscribers"
@@ -224,11 +230,11 @@
   "andsayhi": {
     "message": " and say hi!"
   },
-  "andsayhiSomeonewilltipyoucoins": {
-    "message": " and say hi! Someone will tip you coins."
-  },
   "optional": {
     "message": " optional"
+  },
+  "peoplechatting": {
+    "message": " people chatting"
   },
   "extensionName": {
     "message": "D-Chat"

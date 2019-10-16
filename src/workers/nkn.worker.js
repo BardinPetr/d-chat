@@ -86,9 +86,10 @@ onmessage = async ({ data: action }) => {
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.sendMessage(payload.recipient, message);
 			// Receive it locally.
-			message = new IncomingMessage(payload.message);
-			message = message.from('me', { toChat: payload.recipient });
-			postMessage(receiveMessage(message));
+			data = new IncomingMessage(payload.message);
+			data.id = message.id;
+			data = data.from('me', { toChat: payload.recipient });
+			postMessage(receiveMessage(data));
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':
@@ -131,23 +132,10 @@ onmessage = async ({ data: action }) => {
 						topic,
 						isPrivate: true,
 						// TODO i18n
-						content: 'Subscribed.',
+						content: 'Joined channel.',
 					}).from('me');
 					postMessage(receiveMessage(message));
-				})
-				.catch(err => {
-					if (err.code === 1 || err.msg?.data?.includes('funds')) {
-						message = new IncomingMessage({
-							contentType: 'dchat/offerSubscribe',
-							topic,
-							isPrivate: true,
-							// TODO i18n
-							content:
-								'Insufficient funds. Send a message and ask for a tip.\nOnce you have been tipped, you need to wait a moment for the transaction to confirm, and then click subscribe again.',
-						}).from('me');
-						postMessage(receiveMessage(message));
-					}
-				});
+				}).catch(() => {});
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
@@ -167,19 +155,6 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.wallet
 				.getBalance()
 				.then(balance => postMessage(setBalance(payload.address, balance)));
-			break;
-
-		case 'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS':
-			topic = payload.topic;
-			status = await NKN.instance.isSubscribed(topic);
-			if (!status) {
-				message = new IncomingMessage({
-					contentType: 'dchat/offerSubscribe',
-					topic,
-					isPrivate: true,
-				}).from('me');
-				postMessage(receiveMessage(message));
-			}
 			break;
 
 		case 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS':

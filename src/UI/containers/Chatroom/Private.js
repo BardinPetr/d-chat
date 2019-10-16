@@ -12,9 +12,9 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		draft: state.draftMessage,
 		messages: state.messages[topic] || [],
-		// reactions: state.reactions[topic] || {},
+		reactions: state.reactions[topic] || {},
 		unreadMessages: state.chatSettings[topic]?.unread || [],
-		topic: recipient,
+		topic,
 		subs: [recipient, state.login?.addr],
 		client: state.clients.find(c => c.active),
 	};
@@ -23,8 +23,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
 	createMessage: message => dispatch(sendPrivateMessage(message)),
 	saveDraft: draft => dispatch(saveDraft(draft)),
-	markAsRead: (recipient, ids) =>
-		dispatch(markRead(genPrivateChatName(recipient), ids)),
+	markAsRead: (topic, ids) =>
+		dispatch(markRead(topic, ids)),
 	getSubscribers: () => {},
 });
 

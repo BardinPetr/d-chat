@@ -5,9 +5,6 @@
 import React from 'react';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
-import SubscribeOffer, {
-	DeleteMessageButton,
-} from 'Approot/UI/containers/SubscribeOfferMessage';
 import TimeAgo from './TimeAgo';
 
 const Nickname = ({
@@ -40,24 +37,19 @@ const Nickname = ({
 class Message extends React.PureComponent {
 	render() {
 		const {
+			addReaction,
 			topic,
 			refer,
 			message,
 			isSubscribed,
 			className,
+			includeHeader,
 			children,
+			isNotice,
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
-		const isGreyed = [
-			'dchat/subscribe',
-			'dchat/offerSubscribe',
-			'nkn/tip',
-		].includes(message.contentType);
-		const isOfferSubscribe = ['dchat/offerSubscribe'].includes(
-			message.contentType,
-		);
-		const isNotice = ['dchat/subscribe', 'dchat/offerSubscribe'].includes(
+		const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
 			message.contentType,
 		);
 
@@ -68,47 +60,49 @@ class Message extends React.PureComponent {
 					'x-notice': isGreyed,
 				})}
 			>
-				<div className="message-header is-paddingless has-text-weight-light">
-					<span>
-						<Nickname
-							refer={refer}
-							addr={message.addr}
-							username={message.username}
-							timestamp={message.timestamp}
-							unsubscribed={unsubscribed}
-							pubKey={message.pubKey || ''}
-						/>
-					</span>
-					{isOfferSubscribe || isNotice ? (
-						<DeleteMessageButton id={message.id} topic={topic} />
-					) : (
-						<div className="is-pulled-right">
-							<Toolbar
-								id={message.id}
-								topic={topic}
-								addr={message.addr}
-								topic={topic}
-							/>
+				{(includeHeader || isNotice) && (
+					<div className="message-header is-paddingless has-text-weight-light">
+						<div className="level is-mobile is-marginless is-paddingless">
+							<div className="level-left">
+								<div className="level-item">
+									<Nickname
+										refer={refer}
+										addr={message.addr}
+										username={message.username}
+										timestamp={message.timestamp}
+										unsubscribed={unsubscribed}
+										pubKey={message.pubKey || ''}
+									/>
+								</div>
+							</div>
 						</div>
-					)}
-				</div>
-				{isOfferSubscribe ? (
-					<SubscribeOffer
-						topic={topic}
-						timestamp={message.timestamp}
-						content={message.content}
-						id={message.id}
-					/>
-				) : (
-					<div className="message-body x-is-small-padding">
-						{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-						<div
-							className="content"
-							dangerouslySetInnerHTML={{ __html: message.content }}
-						></div>
-						{children}
 					</div>
 				)}
+
+				{!isNotice && (
+					<div className="x-toolbar">
+						<Toolbar
+							id={message.id}
+							topic={topic}
+							addr={message.addr}
+							topic={topic}
+							addReaction={content =>
+								addReaction({
+									content,
+								})
+							}
+						/>
+					</div>
+				)}
+
+				<div className="message-body x-is-small-padding">
+					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
+					<div
+						className="content"
+						dangerouslySetInnerHTML={{ __html: message.content }}
+					></div>
+					{children}
+				</div>
 			</div>
 		);
 	}
