@@ -91,7 +91,7 @@ const Messages = ({
 		return acc.concat(
 			<Message
 				isNotice={messageIsNotice}
-				className={classnames('', {
+				className={classnames('is-relative', {
 					'x-me': message.isMe,
 					'x-refers-to-me': message.refersToMe,
 				})}

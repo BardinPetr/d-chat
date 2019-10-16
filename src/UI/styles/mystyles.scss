@@ -263,8 +263,5 @@ body, html, #root {
 .x-toolbar {
     position: absolute;
     right: 1rem;
-
-    .button {
-        background-color: hsl(0, 1.8%, 88.8%);
-    }
+    top: -1rem;
 }

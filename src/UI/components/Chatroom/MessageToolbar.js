@@ -18,7 +18,7 @@ Modal.setAppElement('#root');
 const Toolbar = ({ id, topic, addr, addReaction }) => {
 	const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 	return (
-		<div className="x-is-hover buttons are-small">
+		<div className="x-is-hover buttons has-addons are-small">
 			<TipJar className="" messageID={id} topic={topic} addr={addr} value={5} />
 			<a
 				className="button tooltip is-tooltip-left"
