@@ -80,9 +80,11 @@ const Textarea = forwardRef(
 						</div>
 
 						<div className="level-right">
-							<div className="level-item is-hidden-touch">
-								{children}
-							</div>
+							{children && (
+								<div className="level-item is-hidden-mobile">
+									{children}
+								</div>
+							)}
 
 							<a className="level-item button is-white has-text-grey-dark" onClick={() => {
 								setEmojiPickerVisible(!emojiPickerVisible);

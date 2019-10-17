@@ -213,11 +213,7 @@ class Chatroom extends React.Component {
 					subs={this.props.subs}
 					source={this.msg?.state.value || ''}
 					addToDraftMessage={text => this.addToDraftMessage(text)}
-				>
-					<p className="has-text-grey">
-						{this.props.client.balance || '?'} NKN
-					</p>
-				</Textarea>
+				/>
 			</div>
 		);
 	}

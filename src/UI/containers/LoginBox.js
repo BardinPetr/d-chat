@@ -32,8 +32,17 @@ class LoginBox extends React.Component {
 		this.setState({ [e.target.name]: e.target.checked, error: '' });
 	}
 
+	componentDidMount() {
+		// Let's not use a password in web client.
+		// Less secure, sure, but way more streamlined.
+		// And nobody is using the wallet anyways.
+		if (!IS_EXTENSION) {
+			this.handleLoginSubmit();
+		}
+	}
+
 	handleLoginSubmit(e) {
-		e.preventDefault();
+		e?.preventDefault();
 		// See notes in reducer.
 		this.props.dispatch(
 			login({

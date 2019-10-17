@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:chrome": "npm run chrome-launch",
     "start:firefox": "npm run firefox-launch",
-    "start:views": "node scripts/start.js",
+    "start:views": "APP_TARGET=WEB node scripts/start.js",
     "dev": "APP_TARGET=EXT node scripts/dev.js",
     "dev:ext": "APP_TARGET=EXT node scripts/dev.js",
     "dev:web": "APP_TARGET=WEB node scripts/dev.js",

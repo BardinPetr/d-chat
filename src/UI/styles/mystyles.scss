@@ -216,6 +216,12 @@ $content-pre-padding: 0.5em 1em;
 	flex-flow: column;
 	overflow-x: hidden;
 }
+.x-avatar {
+    cursor: pointer;
+    &:hover {
+        color: blueviolet;
+    }
+}
 .x-chatroom {
 	display: flex;
 	flex-flow: column;
