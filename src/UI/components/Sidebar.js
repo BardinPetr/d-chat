@@ -6,7 +6,7 @@ import Logout from 'Approot/UI/containers/Logout';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 
 const Sidebar = () => (
-	<aside className="x-is-small-padding menu section" style={{overflowX: 'hidden'}}>
+	<aside className="menu section">
 		<ul className="menu-list">
 			<li>
 				<Link to="/">{__('Home')}</Link>

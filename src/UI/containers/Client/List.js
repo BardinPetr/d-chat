@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import { __, IS_SIDEBAR, popout } from 'Approot/misc/browser-util-APP_TARGET';
 import { navigated } from 'Approot/redux/actions';
 import { switchToClient } from 'Approot/redux/actions/client';
+import OldWalletExporter from 'Approot/UI/components/Client/ExportOldWallet-APP_TARGET';
 
 const ClientList = ({ clients, dispatch }) => {
 	const [expanded, setExpanded] = useState([]);
@@ -52,6 +53,7 @@ const ClientList = ({ clients, dispatch }) => {
 						<Link to="/wallets/new" className="button">
 							{__('New')}
 						</Link>
+						<OldWalletExporter />
 					</div>
 				</div>
 			</div>
