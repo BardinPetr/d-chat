@@ -65,6 +65,9 @@
   "Export": {
     "message": " Export"
   },
+  "Exportit": {
+    "message": " Export it."
+  },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
   },
@@ -89,9 +92,6 @@
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
-  "IfyoucareaboutyourwalletthenexportitfromtheaccountstabItwillbeencryptedwiththepasswordthatyouusedforlogin": {
-    "message": " If you care about your wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login."
-  },
   "Import": {
     "message": " Import"
   },
@@ -112,6 +112,9 @@
   },
   "LogOut": {
     "message": " Log Out"
+  },
+  "LostawalletyouhadinanolderversionofDChat": {
+    "message": " Lost a wallet you had in an older version of D-Chat?"
   },
   "Messageas": {
     "message": " Message as"

@@ -1,7 +1,7 @@
 $primary: #1791f2;
 $info: rgba(29,155,209,.1);
 $tablet: 680px;
-$desktop: 800px;
+$desktop: 1000px;
 $navbar-breakpoint: 679px;
 $navbar-height: 3rem;
 $section-padding: 0.5rem;
@@ -101,6 +101,11 @@ $content-pre-padding: 0.5em 1em;
 	text-overflow: ellipsis;
 	overflow-x: hidden;
 	white-space: nowrap;
+	&-limited {
+		&-20 {
+			max-width: 20em;
+		}
+	}
 }
 .x-are-truncated * {
 	text-overflow: ellipsis;
@@ -136,7 +141,7 @@ $content-pre-padding: 0.5em 1em;
 	align-items: flex-start !important;
 }
 .x-is-small-padding {
-	padding: 0.5rem;
+	padding: 1vh 1vw;
 }
 .x-is-padding-left {
 	padding-left: 0.4em;
@@ -154,6 +159,7 @@ $content-pre-padding: 0.5em 1em;
 	padding-bottom: 1em;
 
 	.message {
+		margin: 0;
 		&:hover {
 			background-color: $white-ter;
 
@@ -161,7 +167,6 @@ $content-pre-padding: 0.5em 1em;
 				visibility: visible;
 			}
 		}
-		margin-bottom: 0.25rem;
 		background-color: white;
 		word-wrap: break-word;
 
@@ -171,21 +176,16 @@ $content-pre-padding: 0.5em 1em;
 	}
 
 	.message-header {
+		margin: 0.4rem 0 0.1rem 0;
 		background-color: transparent;
 		color: $primary;
 	}
 
 	.x-me {
-		.message-body {
-			border-left-color: #9b1a34;
-		}
 		.message-header {
 			color: #9b1a34;
 		}
 		&.x-notice {
-			.message-body {
-				border-left-color: #8bf9ac;
-			}
 			.message-header {
 				color: $primary;
 			}
@@ -194,9 +194,8 @@ $content-pre-padding: 0.5em 1em;
 
 
 	.message-body {
-		border-left-color: $primary;
-		border-left-width: 3px;
-		border-radius: 0;
+		border: 0;
+		padding: 0 0.3rem;
 
 		.content {
 			white-space: initial;
@@ -215,6 +214,12 @@ $content-pre-padding: 0.5em 1em;
 	height: calc(100vh - #{$navbar-height});
 	flex-flow: column;
 	overflow-x: hidden;
+}
+.x-avatar {
+    cursor: pointer;
+    &:hover {
+        color: blueviolet;
+    }
 }
 .x-chatroom {
 	display: flex;
@@ -264,4 +269,18 @@ body, html, #root {
     position: absolute;
     right: 1rem;
     top: -1rem;
+}
+.x-not-confirmed {
+    opacity: 0.6;
+}
+body * {
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background-color: $grey-light;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $grey-lighter;
+    }
 }

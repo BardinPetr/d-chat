@@ -28,5 +28,5 @@ redux: actions, middleware, aliases, reducers.
 workers: NKN worker: everything in/out of NKN.
 * nkn folder:
   * incoming, outgoing, and BaseMessage classes. 
-  * nkn.js: nkn-client
+  * nkn.js: nkn-client. Changing this file and nknHandler (and touch on aliases.js), one could plug in a different backend, so the code works as a chat boilerplate.
   * nknHandler: keeps track of active, connected, client.

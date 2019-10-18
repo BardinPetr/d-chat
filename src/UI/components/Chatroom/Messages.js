@@ -9,8 +9,8 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { debounce } from 'debounce';
 import { isNotice } from 'Approot/misc/util';
 
-// 30 seconds.
-const SEPARATE_MESSAGE_TIME = 30 * 1000;
+// 1min 30seconds seconds.
+const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
 
 const LastRead = () => {
 	const lastReadRef = useRef();

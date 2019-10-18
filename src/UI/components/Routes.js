@@ -1,3 +1,6 @@
+/**
+ * Contains main routes. Users are redirected to /login if not logged in and before getting here.
+ */
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Home from 'Approot/UI/containers/Home';
@@ -11,7 +14,7 @@ import ChatroomSidebar from 'Approot/UI/containers/Chatroom/Sidebar';
 
 const Routes = () => (
 	<div className="dashboard">
-		<div className="dashboard-panel is-one-quarter is-paddingless is-scrollable">
+		<div className="dashboard-panel is-one-quarter x-is-small-padding is-scrollable">
 			<Route path="/" component={Sidebar} />
 		</div>
 		<main className="dashboard-main x-main">

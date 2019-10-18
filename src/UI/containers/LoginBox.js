@@ -22,6 +22,13 @@ class LoginBox extends React.Component {
 		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.clear = this.clear.bind(this);
+
+		// Autologin in web client.
+		// Nobody is using the wallet there anyways.
+		// TODO fix the login screen flash. Need to move this elsewhere?
+		if (!IS_EXTENSION) {
+			this.handleLoginSubmit();
+		}
 	}
 
 	handleChange(e) {
@@ -33,7 +40,7 @@ class LoginBox extends React.Component {
 	}
 
 	handleLoginSubmit(e) {
-		e.preventDefault();
+		e?.preventDefault();
 		// See notes in reducer.
 		this.props.dispatch(
 			login({
