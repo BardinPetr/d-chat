@@ -21,9 +21,6 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
-.x-scrollbar-fix > :first-child {
-    position: relative;
-}
 .emoji-mart-emoji-native {
 	font-family: inherit;
 }
@@ -275,4 +272,15 @@ body, html, #root {
 }
 .x-not-confirmed {
     opacity: 0.6;
+}
+body * {
+    scrollbar-width: thin;
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background-color: $grey-light;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $grey-lighter;
+    }
 }

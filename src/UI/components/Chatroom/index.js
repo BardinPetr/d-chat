@@ -8,6 +8,7 @@ import { formatAddr } from 'Approot/misc/util';
 import Messages from './Messages';
 import Textarea from './Textarea';
 
+const STARTING_MESSAGES_COUNT = 25;
 const mention = addr => '@' + formatAddr(addr);
 
 /**
@@ -19,8 +20,9 @@ class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
 
+		// TODO you can't see old messages before scrollbar appears.
 		this.state = {
-			count: 15 + props.unreadMessages.length,
+			count: STARTING_MESSAGES_COUNT + props.unreadMessages.length,
 			showingPreview: false,
 		};
 	}
@@ -80,7 +82,7 @@ class Chatroom extends React.Component {
 			this.unmounter();
 			this.mounter();
 			this.setState({
-				count: 15 + this.props.unreadMessages.length,
+				count: STARTING_MESSAGES_COUNT + this.props.unreadMessages.length,
 			});
 		} else if (
 			prevProps.topic === this.props.topic &&

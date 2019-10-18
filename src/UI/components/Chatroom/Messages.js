@@ -1,6 +1,4 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import SimpleBar from 'simplebar-react';
-import 'simplebar/dist/simplebar.min.css';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
 import Message from './Message';
 import Reactions from './Reactions';
@@ -117,9 +115,9 @@ const Messages = ({
 	const stay = debounce(stayScrolled, 50, true);
 
 	return (
-		<SimpleBar
+		<div
 			className={`x-is-fullwidth is-scrollable is-relative x-chatroom-messages`}
-			scrollableNodeProps={{ ref: listRef, className: 'x-scrollbar-fix' }}
+			ref={listRef}
 		>
 			<ResizeReporter onSizeChanged={() => stay()} />
 			<InfiniteScroller
@@ -135,7 +133,7 @@ const Messages = ({
 			>
 				<div className="x-chat">{messageList}</div>
 			</InfiniteScroller>
-		</SimpleBar>
+		</div>
 	);
 };
 
