@@ -54,7 +54,7 @@ class Header extends React.Component {
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
-						<h5 title={getChatDisplayName(topic)} className="x-truncate x-truncate-limited-half title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
+						<h5 title={getChatDisplayName(topic)} className="x-truncate x-truncate-limited-20 title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
 					</span>
 
 					<a

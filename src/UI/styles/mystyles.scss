@@ -104,8 +104,10 @@ $content-pre-padding: 0.5em 1em;
 	text-overflow: ellipsis;
 	overflow-x: hidden;
 	white-space: nowrap;
-	&-limited-half {
-		max-width: 50%;
+	&-limited {
+		&-20 {
+			max-width: 20em;
+		}
 	}
 }
 .x-are-truncated * {
