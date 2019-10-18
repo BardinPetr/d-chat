@@ -58,6 +58,7 @@ class Message extends React.PureComponent {
 				className={classnames(`message ${className}`, {
 					'has-background-grey-lighter': isGreyed,
 					'x-notice': isGreyed,
+					'x-not-confirmed': message.isNotConfirmed,
 				})}
 			>
 				{(includeHeader || isNotice) && (

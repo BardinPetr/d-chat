@@ -35,9 +35,6 @@ const Info = () => {
 				</div>
 			</div>
 			<div className="content">
-				<p>{__('If you care about your wallet, then export it from the accounts tab. It will be encrypted with the password that you used for login.')}</p>
-			</div>
-			<div className="content">
 				<p>{__('Source code on GitLab.')} <a href="https://gitlab.com/losnappas/d-chat">https://gitlab.com/losnappas/d-chat</a></p>
 			</div>
 		</div>

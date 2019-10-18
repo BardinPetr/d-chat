@@ -90,6 +90,21 @@ const messages = (state = {}, action) => {
 			configs.messages = newState;
 			break;
 
+		case 'chat/MODIFY_MESSAGE':
+			initial = [...state[topic]] || [];
+			newState = {
+				...state,
+				[topic]: initial.map(ii => {
+					const i = {...ii};
+					if (i.id === action.payload.id) {
+						return action.payload.modifiedMessage;
+					}
+					return i;
+				}),
+			};
+			configs.messages = newState;
+			break;
+
 		// This one is for displaying all rooms in the chatlist.
 		case 'chat/CREATE_CHAT':
 			newState = {

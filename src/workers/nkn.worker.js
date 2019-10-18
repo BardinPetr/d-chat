@@ -72,12 +72,13 @@ onmessage = async ({ data: action }) => {
 
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
-			// Should we confirm that messages have been sent? Should do it by confirming it once sent message has been received, otherwise it will look like you don't need to subscribe at all.
 			NKN.instance.publishMessage(payload.topic, message);
 			data = new IncomingMessage(payload.message);
 			// Overwrite id so when we receive it again, it will be ignored.
 			data.id = message.id;
 			data.from('me');
+			// Will display message as greyed out. Removed once it is received.
+			data.isNotConfirmed = true;
 			postMessage(receiveMessage(data));
 			break;
 
@@ -135,6 +136,13 @@ onmessage = async ({ data: action }) => {
 						content: 'Joined channel.',
 					}).from('me');
 					postMessage(receiveMessage(message));
+
+					data = new OutgoingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						content: 'Joined channel.',
+					});
+					NKN.instance.publishMessage(topic, data);
 				}).catch(() => {});
 			break;
 

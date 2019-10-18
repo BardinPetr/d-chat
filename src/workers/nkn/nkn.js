@@ -52,9 +52,10 @@ const SEED_ADDRESSES = [
 ];
 const getRandomSeed = () =>
 	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
+const randomSeed = getRandomSeed();
 
 nknWallet.configure({
-	rpcAddr: getRandomSeed(),
+	rpcAddr: randomSeed,
 });
 
 /**
@@ -67,7 +68,7 @@ class NKN extends nkn {
 			originalClient: true,
 			identifier: username?.trim() || undefined,
 			seed: wallet.getSeed(),
-			seedRpcServerAddr: getRandomSeed(),
+			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
 		});
 
