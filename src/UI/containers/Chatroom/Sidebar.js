@@ -1,16 +1,18 @@
 import React from 'react';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 import { connect } from 'react-redux';
 import SubscriberList from 'Approot/UI/components/SubscriberList';
 import Profile from 'Approot/UI/components/Profile';
 
 const Sidebar = ({ subscribers }) => (
-	<div className="dashboard-panel is-medium is-scrollable is-hidden-touch">
+	<SimpleBar className="dashboard-panel is-medium is-scrollable is-hidden-touch">
 		{( Array.isArray(subscribers) ?
 			(<SubscriberList subscribers={subscribers} />)
 			:
 			(<Profile profile={subscribers} />)
 		)}
-	</div>
+	</SimpleBar>
 );
 
 const mapStateToProps = (state, ownProps) => {

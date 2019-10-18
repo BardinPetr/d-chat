@@ -1,5 +1,10 @@
+/**
+ * Contains main routes. Users are redirected to /login if not logged in and before getting here.
+ */
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 import Home from 'Approot/UI/containers/Home';
 import PublicChatroom from 'Approot/UI/containers/Chatroom/Public';
 import PrivateChatroom from 'Approot/UI/containers/Chatroom/Private';
@@ -11,9 +16,9 @@ import ChatroomSidebar from 'Approot/UI/containers/Chatroom/Sidebar';
 
 const Routes = () => (
 	<div className="dashboard">
-		<div className="dashboard-panel is-one-quarter x-is-small-padding is-scrollable">
+		<SimpleBar className="dashboard-panel is-one-quarter x-is-small-padding is-scrollable">
 			<Route path="/" component={Sidebar} />
-		</div>
+		</SimpleBar>
 		<main className="dashboard-main x-main">
 			<Route path="/" component={Header} />
 			<section className="hero is-fullheight-with-navbar">

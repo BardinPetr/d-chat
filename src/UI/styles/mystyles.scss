@@ -21,6 +21,9 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
+.x-scrollbar-fix > :first-child {
+    position: relative;
+}
 .emoji-mart-emoji-native {
 	font-family: inherit;
 }
@@ -101,6 +104,9 @@ $content-pre-padding: 0.5em 1em;
 	text-overflow: ellipsis;
 	overflow-x: hidden;
 	white-space: nowrap;
+	&-limited-half {
+		max-width: 50%;
+	}
 }
 .x-are-truncated * {
 	text-overflow: ellipsis;

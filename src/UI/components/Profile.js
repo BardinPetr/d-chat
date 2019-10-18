@@ -1,9 +1,10 @@
 import React from 'react';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
-const Profile = () => (
+const Profile = ({profile}) => (
 	<div className="">
-		<p className="subtitle">Profile</p>
-		Work in progress.
+		<p className="subtitle">{__('Contact address')}</p>
+		<p className="x-address x-address-broken">{profile}</p>
 	</div>
 );
 
