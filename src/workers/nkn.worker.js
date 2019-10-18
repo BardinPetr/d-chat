@@ -128,15 +128,6 @@ onmessage = async ({ data: action }) => {
 					fee: action.payload.options.fee,
 				})
 				.then(() => {
-					message = new IncomingMessage({
-						contentType: 'dchat/subscribe',
-						topic,
-						isPrivate: true,
-						// TODO i18n
-						content: 'Joined channel.',
-					}).from('me');
-					postMessage(receiveMessage(message));
-
 					data = new OutgoingMessage({
 						contentType: 'dchat/subscribe',
 						topic,
