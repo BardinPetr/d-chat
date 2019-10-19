@@ -1,3 +1,6 @@
+/**
+ * Lists chatters in topic in navbar (header).
+ */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -16,7 +19,7 @@ const SubscriberList = ({ subscribers, className }) => {
 				{subscribers.length} {__('people chatting')}
 			</a>
 			<div className={classnames('x-has-max-width x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
-				'is-hidden-mobile': !open,
+				'is-hidden': !open,
 			})}>
 				{subscribers.sort().map((sub, key) => (
 					<a className="navbar-item" key={key}>

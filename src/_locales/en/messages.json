@@ -161,6 +161,9 @@
   "Removewallet": {
     "message": " Remove wallet"
   },
+  "Send": {
+    "message": " Send"
+  },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
   },

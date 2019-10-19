@@ -48,13 +48,13 @@ class Header extends React.Component {
 		const isPrivateChat = topic?.startsWith('/whisper/');
 
 		return (
-			<nav className="navbar is-primary has-text-white x-navbar-height">
+			<nav className="navbar is-primary">
 				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
 					<span className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
 						</figure>
-						<h5 title={getChatDisplayName(topic)} className="x-truncate x-truncate-limited-20 title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
+						<h5 title={getChatDisplayName(topic)} className="x-truncate x-truncate-limited-width title is-5 has-text-white x-is-padding-left">{getChatDisplayName(topic) || __('D-Chat')}</h5>
 					</span>
 
 					<a
@@ -79,7 +79,7 @@ class Header extends React.Component {
 					role="navigation"
 					aria-label="main navigation"
 				>
-					<div className="navbar-end is-hidden-desktop">
+					<div className="navbar-end">
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
 								'is-hidden': topic == null || isPrivateChat,
