@@ -28,9 +28,12 @@ const Textarea = forwardRef(
 		const [showingPreview, setShowingPreview] = useState(false);
 		const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
 		return (
-			<form className="card x-is-fullwidth" onSubmit={e => submitText(e)}>
-				<div className="card-content is-paddingless field">
-					<div className={classnames('control')} onClick={() => setEmojiPickerVisible(false)}>
+			<form className="card" onSubmit={e => submitText(e)}>
+				<div className="card-content x-is-padded-sides">
+					<div
+						className={classnames('control')}
+						onClick={() => setEmojiPickerVisible(false)}
+					>
 						<TextareaAutoCompleter
 							className={classnames('textarea', {
 								'is-hidden': showingPreview,
@@ -48,16 +51,13 @@ const Textarea = forwardRef(
 							mention={mention}
 						/>
 						{showingPreview && (
-							<Markdown
-								source={source}
-								className="x-white-space"
-							/>
+							<Markdown source={source} className="x-white-space" />
 						)}
 					</div>
 
 					<div className="level is-mobile">
 						<div className="level-left">
-							<div className="tabs is-small x-tabs-has-bigger-border">
+							<div className="level-item tabs is-small x-tabs-has-bigger-border">
 								<ul>
 									<li
 										className={classnames('', {
@@ -81,14 +81,15 @@ const Textarea = forwardRef(
 
 						<div className="level-right">
 							{children && (
-								<div className="level-item is-hidden-mobile">
-									{children}
-								</div>
+								<div className="level-item is-hidden-mobile">{children}</div>
 							)}
 
-							<a className="level-item button is-white has-text-grey-dark" onClick={() => {
-								setEmojiPickerVisible(!emojiPickerVisible);
-							}}>
+							<a
+								className="level-item button is-white has-text-grey-dark"
+								onClick={() => {
+									setEmojiPickerVisible(!emojiPickerVisible);
+								}}
+							>
 								<span className="icon is-small">
 									<IoMdHappy />
 								</span>
@@ -115,11 +116,12 @@ const Textarea = forwardRef(
 							>
 								{__('Upload')}
 							</Uploader>
-							<input
+							<button
 								type="submit"
 								className="button is-small is-primary level-item is-hidden-mobile"
-								value={__('Submit')}
-							/>
+							>
+								{__('Send')}
+							</button>
 						</div>
 					</div>
 				</div>

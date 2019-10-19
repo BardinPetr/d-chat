@@ -102,8 +102,8 @@ $content-pre-padding: 0.5em 1em;
 	overflow-x: hidden;
 	white-space: nowrap;
 	&-limited {
-		&-20 {
-			max-width: 20em;
+		&-width {
+			max-width: 12em;
 		}
 	}
 }
@@ -113,7 +113,7 @@ $content-pre-padding: 0.5em 1em;
 	white-space: nowrap;
 }
 .x-has-max-height {
-	max-height: 300px;
+	max-height: 10rem;
 	overflow-y: auto !important;
 }
 .x-has-max-width {
@@ -159,7 +159,8 @@ $content-pre-padding: 0.5em 1em;
 	padding-bottom: 1em;
 
 	.message {
-		margin: 0;
+		margin: 0.2rem 0;
+		padding: 0 0.4rem;
 		&:hover {
 			background-color: $white-ter;
 
@@ -176,7 +177,7 @@ $content-pre-padding: 0.5em 1em;
 	}
 
 	.message-header {
-		margin: 0.4rem 0 0.1rem 0;
+		margin: 0.8rem 0 0.1rem 0;
 		background-color: transparent;
 		color: $primary;
 	}
@@ -248,6 +249,11 @@ body, html, #root {
 		}
 		&.is-medium {
 			flex: 0 0 15rem;
+			&-desktop {
+				@media screen and (min-width: $desktop) {
+					flex: 0 0 15rem !important;
+				}
+			}
 		}
 	}
 }
@@ -283,4 +289,7 @@ body * {
     &::-webkit-scrollbar-thumb {
         background: $grey-lighter;
     }
+}
+.x-is-padded-sides {
+	padding: 0 0.1rem;
 }

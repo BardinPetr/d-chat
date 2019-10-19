@@ -10,11 +10,10 @@ import Header from 'Approot/UI/components/Header';
 import Sidebar from 'Approot/UI/components/Sidebar';
 import TopicInfoList from 'Approot/UI/containers/TopicInfoList';
 import WalletRoutes from 'Approot/UI/components/WalletRoutes';
-import ChatroomSidebar from 'Approot/UI/containers/Chatroom/Sidebar';
 
 const Routes = () => (
 	<div className="dashboard">
-		<div className="dashboard-panel is-one-quarter x-is-small-padding is-scrollable">
+		<div className="dashboard-panel is-small is-medium-desktop is-scrollable">
 			<Route path="/" component={Sidebar} />
 		</div>
 		<main className="dashboard-main x-main">
@@ -31,7 +30,6 @@ const Routes = () => (
 				</div>
 			</section>
 		</main>
-		<Route path="/(chat|whisper)/:topic" component={ChatroomSidebar} />
 	</div>
 );
 

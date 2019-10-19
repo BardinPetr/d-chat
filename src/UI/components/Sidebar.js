@@ -7,7 +7,7 @@ import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 import { IS_EXTENSION } from 'Approot/misc/util';
 
 const Sidebar = () => (
-	<aside className="menu section">
+	<aside className="menu">
 		<ul className="menu-list">
 			<li>
 				<Link to="/">{__('Home')}</Link>
