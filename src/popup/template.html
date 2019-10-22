@@ -8,8 +8,8 @@
 	<!-- There is something wrong with the webpack configs.
 	Things get included twice in either popup or sidebar.
 	This is workaround. -->
-	<script src="lib/js/browser-polyfill.js"></script>
-	<script src="lib/js/webextensions-lib-configs/Configs.js"></script>
+	<script src="lib/js/browser-polyfill.js" defer></script>
+	<script src="lib/js/webextensions-lib-configs/Configs.js" defer></script>
 	<style type="text/css">
 	html {
 		overflow: hidden;
@@ -31,6 +31,7 @@
 			</div>
 			<main class="dashboard-main x-main">
 				<nav id="header-root" class="navbar is-primary">
+
 				</nav>
 				<section class="hero is-fullheight-with-navbar">
 					<div class="hero-body is-paddingless x-is-align-start">

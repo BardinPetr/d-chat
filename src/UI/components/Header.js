@@ -48,7 +48,7 @@ class Header extends React.Component {
 		const isPrivateChat = topic?.startsWith('/whisper/');
 
 		return (
-			<nav className="navbar is-primary">
+			<React.Fragment>
 				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
 					<span className="navbar-item">
 						<figure className="image is-32x32">
@@ -127,7 +127,7 @@ class Header extends React.Component {
 					</div>
 
 				</div>
-			</nav>
+			</React.Fragment>
 		);
 	}
 }
