@@ -116,12 +116,6 @@ const Textarea = forwardRef(
 							>
 								{__('Upload')}
 							</Uploader>
-							<button
-								type="submit"
-								className="button is-small is-primary level-item is-hidden-mobile"
-							>
-								{__('Send')}
-							</button>
 						</div>
 					</div>
 				</div>
