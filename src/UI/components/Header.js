@@ -39,7 +39,7 @@ class Header extends React.Component {
 	render() {
 
 		const path = matchPath(
-			this.props.location.pathname,
+			history.location.pathname,
 			{
 				path: ['/chat/:topic', '/whisper/:whisper']
 			}
