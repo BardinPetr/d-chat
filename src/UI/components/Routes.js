@@ -1,36 +1,25 @@
 /**
  * Contains main routes. Users are redirected to /login if not logged in and before getting here.
  */
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 
-const Loader = (
-	<div className="section">
-		<div className="icon is-large loader" />
-	</div>
-);
-const LazySidebar = lazy(() => import('Approot/UI/components/Sidebar'));
-const LazyHeader = lazy(() => import('Approot/UI/components/Header'));
-const LazyRoutes = lazy(() => import('Approot/UI/components/MainRoutes'));
+import Sidebar from 'Approot/UI/components/Sidebar';
+import Header from 'Approot/UI/components/Header';
+import MainRoutes from 'Approot/UI/components/MainRoutes';
 
 const Routes = () => (
 	<React.Fragment>
 		{createPortal((
-			<Suspense fallback={<div className="" />}>
-				<LazySidebar />
-			</Suspense>
+			<Sidebar />
 		), document.getElementById('sidebar-root'))}
 
 		{createPortal((
-			<Suspense fallback={<div className="" />}>
-				<LazyHeader />
-			</Suspense>
+			<Header />
 		), document.getElementById('header-root'))}
 
 		{createPortal((
-			<Suspense fallback={Loader}>
-				<LazyRoutes />
-			</Suspense>
+			<MainRoutes />
 		), document.getElementById('chatroom-root'))}
 	</React.Fragment>
 );

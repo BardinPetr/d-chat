@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import TopicInfoList from 'Approot/UI/containers/Topics';
-import WalletRoutes from 'Approot/UI/components/WalletRoutes';
-import PublicChatroom from 'Approot/UI/containers/Chatroom/Public';
-import PrivateChatroom from 'Approot/UI/containers/Chatroom/Private';
-import Home from 'Approot/UI/containers/Home';
+
+const LazyWalletRoutes = lazy(() => import('Approot/UI/components/WalletRoutes'));
+const LazyPublicChatroom = lazy(() => import('Approot/UI/containers/Chatroom/Public'));
+const LazyPrivateChatroom = lazy(() => import('Approot/UI/containers/Chatroom/Private'));
+const LazyHome = lazy(() => import('Approot/UI/containers/Home'));
+const LazyTopicInfoList = lazy(() => import('Approot/UI/containers/Topics'));
+
+const Loader = (
+	<div className="section">
+		<div className="icon is-large loader" />
+	</div>
+);
 
 const MainRoutes = () => (
-	<Switch>
-		<Route path="/chat/:topic" component={PublicChatroom} />
-		<Route path="/whisper/:recipient" component={PrivateChatroom} />
-		<Route path="/topics" component={TopicInfoList} />
-		<Route path="/wallets" component={WalletRoutes} />
-		<Route path="/" component={Home} />
-	</Switch>
+	<Suspense fallback={Loader}>
+		<Switch>
+			<Route path="/chat/:topic" component={LazyPublicChatroom} />
+			<Route path="/whisper/:recipient" component={LazyPrivateChatroom} />
+			<Route path="/topics" component={LazyTopicInfoList} />
+			<Route path="/wallets" component={LazyWalletRoutes} />
+			<Route path="/" component={LazyHome} />
+		</Switch>
+	</Suspense>
 );
 
 export default MainRoutes;
