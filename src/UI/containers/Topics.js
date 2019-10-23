@@ -139,7 +139,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 							<div className="field">
 								<div className="control">
 									<button type="submit" className="button is-link">
-										{__('Add')}
+										{__('Submit')}
 									</button>
 								</div>
 							</div>
