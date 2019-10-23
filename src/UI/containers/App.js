@@ -9,7 +9,7 @@ import 'Approot/UI/styles/mystyles.scss';
 import history from 'Approot/UI/history';
 import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
 
-const App = (store) => {
+const App = async (store) => {
 	const subscribeToChatOnNavigation = (location) => {
 		let match = matchPath(location.pathname, {
 			path: '/chat/:topic',

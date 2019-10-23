@@ -60,121 +60,124 @@ class LoginBox extends React.Component {
 
 	render() {
 		const { loggedIn, connecting, error, location } = this.props;
-		const redir = location?.search && new URL(
-			`http://example.org/${location.search}`,
-		)?.searchParams?.get('returnUrl');
+		const redir =
+			location?.search &&
+			new URL(`http://example.org/${location.search}`)?.searchParams?.get(
+				'returnUrl',
+			);
 
-		return loggedIn ? (
-			<LoadingScreen loading={connecting}>
-				<Redirect
-					to={{
-						pathname: redir || '/',
-					}}
-				/>
-			</LoadingScreen>
-		) : (
-			<div className="hero is-primary">
-				<div className="hero-body" style={{ height: '100vh' }}>
-					<h1 className="title has-text-centered is-size-2">
-						{__('Welcome!')}
-					</h1>
-					<div className="columns is-centered">
-						<div className="column is-9 is-4-desktop">
-							<div className="notification is-light">
-								<figure className="image container is-64x64">
-									<DchatLogo />
-								</figure>
-								<p className="subtitle has-text-grey has-text-centered">
-									{__('The decentralized chat awaits.')}
-								</p>
+		return (
+			<div className="is-overlay">
+				{loggedIn ? (
+					<LoadingScreen loading={connecting}>
+						<Redirect
+							to={{
+								pathname: redir || '/',
+							}}
+						/>
+					</LoadingScreen>
+				) : (
+					<div className="hero is-primary is-overlay">
+						<div className="hero-body" style={{ height: '100vh' }}>
+							<h1 className="title has-text-centered is-size-2">
+								{__('Welcome!')}
+							</h1>
+							<div className="columns is-centered">
+								<div className="column is-9 is-4-desktop">
+									<div className="notification is-light">
+										<figure className="image container is-64x64">
+											<DchatLogo />
+										</figure>
+										<p className="subtitle has-text-grey has-text-centered">
+											{__('The decentralized chat awaits.')}
+										</p>
 
-								<form className="" onSubmit={this.handleLoginSubmit}>
-									{IS_EXTENSION && ( // Want to remove identifier usernames later.
-										<div className="field">
-											<label className="label">
-												{__('Username')}
-												<span className="has-text-grey-light is-size-7">
-													{' (' + __('optional') + ')'}
-												</span>
-											</label>
-											<div className="control">
-												<input
-													type="username"
-													name="username"
-													value={this.state.username}
-													onChange={this.handleChange}
-													className="input"
-													placeholder="Username"
-													pattern="[^\/]*"
-													autoComplete="current-user"
-												/>
-											</div>
-										</div>
-									)}
-									<div className="field">
-										<label className="label">
-											{__('Password')}
-											<span className="help is-danger is-inline">
-												{error && __('Wrong password.')}
-											</span>
-										</label>
-										<div className="control">
-											<input
-												type="password"
-												name="password"
-												value={this.state.password}
-												onChange={this.handleChange}
-												className="input password"
-												placeholder="Password"
-												autoComplete="current-user"
-											/>
-										</div>
-									</div>
-									{IS_EXTENSION && (
-										<div className="field">
-											<div className="control">
-												<label className="checkbox">
-													<input
-														type="checkbox"
-														checked={this.state.rememberMe}
-														onChange={this.handleCheckboxChange}
-														value="rememberMe"
-														name="rememberMe"
-														id="rememberMe"
-													/>
-													{__('Store password')}
+										<form className="" onSubmit={this.handleLoginSubmit}>
+											<div className="field">
+												<label className="label">
+													{__('Username')}
+													<span className="has-text-grey-light is-size-7">
+														{' (' + __('optional') + ')'}
+													</span>
 												</label>
+												<div className="control">
+													<input
+														type="username"
+														name="username"
+														value={this.state.username}
+														onChange={this.handleChange}
+														className="input"
+														placeholder="Username"
+														pattern="[^\/]*"
+														autoComplete="current-user"
+													/>
+												</div>
 											</div>
-										</div>
-									)}
-									<div className="field">
-										<div className="control">
-											<button type="submit" className="button is-link">
-												{__('Continue')}
-											</button>
+											<div className="field">
+												<label className="label">
+													{__('Password')}
+													<span className="help is-danger is-inline">
+														{error && __('Wrong password.')}
+													</span>
+												</label>
+												<div className="control">
+													<input
+														type="password"
+														name="password"
+														value={this.state.password}
+														onChange={this.handleChange}
+														className="input password"
+														placeholder="Password"
+														autoComplete="current-user"
+													/>
+												</div>
+											</div>
+											{IS_EXTENSION && (
+												<div className="field">
+													<div className="control">
+														<label className="checkbox">
+															<input
+																type="checkbox"
+																checked={this.state.rememberMe}
+																onChange={this.handleCheckboxChange}
+																value="rememberMe"
+																name="rememberMe"
+																id="rememberMe"
+															/>
+															{__('Store password')}
+														</label>
+													</div>
+												</div>
+											)}
+											<div className="field">
+												<div className="control">
+													<button type="submit" className="button is-link">
+														{__('Continue')}
+													</button>
+												</div>
+											</div>
+										</form>
+										<div style={{ marginTop: '1em' }}>
+											{__('Forgot password?') + ' '}
+											<a
+												style={
+													this.state.cleared
+														? { color: 'gray', cursor: 'auto' }
+														: { color: 'blue', cursor: 'pointer' }
+												}
+												onClick={this.clear}
+											>
+												{this.state.cleared
+													? __('Wallet removed')
+													: __('Remove wallet')}
+											</a>
 										</div>
 									</div>
-								</form>
-								<div style={{ marginTop: '1em' }}>
-									{__('Forgot password?') + ' '}
-									<a
-										style={
-											this.state.cleared
-												? { color: 'gray', cursor: 'auto' }
-												: { color: 'blue', cursor: 'pointer' }
-										}
-										onClick={this.clear}
-									>
-										{this.state.cleared
-											? __('Wallet removed')
-											: __('Remove wallet')}
-										.
-									</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		);
 	}
