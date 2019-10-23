@@ -93,28 +93,26 @@ class LoginBox extends React.Component {
 										</p>
 
 										<form className="" onSubmit={this.handleLoginSubmit}>
-											{IS_EXTENSION && ( // Want to remove identifier usernames later.
-												<div className="field">
-													<label className="label">
-														{__('Username')}
-														<span className="has-text-grey-light is-size-7">
-															{' (' + __('optional') + ')'}
-														</span>
-													</label>
-													<div className="control">
-														<input
-															type="username"
-															name="username"
-															value={this.state.username}
-															onChange={this.handleChange}
-															className="input"
-															placeholder="Username"
-															pattern="[^\/]*"
-															autoComplete="current-user"
-														/>
-													</div>
+											<div className="field">
+												<label className="label">
+													{__('Username')}
+													<span className="has-text-grey-light is-size-7">
+														{' (' + __('optional') + ')'}
+													</span>
+												</label>
+												<div className="control">
+													<input
+														type="username"
+														name="username"
+														value={this.state.username}
+														onChange={this.handleChange}
+														className="input"
+														placeholder="Username"
+														pattern="[^\/]*"
+														autoComplete="current-user"
+													/>
 												</div>
-											)}
+											</div>
 											<div className="field">
 												<label className="label">
 													{__('Password')}

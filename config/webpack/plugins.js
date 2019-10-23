@@ -35,7 +35,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 	);
 
 	const scriptExtHtmlPlugin = new ScriptExtHtmlWebpackPlugin({
-		defaultAttribute: 'async',
+		defaultAttribute: 'defer',
 	});
 
 	const popupHtmlPlugin = new HtmlWebpackPlugin(
