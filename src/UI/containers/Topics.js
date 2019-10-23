@@ -71,79 +71,83 @@ const TopicInfoList = ({ dispatch, topics }) => {
 	}));
 
 	return (
-		<div className="section container">
-			<div className="tile is-ancestor">
-				<div className="tile is-vertical is-parent container">
-					<div className="tile is-child">
-						<div className="content">
-							<h4 className="is-size-4 title">
-								{__('List of Public Channels')}
-							</h4>
-							<p>
-								{__('Here are channels that people have listed. You can submit your own channel to the list, so others can find you.')}
-							</p>
-						</div>
-						<div className="table-container">
-							<Table data={data} columns={columns} className="table" />
-						</div>
-					</div>
-
-					<div className="tile is-child">
-						<form className="container" onSubmit={onSubmit}>
-							<h4 className="title is-size-4">{__('Submit Your Own')}</h4>
-							<p className="has-text-success">{status}</p>
-							<div className="field">
-								<p className="label">{__('Name')}</p>
-								<p>{__('Channel name, like "#d-chat", for example.')}</p>
-								<div className="control">
-									<input
-										name="name"
-										value={formData.name}
-										onChange={e =>
-											setFormData({
-												...formData,
-												[e.target.name]: e.target.value,
-											})
-										}
-										className="input"
-										type="text"
-										required
-										placeholder={__('Name')}
-									/>
-								</div>
-							</div>
-							<div className="field">
-								<p className="label">{__('Description')}</p>
-								<p>{__('In few words, explain what your channel is about.')}</p>
-								<div className="control">
-									<input
-										name="description"
-										value={formData.description}
-										onChange={e =>
-											setFormData({
-												...formData,
-												[e.target.name]: e.target.value,
-											})
-										}
-										className="input"
-										type="text"
-										placeholder={__('Keep it short.')}
-									/>
-								</div>
-							</div>
-							<div className="field">
+		<div className="section">
+			<div className="container">
+				<div className="tile is-ancestor">
+					<div className="tile is-vertical is-parent container">
+						<div className="tile is-child">
+							<div className="content">
+								<h4 className="is-size-4 title">
+									{__('List of Public Channels')}
+								</h4>
 								<p>
-									{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
+									{__('Here are channels that people have listed. You can submit your own channel to the list, so others can find you.')}
 								</p>
 							</div>
-							<div className="field">
-								<div className="control">
-									<button type="submit" className="button is-link">
-										{__('Submit')}
-									</button>
-								</div>
+							<div className="table-container">
+								<Table data={data} columns={columns} className="table" />
 							</div>
-						</form>
+						</div>
+
+						<div className="tile is-child">
+							<form className="container" onSubmit={onSubmit}>
+								<h4 className="title is-size-4">{__('Submit Your Own')}</h4>
+								<p className="has-text-success">{status}</p>
+								<div className="field">
+									<p className="label">{__('Name')}</p>
+									<p>{__('Channel name, like "#d-chat", for example.')}</p>
+									<div className="control">
+										<input
+											name="name"
+											value={formData.name}
+											onChange={e =>
+												setFormData({
+													...formData,
+													[e.target.name]: e.target.value,
+												})
+											}
+											className="input"
+											type="text"
+											required
+											placeholder={__('Name')}
+										/>
+									</div>
+								</div>
+								<div className="field">
+									<p className="label">{__('Description')}</p>
+									<p>
+										{__('In few words, explain what your channel is about.')}
+									</p>
+									<div className="control">
+										<input
+											name="description"
+											value={formData.description}
+											onChange={e =>
+												setFormData({
+													...formData,
+													[e.target.name]: e.target.value,
+												})
+											}
+											className="input"
+											type="text"
+											placeholder={__('Keep it short.')}
+										/>
+									</div>
+								</div>
+								<div className="field">
+									<p>
+										{__('One recommended channel per address. If you have already listed a channel, it will be overwritten.')}
+									</p>
+								</div>
+								<div className="field">
+									<div className="control">
+										<button type="submit" className="button is-link">
+											{__('Submit')}
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
