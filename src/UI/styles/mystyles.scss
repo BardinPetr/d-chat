@@ -21,11 +21,14 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
+.x-has-opacity-1 {
+	opacity: 1 !important;
+}
 .emoji-mart-emoji-native {
-	font-family: inherit;
+	font-family: inherit !important;
 }
 .textarea:not([rows]) {
-	max-height: 6rem;
+	max-height: 16rem;
 	/* Without min-height, stayScrolled gets bugged. */
 	min-height: 3rem;
 }
@@ -36,21 +39,9 @@ $content-pre-padding: 0.5em 1em;
 	position:absolute;
 	bottom: 2.5rem;
 	z-index: 30;
-
-	&.x-is-reactions-mart {
-		left: 45%;
-	}
 }
 .x-is-fullwidth {
 	width: 100%;
-}
-.x-modal-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
 }
 .ReactModal__Overlay {
 	z-index: 30;

@@ -2,7 +2,7 @@
 
 A decentralized chat on NKN as an extension for Chrome and Firefox.
 
-Join *#d-chat* on d-chat!
+Join *#d-chat* on D-Chat!
 
 http://losnappas.gitlab.io/d-chat/
 
@@ -12,11 +12,15 @@ https://chrome.google.com/webstore/detail/d-chat/glnmkakdjcognfgonjfcklpmjiobiji
 
 ## What is D-Chat and NKN
 
-NKN is a decentralized network of more than 10k nodes, incentivised by the NKN coin.
+[NKN](https://www.nkn.org) is a decentralized network of more than 10k nodes, incentivised by the NKN cryptocurrency that goes along.
 
-D-Chat is a chat that uses NKN for transmitting messages and subscribing to topics.
+D-Chat is a chat that uses NKN for transmitting messages, and its blockchain for subscribing to topics.
 
-D-Chat is free to use.
+D-Chat is free to use, you do not need coins for anything at this point.
+
+## How It Works
+
+![](https://gitlab.com/losnappas/d-chat/uploads/6da16fa6653835eded4319fa076d1197/D-Chat_explanation_draft.png)
 
 ## Installation
 
@@ -24,12 +28,15 @@ D-Chat is free to use.
 
 `npm install`
 
-`npm run dev`
+`npm run dev:ext`
 or
 `npm run build`
 or
 `npm start:firefox`
 `npm start:chrome`
+
+and for web version:
+`npm run start:views`
 
 ## Info
 
@@ -39,9 +46,13 @@ React boilerplate from https://github.com/kryptokinght/react-extension-boilerpla
 
 ## Contributing
 
-Send a merge request if you've got something nice, thanks! And make issues and so forth, basic stuff. Appreciate.
+Send a merge request if you've got something nice. Make issues and so forth. All help is appreciated.
 
-I'll pay NKN for code, so you don't have to feel like you're working for someone else for free. [d-chat developer fund](https://explorer.nknx.org/addresses/NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1) 
+### Reimbursement for Your Efforts
+
+You may get "paid" NKN in exchange for *anything* useful. Could be code, issues, or posting about D-Chat somewhere.
+
+The point is to get more coin spread; when subscriptions start costing coins, it will a problem if nobody has any. D-Chat fund: 
 
 https://explorer.nknx.org/addresses/NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
 

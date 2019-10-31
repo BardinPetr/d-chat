@@ -195,6 +195,7 @@ class Chatroom extends React.Component {
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
+					myAddr={client.addr}
 					createReaction={msg =>
 						createMessage({
 							...msg,

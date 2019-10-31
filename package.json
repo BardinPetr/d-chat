@@ -1,15 +1,15 @@
 {
-  "name": "react-extension-boilerplate",
-  "version": "4.5.0",
-  "description": "Modern React boilerplate for Firefox and Chrome extensions",
+  "name": "d-chat",
+  "version": "4.5.1",
+  "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kryptokinght/react-extension-boilerplate"
+    "url": "https://gitlab.com/losnappas/d-chat"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kryptokinght/react-extension-boilerplate/issues"
+    "url": "https://gitlab.com/losnappas/d-chat/issues"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,8 +19,8 @@
     "dev": "APP_TARGET=EXT node scripts/dev.js",
     "dev:ext": "APP_TARGET=EXT node scripts/dev.js",
     "dev:web": "APP_TARGET=WEB node scripts/dev.js",
-    "build": "npm run i18n && APP_TARGET=EXT node scripts/build.js",
-    "build:web": "npm run i18n && APP_TARGET=WEB node scripts/build.js",
+    "build": "npm run i18n && BROWSERSLIST=$(cat ./.browserslistrc-EXT) APP_TARGET=EXT node scripts/build.js",
+    "build:web": "npm run i18n && APP_TARGET=WEB BROWSERSLIST=$(cat ./.browserslistrc-WEB) node scripts/build.js",
     "build:pack": "npm run build && web-ext build -s extension --overwrite-dest",
     "compress": "node scripts/compress",
     "compress-keygen": "crx keygen",

@@ -1,13 +1,13 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, lazy, Suspense } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import classnames from 'classnames';
 import Markdown from './Markdown';
 import TextareaAutosize from 'react-textarea-autosize';
 import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Uploader from './Uploader';
-import 'emoji-mart/css/emoji-mart.css';
-import { Picker } from 'emoji-mart';
 import { IoMdHappy } from 'react-icons/io';
+
+const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 
 const Textarea = forwardRef(
 	(
@@ -95,19 +95,14 @@ const Textarea = forwardRef(
 								</span>
 							</a>
 							{emojiPickerVisible && (
-								<div className="x-emoji-mart-container">
-									<Picker
-										autoFocus
-										title={__('Emojis')}
-										native={true}
-										backgroundImageFn={() => {}}
+								<Suspense fallback={<div className="loader" />}>
+									<LazyEmojiPicker
 										onSelect={emoji => {
 											addToDraftMessage(emoji.native);
 											setEmojiPickerVisible(false);
 										}}
-										emoji="droplet"
 									/>
-								</div>
+								</Suspense>
 							)}
 
 							<Uploader

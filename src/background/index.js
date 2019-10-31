@@ -12,6 +12,7 @@ import passworder from 'browser-passworder';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
 import confirmerMiddleware from 'Approot/redux/middleware/messageSentConfirmer';
+import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
 
 const password = 'd-chat!!!';
@@ -49,6 +50,7 @@ export default configs.$loaded.then(() => {
 				alias(aliases),
 				confirmerMiddleware,
 				notifierMiddleware,
+				subscribersFetcher,
 				thunkMiddleware
 			)
 		)
