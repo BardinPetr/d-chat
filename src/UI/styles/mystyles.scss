@@ -235,6 +235,11 @@ body, html, #root {
 .dashboard {
 	height: 100vh;
 	&-panel {
+		&.is-hidden-mobile {
+			@media screen and (width: 680px) {
+				display: inherit !important;
+			}
+		}
 		&.is-small {
 			flex: 0 0 12rem;
 		}
