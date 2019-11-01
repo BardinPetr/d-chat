@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info-APP_TARGET';
@@ -65,6 +66,11 @@ const Home = ({ client }) => (
 								<div className="control">
 									<NewTopicForm privateChat />
 								</div>
+							</div>
+						</div>
+						<div className="column">
+							<div className="content">
+								<p><Link to="/topics">{__('Public chat index')}</Link></p>
 							</div>
 						</div>
 					</div>

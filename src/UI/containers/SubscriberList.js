@@ -1,25 +1,23 @@
 /**
  * Lists chatters in topic in navbar (header).
  */
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import classnames from 'classnames';
 
 // Not the most reusable container.
-const SubscriberList = ({ subscribers, className }) => {
-	const [open, setOpen] = useState(false);
+const SubscriberList = ({ subscribers, className, active }) => {
 
 	return (
 		<div className={className}>
 			<a
 				className="navbar-link"
-				onClick={() => setOpen(!open)}
 			>
 				{subscribers.length} {__('people chatting')}
 			</a>
 			<div className={classnames('x-has-max-width x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
-				'is-hidden': !open,
+				'is-hidden': !active,
 			})}>
 				{subscribers.sort().map((sub, key) => (
 					<a className="navbar-item" key={key}>
