@@ -5,7 +5,7 @@ import Markdown from './Markdown';
 import TextareaAutosize from 'react-textarea-autosize';
 import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Uploader from './Uploader';
-import { IoMdHappy } from 'react-icons/io';
+import { IoMdHappy, IoMdPaperPlane } from 'react-icons/io';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 
@@ -85,7 +85,7 @@ const Textarea = forwardRef(
 							)}
 
 							<a
-								className="level-item button is-white has-text-grey-dark"
+								className="level-item button is-white has-text-grey-dark is-hidden-mobile"
 								onClick={() => {
 									setEmojiPickerVisible(!emojiPickerVisible);
 								}}
@@ -111,8 +111,10 @@ const Textarea = forwardRef(
 							>
 								{__('Upload')}
 							</Uploader>
-							<button type="submit" className="button is-small is-primary level-item is-hidden-desktop">
-								{__('Send')}
+							<button type="submit" className="button is-small level-item is-hidden-desktop">
+								<span className="icon is-size-5">
+									<IoMdPaperPlane />
+								</span>
 							</button>
 						</div>
 					</div>
