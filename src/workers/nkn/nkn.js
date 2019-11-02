@@ -115,12 +115,13 @@ class NKN extends nkn {
 				if (blockHeight === 0) {
 					throw 'Block height 0.';
 				}
+				const inPool = subs.subscribersInTxPool.some(sub => sub === this.addr);
 				if (
 					info.expiresAt - blockHeight > 5000 ||
-					subs.subscribersInTxPool.some(sub => sub === this.addr)
+					inPool
 				) {
 					return info;
-				} else {
+				} else if (inPool) {
 					throw 'In mempool';
 				}
 			},
