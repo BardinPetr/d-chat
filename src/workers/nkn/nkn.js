@@ -121,7 +121,7 @@ class NKN extends nkn {
 				) {
 					return info;
 				} else {
-					return false;
+					throw 'In mempool';
 				}
 			},
 		);

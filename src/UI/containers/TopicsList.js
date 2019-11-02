@@ -15,6 +15,7 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 	<ul className="menu-list">
 		{chats.map((chat, key) =>
 			chat.topic !== DCHAT_PUBLIC_TOPICS &&
+			// List topics or whispers.
 			((chat.topic.startsWith('/whisper/') && whispers) ||
 				(!chat.topic.startsWith('/whisper/') && !whispers)) ? (
 					<li key={key} title={getChatDisplayName(chat.topic)}>
@@ -29,6 +30,7 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 								title={__('Remove')}
 								className="delete is-small x-is-hover-hidden"
 								onClick={e => {
+									// Closing chat.
 									e.preventDefault();
 									// Navigate away from closing chat first.
 									if (history.location.pathname.indexOf(chat.topic) > -1) {
@@ -59,6 +61,35 @@ const mapStateToProps = state => {
 			active: history.location.pathname === getChatURL(key),
 		});
 	}
+	// Sort newest messages on top.
+	newState.sort((a, b) => {
+		let lastMessageA = state.messages[a.topic];
+		let lastMessageB = state.messages[b.topic];
+		lastMessageA = lastMessageA?.[lastMessageA.length - 1]?.timestamp;
+		lastMessageB = lastMessageB?.[lastMessageB.length - 1]?.timestamp;
+
+		if (!lastMessageA) {
+			return 1;
+		} else if (!lastMessageB) {
+			return -1;
+		}
+
+		const latest =
+			new Date(lastMessageA) - new Date(lastMessageB) > 0
+				? -1
+				: 1;
+		if (a.unread.length > 0) {
+			if (b.unread.length > 0) {
+				return latest;
+			} else {
+				return -1;
+			}
+		} else if (b.unread.length > 0) {
+			return 1;
+		}
+		return latest;
+	});
+
 	return {
 		chats: newState,
 	};
