@@ -218,20 +218,9 @@ body, html, #root {
 .x-navbar-height {
 	height: $navbar-height;
 }
-/* HACK: don't show burger in popup. */
-@media screen and (width: 680px) {
-	.navbar-burger {
-		display: none;
-	}
-}
 .dashboard {
 	height: 100vh;
 	&-panel {
-		&.is-hidden-mobile {
-			@media screen and (width: 680px) {
-				display: inherit !important;
-			}
-		}
 		&.is-small {
 			flex: 0 0 12rem;
 		}
