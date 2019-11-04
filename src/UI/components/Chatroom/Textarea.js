@@ -112,8 +112,8 @@ const Textarea = forwardRef(
 								{__('Upload')}
 							</Uploader>
 							<button type="submit" className="button is-small level-item is-hidden-desktop">
-								<span className="icon is-size-5">
-									<IoMdPaperPlane />
+								<span className="icon">
+									<IoMdPaperPlane className="is-size-5" />
 								</span>
 							</button>
 						</div>
