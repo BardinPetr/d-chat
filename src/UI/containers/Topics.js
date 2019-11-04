@@ -10,7 +10,7 @@ import { DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { getChatDisplayName, getChatURL } from 'Approot/misc/util';
 import Table from 'rc-table';
-import useTimeout from '@rooks/use-timeout';
+import useInterval from '@rooks/use-interval';
 
 const defaults = {
 	name: '',
@@ -20,10 +20,9 @@ const defaults = {
 const TopicInfoList = ({ dispatch, topics }) => {
 	const [formData, setFormData] = useState({ ...defaults });
 	const [status, setStatus] = useState('');
-	const { start } = useTimeout(() => {
+	const { start } = useInterval(() => {
 		dispatch(fetchSubscriptionInfos(DCHAT_PUBLIC_TOPICS));
-		start();
-	}, 10000);
+	}, 20000);
 
 	// Maybe make the link in sidebar do this action, instead?
 	// Could refresh by clicking it (not useful, though).

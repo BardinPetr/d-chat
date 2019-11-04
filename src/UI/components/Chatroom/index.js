@@ -1,5 +1,7 @@
 /**
  * Contains messages list + submit box.
+ *
+ * Note about lazy textarea: refs will mess it up.
  */
 import React from 'react';
 
