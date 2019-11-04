@@ -1,3 +1,6 @@
+/**
+ * Lists messages and reactions that belong to a topic.
+ */
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
 import Message from './Message';
@@ -36,6 +39,7 @@ const Messages = ({
 	reactions,
 	markAllMessagesRead,
 	createReaction,
+	myAddr,
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
@@ -68,6 +72,7 @@ const Messages = ({
 
 		const messageReactions = reactions[message.id];
 		const addReaction = msg =>
+			!messageReactions?.some(r => r.addr === myAddr) &&
 			createReaction({
 				...msg,
 				targetID: message.id,
@@ -105,7 +110,11 @@ const Messages = ({
 				addReaction={addReaction}
 			>
 				{messageReactions && (
-					<Reactions addReaction={addReaction} reactions={messageReactions} />
+					<Reactions
+						addReaction={addReaction}
+						myAddr={myAddr}
+						reactions={messageReactions}
+					/>
 				)}
 			</Message>,
 		);

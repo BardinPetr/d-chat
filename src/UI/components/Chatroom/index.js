@@ -1,5 +1,7 @@
 /**
  * Contains messages list + submit box.
+ *
+ * Note about lazy textarea: refs will mess it up.
  */
 import React from 'react';
 
@@ -195,6 +197,7 @@ class Chatroom extends React.Component {
 					lastReadId={this.lastReadId}
 					subs={subs}
 					markAllMessagesRead={() => this.markAllMessagesRead()}
+					myAddr={client.addr}
 					createReaction={msg =>
 						createMessage({
 							...msg,

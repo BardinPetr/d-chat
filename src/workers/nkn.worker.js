@@ -20,9 +20,6 @@ import {
 // It is probably because each message is transmitted to state separately.
 // Might want to throttle receiveMessage and receive chunks of multiple messages.
 // Or maybe deep diff between store and proxy store will fix it?
-// TODO need to do a 'was message published' check.
-// Right now there's potential that you just message yourself and get connection errors.
-// No error messages displayed, then.
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
@@ -131,6 +128,7 @@ onmessage = async ({ data: action }) => {
 					data = new OutgoingMessage({
 						contentType: 'dchat/subscribe',
 						topic,
+						// No i18n here.
 						content: 'Joined channel.',
 					});
 					NKN.instance.publishMessage(topic, data);

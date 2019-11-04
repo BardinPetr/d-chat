@@ -1,5 +1,4 @@
 import { PayloadType } from 'nkn-client';
-import { debounce } from 'debounce';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN from 'Approot/workers/nkn/nkn';
 import FakeNKN from 'Approot/workers/nkn/FakeNKN';
@@ -21,12 +20,6 @@ function addNKNListeners (client) {
 		postMessage(connected());
 		postMessage(getBalance(client.wallet.address));
 	});
-
-	// Often node doesn't give block events on defaultClient, so listen on all and debounce to one.
-	const blockListener = debounce(() => {
-		postMessage(getBalance(client.wallet.address));
-	}, 5000, true);
-	Object.values(client.clients).forEach(c => c.on('block', blockListener));
 }
 
 async function handleIncomingMessage(src, payload, payloadType) {

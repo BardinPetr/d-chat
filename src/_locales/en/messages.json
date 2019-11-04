@@ -47,6 +47,9 @@
   "DChatversion": {
     "message": " D-Chat version"
   },
+  "Deactivatewallet": {
+    "message": " Deactivate wallet"
+  },
   "Description": {
     "message": " Description"
   },
@@ -131,6 +134,9 @@
   "Newmessagesbelow": {
     "message": " New messages below"
   },
+  "Nickname": {
+    "message": " Nickname"
+  },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
   },
@@ -149,14 +155,14 @@
   "Public": {
     "message": " Public"
   },
+  "Publicchatindex": {
+    "message": " Public chat index"
+  },
   "Reload": {
     "message": " Reload"
   },
   "Remove": {
     "message": " Remove"
-  },
-  "Removewallet": {
-    "message": " Remove wallet"
   },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
@@ -206,14 +212,14 @@
   "Username": {
     "message": " Username"
   },
+  "WalletDeactivatedLogInusinganypassword": {
+    "message": " Wallet Deactivated. Log In using any password."
+  },
   "Walletaddress": {
     "message": " Wallet address"
   },
   "Walletbalance": {
     "message": " Wallet balance"
-  },
-  "Walletremoved": {
-    "message": " Wallet removed"
   },
   "Welcome": {
     "message": " Welcome!"

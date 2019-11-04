@@ -23,12 +23,6 @@ class LoginBox extends React.Component {
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.clear = this.clear.bind(this);
 
-		// Autologin in web client.
-		// Nobody is using the wallet there anyways.
-		// TODO fix the login screen flash. Need to move this elsewhere?
-		if (!IS_EXTENSION) {
-			this.handleLoginSubmit();
-		}
 	}
 
 	handleChange(e) {
@@ -95,7 +89,7 @@ class LoginBox extends React.Component {
 										<form className="" onSubmit={this.handleLoginSubmit}>
 											<div className="field">
 												<label className="label">
-													{__('Username')}
+													{__('Nickname')}
 													<span className="has-text-grey-light is-size-7">
 														{' (' + __('optional') + ')'}
 													</span>
@@ -168,8 +162,8 @@ class LoginBox extends React.Component {
 												onClick={this.clear}
 											>
 												{this.state.cleared
-													? __('Wallet removed')
-													: __('Remove wallet')}
+													? __('Wallet Deactivated. Log In using any password.')
+													: __('Deactivate wallet')}
 											</a>
 										</div>
 									</div>

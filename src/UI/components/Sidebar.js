@@ -4,7 +4,6 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import Logout from 'Approot/UI/containers/Logout';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
-import { IS_EXTENSION } from 'Approot/misc/util';
 
 const Sidebar = () => (
 	<aside className="menu">
@@ -32,13 +31,11 @@ const Sidebar = () => (
 					{__('Accounts')}
 				</Link>
 			</li>
-			{IS_EXTENSION && (
-				<li>
-					<Logout>
-						{__('Log Out')}
-					</Logout>
-				</li>
-			)}
+			<li>
+				<Logout>
+					{__('Log Out')}
+				</Logout>
+			</li>
 		</ul>
 
 		<Popout />

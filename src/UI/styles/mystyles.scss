@@ -1,10 +1,10 @@
 $primary: #1791f2;
 $info: rgba(29,155,209,.1);
 $tablet: 680px;
-$desktop: 1000px;
-$navbar-breakpoint: 679px;
+$desktop: 1024px;
+$navbar-breakpoint: $tablet;
 $navbar-height: 3rem;
-$section-padding: 0.5rem;
+$section-padding: 1.5rem;
 $section-padding-medium: 3rem 1.5rem;
 $section-padding-large: 9rem 1.5rem;
 $accordion-background-color: transparent;
@@ -21,11 +21,14 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
+.x-has-opacity-1 {
+	opacity: 1 !important;
+}
 .emoji-mart-emoji-native {
-	font-family: inherit;
+	font-family: inherit !important;
 }
 .textarea:not([rows]) {
-	max-height: 6rem;
+	max-height: 16rem;
 	/* Without min-height, stayScrolled gets bugged. */
 	min-height: 3rem;
 }
@@ -34,23 +37,11 @@ $content-pre-padding: 0.5em 1em;
 }
 .x-emoji-mart-container {
 	position:absolute;
-	bottom: 2.5rem;
+	bottom: 1.8rem;
 	z-index: 30;
-
-	&.x-is-reactions-mart {
-		left: 45%;
-	}
 }
 .x-is-fullwidth {
 	width: 100%;
-}
-.x-modal-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
 }
 .ReactModal__Overlay {
 	z-index: 30;
@@ -66,14 +57,6 @@ $content-pre-padding: 0.5em 1em;
 .emoji-mart-scroll {
 	overflow-x: hidden;
 }
-@media (max-width: 768px) {
-	.x-fix-mobile.navbar-brand {
-		max-width: inherit !important;
-		.navbar-item {
-			max-width: 70% !important;
-		}
-	}
-}
 .accordions .accordion {
 	background: linear-gradient(white, $grey-lighter);
 }
@@ -86,15 +69,6 @@ $content-pre-padding: 0.5em 1em;
 	}
 	&:hover .x-is-hover-hidden {
 		display: inline-block;
-	}
-}
-.x-fix-mobile.navbar-brand {
-	max-width: 60%;
-	.navbar-item {
-		max-width: 100%;
-		.image {
-			flex-shrink: 0;
-		}
 	}
 }
 .x-truncate {
@@ -113,11 +87,14 @@ $content-pre-padding: 0.5em 1em;
 	white-space: nowrap;
 }
 .x-has-max-height {
-	max-height: 20rem;
+	max-height: 11.5em;
 	overflow-y: auto !important;
 }
 .x-has-max-width {
 	max-width: 300px;
+	@media (max-width: $tablet) {
+		max-width: 100%;
+	}
 }
 .x-reactions {
 	margin-top: 0.2rem;

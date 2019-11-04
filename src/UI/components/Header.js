@@ -19,12 +19,13 @@ class Header extends React.Component {
 		this.state = {
 			topic: '',
 			active: false,
-			subsOpen: false,
+			expanded: false,
 		};
 
 		// Using the items in the hamburger menu should close it.
 		this.unlisten = history.listen(() => this.setState({
-			active: false
+			active: false,
+			expanded: false,
 		}));
 	}
 
@@ -61,7 +62,7 @@ class Header extends React.Component {
 						className={classnames('navbar-burger burger', {
 							'is-active': this.state.active,
 						})}
-						onClick={() => this.setState({ active: !this.state.active })}
+						onClick={() => this.setState({ active: !this.state.active, expanded: false })}
 						aria-label="menu"
 						aria-expanded={this.state.active}
 						role="button"
@@ -74,8 +75,9 @@ class Header extends React.Component {
 				</div>
 				<div
 					className={classnames('navbar-menu', {
-						'is-active': this.state.active,
+						'is-active': this.state.expanded || this.state.active,
 					})}
+					onClick={() => this.setState({expanded: !this.state.expanded})}
 					role="navigation"
 					aria-label="main navigation"
 				>
@@ -83,7 +85,9 @@ class Header extends React.Component {
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
 								'is-hidden': topic == null || isPrivateChat,
+								'is-active': this.state.expanded,
 							})}
+							active={this.state.expanded}
 							topic={topic}
 						/>
 					</div>
