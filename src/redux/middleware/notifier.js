@@ -3,6 +3,7 @@
  * 2. Creates notifications and changes badge text.
  */
 
+import sanitize from 'striptags';
 import {
 	getChatDisplayName,
 	isNotice,
@@ -11,6 +12,7 @@ import {
 	setBadgeText,
 	createNotification,
 	getPopupURL,
+	__,
 } from 'Approot/misc/browser-util-APP_TARGET';
 import {
 	markUnread,
@@ -28,7 +30,7 @@ const hasDupe = (initial, message) => initial.some(msg => msg.id === message.id)
 const notifier = store => next => action => {
 	const message = action.payload?.message;
 	const topic = action.payload?.topic;
-	let w, initial, targetID;
+	let w, initial, targetID, content = message?.content || '';
 
 	switch (action.type) {
 		case 'chat/RECEIVE_REACTION':
@@ -58,8 +60,13 @@ const notifier = store => next => action => {
 			break;
 
 		case 'chat/MARK_UNREAD':
+			if (message.contentType === 'media') {
+				content = __('Posted media.');
+			} else {
+				content = sanitize(content);
+			}
 			createNotification({
-				message: message.content,
+				message: content,
 				title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,
 			});
 			setBadgeText(getUnreadMessages(store.getState()) + 1);

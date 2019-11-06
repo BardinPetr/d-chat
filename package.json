@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "4.6.0",
+  "version": "4.6.1",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -147,6 +147,7 @@
     "semver": "^6.3.0",
     "shasum": "^1.0.2",
     "sleep-promise": "^8.0.1",
+    "striptags": "^3.1.1",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.1",
     "uuid": "^3.3.3",
