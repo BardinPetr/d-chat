@@ -23,7 +23,7 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 							topic={chat.topic}
 							className={classnames('x-topic-link is-clearfix x-truncate', {
 								'is-active': chat.active,
-								'has-text-black': chat.unread.length > 0,
+								'has-text-black': chat.unread?.length > 0,
 							})}
 						>
 							<span
@@ -41,7 +41,7 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 							/>{' '}
 							<span>{getChatDisplayName(chat.topic)}</span>
 							<span className="is-pulled-right">
-								{chat.unread.length > 0 ? chat.unread.length : ''}
+								{chat.unread?.length > 0 ? chat.unread.length : ''}
 							</span>
 						</TopicLink>
 					</li>
@@ -78,13 +78,13 @@ const mapStateToProps = state => {
 			new Date(lastMessageA) - new Date(lastMessageB) > 0
 				? -1
 				: 1;
-		if (a.unread.length > 0) {
-			if (b.unread.length > 0) {
+		if (a.unread?.length > 0) {
+			if (b.unread?.length > 0) {
 				return latest;
 			} else {
 				return -1;
 			}
-		} else if (b.unread.length > 0) {
+		} else if (b.unread?.length > 0) {
 			return 1;
 		}
 		return latest;
