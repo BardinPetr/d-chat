@@ -10,6 +10,12 @@ https://addons.mozilla.org/en-US/firefox/addon/d-chat/
 
 https://chrome.google.com/webstore/detail/d-chat/glnmkakdjcognfgonjfcklpmjiobijii
 
+## Screenshot
+
+![](https://gitlab.com/losnappas/d-chat/uploads/589fa1127ad1ac20260c263252c9cff7/d-chatpic.png)
+
+More: https://forum.nkn.org/t/introducing-d-chat-a-server-less-secure-and-private-chat-for-individuals-and-groups/1861
+
 ## What is D-Chat and NKN
 
 [NKN](https://www.nkn.org) is a decentralized network of more than 10k nodes, incentivised by the NKN cryptocurrency that goes along.
