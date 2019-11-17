@@ -38,6 +38,7 @@ $content-pre-padding: 0.5em 1em;
 .x-emoji-mart-container {
 	position:absolute;
 	bottom: 1.8rem;
+	right: 0;
 	z-index: 30;
 }
 .x-is-fullwidth {
@@ -149,7 +150,12 @@ $content-pre-padding: 0.5em 1em;
 		word-wrap: break-word;
 
 		img, video {
-			height: 300px;
+			&:not(.x-oc-content) {
+				height: 300px;
+			}
+			& .x-oc-content {
+				max-height: 500px;
+			}
 		}
 	}
 
@@ -256,7 +262,7 @@ body, html, #root {
 .x-not-confirmed {
     opacity: 0.6;
 }
-body * {
+body *:not(.x-chatroom-messages):not(.x-main) {
     scrollbar-width: thin;
     &::-webkit-scrollbar {
         width: 5px;

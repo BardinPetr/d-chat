@@ -105,9 +105,10 @@ const Messages = ({
 				message={message}
 				isSubscribed={subs.includes(message.addr)}
 				key={message.id}
-				isNotice={['dchat/subscribe'].includes(message.contentType)}
+				isNotice={'dchat/subscribe' === message.contentType}
 				topic={message.topic}
 				addReaction={addReaction}
+				stayScrolled={stayScrolled}
 			>
 				{messageReactions && (
 					<Reactions

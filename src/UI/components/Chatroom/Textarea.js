@@ -1,13 +1,13 @@
 import React, { useState, forwardRef, lazy, Suspense } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import classnames from 'classnames';
-import Markdown from './Markdown';
 import TextareaAutosize from 'react-textarea-autosize';
 import TextareaAutoCompleter from './TextareaAutoCompleter';
 import Uploader from './Uploader';
 import { IoMdHappy, IoMdPaperPlane } from 'react-icons/io';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
+const LazyMarkdown = lazy(() => import('./Markdown'));
 
 const Textarea = forwardRef(
 	(
@@ -51,7 +51,9 @@ const Textarea = forwardRef(
 							mention={mention}
 						/>
 						{showingPreview && (
-							<Markdown source={source} className="x-white-space" />
+							<Suspense fallback={<div className="loader" />}>
+								<LazyMarkdown source={source} className="x-white-space" />
+							</Suspense>
 						)}
 					</div>
 
@@ -84,6 +86,13 @@ const Textarea = forwardRef(
 								<div className="level-item is-hidden-mobile">{children}</div>
 							)}
 
+							<Uploader
+								className="button is-text level-item is-size-7"
+								onUploaded={submitUpload}
+							>
+								{__('Upload')}
+							</Uploader>
+
 							<a
 								className="level-item button is-white has-text-grey-dark is-hidden-mobile"
 								onClick={() => {
@@ -101,16 +110,12 @@ const Textarea = forwardRef(
 											addToDraftMessage(emoji.native);
 											setEmojiPickerVisible(false);
 										}}
+										visible={emojiPickerVisible}
+										setVisible={setEmojiPickerVisible}
 									/>
 								</Suspense>
 							)}
 
-							<Uploader
-								className="button is-text level-item is-size-7"
-								onUploaded={submitUpload}
-							>
-								{__('Upload')}
-							</Uploader>
 							<button type="submit" className="button is-small level-item is-hidden-desktop">
 								<span className="icon">
 									<IoMdPaperPlane className="is-size-5" />

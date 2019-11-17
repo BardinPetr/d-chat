@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "4.6.1",
+  "version": "4.7.0",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -89,6 +89,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "crx": "^3.2.1",
     "debounce": "^1.2.0",
+    "dexie": "^2.0.4",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
     "emoji-mart": "^2.11.1",
@@ -106,7 +107,6 @@
     "highlight.js": "^9.16.2",
     "history": "^4.10.1",
     "html-webpack-include-assets-plugin": "^1.0.10",
-    "idb-file-storage": "^0.1.0",
     "identity-obj-proxy": "3.0.0",
     "is-number": "^7.0.0",
     "jest": "23.6.0",
