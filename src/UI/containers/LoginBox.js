@@ -72,7 +72,7 @@ class LoginBox extends React.Component {
 					</LoadingScreen>
 				) : (
 					<div className="hero is-primary is-overlay">
-						<div className="hero-body" style={{ height: '100vh' }}>
+						<div className="hero-body has-background-primary">
 							<h1 className="title has-text-centered is-size-2">
 								{__('Welcome!')}
 							</h1>
@@ -90,9 +90,6 @@ class LoginBox extends React.Component {
 											<div className="field">
 												<label className="label">
 													{__('Nickname')}
-													<span className="has-text-grey-light is-size-7">
-														{' (' + __('optional') + ')'}
-													</span>
 												</label>
 												<div className="control">
 													<input

@@ -6,6 +6,7 @@ import React from 'react';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 import TimeAgo from './TimeAgo';
+import MediaMessage from './MediaMessage';
 
 const Nickname = ({
 	addr,
@@ -46,6 +47,7 @@ class Message extends React.PureComponent {
 			includeHeader,
 			children,
 			isNotice,
+			stayScrolled,
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
@@ -98,10 +100,12 @@ class Message extends React.PureComponent {
 
 				<div className="message-body x-is-small-padding">
 					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-					<div
-						className="content"
-						dangerouslySetInnerHTML={{ __html: message.content }}
-					></div>
+					{ message.contentType === 'media' ? <MediaMessage stayScrolled={stayScrolled} content={message.content} attachments={message.attachments || []} /> :
+						<div
+							className="content"
+							dangerouslySetInnerHTML={{ __html: message.content }}
+						></div>
+					}
 					{children}
 				</div>
 			</div>

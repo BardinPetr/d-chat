@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-// Sayonara, true pure functions.
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
@@ -74,11 +73,7 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/REMOVE':
-			newState = {
-				...state,
-				[topic]: [],
-			};
-			configs.messages = newState;
+			newState = state;
 			break;
 
 		case 'chat/RECEIVE_MESSAGE':

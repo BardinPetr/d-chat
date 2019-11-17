@@ -18,6 +18,7 @@ const TextareaAutoCompleter = forwardRef(
 	({ subs, mention, ...props }, ref) => (
 		<Autocomplete
 			ref={ref}
+			minChar={0}
 			{...props}
 			trigger={{
 				':': {

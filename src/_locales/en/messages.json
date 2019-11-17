@@ -53,6 +53,9 @@
   "Description": {
     "message": " Description"
   },
+  "Emojipickerdialog": {
+    "message": " Emoji picker dialog"
+  },
   "Emojis": {
     "message": " Emojis"
   },

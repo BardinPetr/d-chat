@@ -1,32 +1,14 @@
+import { saveAttachment } from 'Approot/database/attachments';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
 import Message from './Message';
 import highlight from 'highlight.js';
-import base64ToBlob from 'b64-to-blob';
-import base64Mime from 'base64mime';
+import shasum from 'shasum';
 
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
 	if (href.startsWith('data')) {
-		let mime, data;
-		try {
-			mime = base64Mime(href);
-			data = href.slice(href.indexOf(',') + 1);
-			data = base64ToBlob(data, mime);
-			data = URL.createObjectURL(data);
-		} catch (e) {
-			console.error(e);
-			return '';
-		}
-		if (href.startsWith('data:video/')) {
-			return `<video src="${data}" controls loop playsinline></video>`;
-		} else if (href.startsWith('data:audio/')) {
-			return `<audio src="${data}" controls loop></audio>`;
-		} else if (href.startsWith('data:image/')) {
-			return `<img src="${data}" alt="${text}">`;
-		} else {
-			return '';
-		}
+		return '';
 	} else {
 		return `<img src="${href}" alt=${text}>`;
 	}
@@ -38,7 +20,6 @@ marked.setOptions({
 
 const allowedTags = [
 	'a',
-	'audio',
 	'b',
 	'blockquote',
 	'br',
@@ -67,14 +48,14 @@ const allowedTags = [
 	'thead',
 	'tr',
 	'ul',
-	'video',
 ];
-const allowedSchemes = ['http', 'https', 'blob'];
+const allowedSchemes = ['http', 'https'];
 const allowedAttributes = { ...sanitize.defaults.allowedAttributes };
-allowedAttributes.video = ['src', 'controls', 'loop', 'playsinline'];
-allowedAttributes.audio = ['src', 'controls', 'loop'];
 allowedAttributes.image = ['src', 'alt'];
 allowedAttributes.span = ['class'];
+
+// Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}
+const dataUrl = /data:[^\s)]*/gi;
 
 class IncomingMessage extends Message {
 	constructor(message) {
@@ -93,7 +74,16 @@ class IncomingMessage extends Message {
 		if (this.contentType === 'reaction') {
 			this.content = sanitize(content);
 		} else {
+			if (this.contentType === 'media') {
+				const dataURLs = content.match(dataUrl) || [];
+				this.attachments = dataURLs.map(data => saveAttachment({
+					data,
+					hash: shasum(data),
+				}));
+			}
+
 			// Sanitize first so we only use markdown stuff.
+			// Replace &gt; with > to make blockquotes work.
 			const sanitized = sanitize(content).replace(/&gt;/g, '>');
 			const markdowned = marked(sanitized, {
 				breaks: true,
