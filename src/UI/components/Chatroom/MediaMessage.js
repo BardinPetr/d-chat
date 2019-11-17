@@ -29,9 +29,9 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 		>
 			{attaches.map((attach, i) => (
 				<p key={i}>
-					{(attach.type.includes('audio') && <audio className="x-oc-content" controls onLoadedData={() => revoke(attach)} loop src={attach.src} />)
+					{(attach.type.includes('audio') && <audio className="x-oc-content" controls onCanPlayThrough={() => revoke(attach)} loop src={attach.src} />)
 					|| (attach.type.includes('image') && <img className="x-oc-content" onLoad={() => revoke(attach)} src={attach.src} />)
-					|| (attach.type.includes('video') && <video className="x-oc-content" controls onLoadedData={() => revoke(attach)} loop src={attach.src} />)}
+					|| (attach.type.includes('video') && <video className="x-oc-content" controls onCanPlayThrough={() => revoke(attach)} loop src={attach.src} />)}
 				</p>
 			))}
 			<div dangerouslySetInnerHTML={{ __html: content }} />
