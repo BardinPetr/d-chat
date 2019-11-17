@@ -153,8 +153,8 @@ $content-pre-padding: 0.5em 1em;
 			&:not(.x-oc-content) {
 				height: 300px;
 			}
-			& .x-oc-content {
-				max-height: 500px;
+			&.x-oc-content {
+				max-height: 300px;
 			}
 		}
 	}
