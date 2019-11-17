@@ -9,7 +9,6 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 			loadAttachment(attachment)
 				.then(fileInfo => {
 					const blob = fileInfo.data;
-					console.log(fileInfo);
 					const src = URL.createObjectURL(blob);
 					setAttaches([...attaches, {
 						src,

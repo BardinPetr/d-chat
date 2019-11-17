@@ -73,6 +73,7 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/REMOVE':
+			newState = state;
 			break;
 
 		case 'chat/RECEIVE_MESSAGE':

@@ -90,9 +90,6 @@ class LoginBox extends React.Component {
 											<div className="field">
 												<label className="label">
 													{__('Nickname')}
-													<span className="has-text-grey-light is-size-7">
-														{' (' + __('optional') + ')'}
-													</span>
 												</label>
 												<div className="control">
 													<input
