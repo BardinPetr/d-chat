@@ -16,12 +16,11 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 					}]);
 				})
 		);
-	}, []);
 
-	function revoke(attachment) {
-		URL.revokeObjectURL(attachment.src);
-		stayScrolled();
-	}
+		return () => {
+			attaches.forEach(({ src }) => URL.revokeObjectURL(src));
+		};
+	}, []);
 
 	return (
 		<div
@@ -29,9 +28,32 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 		>
 			{attaches.map((attach, i) => (
 				<p key={i}>
-					{(attach.type.includes('audio') && <audio className="x-oc-content" controls onCanPlayThrough={() => revoke(attach)} loop src={attach.src} />)
-					|| (attach.type.includes('image') && <img className="x-oc-content" onLoad={() => revoke(attach)} src={attach.src} />)
-					|| (attach.type.includes('video') && <video className="x-oc-content" controls onCanPlayThrough={() => revoke(attach)} loop src={attach.src} />)}
+					{(attach.type.includes('audio') &&
+						<audio
+							className="x-oc-content"
+							controls
+							onCanPlayThrough={stayScrolled}
+							loop
+							src={attach.src}
+							onLoadedData={stayScrolled}
+							onLoadedMetaData={stayScrolled}
+						/>)
+					|| (attach.type.includes('image') && <img className="x-oc-content" onLoad={stayScrolled} src={attach.src} />)
+					|| (attach.type.includes('video') &&
+						<video
+							className="x-oc-content"
+							controls
+							playsinline
+							onCanPlayThrough={stayScrolled}
+							loop
+							src={attach.src}
+							onLoadedData={stayScrolled}
+							onCanPlay={stayScrolled}
+							onDurationChange={stayScrolled}
+							onLoadStart={stayScrolled}
+							onLoad={stayScrolled}
+							onLoadedMetaData={stayScrolled}
+						/>)}
 				</p>
 			))}
 			<div dangerouslySetInnerHTML={{ __html: content }} />

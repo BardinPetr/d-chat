@@ -3,6 +3,7 @@
  */
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
+import useTimeout from '@rooks/use-timeout';
 import Message from './Message';
 import Reactions from './Reactions';
 import InfiniteScroller from 'react-infinite-scroller';
@@ -43,14 +44,21 @@ const Messages = ({
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
+	// Sometimes video elements ignore scroll when chat opens, -
+	// and videos are loaded.
+	const { start } = useTimeout(scrollBottom, 50);
 
 	if (lastReadId && lastReadId !== lastRead) {
 		setLastRead(lastReadId);
 	}
+
+	useLayoutEffect(() => {
+		start();
+	}, [messages[0]?.topic]);
 
 	useLayoutEffect(() => {
 		stayScrolled();
