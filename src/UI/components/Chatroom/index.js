@@ -3,7 +3,7 @@
  *
  * Note about lazy textarea: refs will mess it up.
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -33,17 +33,21 @@ const Chatroom = ({
 	draft,
 	getSubscribers,
 }) => {
-	let startingMessages = messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length;
-	startingMessages = Math.max(startingMessages, 0);
-	const [count, setCount] = useState(startingMessages);
+	const [extraMessages, setExtraMessages] = useState(unreadMessages.length);
 	const [lastReadId, setLastReadId] = useState(unreadMessages[0]);
 	const getSubs = () => getSubscribers(topic);
 	const { start, stop } = useInterval(getSubs, 25 * 1000);
 	const textarea = useRef();
 	const msg = useRef();
+	const count = useMemo(() =>
+		messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length - extraMessages,
+	[
+		topic,
+		extraMessages,
+	]);
 
 	const loadMoreMessages = () => {
-		setCount(Math.max(count - 5, 0));
+		setExtraMessages(extraMessages + 5);
 	};
 
 	// Also cleared on submit.
@@ -56,9 +60,9 @@ const Chatroom = ({
 		msg.current.setState({
 			value: draft,
 		});
-		setCount(startingMessages);
 
 		return () => {
+			setExtraMessages(unreadMessages.length);
 			stop();
 		};
 	}, [topic]);
@@ -159,6 +163,7 @@ const Chatroom = ({
 	return (
 		<div className="x-chatroom">
 			<Messages
+				totalMessagesCount={messages.length}
 				reactions={reactions}
 				className=""
 				messages={visibleMessages}

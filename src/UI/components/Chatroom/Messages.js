@@ -3,7 +3,6 @@
  */
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
-import useTimeout from '@rooks/use-timeout';
 import Message from './Message';
 import Reactions from './Reactions';
 import InfiniteScroller from 'react-infinite-scroller';
@@ -41,31 +40,25 @@ const Messages = ({
 	markAllMessagesRead,
 	createReaction,
 	myAddr,
+	totalMessagesCount,
 }) => {
 	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
-	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
+	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
-	// Sometimes video elements ignore scroll when chat opens, -
-	// and videos are loaded.
-	const { start } = useTimeout(scrollBottom, 50);
 
 	if (lastReadId && lastReadId !== lastRead) {
 		setLastRead(lastReadId);
 	}
 
 	useLayoutEffect(() => {
-		start();
-	}, [messages[0]?.topic]);
-
-	useLayoutEffect(() => {
 		stayScrolled();
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
-	}, [messages.length, messages[0]?.topic, Object.keys(reactions).length]);
+	}, [totalMessagesCount, messages[0]?.topic, Object.keys(reactions).length]);
 
 	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 	let didNotMarkYet = true;
@@ -116,7 +109,6 @@ const Messages = ({
 				isNotice={'dchat/subscribe' === message.contentType}
 				topic={message.topic}
 				addReaction={addReaction}
-				stayScrolled={stayScrolled}
 			>
 				{messageReactions && (
 					<Reactions

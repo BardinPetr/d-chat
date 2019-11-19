@@ -47,13 +47,14 @@ class Message extends React.PureComponent {
 			includeHeader,
 			children,
 			isNotice,
-			stayScrolled,
 		} = this.props;
 		const unsubscribed = !isSubscribed;
 
 		const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
 			message.contentType,
 		);
+
+		const isMedia = message.contentType === 'media';
 
 		return (
 			<div
@@ -100,11 +101,18 @@ class Message extends React.PureComponent {
 
 				<div className="message-body x-is-small-padding">
 					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-					{ message.contentType === 'media' ? <MediaMessage stayScrolled={stayScrolled} content={message.content} attachments={message.attachments || []} /> :
-						<div
-							className="content"
-							dangerouslySetInnerHTML={{ __html: message.content }}
-						></div>
+					{ isMedia ?
+						(
+							<MediaMessage
+								content={message.content}
+								attachments={message.attachments || []}
+							/>
+						) : (
+							<div
+								className="content"
+								dangerouslySetInnerHTML={{ __html: message.content }}
+							></div>
+						)
 					}
 					{children}
 				</div>
