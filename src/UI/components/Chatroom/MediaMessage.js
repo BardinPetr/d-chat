@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { loadAttachment } from 'Approot/database/attachments';
 
-const MediaMessage = ({ content, attachments, stayScrolled }) => {
+const MediaMessage = ({ content, attachments }) => {
 	const [attaches, setAttaches] = useState([]);
+	const displayContent = content.includes('blob:') ? '' : content;
 
 	useEffect(() => {
 		attachments.forEach(attachment =>
@@ -22,41 +23,40 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 		};
 	}, []);
 
+	// TODO: multiple media elements and stayScroll is bugged -
+	// because only one x-media-container right now.
 	return (
 		<div
 			className="content"
 		>
-			{attaches.map((attach, i) => (
-				<p key={i}>
-					{(attach.type.includes('audio') &&
-						<audio
-							className="x-oc-content"
-							controls
-							onCanPlayThrough={stayScrolled}
-							loop
-							src={attach.src}
-							onLoadedData={stayScrolled}
-							onLoadedMetaData={stayScrolled}
-						/>)
-					|| (attach.type.includes('image') && <img className="x-oc-content" onLoad={stayScrolled} src={attach.src} />)
-					|| (attach.type.includes('video') &&
-						<video
-							className="x-oc-content"
-							controls
-							playsinline
-							onCanPlayThrough={stayScrolled}
-							loop
-							src={attach.src}
-							onLoadedData={stayScrolled}
-							onCanPlay={stayScrolled}
-							onDurationChange={stayScrolled}
-							onLoadStart={stayScrolled}
-							onLoad={stayScrolled}
-							onLoadedMetaData={stayScrolled}
-						/>)}
-				</p>
-			))}
-			<div dangerouslySetInnerHTML={{ __html: content }} />
+			<div className="x-media-container">
+				{attaches.map((attach, i) => (
+					<p key={i}>
+						{(attach.type.includes('audio') &&
+							<audio
+								className="x-oc-content"
+								controls
+								loop
+								src={attach.src}
+							/>)
+						|| (attach.type.includes('image') &&
+							<img
+								className="x-oc-content"
+								src={attach.src}
+								decoding="sync"
+							/>)
+						|| (attach.type.includes('video') &&
+							<video
+								className="x-oc-content"
+								controls
+								playsInline
+								loop
+								src={attach.src}
+							/>)}
+					</p>
+				))}
+			</div>
+			<div dangerouslySetInnerHTML={{ __html: displayContent }} />
 		</div>
 	);
 };
