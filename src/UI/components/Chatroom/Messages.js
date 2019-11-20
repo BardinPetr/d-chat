@@ -11,6 +11,7 @@ import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { debounce } from 'debounce';
 import { isNotice } from 'Approot/misc/util';
+import 'highlight.js/styles/github.css';
 
 // 1min 30seconds seconds.
 const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
