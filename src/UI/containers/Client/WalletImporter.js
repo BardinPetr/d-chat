@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { importWallet as importer, log } from 'Approot/misc/util';
+import { importWallet as importer } from 'Approot/misc/util';
 import { importWallet } from 'Approot/redux/actions/client';
 import ProvideCredentials from 'Approot/UI/components/ProvideCredentials';
 import history from 'Approot/UI/history';
@@ -47,7 +47,6 @@ const WalletImporter = ({ dispatch }) => {
 									.then(file => {
 										try {
 											const json = JSON.parse(file);
-											log('Importing wallet:', json);
 											setWalletJSON(json);
 										} catch (e) {
 											setImportError('Error: bad JSON data.');

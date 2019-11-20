@@ -59,7 +59,9 @@ const Messages = ({
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
-	}, [totalMessagesCount, messages[0]?.topic, Object.keys(reactions).length]);
+		// XXX Passing entire `reactions` object here. Good/bad idea?
+		// Could pass messages[0] as well, instead of totalMessagesCount & topic.
+	}, [totalMessagesCount, messages[0]?.topic, reactions]);
 
 	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 	let didNotMarkYet = true;

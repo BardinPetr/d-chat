@@ -1,12 +1,14 @@
 /**
  * 1. Filters out duplicate messages by comparing their id.
  * 2. Creates notifications and changes badge text.
+ * 3. Sends back 'received' acknowledgements for private messages.
  */
 
 import sanitize from 'striptags';
 import {
 	getChatDisplayName,
 	isNotice,
+	isWhisper,
 } from 'Approot/misc/util';
 import {
 	setBadgeText,
@@ -16,6 +18,7 @@ import {
 } from 'Approot/misc/browser-util-APP_TARGET';
 import {
 	markUnread,
+	sendPrivateMessage,
 } from 'Approot/redux/actions';
 
 const getUnreadMessages = state => {
@@ -44,18 +47,16 @@ const notifier = store => next => action => {
 		case 'chat/RECEIVE_MESSAGE':
 			initial = store.getState().messages[topic] || [];
 			// Check if duplicate and ignore.
-			// Each id once, "would you like to sub" once.
-			if (
-				hasDupe(initial, message) ||
-				(isNotice(message) &&
-				initial[initial.length - 1]?.contentType === message.contentType)
-			) {
+			if (hasDupe(initial, message)) {
 				return;
 			}
 			// Only mark unread if chat isn't currently open in popup.
 			w = getPopupURL();
 			if (!w?.includes(message.topic) && shouldNotify(message)) {
 				store.dispatch(markUnread(message.topic, message));
+			}
+			if (isWhisper(message) && !isNotice(message)) {
+				sendAck(message);
 			}
 			break;
 
@@ -77,6 +78,18 @@ const notifier = store => next => action => {
 			break;
 	}
 	next(action);
+
+	function sendAck(toMessage) {
+		const { id, topic, isMe } = toMessage;
+		if (!isMe) {
+			store.dispatch(sendPrivateMessage({
+				contentType: 'reaction',
+				topic,
+				targetID: id,
+				content: '✔',
+			}));
+		}
+	}
 };
 
 export default notifier;

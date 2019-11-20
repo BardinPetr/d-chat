@@ -86,6 +86,7 @@ class NKN extends nkn {
 
 		const fee = options.fee || 0;
 
+		// TODO add better error handling for timeouts; should retry a few times.
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
