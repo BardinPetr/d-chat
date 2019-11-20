@@ -12,8 +12,10 @@ import {
 
 function addNKNListeners (client) {
 
-	client.on('message', async (...args) => {
+	client.on('message', (...args) => {
 		handleIncomingMessage(...args);
+		// Do not send ack-messages.
+		return false;
 	});
 
 	client.on('connect', async () => {
