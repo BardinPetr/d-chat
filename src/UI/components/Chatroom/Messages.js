@@ -141,7 +141,7 @@ const Messages = ({
 				loader={<div className="is-loader" key={0} />}
 				initialLoad={false}
 				useWindow={false}
-				threshold={100}
+				threshold={200}
 				className="x-is-fullwidth"
 			>
 				<div className="x-chat">{messageList}</div>

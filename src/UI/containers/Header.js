@@ -77,7 +77,7 @@ class Header extends React.Component {
 
 				</div>
 				<div
-					className={classnames('navbar-menu', {
+					className={classnames('navbar-menu x-navbar-buttons', {
 						'is-active': this.state.expanded || this.state.active,
 					})}
 					role="navigation"
