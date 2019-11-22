@@ -215,6 +215,10 @@ class NKN extends nkn {
 		return JSON.stringify(this.neutered());
 	}
 
+	/**
+	 * Returns a version that is fine to store, -
+	 * it contains no sensitive information.
+	 */
 	neutered = () => {
 		const w = JSON.parse(this.wallet.toJSON());
 		w.address = w.Address;
