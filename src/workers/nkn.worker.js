@@ -1,7 +1,7 @@
 import NKN from 'Approot/workers/nkn/nknHandler';
 import OutgoingMessage from 'Approot/workers/nkn/OutgoingMessage';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
-import { getAddressFromAddr } from 'Approot/misc/util';
+import { getAddressFromAddr, genPrivateChatName } from 'Approot/misc/util';
 import {
 	setLoginStatus,
 	receiveMessage,
@@ -15,7 +15,6 @@ import {
 	switchToClient,
 } from 'Approot/redux/actions/client';
 
-// TODO figure i18n for this. Can't from tl from web worker.
 // Receivin a lot of messages in short time causes UI to lag.
 // It is probably because each message is transmitted to state separately.
 // Might want to throttle receiveMessage and receive chunks of multiple messages.
@@ -70,6 +69,7 @@ onmessage = async ({ data: action }) => {
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.publishMessage(payload.topic, message);
+			// Receive it locally.
 			data = new IncomingMessage(payload.message);
 			// Overwrite id so when we receive it again, it will be ignored.
 			data.id = message.id;
@@ -86,7 +86,9 @@ onmessage = async ({ data: action }) => {
 			// Receive it locally.
 			data = new IncomingMessage(payload.message);
 			data.id = message.id;
-			data = data.from('me', { toChat: payload.recipient });
+			data = data.from('me', {
+				toChat: genPrivateChatName(payload.recipient),
+			});
 			postMessage(receiveMessage(data));
 			break;
 

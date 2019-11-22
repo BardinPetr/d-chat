@@ -1,7 +1,6 @@
 /**
  * Handles #/topics/, which is the public channels list page.
  */
-// eslint-disable-next-line
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';

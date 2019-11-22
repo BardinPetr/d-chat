@@ -238,6 +238,16 @@ const chatSettings = (state = {}, action) => {
 			};
 			break;
 
+		case 'chat/SET_OPTIONS':
+			newState = {
+				...state,
+				[topic]: {
+					...state[topic],
+					...action.payload.options,
+				},
+			};
+			break;
+
 		default:
 			newState = state;
 	}

@@ -280,3 +280,10 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-is-padded-sides {
 	padding: 0 0.1rem;
 }
+.x-dot-dot-dot {
+	right: 3rem;
+	top: 1rem;
+	background-color: white;
+	border: 1px solid black;
+	position: absolute;
+}

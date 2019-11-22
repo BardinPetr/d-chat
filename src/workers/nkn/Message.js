@@ -48,7 +48,7 @@ class Message {
 			src = NKN.instance.addr;
 			// Locally received.
 			if (this.isPrivate && this.topic == null) {
-				this.topic = genPrivateChatName(opts.toChat || '');
+				this.topic = opts.toChat || '';
 			}
 		} else if (this.isPrivate && this.topic == null) {
 			this.topic = genPrivateChatName(src);
@@ -63,8 +63,7 @@ class Message {
 		// Includes dot if identifier exists.
 		this.username = name;
 		this.pubKey = pubKey;
-		this.refersToMe =
-			this.content && this.content.includes(formatAddr(NKN.instance.addr));
+		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
 
 		return this;
 	}

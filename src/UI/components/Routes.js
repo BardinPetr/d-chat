@@ -5,7 +5,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 
 import Sidebar from 'Approot/UI/components/Sidebar';
-import Header from 'Approot/UI/components/Header';
+import Header from 'Approot/UI/containers/Header';
 import MainRoutes from 'Approot/UI/components/MainRoutes';
 
 const Routes = () => (

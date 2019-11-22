@@ -1,3 +1,6 @@
+/**
+ * Lists joined topics and whispers.
+ */
 import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -7,11 +10,9 @@ import {
 	getChatDisplayName,
 	DCHAT_PUBLIC_TOPICS,
 } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { removeChat } from 'Approot/redux/actions';
 import history from 'Approot/UI/history';
 
-const TopicsList = ({ chats, whispers, dispatch }) => (
+const TopicsList = ({ chats, whispers }) => (
 	<ul className="menu-list">
 		{chats.map((chat, key) =>
 			chat.topic !== DCHAT_PUBLIC_TOPICS &&
@@ -26,19 +27,6 @@ const TopicsList = ({ chats, whispers, dispatch }) => (
 								'has-text-black': chat.unread?.length > 0,
 							})}
 						>
-							<span
-								title={__('Remove')}
-								className="delete is-small x-is-hover-hidden"
-								onClick={e => {
-									// Closing chat.
-									e.preventDefault();
-									// Navigate away from closing chat first.
-									if (history.location.pathname.indexOf(chat.topic) > -1) {
-										history.push('/');
-									}
-									dispatch(removeChat(chat.topic));
-								}}
-							/>{' '}
 							<span>{getChatDisplayName(chat.topic)}</span>
 							<span className="is-pulled-right">
 								{chat.unread?.length > 0 ? chat.unread.length : ''}

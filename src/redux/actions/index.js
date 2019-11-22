@@ -199,3 +199,11 @@ export const removeMessageById = (topic, id) => ({
 		id,
 	},
 });
+
+export const setChatOptions = (topic, options) => ({
+	type: 'chat/SET_OPTIONS',
+	payload: {
+		topic,
+		options,
+	},
+});
