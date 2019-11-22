@@ -1,12 +1,14 @@
 /**
  * 1. Filters out duplicate messages by comparing their id.
  * 2. Creates notifications and changes badge text.
+ * 3. Sends back 'received' acknowledgements for private messages.
  */
 
 import sanitize from 'striptags';
 import {
 	getChatDisplayName,
 	isNotice,
+	isWhisper,
 } from 'Approot/misc/util';
 import {
 	setBadgeText,
@@ -16,6 +18,7 @@ import {
 } from 'Approot/misc/browser-util-APP_TARGET';
 import {
 	markUnread,
+	sendPrivateMessage,
 } from 'Approot/redux/actions';
 
 const getUnreadMessages = state => {
@@ -30,32 +33,31 @@ const hasDupe = (initial, message) => initial.some(msg => msg.id === message.id)
 const notifier = store => next => action => {
 	const message = action.payload?.message;
 	const topic = action.payload?.topic;
+	const state = store.getState();
 	let w, initial, targetID, content = message?.content || '';
 
 	switch (action.type) {
 		case 'chat/RECEIVE_REACTION':
 			targetID = action.payload.message.targetID;
-			initial = store.getState().reactions[topic]?.[targetID] || [];
+			initial = state.reactions[topic]?.[targetID] || [];
 			if (hasDupe(initial, message)) {
 				return;
 			}
 			break;
 
 		case 'chat/RECEIVE_MESSAGE':
-			initial = store.getState().messages[topic] || [];
+			initial = state.messages[topic] || [];
 			// Check if duplicate and ignore.
-			// Each id once, "would you like to sub" once.
-			if (
-				hasDupe(initial, message) ||
-				(isNotice(message) &&
-				initial[initial.length - 1]?.contentType === message.contentType)
-			) {
+			if (hasDupe(initial, message)) {
 				return;
 			}
 			// Only mark unread if chat isn't currently open in popup.
 			w = getPopupURL();
 			if (!w?.includes(message.topic) && shouldNotify(message)) {
 				store.dispatch(markUnread(message.topic, message));
+			}
+			if (isWhisper(message) && !isNotice(message)) {
+				sendAck(message);
 			}
 			break;
 
@@ -65,18 +67,32 @@ const notifier = store => next => action => {
 			} else {
 				content = sanitize(content);
 			}
-			createNotification({
-				message: content,
-				title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,
-			});
-			setBadgeText(getUnreadMessages(store.getState()) + 1);
+			if (!state.chatSettings[topic]?.muted) {
+				createNotification({
+					message: content,
+					title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,
+				});
+			}
+			setBadgeText(getUnreadMessages(state) + 1);
 			break;
 
 		case 'chat/MARK_READ':
-			setBadgeText(getUnreadMessages(store.getState()) - action.payload.ids.length);
+			setBadgeText(getUnreadMessages(state) - action.payload.ids.length);
 			break;
 	}
 	next(action);
+
+	function sendAck(toMessage) {
+		const { id, topic, isMe } = toMessage;
+		if (!isMe) {
+			store.dispatch(sendPrivateMessage({
+				contentType: 'reaction',
+				topic,
+				targetID: id,
+				content: '✔',
+			}));
+		}
+	}
 };
 
 export default notifier;

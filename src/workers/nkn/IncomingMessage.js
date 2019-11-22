@@ -13,6 +13,8 @@ renderer.image = (href, title, text) => {
 		return `<img src="${href}" alt=${text}>`;
 	}
 };
+renderer.link = (href, title, text) =>
+	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
 marked.setOptions({
 	highlight: (code, lang) => highlight.highlightAuto(code, [lang]).value,
 	renderer,
@@ -50,9 +52,12 @@ const allowedTags = [
 	'ul',
 ];
 const allowedSchemes = ['http', 'https'];
-const allowedAttributes = { ...sanitize.defaults.allowedAttributes };
+const allowedAttributes = JSON.parse(JSON.stringify(
+	sanitize.defaults.allowedAttributes
+));
 allowedAttributes.image = ['src', 'alt'];
-allowedAttributes.span = ['class'];
+allowedAttributes.a = ['rel', 'target', 'href', 'title'];
+allowedAttributes['*'] = ['class'];
 
 // Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}
 const dataUrl = /data:[^\s)]*/gi;
@@ -84,7 +89,10 @@ class IncomingMessage extends Message {
 
 			// Sanitize first so we only use markdown stuff.
 			// Replace &gt; with > to make blockquotes work.
-			const sanitized = sanitize(content).replace(/&gt;/g, '>');
+			const sanitized = sanitize(content, {
+				allowedTags: [],
+				allowedAttributes: {},
+			}).replace(/&gt;/g, '>');
 			const markdowned = marked(sanitized, {
 				breaks: true,
 			});

@@ -11,6 +11,9 @@
   "Accounts": {
     "message": " Accounts"
   },
+  "Actionsmenu": {
+    "message": " Actions menu"
+  },
   "Activate": {
     "message": " Activate"
   },
@@ -25,6 +28,9 @@
   },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
+  },
+  "Closechat": {
+    "message": " Close chat"
   },
   "Comeandsayhionchannel": {
     "message": " Come and say hi on channel"
@@ -125,6 +131,9 @@
   "More": {
     "message": " More..."
   },
+  "Mutechat": {
+    "message": " Mute chat"
+  },
   "Name": {
     "message": " Name"
   },
@@ -167,9 +176,6 @@
   "Reload": {
     "message": " Reload"
   },
-  "Remove": {
-    "message": " Remove"
-  },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
   },
@@ -211,6 +217,9 @@
   },
   "Topic": {
     "message": " Topic"
+  },
+  "Unmutechat": {
+    "message": " Unmute chat"
   },
   "Upload": {
     "message": " Upload"

@@ -44,6 +44,8 @@ export function getChatURL(topic) {
 	return '/chat/' + topic.slice(1);
 }
 
+export const isWhisper = message => !!message?.topic?.startsWith('/whisper/');
+
 export function getChatName(topic) {
 	if (!topic) {
 		return null;
@@ -84,8 +86,7 @@ export const parseAddr = addr => {
 };
 
 export const getAddressFromAddr = theAddr => {
-	// eslint-disable-next-line
-	const [_, pubkey] = parseAddr(theAddr);
+	const [, pubkey] = parseAddr(theAddr);
 	const nknAddress = protocol.programHashStringToAddress(
 		protocol.hexStringToProgramHash(
 			protocol.publicKeyToSignatureRedeem(pubkey),
@@ -96,12 +97,6 @@ export const getAddressFromAddr = theAddr => {
 
 export const genPrivateChatName = recipient => `/whisper/${recipient}`;
 export const getWhisperURL = recipient => `/whisper/${recipient}`;
-
-export const log = (...args) => {
-	if (localStorage.getItem('debug')) {
-		console.log('d-chat:', args);
-	}
-};
 
 export const isReaction = message =>
 	message.contentType === 'reaction' || message.contentType === 'nkn/tip';
@@ -125,3 +120,5 @@ export const DCHAT_PUBLIC_TOPICS = '__dchat';
 export const ONE_SATOSHI = 0.00000001;
 
 export const IS_EXTENSION = APP_TARGET === 'EXT';
+
+export const isAck = reaction => reaction?.content === '✔';

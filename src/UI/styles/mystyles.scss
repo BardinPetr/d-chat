@@ -97,13 +97,6 @@ $content-pre-padding: 0.5em 1em;
 		max-width: 100%;
 	}
 }
-.x-reactions {
-	margin-top: 0.2rem;
-	.button {
-		width: 2.6rem;
-		height: 1.2rem;
-	}
-}
 .x-is-hover {
 	visibility: hidden;
 }
@@ -155,6 +148,19 @@ $content-pre-padding: 0.5em 1em;
 		.x-media-container {
 			height: 300px;
 		}
+		.x-reactions {
+			margin-top: 0.2rem;
+			.button {
+				width: 2.6rem;
+				height: 1.2rem;
+			}
+			.x-is-ack {
+				position: absolute;
+				right: 0.3rem;
+				bottom: 0;
+				color: $grey;
+			}
+		}
 	}
 
 	.message-header {
@@ -178,10 +184,10 @@ $content-pre-padding: 0.5em 1em;
 	.message-body {
 		border: 0;
 		padding: 0 0.3rem;
+		padding-right: 1rem;
 
 		.content {
 			white-space: initial;
-
 			pre, code {
 				background-color: $grey-lighter;
 			}
@@ -273,4 +279,14 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 }
 .x-is-padded-sides {
 	padding: 0 0.1rem;
+}
+.x-dot-dot-dot {
+	right: 3rem;
+	top: 1rem;
+	background-color: white;
+	border: 1px solid black;
+	position: absolute;
+}
+.x-navbar-buttons {
+	flex: 1;
 }

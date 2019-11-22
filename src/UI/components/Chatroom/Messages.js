@@ -11,6 +11,7 @@ import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { debounce } from 'debounce';
 import { isNotice } from 'Approot/misc/util';
+import 'highlight.js/styles/github.css';
 
 // 1min 30seconds seconds.
 const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
@@ -58,7 +59,9 @@ const Messages = ({
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
-	}, [totalMessagesCount, messages[0]?.topic, Object.keys(reactions).length]);
+		// XXX Passing entire `reactions` object here. Good/bad idea?
+		// Could pass messages[0] as well, instead of totalMessagesCount & topic.
+	}, [totalMessagesCount, messages[0]?.topic, reactions]);
 
 	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
 	let didNotMarkYet = true;
@@ -138,7 +141,7 @@ const Messages = ({
 				loader={<div className="is-loader" key={0} />}
 				initialLoad={false}
 				useWindow={false}
-				threshold={100}
+				threshold={200}
 				className="x-is-fullwidth"
 			>
 				<div className="x-chat">{messageList}</div>

@@ -86,6 +86,7 @@ class NKN extends nkn {
 
 		const fee = options.fee || 0;
 
+		// TODO add better error handling for timeouts; should retry a few times.
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
@@ -214,6 +215,10 @@ class NKN extends nkn {
 		return JSON.stringify(this.neutered());
 	}
 
+	/**
+	 * Returns a version that is fine to store, -
+	 * it contains no sensitive information.
+	 */
 	neutered = () => {
 		const w = JSON.parse(this.wallet.toJSON());
 		w.address = w.Address;

@@ -1,5 +1,28 @@
 import React from 'react';
 import classnames from 'classnames';
+import { isAck } from 'Approot/misc/util';
+
+const Reaction = ({ reaction, addReaction }) => (
+	<button
+		title={reaction._title.slice(0, 100)}
+		className={classnames('button x-has-opacity-1', {
+			'is-primary': reaction._haveReacted,
+			'button': !reaction._isAck,
+		})}
+		disabled={reaction._haveReacted}
+		onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
+		type="button"
+	>
+		<span>
+			{reaction.content}
+		</span>
+		<span className="x-is-padding-left">{reaction._count}</span>
+	</button>
+);
+
+const Ack = () => (
+	<div className="x-is-ack has-text-grey">✔</div>
+);
 
 const Reactions = ({ reactions, addReaction, myAddr }) => {
 	const countedReactions = reactions.reduce((acc, reaction) => {
@@ -19,6 +42,7 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 
 		return acc.concat({
 			...reaction,
+			_isAck: isAck(reaction),
 			_haveReacted: haveReacted,
 			_count: 1,
 			_title: `${reaction.username}.${reaction.pubKey?.slice(0, 8)}`
@@ -27,22 +51,10 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 
 	return (
 		<div className="buttons are-small x-are-very-rounded x-reactions">
-			{countedReactions.map((reaction, idx) => (
-				<button
-					title={reaction._title.slice(0, 100)}
-					className={classnames('button x-has-opacity-1', {
-						'is-primary': reaction._haveReacted,
-					})}
-					disabled={reaction._haveReacted}
-					onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
-					key={idx}
-					type="button"
-				>
-					<span>
-						{reaction.content}
-					</span>
-					<span className="x-is-padding-left">{reaction._count}</span>
-				</button>
+			{countedReactions.map((reaction, idx) => reaction._isAck ? (
+				<Ack key={idx} />
+			) : (
+				<Reaction reaction={reaction} addReaction={addReaction} key={idx} />
 			))}
 		</div>
 	);

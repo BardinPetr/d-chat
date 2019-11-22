@@ -1,3 +1,13 @@
+/**
+ * Handles swapping between wallets, -
+ * producing wallet details that can be stored, -
+ * and parses incoming messages as well as decides what to do with them.
+ *
+ * All in all this thing is quite useless. Changing wallets after login is -
+ * not that UX friendly. Instead, should give a dropdown of clients -
+ * on login screen. 'Import wallet' button there would make better sense -
+ * there, too.
+ */
 import { PayloadType } from 'nkn-client';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN from 'Approot/workers/nkn/nkn';
@@ -12,8 +22,10 @@ import {
 
 function addNKNListeners (client) {
 
-	client.on('message', async (...args) => {
+	client.on('message', (...args) => {
 		handleIncomingMessage(...args);
+		// Do not send ack-messages.
+		return false;
 	});
 
 	client.on('connect', async () => {
@@ -33,6 +45,16 @@ async function handleIncomingMessage(src, payload, payloadType) {
 	}
 }
 
+/**
+ * #instance is the active client.
+ * Only one client is active at a time, otherwise -
+ * messages would come flooding in as duplicates.
+ *
+ * #clients is list of clients, loaded from extension storage at first, -
+ * and stored there.
+ *
+ * There is a bug where changing client name doesn't reflect in status.
+ */
 class NKNHandler {
 	// Static private.
 	static #instance;
