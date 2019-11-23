@@ -28,6 +28,9 @@ import uuidv4 from 'uuid/v4';
  * the media is sent with `content: "![](base64datastring)".`
  * Reactions are `contentType: 'reaction'` and include `targetID`.
  *
+ * Whispers had a field: `isPrivate: true` at some point, not sure why any more.
+ * d-chat still adds it in `nkn/nkn.js: sendMessage`.
+ *
  * There is also a contentType: 'dchat/subscribe', that is used when announcing -
  * joining the chat, and 'nkn/tip', that is used in tips.
  *
@@ -48,12 +51,13 @@ class Message {
 		this.topic = message.topic;
 		this.timestamp = message.timestamp || new Date().toUTCString();
 
-		// This was used in tracking transactions, but that feature is nonsense.
+		// This was used in tracking transactions, but that feature was nonsense,
+		// and only implemented because transactions weren't free at one point.
 		this.transactionID = message.transactionID;
+		this.value = message.value;
 		// Another message's ID.
 		// Useful for reactions, tips, etc. Anything you use on a specific message.
 		this.targetID = message.targetID;
-		this.value = message.value;
 		if (message.timestamp) {
 			this.ping = now - new Date(this.timestamp).getTime();
 		} else {
