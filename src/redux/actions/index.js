@@ -1,9 +1,13 @@
+/**
+ * Contains almost all actions.
+ */
 import {
 	genPrivateChatName,
 	getChatName,
 	getWhisperRecipient,
 } from 'Approot/misc/util';
 
+// So that next time you open popup, it continues where you left off.
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
 	payload: {
@@ -15,6 +19,7 @@ export const logout = () => ({
 	type: 'LOGOUT_ALIAS',
 });
 
+// So that next time you open popup, it continues where you left off.
 export const saveDraft = text => ({
 	type: 'SAVE_DRAFT',
 	payload: {
@@ -26,6 +31,8 @@ export const connected = () => ({
 	type: 'CONNECTED',
 });
 
+// Whispers/topics use nkn.send/publish respectively, so it's probably -
+// not a bad idea to separate them at action level.
 export const sendPrivateMessage = message => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
@@ -55,6 +62,7 @@ export const setSubscribers = (topic, subscribers) => ({
 export const enterPrivateChat = recipient =>
 	createChat(genPrivateChatName(recipient));
 
+// Join chat dispatches createChat and subscribeToChat.
 export const joinChat = topic => ({
 	type: 'JOIN_CHAT_ALIAS',
 	payload: {
@@ -92,6 +100,7 @@ export const publishMessage = message => ({
 	},
 });
 
+// Used in marking message-received.
 export const modifyMessage = (topic, id, modifiedMessage) => ({
 	type: 'chat/MODIFY_MESSAGE',
 	payload: {
@@ -133,6 +142,8 @@ export const markUnread = (topic, message) => ({
 	},
 });
 
+// Options is { fee: 0, metadata: obj? }.
+// Metadata exists when adding topic to public topics list.
 export const subscribeToChat = (topic, options = {}) => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
@@ -141,6 +152,7 @@ export const subscribeToChat = (topic, options = {}) => ({
 	},
 });
 
+// Removes chat from the sidebar list by deleting chatSettings[topic].
 export const removeChat = topic => ({
 	type: 'chat/REMOVE',
 	payload: {
@@ -148,6 +160,7 @@ export const removeChat = topic => ({
 	},
 });
 
+// Get everyone's subscription metadata.
 export const fetchSubscriptionInfos = topic => ({
 	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',
 	payload: {

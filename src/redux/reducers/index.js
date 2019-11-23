@@ -168,6 +168,8 @@ const draftMessage = (state = '', action) => {
  *
  * Have one type of action type like `chat/SET_OPTION` and derive actions from that,
  * or, like currently, have a distinct action type for each?
+ *
+ * TODO: chat/REMOVE needs to be changed. Mute chat -> remove it -> it is unmuted.
  */
 const chatSettings = (state = {}, action) => {
 	let newState, initial;
