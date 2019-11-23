@@ -1,6 +1,16 @@
 import shasum from 'shasum';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
 
+export const isWhisperTopic = topic => !!topic?.startsWith('/whisper/');
+
+/**
+ * Extracts the whisper recipient from whisper topic.
+ */
+export const getWhisperRecipient = topic =>
+	isWhisperTopic(topic) ?
+		topic.slice('/whisper/'.length) :
+		topic;
+
 function unleadingHashIt(str) {
 	return str.replace(/^#*/, '');
 }
@@ -22,17 +32,14 @@ export function getChatDisplayName(topic) {
 	if (!topic) {
 		return '';
 	}
-	if (topic.startsWith('/whisper/')) {
-		return topic.slice('/whisper/'.length);
+	if (isWhisperTopic(topic)) {
+		return getWhisperRecipient(topic);
 	}
 	return leadingHashIt(String(topic));
 }
 
 export function getChatURL(topic) {
-	if (!topic) {
-		return '';
-	}
-	if (topic.startsWith('/whisper/')) {
+	if (isWhisperTopic(topic)) {
 		return topic;
 	}
 
@@ -44,13 +51,13 @@ export function getChatURL(topic) {
 	return '/chat/' + topic.slice(1);
 }
 
-export const isWhisper = message => !!message?.topic?.startsWith('/whisper/');
+export const isWhisper = message => isWhisperTopic(message.topic);
 
 export function getChatName(topic) {
 	if (!topic) {
 		return null;
 	}
-	if (topic.startsWith('/whisper/')) {
+	if (isWhisperTopic(topic)) {
 		return topic;
 	}
 	topic = unleadingHashIt(String(topic));
@@ -60,17 +67,11 @@ export function getChatName(topic) {
 	return topic;
 }
 
-export const formatAddr = addr => {
-	const lastDotPosition = addr.lastIndexOf('.');
-	let formattedAddr = '';
-	if (lastDotPosition !== -1) {
-		formattedAddr = addr.substring(0, lastDotPosition + 7);
-	} else {
-		formattedAddr = addr.substring(0, 6);
-	}
-	return formattedAddr;
-};
-
+/**
+ * Parses an NKN address (ident.pubkey).
+ *
+ * @return Array[formattedAddr, pubKey] Identifier or blank, and public key.
+ */
 export const parseAddr = addr => {
 	if (!addr) {
 		return ['', ''];
@@ -85,6 +86,28 @@ export const parseAddr = addr => {
 	return [formattedAddr, pubKey];
 };
 
+/**
+ * Formats an address for short-form displaying.
+ */
+export const formatAddr = addr => {
+	if (!addr) {
+		return false;
+	}
+	let [name, pubkey] = parseAddr(addr);
+
+	pubkey = pubkey.slice(0, 8);
+	if (name) {
+		return [name, pubkey].join('.');
+	} else {
+		return pubkey;
+	}
+};
+
+/**
+ * Finds NKNXyzfsd wallet address for nkn addr (ident.pubkey).
+ *
+ * @return String nknAddress.
+ */
 export const getAddressFromAddr = theAddr => {
 	const [, pubkey] = parseAddr(theAddr);
 	const nknAddress = protocol.programHashStringToAddress(
@@ -95,11 +118,10 @@ export const getAddressFromAddr = theAddr => {
 	return nknAddress;
 };
 
-export const genPrivateChatName = recipient => `/whisper/${recipient}`;
-export const getWhisperURL = recipient => `/whisper/${recipient}`;
-
-export const isReaction = message =>
-	message.contentType === 'reaction' || message.contentType === 'nkn/tip';
+// 2 of the same, I think the naming makes sense...?
+export const getWhisperURL = recipient =>
+	isWhisperTopic(recipient) ? recipient : `/whisper/${recipient}`;
+export const genPrivateChatName = getWhisperURL;
 
 export const importWallet = file => {
 	return new Promise((resolve, reject) => {
@@ -112,7 +134,7 @@ export const importWallet = file => {
 	});
 };
 
-export const isNotice = msg => ['dchat/subscribe'].includes(msg.contentType);
+export const isNotice = msg => ['dchat/subscribe', 'nkn/tip'].includes(msg.contentType);
 
 // This is the topic for the list of public topics.
 export const DCHAT_PUBLIC_TOPICS = '__dchat';

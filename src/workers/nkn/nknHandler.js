@@ -13,10 +13,9 @@ import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN from 'Approot/workers/nkn/nkn';
 import FakeNKN from 'Approot/workers/nkn/FakeNKN';
 import nknWallet from 'nkn-wallet';
-import { createNewClient } from 'Approot/redux/actions/client';
+import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import {
 	connected,
-	getBalance,
 	receiveMessage,
 } from 'Approot/redux/actions';
 

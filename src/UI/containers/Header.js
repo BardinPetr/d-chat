@@ -13,7 +13,7 @@ import SubscriberList from 'Approot/UI/containers/SubscriberList';
 import Logout from 'Approot/UI/containers/Logout';
 import DotDotDot from 'Approot/UI/components/Chatroom/HeaderDotDotDotBtn';
 
-import { setChatOptions, removeChat } from 'Approot/redux/actions';
+import { muteChat, removeChat } from 'Approot/redux/actions';
 
 class Header extends React.Component {
 
@@ -96,10 +96,8 @@ class Header extends React.Component {
 						{topic && (
 							<DotDotDot>
 								<li><a
-									onClick={() => 
-										dispatch(setChatOptions(topic, {
-											muted: !chatSettings.muted,
-										}))
+									onClick={() =>
+										dispatch(muteChat(topic, !chatSettings.muted))
 									}
 								>
 									{chatSettings.muted ? __('Unmute chat') : __('Mute chat')}

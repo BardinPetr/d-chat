@@ -1,7 +1,8 @@
 /**
  * Contains messages list + submit box.
  *
- * Note about lazy textarea: refs will mess it up.
+ * Note about lazy textarea: refs will mess it up and it doesn't make that -
+ * much sense in the first place.
  */
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
@@ -100,9 +101,8 @@ const Chatroom = ({
 			content: inputValue,
 			contentType: 'text',
 			// About transmitting the hashed topic: that will make UI between different apps bad.
-			// One app will get messages to "topichash" and have "hash -> topic clearname" map interanally,
-			// But other apps will not have the mapping, and will have to have something to work around that.
-			// Maybe do it anyways? Maybe it is worth it privacy-wise.?
+			// One app will get messages to "topichash" and have "hash -> topic clearname" map interanally, -
+			// but other apps will not have the mapping, and so it will break interop.
 			topic,
 		};
 

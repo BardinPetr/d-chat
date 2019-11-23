@@ -1,5 +1,7 @@
 /**
  * Displays a chat message.
+ *
+ * Maybe remove the message-not-confirmed, and use same style as whispers.
  */
 
 import React from 'react';
@@ -87,7 +89,6 @@ class Message extends React.PureComponent {
 					<div className="x-toolbar">
 						<Toolbar
 							id={message.id}
-							topic={topic}
 							addr={message.addr}
 							topic={topic}
 							addReaction={content =>

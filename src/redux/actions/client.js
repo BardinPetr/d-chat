@@ -1,5 +1,5 @@
 /**
- * Contains actions for /wallets/*
+ * Contains actions for /wallets/* and rest of nkn/ family.
  */
 
 export const switchedToClient = (address) => ({
@@ -64,4 +64,32 @@ export const importWalletSeed = ({walletSeed, username}) => ({
 
 export const deactivateClients = () => ({
 	type: 'nkn/DEACTIVATE_CLIENTS',
+});
+
+export const newTransaction = ({
+	targetID,
+	content,
+	topic,
+	to,
+	value,
+	contentType,
+	...rest
+}) => ({
+	type: 'nkn/NEW_TRANSACTION_ALIAS',
+	payload: {
+		value: value * 10 ** -8,
+		to,
+		topic,
+		contentType,
+		content,
+		targetID,
+		...rest,
+	},
+});
+
+export const getBalance = address => ({
+	type: 'nkn/GET_BALANCE_ALIAS',
+	payload: {
+		address,
+	},
 });

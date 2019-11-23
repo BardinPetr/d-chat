@@ -1,7 +1,12 @@
 import NKN from 'Approot/workers/nkn/nknHandler';
 import OutgoingMessage from 'Approot/workers/nkn/OutgoingMessage';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
-import { getAddressFromAddr, genPrivateChatName } from 'Approot/misc/util';
+import {
+	getAddressFromAddr,
+	genPrivateChatName,
+	isWhisper,
+	isWhisperTopic,
+} from 'Approot/misc/util';
 import {
 	setLoginStatus,
 	receiveMessage,
@@ -69,11 +74,13 @@ onmessage = async ({ data: action }) => {
 		case 'PUBLISH_MESSAGE_ALIAS':
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.publishMessage(payload.topic, message);
-			// Receive it locally.
+
+			// Receive it locally and overwrite id so, when we -
+			// receive it again, it will be ignored.
 			data = new IncomingMessage(payload.message);
-			// Overwrite id so when we receive it again, it will be ignored.
 			data.id = message.id;
 			data.from('me');
+
 			// Will display message as greyed out. Removed once it is received.
 			data.isNotConfirmed = true;
 			postMessage(receiveMessage(data));
@@ -83,58 +90,58 @@ onmessage = async ({ data: action }) => {
 			// Send it out.
 			message = new OutgoingMessage(payload.message);
 			NKN.instance.sendMessage(payload.recipient, message);
+
 			// Receive it locally.
 			data = new IncomingMessage(payload.message);
 			data.id = message.id;
 			data = data.from('me', {
-				toChat: genPrivateChatName(payload.recipient),
+				overrideTopic: genPrivateChatName(payload.recipient),
 			});
 			postMessage(receiveMessage(data));
 			break;
 
 		case 'nkn/NEW_TRANSACTION_ALIAS':
-			NKN.instance.wallet
-				.transferTo(getAddressFromAddr(payload.to), payload.value)
-				.then(() => {
-					const message = new OutgoingMessage({
-						contentType: 'nkn/tip',
-						value: payload.value,
-						content: payload.content,
-						topic: payload.topic,
-						isPrivate: true,
-					});
+			await NKN.instance.wallet
+				.transferTo(getAddressFromAddr(payload.to), payload.value);
 
-					NKN.instance.sendMessage(payload.to, message);
+			topic = isWhisperTopic(payload.topic)
+				? undefined
+				: topic;
 
-					const incMessage = new IncomingMessage({
-						contentType: 'nkn/tip',
-						value: payload.value,
-						content: `Tipped ${payload.to} ${payload.value?.toFixed?.(8)} NKN.`,
-						isMe: true,
-						topic: payload.topic,
-						isPrivate: true,
-					});
-					postMessage(receiveMessage(incMessage));
-				})
-				.catch(console.error);
+			message = new OutgoingMessage({
+				contentType: 'nkn/tip',
+				value: payload.value,
+				content: payload.content,
+				topic,
+			});
+
+			if (isWhisper(message)) {
+				NKN.instance.sendMessage(payload.to, message);
+			} else {
+				NKN.instance.publishMessage(topic, message);
+			}
+
+			message = new IncomingMessage({
+				...message,
+			}).from('me');
+			postMessage(receiveMessage(message));
 			break;
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
-			NKN.instance
+			await NKN.instance
 				.subscribe(topic, {
 					metadata: action.payload.options.metadata,
 					fee: action.payload.options.fee,
-				})
-				.then(() => {
-					data = new OutgoingMessage({
-						contentType: 'dchat/subscribe',
-						topic,
-						// No i18n here.
-						content: 'Joined channel.',
-					});
-					NKN.instance.publishMessage(topic, data);
-				}).catch(() => {});
+				});
+
+			data = new OutgoingMessage({
+				contentType: 'dchat/subscribe',
+				topic,
+				// No i18n here.
+				content: 'Joined channel.',
+			});
+			NKN.instance.publishMessage(topic, data);
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':

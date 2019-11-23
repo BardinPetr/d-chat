@@ -1,16 +1,13 @@
-import { genPrivateChatName, getChatName } from 'Approot/misc/util';
+import {
+	genPrivateChatName,
+	getChatName,
+	getWhisperRecipient,
+} from 'Approot/misc/util';
 
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
 	payload: {
 		to,
-	},
-});
-
-export const getBalance = address => ({
-	type: 'nkn/GET_BALANCE_ALIAS',
-	payload: {
-		address,
 	},
 });
 
@@ -32,15 +29,10 @@ export const connected = () => ({
 export const sendPrivateMessage = message => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
-		recipient:
-			message.topic.startsWith('/whisper/')
-				? message.topic.slice('/whisper/'.length)
-				: message.topic,
+		recipient: getWhisperRecipient(message.topic),
 		message: {
 			...message,
 			topic: undefined,
-			isPrivate: true,
-			isWhisper: true,
 		},
 	},
 });
@@ -141,27 +133,6 @@ export const markUnread = (topic, message) => ({
 	},
 });
 
-export const newTransaction = ({
-	targetID,
-	content,
-	topic,
-	to,
-	value,
-	contentType,
-	...rest
-}) => ({
-	type: 'nkn/NEW_TRANSACTION_ALIAS',
-	payload: {
-		value: value * 10 ** -8,
-		to,
-		topic,
-		contentType,
-		content,
-		targetID,
-		...rest,
-	},
-});
-
 export const subscribeToChat = (topic, options = {}) => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
@@ -200,10 +171,10 @@ export const removeMessageById = (topic, id) => ({
 	},
 });
 
-export const setChatOptions = (topic, options) => ({
-	type: 'chat/SET_OPTIONS',
+export const muteChat = (topic, muted) => ({
+	type: 'chat/SET_CHAT_MUTE',
 	payload: {
 		topic,
-		options,
+		muted,
 	},
 });

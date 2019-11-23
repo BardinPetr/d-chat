@@ -68,10 +68,7 @@ class IncomingMessage extends Message {
 		this.messageClass = 'IncomingMessage';
 
 		// Heartbeats should not be received as messages.
-		if (
-			['heartbeat', 'background'].includes(this.contentType) ||
-			(!this.topic && !this.isPrivate)
-		) {
+		if (['heartbeat', 'background'].includes(this.contentType)) {
 			this.unreceivable = true;
 		}
 
