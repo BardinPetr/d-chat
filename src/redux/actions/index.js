@@ -85,10 +85,12 @@ export const setLoginStatus = status => ({
 	},
 });
 
-export const login = credentials => ({
+export const login = (credentials, address, seed) => ({
 	type: 'LOGIN_ALIAS',
 	payload: {
 		credentials,
+		seed,
+		address,
 	},
 });
 

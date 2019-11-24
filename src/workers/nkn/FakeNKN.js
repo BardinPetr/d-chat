@@ -3,6 +3,8 @@
  *
  * There is no option for creating an nkn-client without connecting it, so this is to get around that.
  */
+import { getAddrFromAddress } from 'Approot/misc/util';
+
 class FakeNKN {
 	constructor({ wallet, username }) {
 		this.wallet = wallet;
@@ -23,6 +25,27 @@ class FakeNKN {
 	neutered() {
 		return this.stringified;
 	}
+
+	static constructFromString(walletJSONString) {
+		const parsed = JSON.parse(walletJSONString);
+		parsed.address = parsed.Address;
+		const addr = getAddrFromAddress(parsed.Address);
+
+		const fake = {
+			wallet: walletJSONString,
+			identifier: '',
+			addr,
+			address: parsed.Address,
+			stringified: {
+				identifier: '',
+				wallet: parsed,
+				addr,
+			},
+		};
+
+		return fake;
+	}
 }
 
 export default FakeNKN;
+export const clientFromWalletString = FakeNKN.constructFromString;

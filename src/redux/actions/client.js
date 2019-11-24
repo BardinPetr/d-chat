@@ -9,10 +9,10 @@ export const switchedToClient = (address) => ({
 	},
 });
 
-export const switchToClient = (address) => ({
-	type: 'nkn/SWITCH_TO_CLIENT_ALIAS',
+export const switchToClient = (wallet) => ({
+	type: 'nkn/SWITCH_TO_CLIENT',
 	payload: {
-		address,
+		wallet,
 	},
 });
 
@@ -23,12 +23,10 @@ export const createNewClient = (client) => ({
 	},
 });
 
-export const importWallet = ({walletJSON, password, username}) => ({
+export const importWallet = (walletJSON) => ({
 	type: 'nkn/IMPORT_WALLET_ALIAS',
 	payload: {
 		walletJSON,
-		password,
-		username,
 	},
 });
 
@@ -64,6 +62,13 @@ export const importWalletSeed = ({walletSeed, username}) => ({
 
 export const deactivateClients = () => ({
 	type: 'nkn/DEACTIVATE_CLIENTS',
+});
+
+export const activateClient = (client) => ({
+	type: 'nkn/ACTIVATE_CLIENT',
+	payload: {
+		client,
+	},
 });
 
 export const newTransaction = ({

@@ -2,27 +2,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { parseAddr, formatAddr } from 'Approot/misc/util';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
-import { login, logout } from '../../redux/actions';
-import { deactivateClients } from '../../redux/actions/client';
+import { login } from '../../redux/actions';
+import { deactivateClients } from 'Approot/redux/actions/client';
 import { IS_EXTENSION } from 'Approot/misc/util';
 
 class LoginBox extends React.Component {
 	constructor(props) {
 		super(props);
+		const [username] = parseAddr(props.activeClient.addr);
+
 		this.state = {
-			username: '',
+			username: username || '',
 			password: '',
-			cleared: false,
 			rememberMe: false,
+			showSeedPrompt: false,
+			seed: '',
+			address: props.activeClient.wallet?.Address || '',
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
-		this.clear = this.clear.bind(this);
-
+		this.handleAccountSwitch = this.handleAccountSwitch.bind(this);
 	}
 
 	handleChange(e) {
@@ -35,25 +39,56 @@ class LoginBox extends React.Component {
 
 	handleLoginSubmit(e) {
 		e?.preventDefault();
-		// See notes in reducer.
 		this.props.dispatch(
-			login({
-				username: this.state.username,
-				password: this.state.password,
-				rememberMe: this.state.rememberMe,
-			}),
+			login(
+				{
+					username: this.state.username,
+					password: this.state.password,
+					rememberMe: this.state.rememberMe,
+				},
+				this.state.address,
+				this.state.seed
+			)
 		);
 	}
 
-	clear(e) {
-		e.preventDefault();
-		this.setState({ cleared: true });
-		this.props.dispatch(logout());
-		this.props.dispatch(deactivateClients());
+	handleAccountSwitch(e) {
+		const address = e.target.value;
+		if (address === 'seed') {
+			this.setState({
+				showSeedPrompt: true,
+			});
+		} else {
+			this.setState({
+				showSeedPrompt: false,
+			});
+		}
+		if (address === 'new' || address === 'seed') {
+			this.props.dispatch(deactivateClients());
+			this.setState({
+				address: '',
+				username: '',
+			});
+		} else {
+			const client = this.props.clients.find(c => c.wallet.Address === address);
+			const [username] = parseAddr(client.addr);
+			this.setState({
+				address: address,
+				username,
+			});
+		}
 	}
 
 	render() {
-		const { loggedIn, connecting, error, location } = this.props;
+		const {
+			activeClient,
+			clients,
+			connecting,
+			error,
+			location,
+			loggedIn,
+		} = this.props;
+
 		const redir =
 			location?.search &&
 			new URL(`http://example.org/${location.search}`)?.searchParams?.get(
@@ -89,6 +124,58 @@ class LoginBox extends React.Component {
 										<form className="" onSubmit={this.handleLoginSubmit}>
 											<div className="field">
 												<label className="label">
+													{__('Log in as')}
+												</label>
+												<div className="control level">
+													<span className="select">
+														<select
+															name="client"
+															id="client"
+															defaultValue={activeClient.wallet?.Address || 'new'}
+															onChange={this.handleAccountSwitch}
+														>
+															<option
+																value="new"
+															>
+																-- {__('New wallet')} --
+															</option>
+															{clients.map(client => (
+																<option
+																	key={client.wallet.Address}
+																	value={client.wallet.Address}
+																>
+																	{formatAddr(client.addr)}
+																</option>
+															))}
+															<option
+																value="seed"
+															>
+																-- {__('Import wallet')} --
+															</option>
+														</select>
+													</span>
+												</div>
+											</div>
+											{this.state.showSeedPrompt && (
+												<div className="field">
+													<label className="label">
+														{__('Wallet seed')}
+													</label>
+													<div className="control">
+														<input
+															className="input"
+															type="password"
+															onChange={this.handleChange}
+															name="seed"
+															autoComplete="off"
+															value={this.state.seed}
+														/>
+													</div>
+												</div>
+											)}
+
+											<div className="field">
+												<label className="label">
 													{__('Nickname')}
 												</label>
 												<div className="control">
@@ -98,7 +185,7 @@ class LoginBox extends React.Component {
 														value={this.state.username}
 														onChange={this.handleChange}
 														className="input"
-														placeholder="Username"
+														placeholder="McAfee"
 														pattern="[^\/]*"
 														autoComplete="current-user"
 													/>
@@ -108,7 +195,7 @@ class LoginBox extends React.Component {
 												<label className="label">
 													{__('Password')}
 													<span className="help is-danger is-inline">
-														{error && __('Wrong password.')}
+														{error && ' ' + __('Wrong password.')}
 													</span>
 												</label>
 												<div className="control">
@@ -119,7 +206,7 @@ class LoginBox extends React.Component {
 														onChange={this.handleChange}
 														className="input password"
 														placeholder="Password"
-														autoComplete="current-user"
+														autoComplete="current-password"
 													/>
 												</div>
 											</div>
@@ -148,21 +235,6 @@ class LoginBox extends React.Component {
 												</div>
 											</div>
 										</form>
-										<div style={{ marginTop: '1em' }}>
-											{__('Forgot password?') + ' '}
-											<a
-												style={
-													this.state.cleared
-														? { color: 'gray', cursor: 'auto' }
-														: { color: 'blue', cursor: 'pointer' }
-												}
-												onClick={this.clear}
-											>
-												{this.state.cleared
-													? __('Wallet Deactivated. Log In using any password.')
-													: __('Deactivate wallet')}
-											</a>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -178,6 +250,8 @@ const mapStateToProps = state => ({
 	loggedIn: state.login?.addr != null,
 	connecting: !state.login?.connected,
 	error: state.login?.error,
+	clients: state.clients,
+	activeClient: state.clients.filter(c => c.active)[0] || {},
 });
 
 export default connect(mapStateToProps)(LoginBox);

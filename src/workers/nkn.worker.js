@@ -14,10 +14,8 @@ import {
 	setSubscriptionInfos,
 } from 'Approot/redux/actions';
 import {
-	switchedToClient,
 	setBalance,
-	createNewClient,
-	switchToClient,
+	activateClient,
 } from 'Approot/redux/actions/client';
 
 // Receivin a lot of messages in short time causes UI to lag.
@@ -31,33 +29,16 @@ onmessage = async ({ data: action }) => {
 	let status, client, topic, message, data;
 	// postMessage works like dispatch.
 	switch (action.type) {
-		case 'nkn/SWITCH_TO_CLIENT_ALIAS':
-			client = NKN.activateClient(payload.address);
-			postMessage(switchedToClient(client.wallet.address));
-			break;
-
-		case 'nkn/NEW_CLIENT_ALIAS':
-			client = NKN.createClient(payload.username);
-			postMessage(createNewClient(client.neutered()));
-			postMessage(switchToClient(client.wallet.address));
-			break;
-
-		case 'nkn/IMPORT_WALLETSEED':
-			client = NKN.importClient(payload.walletSeed, payload.username);
-			postMessage(createNewClient(client.neutered()));
-			postMessage(switchToClient(client.wallet.address, payload.username));
-			break;
-
 		case 'LOGIN_ALIAS':
 			try {
-				if (action.meta.clients.length > 0) {
-					// Previously active.
-					client = action.meta.clients.find(c => c.active);
-				}
-				client = NKN.start(
-					{ ...action.payload.credentials, client },
-					action.meta.clients,
-				);
+				client = NKN.start({
+					...action.payload.credentials,
+					wallet: action.payload.wallet,
+					seed: action.payload.seed,
+				});
+				postMessage(activateClient(
+					client.neutered(),
+				));
 				status = { addr: client.addr };
 			} catch (e) {
 				console.log('Failed login.', e);
