@@ -28,9 +28,15 @@ const ChatroomDots = ({ dispatch, topic, chatSettings, }) => (
 	</>
 );
 
-const mapStateToProps = (state, ownProps) => ({
-	chatSettings: state.chatSettings[ownProps.match?.params?.topic] || {},
-	topic: ownProps.match.params.topic,
-});
+const mapStateToProps = (state, ownProps) => {
+	const topic = ownProps.match.params.topic
+		// Whisper
+		|| ownProps.match.url;
+	console.log('topic', topic, ownProps);
+	return ({
+		chatSettings: state.chatSettings[topic] || {},
+		topic: topic,
+	});
+};
 
 export default connect(mapStateToProps)(ChatroomDots);

@@ -169,7 +169,7 @@ const draftMessage = (state = '', action) => {
  * Have one type of action type like `chat/SET_OPTION` and derive actions from that,
  * or, like currently, have a distinct action type for each?
  *
- * TODO: chat/REMOVE needs to be changed. Mute chat -> remove it -> it is unmuted.
+ * TODO "remove chat", which unsubscribes.
  */
 const chatSettings = (state = {}, action) => {
 	let newState, initial;
@@ -177,7 +177,7 @@ const chatSettings = (state = {}, action) => {
 
 	switch (action.type) {
 		case 'chat/REMOVE':
-			initial = {
+			newState = {
 				...state,
 				[topic]: {
 					...state[topic],
@@ -185,8 +185,6 @@ const chatSettings = (state = {}, action) => {
 					hidden: true,
 				}
 			};
-			delete initial[topic];
-			newState = initial;
 			configs.chatSettings = newState;
 			break;
 
@@ -197,6 +195,8 @@ const chatSettings = (state = {}, action) => {
 				[topic]: {
 					...state[topic],
 					unread: [...initial, action.payload.message.id],
+					// New messages bring hidden topics back.
+					hidden: false,
 				},
 			};
 			configs.chatSettings = newState;

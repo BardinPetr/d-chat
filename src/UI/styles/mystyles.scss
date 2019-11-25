@@ -281,8 +281,8 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	padding: 0 0.1rem;
 }
 .x-dot-dot-dot {
-	right: 2.3rem;
-	top: 2rem;
+	right: 0.5rem;
+	top: $navbar-height - 0.4rem;
 	background-color: white;
 	border: 1px solid black;
 	position: absolute;

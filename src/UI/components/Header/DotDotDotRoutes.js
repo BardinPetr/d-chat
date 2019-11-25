@@ -6,12 +6,13 @@ import { Route } from 'react-router-dom';
 import Loader from 'Approot/UI/components/Spinner';
 import DefaultDots from 'Approot/UI/components/Header/DefaultDots';
 
-const LazyChatroom = lazy(() => import('Approot/UI/containers/Header/ChatroomDots'));
+const LazyChatroomDots = lazy(() => import('Approot/UI/containers/Header/ChatroomDots'));
 
 const DotRoutes = () => (
 	<>
 		<Suspense fallback={Loader}>
-			<Route path="/(chat|whisper)/:topic" component={LazyChatroom} />
+			<Route path="/chat/:topic" component={LazyChatroomDots} />
+			<Route path="/whisper/:recipient" component={LazyChatroomDots} />
 		</Suspense>
 		<Route path="/" component={DefaultDots} />
 	</>

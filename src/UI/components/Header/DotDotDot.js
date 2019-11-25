@@ -27,7 +27,7 @@ const DotDotDot = ({ className = '', children, ...props }) => {
 			>
 				<div className="x-dot-dot-dot">
 					<div className="menu">
-						<ul className="menu-list">
+						<ul className="menu-list" onClick={() => setExpanded(false)}>
 							{children}
 						</ul>
 					</div>
