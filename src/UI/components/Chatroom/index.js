@@ -6,6 +6,7 @@
  */
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
+import debounce from 'debounce';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { formatAddr } from 'Approot/misc/util';
@@ -52,7 +53,7 @@ const Chatroom = ({
 	};
 
 	// Also cleared on submit.
-	const _saveDraft = e => saveDraft(e.target.value);
+	const _saveDraft = debounce(e => saveDraft(e.target.value), 500);
 
 	useEffect(() => {
 		getSubs();
@@ -73,10 +74,10 @@ const Chatroom = ({
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
 		*/
-		textarea.current.addEventListener('change', _saveDraft);
+		textarea.current.addEventListener('input', _saveDraft);
 
 		return () => {
-			textarea.current.removeEventListener('change', _saveDraft);
+			textarea.current.removeEventListener('input', _saveDraft);
 		};
 	}, []);
 

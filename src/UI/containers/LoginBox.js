@@ -52,6 +52,11 @@ class LoginBox extends React.Component {
 		);
 	}
 
+	/**
+	 * Switches active account. Otherwise deactivates accounts.
+	 *
+	 * Active account is the account that is logged in.
+	 */
 	handleAccountSwitch(e) {
 		const address = e.target.value;
 		if (address === 'seed') {
@@ -107,7 +112,7 @@ class LoginBox extends React.Component {
 					</LoadingScreen>
 				) : (
 					<div className="hero is-primary is-overlay">
-						<div className="hero-body has-background-primary">
+						<div className="hero-body has-background-primary x-login-box">
 							<h1 className="title has-text-centered is-size-2">
 								{__('Welcome!')}
 							</h1>

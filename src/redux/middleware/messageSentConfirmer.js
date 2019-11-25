@@ -1,3 +1,9 @@
+/**
+ * Makes the messages appear to transition in.
+ *
+ * The private message check-tickers are handled in -
+ * notifier.js middleware by mistake.
+ */
 import { modifyMessage } from 'Approot/redux/actions';
 
 const confirmer = store => next => action => {

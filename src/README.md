@@ -12,7 +12,7 @@ Aliases are there to give access to background-script-only functions which, in o
 
 These aliased actions are in `src/redux/aliases.js`, and they mostly redirect the action into our web worker.
 
-From web worker, another round of actions is dispatched, and these go through middlewares, into the reducers, which update state, which is propagated to d-chat tabs and windows.
+From web worker, another round of actions is dispatched, and these again go through middlewares, this time into the reducers, which update state, which is propagated to d-chat tabs and windows.
 
 ## About -EXT and -WEB in filenames
 
@@ -20,7 +20,9 @@ From web worker, another round of actions is dispatched, and these go through mi
 
 The web version is nice for development, since react/redux devtools don't work in web-exts.
 
-## Structure
+## Folder structure
+
+> UI, workers, misc, and redux folders are the honey.
 
 UI: all the code for UI. Popup and sidebar both use the same code.
 

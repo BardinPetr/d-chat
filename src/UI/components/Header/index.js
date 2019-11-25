@@ -76,7 +76,7 @@ class Header extends React.Component {
 				</div>
 
 				<DotDotDot
-					className="navbar-item x-header-dots button is-primary is-inline-flex is-pulled-right"
+					className="navbar-item x-header-dots button is-primary is-inline-flex"
 					aria-label={__('secondary navigation')}
 					role="navigation"
 				>

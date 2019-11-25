@@ -305,3 +305,9 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 		width: 100%;
 	}
 }
+.rc-table-row {
+	word-break: break-word;
+}
+.x-login-box {
+	padding-bottom: 0;
+}

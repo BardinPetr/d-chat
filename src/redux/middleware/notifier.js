@@ -82,6 +82,7 @@ const notifier = store => next => action => {
 	}
 	next(action);
 
+	// Should've put this thing in messageSentConfirmer instead, huh.
 	function sendAck(toMessage) {
 		const { id, topic, isMe } = toMessage;
 		if (!isMe) {
