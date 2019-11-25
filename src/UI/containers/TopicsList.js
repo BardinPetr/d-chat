@@ -21,6 +21,7 @@ const Element = ({ chat }) => (
 				className={classnames('x-topic-link is-clearfix x-truncate', {
 					'is-active': chat.active,
 					'has-text-black': chat.unread?.length > 0,
+					'has-text-grey': chat.muted,
 				})}
 			>
 				<span>{getChatDisplayName(chat.topic)}</span>
@@ -78,11 +79,13 @@ const mapStateToProps = state => {
 	// Separate whispers and topics.
 	for (const key in state.chatSettings) {
 		if (!state.chatSettings[key].hidden) {
+			const settings = state.chatSettings[key];
 			const element = {
 				topic: key,
-				unread: state.chatSettings[key].unread,
+				unread: settings.unread,
 				active: history.location.pathname === getChatURL(key),
 				lastMessage: state.messages[key]?.[state.messages[key].length - 1]?.timestamp,
+				muted: settings.muted,
 			};
 
 			if (isWhisperTopic(key)) {
