@@ -67,7 +67,7 @@ const notifier = store => next => action => {
 			} else {
 				content = sanitize(content);
 			}
-			if (!state.chatSettings[topic]?.muted && !message.refersToMe) {
+			if (!state.chatSettings[topic]?.muted || message.refersToMe) {
 				createNotification({
 					message: content,
 					title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,

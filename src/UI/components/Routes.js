@@ -1,5 +1,7 @@
 /**
- * Contains main routes. Users are redirected to /login if not logged in and before getting here.
+ * Contained main routes. Users are redirected to /login if not logged in and before getting here.
+ *
+ * Now it just attaches the elements to dom.
  */
 import React from 'react';
 import { createPortal } from 'react-dom';
