@@ -35,14 +35,6 @@ const reactions = (state = {}, action) => {
 			configs.reactions = newState;
 			break;
 
-		case 'chat/REMOVE':
-			newState = {
-				...state,
-				[topic]: {},
-			};
-			configs.reactions = newState;
-			break;
-
 		default:
 			newState = state;
 	}

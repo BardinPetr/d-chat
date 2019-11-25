@@ -23,7 +23,13 @@ import {
 
 const getUnreadMessages = state => {
 	const chats = Object.values(state.chatSettings);
-	return chats.reduce((acc, settings) => acc + (settings.unread?.length || 0), 0);
+	return chats.reduce((acc, settings) => {
+		if (!settings.muted) {
+			return acc + (settings.unread?.length || 0);
+		} else {
+			return acc;
+		}
+	}, 0);
 };
 
 const shouldNotify = message => !(isNotice(message) || message.isMe || message.isSeen);
@@ -53,7 +59,10 @@ const notifier = store => next => action => {
 			}
 			// Only mark unread if chat isn't currently open in popup.
 			w = getPopupURL();
-			if (!w?.includes(message.topic) && shouldNotify(message)) {
+			if (
+				!w?.includes(message.topic)
+				&& shouldNotify(message)
+			) {
 				store.dispatch(markUnread(message.topic, message));
 			}
 			if (isWhisper(message) && !isNotice(message)) {
@@ -72,8 +81,8 @@ const notifier = store => next => action => {
 					message: content,
 					title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,
 				});
+				setBadgeText(getUnreadMessages(state) + 1);
 			}
-			setBadgeText(getUnreadMessages(state) + 1);
 			break;
 
 		case 'chat/MARK_READ':

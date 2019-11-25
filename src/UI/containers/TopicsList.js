@@ -56,6 +56,13 @@ const sorter = (a, b) => {
 		return -1;
 	}
 
+	// Sort muted channels last.
+	if (a.muted && !b.muted) {
+		return 1;
+	} else if (!a.muted && b.muted) {
+		return -1;
+	}
+
 	const latest =
 		new Date(lastMessageA) - new Date(lastMessageB) > 0
 			? -1
