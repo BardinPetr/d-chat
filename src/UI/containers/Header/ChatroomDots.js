@@ -32,7 +32,6 @@ const mapStateToProps = (state, ownProps) => {
 	const topic = ownProps.match.params.topic
 		// Whisper
 		|| ownProps.match.url;
-	console.log('topic', topic, ownProps);
 	return ({
 		chatSettings: state.chatSettings[topic] || {},
 		topic: topic,

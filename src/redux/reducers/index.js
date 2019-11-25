@@ -258,7 +258,7 @@ const chatSettings = (state = {}, action) => {
 				...state,
 				[topic]: {
 					...state[topic],
-					...action.payload.muted,
+					muted: action.payload.muted,
 				},
 			};
 			configs.chatSettings = newState;
