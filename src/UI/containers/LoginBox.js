@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -8,6 +9,16 @@ import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login } from '../../redux/actions';
 import { deactivateClients } from 'Approot/redux/actions/client';
 import { IS_EXTENSION } from 'Approot/misc/util';
+
+const Error = ({ err }) => (
+	<>
+		{err && (
+			err.includes('seed')
+				? __('Invalid seed.')
+				: __('Wrong password.')
+		)}
+	</>
+);
 
 class LoginBox extends React.Component {
 	constructor(props) {
@@ -21,6 +32,7 @@ class LoginBox extends React.Component {
 			showSeedPrompt: false,
 			seed: '',
 			address: props.activeClient.wallet?.Address || '',
+			showError: true,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -30,11 +42,11 @@ class LoginBox extends React.Component {
 	}
 
 	handleChange(e) {
-		this.setState({ [e.target.name]: e.target.value, error: '' });
+		this.setState({ [e.target.name]: e.target.value });
 	}
 
 	handleCheckboxChange(e) {
-		this.setState({ [e.target.name]: e.target.checked, error: '' });
+		this.setState({ [e.target.name]: e.target.checked });
 	}
 
 	handleLoginSubmit(e) {
@@ -50,12 +62,24 @@ class LoginBox extends React.Component {
 				this.state.seed
 			)
 		);
+
+		// Clunky message flash.
+		this.setState({
+			showError: true,
+		}, () => {
+			this.timeout = setTimeout(() => this.setState({
+				showError: false,
+			}), 10);
+		});
+	}
+
+	// Is this somehow autobound?
+	componentWillUnmount() {
+		clearTimeout(this.timeout);
 	}
 
 	/**
-	 * Switches active account. Otherwise deactivates accounts.
-	 *
-	 * Active account is the account that is logged in.
+	 * Account is restored from seed, or 'address' is logged in, or new created.
 	 */
 	handleAccountSwitch(e) {
 		const address = e.target.value;
@@ -171,6 +195,7 @@ class LoginBox extends React.Component {
 															className="input"
 															type="password"
 															onChange={this.handleChange}
+															placeholder={__('Quite a long base58 string')}
 															name="seed"
 															autoComplete="off"
 															value={this.state.seed}
@@ -199,8 +224,10 @@ class LoginBox extends React.Component {
 											<div className="field">
 												<label className="label">
 													{__('Password')}
-													<span className="help is-danger is-inline">
-														{error && ' ' + __('Wrong password.')}
+													<span className={classnames('help is-danger is-inline x-visibility', {
+														'x-is-transparent': !this.state.showError,
+													})}>
+														{' '}<Error err={error} />
 													</span>
 												</label>
 												<div className="control">

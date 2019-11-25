@@ -119,7 +119,7 @@ const login = (state = {}, action) => {
 
 		case 'LOGIN_STATUS':
 			if (action.error) {
-				newState = { error: true };
+				newState = { error: action.error };
 			} else {
 				newState = action.payload;
 			}

@@ -86,6 +86,9 @@
   "Infewwordsexplainwhatyourchannelisabout": {
     "message": " In few words, explain what your channel is about."
   },
+  "Invalidseed": {
+    "message": " Invalid seed."
+  },
   "Joinachatroom": {
     "message": " Join a chatroom"
   },
@@ -157,6 +160,9 @@
   },
   "Publicchatindex": {
     "message": " Public chat index"
+  },
+  "Quitealongbasestring": {
+    "message": " Quite a long base58 string"
   },
   "Reload": {
     "message": " Reload"

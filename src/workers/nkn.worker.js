@@ -42,7 +42,7 @@ onmessage = async ({ data: action }) => {
 				status = { addr: client.addr };
 			} catch (e) {
 				console.log('Failed login.', e);
-				status = { error: true };
+				status = { error: e.message || 'Error' };
 			}
 			postMessage(setLoginStatus(status));
 			break;

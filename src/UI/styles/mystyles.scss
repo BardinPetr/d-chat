@@ -308,3 +308,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .rc-table-row {
 	word-break: break-word;
 }
+.x-is-transparent {
+	opacity: 0;
+	transition: opacity 5000ms;
+}
