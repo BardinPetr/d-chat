@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { matchPath, Link } from 'react-router-dom';
 import classnames from 'classnames';
-import { getChatDisplayName } from '../../misc/util';
+import { getChatDisplayName } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 
@@ -10,10 +9,8 @@ import DchatLogo from 'Approot/UI/components/DchatLogo';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import SubscriberList from 'Approot/UI/containers/SubscriberList';
-import Logout from 'Approot/UI/containers/Logout';
-import DotDotDot from 'Approot/UI/components/Chatroom/HeaderDotDotDotBtn';
-
-import { muteChat, removeChat } from 'Approot/redux/actions';
+import DotDotDot from 'Approot/UI/components/Header/DotDotDot';
+import DotDotDotRoutes from 'Approot/UI/components/Header/DotDotDotRoutes';
 
 class Header extends React.Component {
 
@@ -43,17 +40,19 @@ class Header extends React.Component {
 
 	render() {
 
-		const {
-			chatSettings,
-			dispatch,
-			topic,
-			topicName,
-			isPrivateChat,
-		} = this.props;
+		const path = matchPath(
+			history.location.pathname,
+			{
+				path: ['/chat/:topic', '/whisper/:whisper']
+			}
+		);
+		const topic = path?.params.topic || path?.url;
+		const topicName = getChatDisplayName(topic);
+		const isPrivateChat = topic?.startsWith('/whisper/');
 
 		return (
 			<React.Fragment>
-				<div className="navbar-brand" aria-label="menu navigation" role="navigation">
+				<div className="navbar-brand x-navbar-brand is-inline-flex x-navbar-brand" aria-label={__('menu navigation')} role="navigation">
 					<span className="navbar-item">
 						<figure className="image is-32x32">
 							<DchatLogo white />
@@ -62,7 +61,7 @@ class Header extends React.Component {
 					</span>
 
 					<a
-						className={classnames('navbar-burger burger', {
+						className={classnames('navbar-burger', {
 							'is-active': this.state.active,
 						})}
 						onClick={() => this.setState({ active: !this.state.active, expanded: false })}
@@ -74,8 +73,16 @@ class Header extends React.Component {
 						<span aria-hidden="true"></span>
 						<span aria-hidden="true"></span>
 					</a>
-
 				</div>
+
+				<DotDotDot
+					className="navbar-item x-header-dots button is-primary is-inline-flex"
+					aria-label={__('secondary navigation')}
+					role="navigation"
+				>
+					<DotDotDotRoutes />
+				</DotDotDot>
+
 				<div
 					className={classnames('navbar-menu x-navbar-buttons', {
 						'is-active': this.state.expanded || this.state.active,
@@ -93,27 +100,7 @@ class Header extends React.Component {
 							topic={topic}
 							onClick={() => this.setState({expanded: !this.state.expanded})}
 						/>
-						{topic && (
-							<DotDotDot>
-								<li><a
-									onClick={() =>
-										dispatch(muteChat(topic, !chatSettings.muted))
-									}
-								>
-									{chatSettings.muted ? __('Unmute chat') : __('Mute chat')}
-								</a></li>
-								<li><a
-									onClick={() => {
-										// First navigate out of chat.
-										history.push('/');
-										// Then remove it from list.
-										dispatch(removeChat(topic));
-									}}
-								>
-									{__('Close chat')}
-								</a></li>
-							</DotDotDot>
-						)}
+
 					</div>
 
 					<div className="navbar-start is-hidden-desktop is-hidden-tablet">
@@ -127,25 +114,7 @@ class Header extends React.Component {
 
 						<div className="navbar-item">
 							<p className="menu-label">{__('Whispers')}</p>
-							<TopicsList whispers />
-						</div>
-
-						<div className="navbar-item is-hidden-desktop">
-							<p className="menu-label">
-								{__('Account')}
-							</p>
-							<ul className="menu-list">
-								<li>
-									<Link to="/wallets">
-										{__('Accounts')}
-									</Link>
-								</li>
-								<li>
-									<Logout>
-										{__('Log Out')}
-									</Logout>
-								</li>
-							</ul>
+							<TopicsList showWhispers />
 						</div>
 
 						<div className="navbar-item">
@@ -160,23 +129,4 @@ class Header extends React.Component {
 	}
 }
 
-const mapStateToProps = state => {
-	const path = matchPath(
-		history.location.pathname,
-		{
-			path: ['/chat/:topic', '/whisper/:whisper']
-		}
-	);
-	const topic = path?.params.topic || path?.url;
-	const topicName = getChatDisplayName(topic);
-	const isPrivateChat = topic?.startsWith('/whisper/');
-
-	return ({
-		chatSettings: state.chatSettings[topic],
-		topic,
-		topicName,
-		isPrivateChat,
-	});
-};
-
-export default connect(mapStateToProps)(Header);
+export default Header;

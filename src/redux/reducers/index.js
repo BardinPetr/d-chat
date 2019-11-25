@@ -177,7 +177,14 @@ const chatSettings = (state = {}, action) => {
 
 	switch (action.type) {
 		case 'chat/REMOVE':
-			initial = { ...state };
+			initial = {
+				...state,
+				[topic]: {
+					...state[topic],
+					unread: [],
+					hidden: true,
+				}
+			};
 			delete initial[topic];
 			newState = initial;
 			configs.chatSettings = newState;
@@ -217,6 +224,7 @@ const chatSettings = (state = {}, action) => {
 					subscribers: [],
 					subscribersMeta: [],
 					...state[topic],
+					hidden: false,
 				},
 			};
 			configs.chatSettings = newState;

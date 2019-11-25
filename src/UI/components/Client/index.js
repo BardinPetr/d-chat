@@ -2,16 +2,13 @@ import React from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import ClientInfo from './Info';
 
-const Client = ({ activate, client }) => {
+const Client = ({ client }) => {
 	return (
 		<div className="container box">
 			<ClientInfo client={client} />
 
 			<div style={{ paddingTop: '0.5rem' }}>
 				<div className="buttons are-small">
-					<a className="button" onClick={activate}>
-						{__('Activate')}
-					</a>
 					<a
 						className="button"
 						download={`${client.wallet.Address}.json`}

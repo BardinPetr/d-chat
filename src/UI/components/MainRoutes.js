@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-const LazyWalletRoutes = lazy(() => import('Approot/UI/components/WalletRoutes'));
 const LazyPublicChatroom = lazy(() => import('Approot/UI/containers/Chatroom/Public'));
 const LazyPrivateChatroom = lazy(() => import('Approot/UI/containers/Chatroom/Private'));
 const LazyHome = lazy(() => import('Approot/UI/containers/Home'));
@@ -19,7 +18,6 @@ const MainRoutes = () => (
 			<Route path="/chat/:topic" component={LazyPublicChatroom} />
 			<Route path="/whisper/:recipient" component={LazyPrivateChatroom} />
 			<Route path="/topics" component={LazyTopicInfoList} />
-			<Route path="/wallets" component={LazyWalletRoutes} />
 			<Route path="/" component={LazyHome} />
 		</Switch>
 	</Suspense>
