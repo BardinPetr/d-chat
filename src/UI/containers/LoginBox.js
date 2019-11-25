@@ -112,7 +112,7 @@ class LoginBox extends React.Component {
 					</LoadingScreen>
 				) : (
 					<div className="hero is-primary is-overlay">
-						<div className="hero-body has-background-primary x-login-box">
+						<div className="hero-body has-background-primary">
 							<h1 className="title has-text-centered is-size-2">
 								{__('Welcome!')}
 							</h1>
