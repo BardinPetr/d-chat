@@ -299,5 +299,9 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	flex-grow: 2;
 }
 .x-navbar-brand {
-	width: calc(100% - #{$navbar-height});
+	max-width: calc(100% - #{$navbar-height});
+	position: relative;
+	@media (max-width: $navbar-breakpoint) {
+		width: 100%;
+	}
 }
