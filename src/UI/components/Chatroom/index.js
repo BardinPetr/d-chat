@@ -59,8 +59,12 @@ const Chatroom = ({
 	const { start, stop } = useInterval(getSubs, 25 * 1000);
 	const textarea = useRef();
 	const msg = useRef();
+	// How many messages to display?
+	// If count = 0: display all messages. If count = messages.length: display 0 messages.
+	// By default it displays 25 messages + unread messages.
+	// Scrolling up, extraMessages is incremented, displaying more messages.
 	const count = useMemo(() =>
-		messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length - extraMessages,
+		Math.max(messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length - extraMessages, 0),
 	[
 		topic,
 		extraMessages,
