@@ -80,6 +80,7 @@ const Chatroom = ({
 	useEffect(() => {
 		getSubs();
 		start();
+		setLastReadId(unreadMessages[0]);
 
 		msg.current.setState({
 			value: draft,
@@ -106,8 +107,10 @@ const Chatroom = ({
 
 	const markAllMessagesRead = () => {
 		if (unreadMessages.length > 0) {
+			if (unreadMessages.length < 4) {
+				setLastReadId(null);
+			}
 			markAsRead(topic, unreadMessages);
-			setLastReadId(null);
 		}
 	};
 
