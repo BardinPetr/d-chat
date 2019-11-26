@@ -3,6 +3,8 @@
  *
  * Note about lazy textarea: refs will mess it up and it doesn't make that -
  * much sense in the first place.
+ *
+ * How in the world are callback refs supposed to be done in this?
  */
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
@@ -15,6 +17,22 @@ import Textarea from './Textarea';
 
 const STARTING_MESSAGES_COUNT = 25;
 const mention = addr => '@' + formatAddr(addr);
+const quote = (addr, text) => {
+	if (text) {
+		// > @someone:
+		// > said
+		// > some
+		// > thing.
+		// [blank line]
+		// [cursor]
+		return `> ${mention(addr)}:
+${text.replace(/^/mg, '> ')}
+
+`;
+	} else {
+		return mention(addr);
+	}
+};
 
 /**
  * Consists of existing messages and the text form.
@@ -102,7 +120,8 @@ const Chatroom = ({
 			content: inputValue,
 			contentType: 'text',
 			// About transmitting the hashed topic: that will make UI between different apps bad.
-			// One app will get messages to "topichash" and have "hash -> topic clearname" map interanally, -
+			// One app will get messages to "topichash" and have "hash -> topic clearname" -
+			// map internally, -
 			// but other apps will not have the mapping, and so it will break interop.
 			topic,
 		};
@@ -166,11 +185,15 @@ const Chatroom = ({
 			<Messages
 				totalMessagesCount={messages.length}
 				reactions={reactions}
-				className=""
 				messages={visibleMessages}
 				hasMore={visibleMessages.length < messages.length}
 				loadMore={loadMoreMessages}
-				refer={addr => addToDraftMessage(mention(addr))}
+				refer={(addr, text) => addToDraftMessage(
+					quote(
+						addr,
+						text
+					)
+				)}
 				lastReadId={lastReadId}
 				subs={subs}
 				markAllMessagesRead={markAllMessagesRead}

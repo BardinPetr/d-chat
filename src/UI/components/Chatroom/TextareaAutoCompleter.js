@@ -22,7 +22,7 @@ const TextareaAutoCompleter = forwardRef(
 			{...props}
 			trigger={{
 				':': {
-					dataProvider: async token => emojiIndex.search(token).slice(0, 5),
+					dataProvider: async token => emojiIndex.search(token)?.slice(0, 5) || [],
 					component: AutofillEmojiItem,
 					output: i => _outputCaretEnd({char: i.native}),
 				},

@@ -4,7 +4,7 @@
  * Maybe remove the message-not-confirmed, and use same style as whispers.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 import TimeAgo from './TimeAgo';
@@ -17,25 +17,30 @@ const Nickname = ({
 	username,
 	unsubscribed,
 	pubKey,
-}) => (
-	<span>
-		<span
-			onClick={() => refer(addr)}
-			className={classnames('x-avatar', {
-				'has-text-grey': unsubscribed,
-			})}
-		>
-			<span className="">{username}</span>
-			{username ? '.' : ''}
-			<i className="is-size-7 has-text-weight-normal">
-				{pubKey.slice(0, 8)}
-			</i>{' '}
+}) => {
+	// Use selected text for quoting.
+	const [text, setText] = useState('');
+	return (
+		<span>
+			<span
+				onMouseDown={() => setText(window.getSelection().toString())}
+				onClick={() => refer(addr, text)}
+				className={classnames('x-avatar', {
+					'has-text-grey': unsubscribed,
+				})}
+			>
+				<span className="">{username}</span>
+				{username ? '.' : ''}
+				<i className="is-size-7 has-text-weight-normal">
+					{pubKey.slice(0, 8)}
+				</i>{' '}
+			</span>
+			<span className="has-text-grey is-size-7 x-is-padding-left">
+				<TimeAgo date={timestamp} />
+			</span>
 		</span>
-		<span className="has-text-grey is-size-7 x-is-padding-left">
-			<TimeAgo date={timestamp} />
-		</span>
-	</span>
-);
+	);
+};
 
 class Message extends React.PureComponent {
 	render() {

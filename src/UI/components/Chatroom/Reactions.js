@@ -50,7 +50,7 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 	}, []);
 
 	return (
-		<div className="buttons are-small x-are-very-rounded x-reactions">
+		<div className="x-reactions">
 			{countedReactions.map((reaction, idx) => reaction._isAck ? (
 				<Ack key={idx} />
 			) : (

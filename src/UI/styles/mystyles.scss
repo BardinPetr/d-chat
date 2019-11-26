@@ -105,9 +105,6 @@ $content-pre-padding: 0.5em 1em;
 	font-size: 0.9375rem;
 }
 
-.buttons.x-are-very-rounded .button {
-	border-radius: 25px !important;
-}
 .x-is-align-start {
 	align-items: flex-start !important;
 }
@@ -149,7 +146,6 @@ $content-pre-padding: 0.5em 1em;
 			height: 300px;
 		}
 		.x-reactions {
-			margin-top: 0.2rem;
 			.button {
 				width: 2.6rem;
 				height: 1.2rem;

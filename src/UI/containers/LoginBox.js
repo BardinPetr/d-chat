@@ -80,6 +80,8 @@ class LoginBox extends React.Component {
 
 	/**
 	 * Account is restored from seed, or 'address' is logged in, or new created.
+	 *
+	 * See workers/nkn/nknHandler.js
 	 */
 	handleAccountSwitch(e) {
 		const address = e.target.value;

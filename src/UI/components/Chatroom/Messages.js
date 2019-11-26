@@ -124,7 +124,6 @@ const Messages = ({
 		);
 	}, []);
 
-	// Does it work correctly if the function is created here?
 	const stay = debounce(stayScrolled, 50, true);
 
 	return (
