@@ -30,17 +30,18 @@ import uuidv4 from 'uuid/v4';
  * the media is sent with `content: "![](base64datastring)".`
  * Reactions are `contentType: 'reaction'` and include `targetID`.
  *
- * Whispers have field `isPrivate: true` set so that, -
- * in the future, you can whisper to people inside a topic, -
- * and it would not create a new private chatroom, but just display -
+ * Whispers have field `isPrivate: true` set, so that -
+ * in the future, you can whisper to people inside a topic -
+ * and not create a new private chatroom, but just display -
  * the message in the topic chatroom. It is not used in D-Chat for anything, -
  * and is mostly optional for now.
  * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
  *
  * There is also a contentType: 'dchat/subscribe', that is used when announcing -
- * joining the chat.
+ * joining the chat, and contentType: 'receipt', that is is like reaction without content.
+ * Receipt is used for notifying "message received".
  *
- * For messages that don't want user reaction, use `contentType: 'background'`.
+ * For messages that don't want user reaction, you might use `contentType: 'background'`.
  *
  * Rest of stuff is internal or old stuff, didn't have the presence of mind to underscore them.
  *
@@ -71,13 +72,6 @@ class Message {
 			this.ping = 0;
 		}
 		this.content = message.content;
-
-		// Handling receipts as reactions.
-		if (this.contentType === 'receipt') {
-			this.contentType = 'reaction';
-			// Override content so we don't get any smart stuff.
-			this.content = '✔';
-		}
 	}
 
 	/**
