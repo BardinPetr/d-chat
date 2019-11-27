@@ -60,7 +60,11 @@ export default configs.$loaded.then(() => {
 
 	if ( IS_EXTENSION && credentials ) {
 		passworder.decrypt(password, credentials)
-			.then(creds => store.dispatch(login(creds)));
+			.then(creds => {
+				const activeClient = store.getState().clients.find(c => c.active);
+				const address = activeClient?.wallet.Address;
+				store.dispatch(login(creds, address));
+			});
 	}
 	return store;
 });

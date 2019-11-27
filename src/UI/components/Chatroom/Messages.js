@@ -49,6 +49,8 @@ const Messages = ({
 		inaccuracy: 15,
 	});
 
+	// Add useLayoutEffect(() => {scrollBottom();}, [messages[0]?.topic]) ?
+	// It would always scroll to bottom when you change topic.
 	useLayoutEffect(() => {
 		stayScrolled();
 

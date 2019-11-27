@@ -285,7 +285,7 @@ const mapStateToProps = state => ({
 	connecting: !state.login?.connected,
 	error: state.login?.error,
 	clients: state.clients,
-	activeClient: state.clients.filter(c => c.active)[0] || {},
+	activeClient: state.clients.find(c => c.active) || {},
 });
 
 export default connect(mapStateToProps)(LoginBox);
