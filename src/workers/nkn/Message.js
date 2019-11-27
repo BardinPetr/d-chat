@@ -11,25 +11,31 @@ import uuidv4 from 'uuid/v4';
  *  Specify a unique ID so people can react to certain messages via `targetID`.
  *  `timestamp` from toUTCString.
  *
+ * `targetID` is like "reply to message that has this ID".
+ *
  * Example of a text message that is sent out:
  *
  * ```json
  * {
  *   contentType: 'text',
  *   content: 'some _markdown_ format text',
- *   id: '{123-321-3213-21435tr}', // uuidv4()
+ *   id: '{123-321-3213-21435tr}', // uuidv4(). Do not use uuidv1, because it will create duplicates.
  *   topic: 'topic-name-without-hash',
  *   timestamp: ${new Date().toUTCString()},
  * }
  * ```
  *
- * Topic is omitted in whispers.
+ * Topic is omitted in whispers, and `isPrivate: true` is added.
  * Media messages are the same except `contentType: 'media'`, -
  * the media is sent with `content: "![](base64datastring)".`
  * Reactions are `contentType: 'reaction'` and include `targetID`.
  *
- * Whispers had a field: `isPrivate: true` at some point, not sure why any more.
- * D-Chat still adds it in `nkn/nkn.js: sendMessage`.
+ * Whispers have field `isPrivate: true` set so that, -
+ * in the future, you can whisper to people inside a topic, -
+ * and it would not create a new private chatroom, but just display -
+ * the message in the topic chatroom. It is not used in d-chat for anything, -
+ * and is mostly optional for now.
+ * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
  *
  * There is also a contentType: 'dchat/subscribe', that is used when announcing -
  * joining the chat, and 'nkn/tip', that is used in tips.
