@@ -197,7 +197,7 @@ class LoginBox extends React.Component {
 															className="input"
 															type="password"
 															onChange={this.handleChange}
-															placeholder={__('Quite a long base58 string')}
+															placeholder={__('Quite a long string')}
 															name="seed"
 															autoComplete="off"
 															value={this.state.seed}

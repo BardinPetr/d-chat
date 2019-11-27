@@ -161,8 +161,8 @@
   "Publicchatindex": {
     "message": " Public chat index"
   },
-  "Quitealongbasestring": {
-    "message": " Quite a long base58 string"
+  "Quitealongstring": {
+    "message": " Quite a long string"
   },
   "Reload": {
     "message": " Reload"
