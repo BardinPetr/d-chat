@@ -93,9 +93,11 @@ class Message {
 		}
 
 		// So why is topic set here and not the constructor?
-		// Well, sending whispers, it's to omit topic, rather than to -
-		// use /whisper/recipient_addr at send time.
+		// Well, when sending whispers we want to omit topic, rather than -
+		// using "/whisper/their_addr" at send time.
 		if (this.topic == null) {
+			// Because we can receive a whisper locally, we sometimes -
+			// need to override the topic manually.
 			this.topic = opts.overrideTopic || genPrivateChatName(src);
 		}
 

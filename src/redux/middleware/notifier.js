@@ -101,6 +101,7 @@ const notifier = store => next => action => {
 				targetID: id,
 				content: '✔',
 			}, {
+				// Do not receive an ACK for this one.
 				noReply: true,
 			}));
 		}
