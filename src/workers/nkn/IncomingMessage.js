@@ -72,6 +72,13 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
+		// Handling receipts as reactions.
+		if (this.contentType === 'receipt') {
+			this.contentType = 'reaction';
+			// Override content so we don't get any smart stuff.
+			this.content = '✔';
+		}
+
 		let content = this.content || '';
 		if (this.contentType === 'reaction') {
 			this.content = sanitize(content);
