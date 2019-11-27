@@ -125,8 +125,6 @@ class NKN extends nkn {
 					inPool
 				) {
 					return info;
-				} else if (inPool) {
-					throw 'In mempool';
 				}
 			},
 		);
@@ -151,12 +149,8 @@ class NKN extends nkn {
 		}
 		// For some reason we used to have this.
 		message.isPrivate = true;
-		try {
-			return this.send(to, JSON.stringify(message), options);
-		} catch (e) {
-			console.error('Error when sending', e);
-			throw e;
-		}
+		// Ignore errors.
+		return this.send(to, JSON.stringify(message), options).catch(() => {});
 	};
 
 	getSubs = (topic, options = {}) => {

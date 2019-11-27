@@ -33,7 +33,7 @@ import uuidv4 from 'uuid/v4';
  * Whispers have field `isPrivate: true` set so that, -
  * in the future, you can whisper to people inside a topic, -
  * and it would not create a new private chatroom, but just display -
- * the message in the topic chatroom. It is not used in d-chat for anything, -
+ * the message in the topic chatroom. It is not used in D-Chat for anything, -
  * and is mostly optional for now.
  * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
  *
