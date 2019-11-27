@@ -6,7 +6,7 @@ import Logout from 'Approot/UI/containers/Logout';
 
 const DefaultDots = () => (
 	<Logout>
-		{__('Log Out')}
+		{__('Log out')}
 	</Logout>
 );
 

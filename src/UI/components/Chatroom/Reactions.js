@@ -5,9 +5,8 @@ import { isAck } from 'Approot/misc/util';
 const Reaction = ({ reaction, addReaction }) => (
 	<button
 		title={reaction._title.slice(0, 100)}
-		className={classnames('button x-has-opacity-1', {
+		className={classnames('button x-has-opacity-1 button', {
 			'is-primary': reaction._haveReacted,
-			'button': !reaction._isAck,
 		})}
 		disabled={reaction._haveReacted}
 		onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
@@ -34,6 +33,12 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 
 		const same = acc.findIndex(r => r.content == reaction.content);
 		if (same !== -1) {
+
+			// Only one ack.
+			if (isAck(reaction)) {
+				return acc;
+			}
+
 			acc[same]._count += 1;
 			acc[same]._title += `, ${reaction.username}.${reaction.pubKey?.slice(0, 8)}`;
 			acc[same]._haveReacted = acc[same]._haveReacted || haveReacted;

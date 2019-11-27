@@ -69,7 +69,6 @@ const Messages = ({
 
 		const messageReactions = reactions[message.id];
 		const addReaction = msg =>
-			!messageReactions?.some(r => r.addr === myAddr) &&
 			createReaction({
 				...msg,
 				targetID: message.id,

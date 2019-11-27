@@ -5,13 +5,14 @@ import {
 	getAddressFromAddr,
 	genPrivateChatName,
 	isWhisper,
-	isWhisperTopic,
 } from 'Approot/misc/util';
 import {
 	setLoginStatus,
 	receiveMessage,
 	setSubscribers,
 	setSubscriptionInfos,
+	sendPrivateMessage,
+	publishMessage,
 } from 'Approot/redux/actions';
 import {
 	setBalance,
@@ -81,31 +82,28 @@ onmessage = async ({ data: action }) => {
 			postMessage(receiveMessage(data));
 			break;
 
+		// TODO may want some "insufficient funds" check in place.
 		case 'nkn/NEW_TRANSACTION_ALIAS':
-			await NKN.instance.wallet
-				.transferTo(getAddressFromAddr(payload.to), payload.value);
+			data = await NKN.instance.wallet
+				.transferTo(getAddressFromAddr(payload.recipient), payload.value)
+				.catch(() => {
+					return false;
+				});
 
-			topic = isWhisperTopic(payload.topic)
-				? undefined
-				: topic;
+			if (data) {
+				message = new OutgoingMessage({
+					contentType: 'reaction',
+					content: payload.content,
+					topic: payload.topic,
+					targetID: payload.targetID,
+				});
 
-			message = new OutgoingMessage({
-				contentType: 'nkn/tip',
-				value: payload.value,
-				content: payload.content,
-				topic,
-			});
-
-			if (isWhisper(message)) {
-				NKN.instance.sendMessage(payload.to, message);
-			} else {
-				NKN.instance.publishMessage(topic, message);
+				if (isWhisper(message)) {
+					postMessage(sendPrivateMessage(message));
+				} else {
+					postMessage(publishMessage(message));
+				}
 			}
-
-			message = new IncomingMessage({
-				...message,
-			}).from('me');
-			postMessage(receiveMessage(message));
 			break;
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':

@@ -118,10 +118,11 @@ export const getAddressFromAddr = theAddr => {
 	return nknAddress;
 };
 
-// 2 of the same, I think the naming makes sense...?
+// 3 of the same, I think the naming makes sense...?
 export const getWhisperURL = recipient =>
 	isWhisperTopic(recipient) ? recipient : `/whisper/${recipient}`;
 export const genPrivateChatName = getWhisperURL;
+export const getWhisperTopic = getWhisperURL;
 
 export const importWallet = file => {
 	return new Promise((resolve, reject) => {

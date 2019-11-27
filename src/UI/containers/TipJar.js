@@ -1,26 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions/client';
-import history from 'Approot/UI/history';
-import { matchPath } from 'react-router-dom';
 
-const TipJar = ({ className, value, topic, addr, dispatch, messageID }) => {
+const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => {
 
 	const send = (value) => {
 		if ( !addr ) {
 			return;
 		}
-		const whisper = matchPath(history.location.pathname, {
-			path: '/whisper/:topic',
-		})?.url;
-
+		// A nice way would be to get `.then()` working, and send a regular reaction.
+		// However, with the worker setup, it's not so feasible.
 		dispatch(newTransaction({
-			to: addr,
-			content: `Tipped ${addr} ${value}sats.`,
-			value,
-			topic: whisper ? whisper : topic,
+			recipient: addr,
+			content: '🏴‍☠️',
 			targetID: messageID,
-			contentType: 'nkn/tip',
+			value,
+			topic,
 		}));
 	};
 

@@ -29,22 +29,20 @@ export const activateClient = (client) => ({
 });
 
 export const newTransaction = ({
-	targetID,
 	content,
+	recipient,
+	targetID,
 	topic,
-	to,
 	value,
-	contentType,
 	...rest
 }) => ({
 	type: 'nkn/NEW_TRANSACTION_ALIAS',
 	payload: {
-		value: value * 10 ** -8,
-		to,
-		topic,
-		contentType,
 		content,
+		recipient,
 		targetID,
+		topic,
+		value: value * 10 ** -8,
 		...rest,
 	},
 });
