@@ -127,7 +127,7 @@ class LoginBox extends React.Component {
 			);
 
 		return (
-			<div className="is-overlay">
+			<div className="is-overlay x-is-login-overlay">
 				{loggedIn ? (
 					<LoadingScreen loading={connecting}>
 						<Redirect

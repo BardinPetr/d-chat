@@ -146,9 +146,10 @@ $content-pre-padding: 0.5em 1em;
 		}
 		.x-reactions {
 			.button {
-				width: 2.6rem;
 				height: 1.2rem;
+				box-sizing: content-box;
 				margin: 0 0.1rem;
+				padding: 0.1rem;
 			}
 			.x-is-ack {
 				position: absolute;
@@ -307,4 +308,8 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-is-transparent {
 	opacity: 0;
 	transition: opacity 5000ms;
+}
+.x-is-login-overlay {
+	z-index: 99;
+	overflow-y: scroll;
 }
