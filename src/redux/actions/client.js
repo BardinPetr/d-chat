@@ -1,5 +1,5 @@
 /**
- * Contains actions for /wallets/* and rest of nkn/ family.
+ * Contains actions for `nkn/` family.
  */
 
 export const createNewClient = (client) => ({

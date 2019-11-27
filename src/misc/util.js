@@ -135,6 +135,7 @@ export const importWallet = file => {
 	});
 };
 
+// nkn/tip was used once, but is gone now.
 export const isNotice = msg => ['dchat/subscribe', 'nkn/tip'].includes(msg.contentType);
 
 // This is the topic for the list of public topics.

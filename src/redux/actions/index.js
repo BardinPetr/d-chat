@@ -155,7 +155,7 @@ export const subscribeToChat = (topic, options = {}) => ({
 	},
 });
 
-// Removes chat from the sidebar list by deleting chatSettings[topic].
+// Removes chat from the sidebar list by setting chatSettings[topic].hidden = true.
 export const removeChat = topic => ({
 	type: 'chat/REMOVE',
 	payload: {

@@ -147,7 +147,7 @@ class NKN extends nkn {
 		if (to === this.addr) {
 			return;
 		}
-		// For some reason we used to have this.
+		// Add this every time for now.
 		message.isPrivate = true;
 		// Ignore errors.
 		return this.send(to, JSON.stringify(message), options).catch(() => {});
