@@ -38,7 +38,7 @@ import uuidv4 from 'uuid/v4';
  * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
  *
  * There is also a contentType: 'dchat/subscribe', that is used when announcing -
- * joining the chat, and 'nkn/tip', that is used in tips.
+ * joining the chat.
  *
  * For messages that don't want user reaction, use `contentType: 'background'`.
  *
