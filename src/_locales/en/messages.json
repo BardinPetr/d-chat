@@ -104,11 +104,11 @@
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
-  "LogOut": {
-    "message": " Log Out"
-  },
   "Loginas": {
     "message": " Log in as"
+  },
+  "Logout": {
+    "message": " Log out"
   },
   "LostawalletyouhadinanolderversionofDChat": {
     "message": " Lost a wallet you had in an older version of D-Chat?"
