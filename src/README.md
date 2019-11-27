@@ -1,5 +1,9 @@
 # Src folder
 
+## Message schema
+
+Plenty of comments in `workers/nkn/Message.js`.
+
 ## Redux
 
 The code jumps around a lot, because we are using redux.
