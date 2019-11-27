@@ -297,7 +297,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-navbar-brand {
 	max-width: calc(100% - #{$navbar-height});
 	position: relative;
-	@media (max-width: $navbar-breakpoint) {
+	@media (max-width: $navbar-breakpoint - 1) {
 		width: 100%;
 	}
 }
