@@ -72,7 +72,7 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
-		let content = message.content || '';
+		let content = this.content || '';
 		if (this.contentType === 'reaction') {
 			this.content = sanitize(content);
 		} else {

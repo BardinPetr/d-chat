@@ -4,8 +4,6 @@ class OutgoingMessage extends Message {
 	constructor(message) {
 		super(message);
 
-		this.content = message.content;
-
 		// Let's delete some useless, internal, data.
 		this.isMe = undefined;
 		this.addr = undefined;

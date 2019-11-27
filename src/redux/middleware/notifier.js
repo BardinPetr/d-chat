@@ -99,7 +99,6 @@ const notifier = store => next => action => {
 				contentType: 'receipt',
 				topic,
 				targetID: id,
-				content: '✔',
 			}, {
 				// Do not receive an ACK for this one.
 				noReply: true,

@@ -42,9 +42,6 @@ import uuidv4 from 'uuid/v4';
  */
 class Message {
 
-	/**
-	 * Note to self: `.content` is not set here.
-	 */
 	constructor(message) {
 		const now = new Date().getTime();
 
@@ -67,6 +64,7 @@ class Message {
 		} else {
 			this.ping = 0;
 		}
+		this.content = message.content;
 
 		// Handling receipts as reactions.
 		if (this.contentType === 'receipt') {
