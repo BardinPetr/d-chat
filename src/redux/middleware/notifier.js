@@ -96,10 +96,12 @@ const notifier = store => next => action => {
 		const { id, topic, isMe } = toMessage;
 		if (!isMe) {
 			store.dispatch(sendPrivateMessage({
-				contentType: 'reaction',
+				contentType: 'receipt',
 				topic,
 				targetID: id,
 				content: '✔',
+			}, {
+				noReply: true,
 			}));
 		}
 	}

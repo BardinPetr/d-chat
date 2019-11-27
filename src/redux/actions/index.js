@@ -33,7 +33,7 @@ export const connected = () => ({
 
 // Whispers/topics use nkn.send/publish respectively, so it's probably -
 // not a bad idea to separate them at action level.
-export const sendPrivateMessage = message => ({
+export const sendPrivateMessage = (message, options) => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
 		recipient: getWhisperRecipient(message.topic),
@@ -41,6 +41,7 @@ export const sendPrivateMessage = message => ({
 			...message,
 			topic: undefined,
 		},
+		options,
 	},
 });
 

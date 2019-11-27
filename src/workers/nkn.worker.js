@@ -70,7 +70,7 @@ onmessage = async ({ data: action }) => {
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
 			// Send it out.
 			message = new OutgoingMessage(payload.message);
-			NKN.instance.sendMessage(payload.recipient, message);
+			NKN.instance.sendMessage(payload.recipient, message, payload.options);
 
 			// Receive it locally.
 			data = new IncomingMessage(payload.message);

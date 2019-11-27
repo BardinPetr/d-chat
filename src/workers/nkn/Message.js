@@ -29,7 +29,7 @@ import uuidv4 from 'uuid/v4';
  * Reactions are `contentType: 'reaction'` and include `targetID`.
  *
  * Whispers had a field: `isPrivate: true` at some point, not sure why any more.
- * d-chat still adds it in `nkn/nkn.js: sendMessage`.
+ * D-Chat still adds it in `nkn/nkn.js: sendMessage`.
  *
  * There is also a contentType: 'dchat/subscribe', that is used when announcing -
  * joining the chat, and 'nkn/tip', that is used in tips.
@@ -41,6 +41,10 @@ import uuidv4 from 'uuid/v4';
  * Do not treat messages as trusted content, see `IncomingMessage.js`.
  */
 class Message {
+
+	/**
+	 * Note to self: `.content` is not set here.
+	 */
 	constructor(message) {
 		const now = new Date().getTime();
 
@@ -62,6 +66,13 @@ class Message {
 			this.ping = now - new Date(this.timestamp).getTime();
 		} else {
 			this.ping = 0;
+		}
+
+		// Handling receipts as reactions.
+		if (this.contentType === 'receipt') {
+			this.contentType = 'reaction';
+			// Override content so we don't get any smart stuff.
+			this.content = '✔';
 		}
 	}
 
