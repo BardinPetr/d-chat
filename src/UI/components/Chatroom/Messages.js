@@ -70,6 +70,7 @@ const Messages = ({
 		}
 
 		const messageReactions = reactions[message.id];
+		// TODO fix the toolbar reaction button.
 		const addReaction = msg =>
 			createReaction({
 				...msg,
