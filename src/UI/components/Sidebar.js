@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
-import Logout from 'Approot/UI/containers/Logout';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 
 const Sidebar = () => (
@@ -20,23 +19,7 @@ const Sidebar = () => (
 		<TopicsList />
 
 		<p className="menu-label">{__('Whispers')}</p>
-		<TopicsList whispers />
-
-		<p className="menu-label">
-			{__('Account')}
-		</p>
-		<ul className="menu-list">
-			<li>
-				<Link to="/wallets">
-					{__('Accounts')}
-				</Link>
-			</li>
-			<li>
-				<Logout>
-					{__('Log Out')}
-				</Logout>
-			</li>
-		</ul>
+		<TopicsList showWhispers />
 
 		<Popout />
 

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
+// Going to move reactions completely into indexedDb at some point.
 const reactions = (state = {}, action) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
@@ -34,14 +35,6 @@ const reactions = (state = {}, action) => {
 			configs.reactions = newState;
 			break;
 
-		case 'chat/REMOVE':
-			newState = {
-				...state,
-				[topic]: {},
-			};
-			configs.reactions = newState;
-			break;
-
 		default:
 			newState = state;
 	}
@@ -53,6 +46,8 @@ const reactions = (state = {}, action) => {
  * configs.messages = {...} is an async operation, and so
  * if not keeping the history in memory, we will get bad updates.
  * Then we have to load the history from storage.local all the time, so why not just keep it.
+ *
+ * Will make sense once things are in indexeddb.
  */
 const messages = (state = {}, action) => {
 	let newState, initial;
@@ -89,12 +84,11 @@ const messages = (state = {}, action) => {
 			initial = [...state[topic]] || [];
 			newState = {
 				...state,
-				[topic]: initial.map(ii => {
-					const i = {...ii};
-					if (i.id === action.payload.id) {
+				[topic]: initial.map(message => {
+					if (message.id === action.payload.id) {
 						return action.payload.modifiedMessage;
 					}
-					return i;
+					return message;
 				}),
 			};
 			configs.messages = newState;
@@ -125,7 +119,7 @@ const login = (state = {}, action) => {
 
 		case 'LOGIN_STATUS':
 			if (action.error) {
-				newState = { error: true };
+				newState = { error: action.error };
 			} else {
 				newState = action.payload;
 			}
@@ -163,6 +157,11 @@ const draftMessage = (state = '', action) => {
 
 /**
  * Handles individual chat (topic) settings.
+ *
+ * Have one type of action type like `chat/SET_OPTION` and derive actions from that,
+ * or, like currently, have a distinct action type for each?
+ *
+ * TODO "remove chat", which unsubscribes.
  */
 const chatSettings = (state = {}, action) => {
 	let newState, initial;
@@ -170,9 +169,14 @@ const chatSettings = (state = {}, action) => {
 
 	switch (action.type) {
 		case 'chat/REMOVE':
-			initial = { ...state };
-			delete initial[topic];
-			newState = initial;
+			newState = {
+				...state,
+				[topic]: {
+					...state[topic],
+					unread: [],
+					hidden: true,
+				}
+			};
 			configs.chatSettings = newState;
 			break;
 
@@ -183,6 +187,8 @@ const chatSettings = (state = {}, action) => {
 				[topic]: {
 					...state[topic],
 					unread: [...initial, action.payload.message.id],
+					// New messages bring hidden topics back.
+					hidden: false,
 				},
 			};
 			configs.chatSettings = newState;
@@ -210,6 +216,7 @@ const chatSettings = (state = {}, action) => {
 					subscribers: [],
 					subscribersMeta: [],
 					...state[topic],
+					hidden: false,
 				},
 			};
 			configs.chatSettings = newState;
@@ -238,14 +245,15 @@ const chatSettings = (state = {}, action) => {
 			};
 			break;
 
-		case 'chat/SET_OPTIONS':
+		case 'chat/SET_CHAT_MUTE':
 			newState = {
 				...state,
 				[topic]: {
 					...state[topic],
-					...action.payload.options,
+					muted: action.payload.muted,
 				},
 			};
+			configs.chatSettings = newState;
 			break;
 
 		default:

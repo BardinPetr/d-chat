@@ -1,38 +1,34 @@
 import configs from 'Approot/misc/configs-APP_TARGET';
 
-const clients = (state = {}, action) => {
-	let newState, initial, address;
+function deactivate(clients) {
+	return clients.map(i => ({ ...i, active: false }));
+}
+
+const clients = (state = [], action) => {
+	let newState, newClient, address, target;
 	switch (action.type) {
 		case 'nkn/DEACTIVATE_CLIENTS':
-			newState = state.map(c => ({ ...c, active: false }));
+			newState = deactivate(state);
 			break;
 
-		case 'nkn/SWITCHED_TO_CLIENT':
-			address = action.payload.address;
-			newState = state.map(c => {
-				let client = {...c};
-				const isTarget = (client.wallet.Address === address);
-				client.active = isTarget;
-				if (isTarget) {
-					client = {
-						...client,
-						...action.payload.client,
-						active: true,
-					};
-				}
-				return client;
-			});
-			configs.clientsMeta = newState;
-			break;
-
-		case 'nkn/CREATE_NEW_CLIENT':
-			initial = {
-				...action.payload.client,
-				createdAt: Date.now(),
-				active: true,
-			};
-			newState = state.map(i => ({ ...i, active: false }));
-			newState = [...newState, initial];
+		case 'nkn/ACTIVATE_CLIENT':
+			address = action.payload.client.wallet.Address;
+			newState = deactivate(state);
+			target = newState.findIndex(client => client.wallet.Address === address);
+			if (target === -1) {
+				newClient = {
+					...action.payload.client,
+					createdAt: Date.now(),
+					active: true,
+				};
+				newState = [...newState, newClient];
+			} else {
+				newState[target] = {
+					...newState[target],
+					...action.payload.client,
+					active: true,
+				};
+			}
 			configs.clientsMeta = newState;
 			break;
 

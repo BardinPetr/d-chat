@@ -1,10 +1,14 @@
 /**
  * Contains messages list + submit box.
  *
- * Note about lazy textarea: refs will mess it up.
+ * Note about lazy textarea: refs will mess it up and it doesn't make that -
+ * much sense in the first place.
+ *
+ * How in the world are callback refs supposed to be done in this?
  */
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
+import debounce from 'debounce';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { formatAddr } from 'Approot/misc/util';
@@ -13,6 +17,22 @@ import Textarea from './Textarea';
 
 const STARTING_MESSAGES_COUNT = 25;
 const mention = addr => '@' + formatAddr(addr);
+const quote = (addr, text) => {
+	if (text) {
+		// > @someone:
+		// > said
+		// > some
+		// > thing.
+		// [blank line]
+		// [cursor]
+		return `> ${mention(addr)}:
+${text.replace(/^/mg, '> ')}
+
+`;
+	} else {
+		return mention(addr);
+	}
+};
 
 /**
  * Consists of existing messages and the text form.
@@ -39,8 +59,12 @@ const Chatroom = ({
 	const { start, stop } = useInterval(getSubs, 25 * 1000);
 	const textarea = useRef();
 	const msg = useRef();
+	// How many messages to display?
+	// If count = 0: display all messages. If count = messages.length: display 0 messages.
+	// By default it displays 25 messages + unread messages.
+	// Scrolling up, extraMessages is incremented, displaying more messages.
 	const count = useMemo(() =>
-		messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length - extraMessages,
+		Math.max(messages.length - STARTING_MESSAGES_COUNT - unreadMessages.length - extraMessages, 0),
 	[
 		topic,
 		extraMessages,
@@ -51,11 +75,12 @@ const Chatroom = ({
 	};
 
 	// Also cleared on submit.
-	const _saveDraft = e => saveDraft(e.target.value);
+	const _saveDraft = debounce(e => saveDraft(e.target.value), 500);
 
 	useEffect(() => {
 		getSubs();
 		start();
+		setLastReadId(unreadMessages[0]);
 
 		msg.current.setState({
 			value: draft,
@@ -72,18 +97,20 @@ const Chatroom = ({
 		componentWillUnmount doesn't work with the popup. It dies too fast.
 		Workaround: save every change.
 		*/
-		textarea.current.addEventListener('change', _saveDraft);
+		textarea.current.addEventListener('input', _saveDraft);
 
 		return () => {
-			textarea.current.removeEventListener('change', _saveDraft);
+			textarea.current.removeEventListener('input', _saveDraft);
 		};
 	}, []);
 
 
 	const markAllMessagesRead = () => {
 		if (unreadMessages.length > 0) {
+			if (unreadMessages.length < 4) {
+				setLastReadId(null);
+			}
 			markAsRead(topic, unreadMessages);
-			setLastReadId(null);
 		}
 	};
 
@@ -100,9 +127,9 @@ const Chatroom = ({
 			content: inputValue,
 			contentType: 'text',
 			// About transmitting the hashed topic: that will make UI between different apps bad.
-			// One app will get messages to "topichash" and have "hash -> topic clearname" map interanally,
-			// But other apps will not have the mapping, and will have to have something to work around that.
-			// Maybe do it anyways? Maybe it is worth it privacy-wise.?
+			// One app will get messages to "topichash" and have "hash -> topic clearname" -
+			// map internally, -
+			// but other apps will not have the mapping, and so it will break interop.
 			topic,
 		};
 
@@ -165,11 +192,15 @@ const Chatroom = ({
 			<Messages
 				totalMessagesCount={messages.length}
 				reactions={reactions}
-				className=""
 				messages={visibleMessages}
 				hasMore={visibleMessages.length < messages.length}
 				loadMore={loadMoreMessages}
-				refer={addr => addToDraftMessage(mention(addr))}
+				refer={(addr, text) => addToDraftMessage(
+					quote(
+						addr,
+						text
+					)
+				)}
 				lastReadId={lastReadId}
 				subs={subs}
 				markAllMessagesRead={markAllMessagesRead}

@@ -9,12 +9,12 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 Modal.setAppElement('.dashboard');
 
-const HeaderDotDotDotButton = ({ children }) => {
+const DotDotDot = ({ className = '', children, ...props }) => {
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className="navbar-item is-hidden-mobile">
-			<a className="button is-primary" onClick={() => setExpanded(true)}>
+		<>
+			<a {...props} className={className} onClick={() => setExpanded(true)}>
 				<div className="icon">
 					<IoMdMore className="is-size-3" />
 				</div>
@@ -27,14 +27,14 @@ const HeaderDotDotDotButton = ({ children }) => {
 			>
 				<div className="x-dot-dot-dot">
 					<div className="menu">
-						<ul className="menu-list">
+						<ul className="menu-list" onClick={() => setExpanded(false)}>
 							{children}
 						</ul>
 					</div>
 				</div>
 			</Modal>
-		</div>
+		</>
 	);
 };
 
-export default HeaderDotDotDotButton;
+export default DotDotDot;

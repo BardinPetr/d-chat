@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import OldWalletExporter from './ExportOldWallet-APP_TARGET';
+import WalletExporter from './WalletExporter';
 
 const ClientInfo = ({ client, children }) => {
 	const [expanded, setExpanded] = useState(false);
@@ -40,6 +42,18 @@ const ClientInfo = ({ client, children }) => {
 								<p>{client.balance || '?'} NKN</p>
 							</div>
 							{children}
+						</div>
+						<div className="tile is-child">
+							<div className="field">
+								<WalletExporter wallet={client.wallet}>
+									{__('Export wallet')}
+								</WalletExporter>
+							</div>
+						</div>
+						<div className="tile is-child">
+							<div className="field">
+								<OldWalletExporter />
+							</div>
 						</div>
 					</div>
 				)}

@@ -10,6 +10,10 @@ import history from 'Approot/UI/history';
 import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
 
 const App = async (store) => {
+	/**
+	 * Subscribes to chats when they're opened.
+	 * Very separated from other logic, but it's fine.
+	 */
 	const subscribeToChatOnNavigation = (location) => {
 		let match = matchPath(location.pathname, {
 			path: '/chat/:topic',

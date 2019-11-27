@@ -1,5 +1,13 @@
-import { genPrivateChatName, getChatName } from 'Approot/misc/util';
+/**
+ * Contains almost all actions.
+ */
+import {
+	genPrivateChatName,
+	getChatName,
+	getWhisperRecipient,
+} from 'Approot/misc/util';
 
+// So that next time you open popup, it continues where you left off.
 export const navigated = to => ({
 	type: 'ui/NAVIGATED',
 	payload: {
@@ -7,17 +15,11 @@ export const navigated = to => ({
 	},
 });
 
-export const getBalance = address => ({
-	type: 'nkn/GET_BALANCE_ALIAS',
-	payload: {
-		address,
-	},
-});
-
 export const logout = () => ({
 	type: 'LOGOUT_ALIAS',
 });
 
+// So that next time you open popup, it continues where you left off.
 export const saveDraft = text => ({
 	type: 'SAVE_DRAFT',
 	payload: {
@@ -29,19 +31,17 @@ export const connected = () => ({
 	type: 'CONNECTED',
 });
 
-export const sendPrivateMessage = message => ({
+// Whispers/topics use nkn.send/publish respectively, so it's probably -
+// not a bad idea to separate them at action level.
+export const sendPrivateMessage = (message, options) => ({
 	type: 'SEND_PRIVATE_MESSAGE_ALIAS',
 	payload: {
-		recipient:
-			message.topic.startsWith('/whisper/')
-				? message.topic.slice('/whisper/'.length)
-				: message.topic,
+		recipient: getWhisperRecipient(message.topic),
 		message: {
 			...message,
 			topic: undefined,
-			isPrivate: true,
-			isWhisper: true,
 		},
+		options,
 	},
 });
 
@@ -63,6 +63,7 @@ export const setSubscribers = (topic, subscribers) => ({
 export const enterPrivateChat = recipient =>
 	createChat(genPrivateChatName(recipient));
 
+// Join chat dispatches createChat and subscribeToChat.
 export const joinChat = topic => ({
 	type: 'JOIN_CHAT_ALIAS',
 	payload: {
@@ -85,10 +86,12 @@ export const setLoginStatus = status => ({
 	},
 });
 
-export const login = credentials => ({
+export const login = (credentials, address, seed) => ({
 	type: 'LOGIN_ALIAS',
 	payload: {
 		credentials,
+		seed,
+		address,
 	},
 });
 
@@ -100,6 +103,7 @@ export const publishMessage = message => ({
 	},
 });
 
+// Used in marking message-received.
 export const modifyMessage = (topic, id, modifiedMessage) => ({
 	type: 'chat/MODIFY_MESSAGE',
 	payload: {
@@ -141,27 +145,8 @@ export const markUnread = (topic, message) => ({
 	},
 });
 
-export const newTransaction = ({
-	targetID,
-	content,
-	topic,
-	to,
-	value,
-	contentType,
-	...rest
-}) => ({
-	type: 'nkn/NEW_TRANSACTION_ALIAS',
-	payload: {
-		value: value * 10 ** -8,
-		to,
-		topic,
-		contentType,
-		content,
-		targetID,
-		...rest,
-	},
-});
-
+// Options is { fee: 0, metadata: obj? }.
+// Metadata exists when adding topic to public topics list.
 export const subscribeToChat = (topic, options = {}) => ({
 	type: 'SUBSCRIBE_TO_CHAT_ALIAS',
 	payload: {
@@ -170,6 +155,7 @@ export const subscribeToChat = (topic, options = {}) => ({
 	},
 });
 
+// Removes chat from the sidebar list by setting chatSettings[topic].hidden = true.
 export const removeChat = topic => ({
 	type: 'chat/REMOVE',
 	payload: {
@@ -177,6 +163,7 @@ export const removeChat = topic => ({
 	},
 });
 
+// Get everyone's subscription metadata.
 export const fetchSubscriptionInfos = topic => ({
 	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',
 	payload: {
@@ -200,10 +187,10 @@ export const removeMessageById = (topic, id) => ({
 	},
 });
 
-export const setChatOptions = (topic, options) => ({
-	type: 'chat/SET_OPTIONS',
+export const muteChat = (topic, muted) => ({
+	type: 'chat/SET_CHAT_MUTE',
 	payload: {
 		topic,
-		options,
+		muted,
 	},
 });

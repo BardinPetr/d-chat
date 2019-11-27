@@ -1,7 +1,7 @@
 /**
  * Lists messages and reactions that belong to a topic.
  */
-import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
 import Message from './Message';
 import Reactions from './Reactions';
@@ -43,19 +43,17 @@ const Messages = ({
 	myAddr,
 	totalMessagesCount,
 }) => {
-	const [lastRead, setLastRead] = useState(null);
 	const listRef = useRef();
 	const { stayScrolled, isScrolled } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
 
-	if (lastReadId && lastReadId !== lastRead) {
-		setLastRead(lastReadId);
-	}
-
+	// Add useLayoutEffect(() => {scrollBottom();}, [messages[0]?.topic]) ?
+	// It would always scroll to bottom when you change topic.
 	useLayoutEffect(() => {
 		stayScrolled();
+
 		if (isScrolled()) {
 			markAllMessagesRead();
 		}
@@ -63,20 +61,17 @@ const Messages = ({
 		// Could pass messages[0] as well, instead of totalMessagesCount & topic.
 	}, [totalMessagesCount, messages[0]?.topic, reactions]);
 
-	// Flag to make sure we insert "NEW MESSAGES BELOW" only once.
-	let didNotMarkYet = true;
 	let previousMessage;
 	const messageList = messages.reduce((acc, message) => {
 		let includeHeader = true;
 		const messageIsNotice = isNotice(message);
-		if (didNotMarkYet && message.id === lastRead) {
+		if (message.id === lastReadId) {
 			acc.push(<LastRead key={'lastRead'} />);
-			didNotMarkYet = false;
 		}
 
 		const messageReactions = reactions[message.id];
+		// TODO fix the toolbar reaction button.
 		const addReaction = msg =>
-			!messageReactions?.some(r => r.addr === myAddr) &&
 			createReaction({
 				...msg,
 				targetID: message.id,
@@ -124,7 +119,6 @@ const Messages = ({
 		);
 	}, []);
 
-	// Does it work correctly if the function is created here?
 	const stay = debounce(stayScrolled, 50, true);
 
 	return (

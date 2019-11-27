@@ -9,77 +9,108 @@ import {
 	getChatURL,
 	getChatDisplayName,
 	DCHAT_PUBLIC_TOPICS,
+	isWhisperTopic,
 } from 'Approot/misc/util';
 import history from 'Approot/UI/history';
 
-const TopicsList = ({ chats, whispers }) => (
+const Element = ({ chat }) => (
+	!chat.hidden && (
+		<li title={getChatDisplayName(chat.topic)}>
+			<TopicLink
+				topic={chat.topic}
+				className={classnames('x-topic-link is-clearfix x-truncate', {
+					'is-active': chat.active,
+					'has-text-black': chat.unread?.length > 0,
+					'has-text-grey': chat.muted,
+				})}
+			>
+				<span>{getChatDisplayName(chat.topic)}</span>
+				<span className="is-pulled-right">
+					{chat.unread?.length > 0 ? chat.unread.length : ''}
+				</span>
+			</TopicLink>
+		</li>
+	)
+);
+
+const TopicsList = ({ topics, whispers, showWhispers }) => (
 	<ul className="menu-list">
-		{chats.map((chat, key) =>
-			chat.topic !== DCHAT_PUBLIC_TOPICS &&
-			// List topics or whispers.
-			((chat.topic.startsWith('/whisper/') && whispers) ||
-				(!chat.topic.startsWith('/whisper/') && !whispers)) ? (
-					<li key={key} title={getChatDisplayName(chat.topic)}>
-						<TopicLink
-							topic={chat.topic}
-							className={classnames('x-topic-link is-clearfix x-truncate', {
-								'is-active': chat.active,
-								'has-text-black': chat.unread?.length > 0,
-							})}
-						>
-							<span>{getChatDisplayName(chat.topic)}</span>
-							<span className="is-pulled-right">
-								{chat.unread?.length > 0 ? chat.unread.length : ''}
-							</span>
-						</TopicLink>
-					</li>
-				) : (
-					undefined
-				),
-		)}
+		{showWhispers
+			? whispers.map((chat, key) => (
+				<Element key={key} chat={chat} />
+			))
+			: topics.map((chat, key) => (
+				<Element key={key} chat={chat} />
+			))}
 	</ul>
 );
 
-const mapStateToProps = state => {
-	let newState = [];
-	for (const key in state.chatSettings) {
-		newState.push({
-			topic: key,
-			unread: state.chatSettings[key].unread,
-			active: history.location.pathname === getChatURL(key),
-		});
-	}
-	// Sort newest messages on top.
-	newState.sort((a, b) => {
-		let lastMessageA = state.messages[a.topic];
-		let lastMessageB = state.messages[b.topic];
-		lastMessageA = lastMessageA?.[lastMessageA.length - 1]?.timestamp;
-		lastMessageB = lastMessageB?.[lastMessageB.length - 1]?.timestamp;
+// Sorts newest messages on top.
+const sorter = (a, b) => {
+	const lastMessageA = a.lastMessage;
+	const lastMessageB = b.lastMessage;
 
-		if (!lastMessageA) {
-			return 1;
-		} else if (!lastMessageB) {
+	if (!lastMessageA) {
+		return 1;
+	} else if (!lastMessageB) {
+		return -1;
+	}
+
+	// Sort muted channels last.
+	if (a.muted && !b.muted) {
+		return 1;
+	} else if (!a.muted && b.muted) {
+		return -1;
+	}
+
+	const latest =
+		new Date(lastMessageA) - new Date(lastMessageB) > 0
+			? -1
+			: 1;
+	if (a.unread?.length > 0) {
+		if (b.unread?.length > 0) {
+			return latest;
+		} else {
 			return -1;
 		}
+	} else if (b.unread?.length > 0) {
+		return 1;
+	}
+	return latest;
+};
 
-		const latest =
-			new Date(lastMessageA) - new Date(lastMessageB) > 0
-				? -1
-				: 1;
-		if (a.unread?.length > 0) {
-			if (b.unread?.length > 0) {
-				return latest;
-			} else {
-				return -1;
+const mapStateToProps = state => {
+	const topics = [];
+	const whispers = [];
+
+	// Separate whispers and topics.
+	for (const key in state.chatSettings) {
+		if (!state.chatSettings[key].hidden) {
+			const settings = state.chatSettings[key];
+			const element = {
+				topic: key,
+				unread: settings.unread,
+				active: history.location.pathname === getChatURL(key),
+				lastMessage: state.messages[key]?.[state.messages[key].length - 1]?.timestamp,
+				muted: settings.muted,
+			};
+
+			if (isWhisperTopic(key)) {
+				whispers.push(element);
+				// Ignore __dchat topic.
+			} else if (key !== DCHAT_PUBLIC_TOPICS){
+				topics.push(element);
 			}
-		} else if (b.unread?.length > 0) {
-			return 1;
 		}
-		return latest;
-	});
+	}
+
+	// Sort newest messages on top.
+	topics.sort(sorter);
+	whispers.sort(sorter);
 
 	return {
-		chats: newState,
+		topics,
+		whispers,
 	};
 };
 

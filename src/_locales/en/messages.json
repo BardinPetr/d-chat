@@ -5,20 +5,8 @@
   "s": {
     "message": " < 30 s"
   },
-  "Account": {
-    "message": " Account"
-  },
-  "Accounts": {
-    "message": " Accounts"
-  },
   "Actionsmenu": {
     "message": " Actions menu"
-  },
-  "Activate": {
-    "message": " Activate"
-  },
-  "Add": {
-    "message": " Add"
   },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
@@ -28,9 +16,6 @@
   },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
-  },
-  "Closechat": {
-    "message": " Close chat"
   },
   "Comeandsayhionchannel": {
     "message": " Come and say hi on channel"
@@ -53,9 +38,6 @@
   "DChatversion": {
     "message": " D-Chat version"
   },
-  "Deactivatewallet": {
-    "message": " Deactivate wallet"
-  },
   "Description": {
     "message": " Description"
   },
@@ -68,17 +50,14 @@
   "Expandsonclick": {
     "message": " Expands on click"
   },
-  "Export": {
-    "message": " Export"
-  },
   "Exportit": {
     "message": " Export it."
   },
+  "Exportwallet": {
+    "message": " Export wallet"
+  },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
-  },
-  "Forgotpassword": {
-    "message": " Forgot password?"
   },
   "GettheaddonforChrome": {
     "message": " Get the add-on for Chrome"
@@ -92,17 +71,23 @@
   "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
     "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
+  "Hidechat": {
+    "message": " Hide chat"
+  },
   "Home": {
     "message": " Home"
   },
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
   },
-  "Import": {
-    "message": " Import"
+  "Importwallet": {
+    "message": " Import wallet"
   },
   "Infewwordsexplainwhatyourchannelisabout": {
     "message": " In few words, explain what your channel is about."
+  },
+  "Invalidseed": {
+    "message": " Invalid seed."
   },
   "Joinachatroom": {
     "message": " Join a chatroom"
@@ -119,8 +104,11 @@
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
-  "LogOut": {
-    "message": " Log Out"
+  "Loginas": {
+    "message": " Log in as"
+  },
+  "Logout": {
+    "message": " Log out"
   },
   "LostawalletyouhadinanolderversionofDChat": {
     "message": " Lost a wallet you had in an older version of D-Chat?"
@@ -137,14 +125,14 @@
   "Name": {
     "message": " Name"
   },
-  "New": {
-    "message": " New"
-  },
   "NewView": {
     "message": " New View"
   },
   "Newmessagesbelow": {
     "message": " New messages below"
+  },
+  "Newwallet": {
+    "message": " New wallet"
   },
   "Nickname": {
     "message": " Nickname"
@@ -172,6 +160,9 @@
   },
   "Publicchatindex": {
     "message": " Public chat index"
+  },
+  "Quitealongstring": {
+    "message": " Quite a long string"
   },
   "Reload": {
     "message": " Reload"
@@ -206,15 +197,6 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "Theseareyourwallets": {
-    "message": " These are your wallets."
-  },
-  "Theyexpandonclick": {
-    "message": " They expand on click."
-  },
-  "Thiswalletisalreadyimported": {
-    "message": " This wallet is already imported."
-  },
   "Topic": {
     "message": " Topic"
   },
@@ -224,17 +206,14 @@
   "Upload": {
     "message": " Upload"
   },
-  "Username": {
-    "message": " Username"
-  },
-  "WalletDeactivatedLogInusinganypassword": {
-    "message": " Wallet Deactivated. Log In using any password."
-  },
   "Walletaddress": {
     "message": " Wallet address"
   },
   "Walletbalance": {
     "message": " Wallet balance"
+  },
+  "Walletseed": {
+    "message": " Wallet seed"
   },
   "Welcome": {
     "message": " Welcome!"
@@ -251,11 +230,14 @@
   "andsayhi": {
     "message": " and say hi!"
   },
-  "optional": {
-    "message": " optional"
+  "menunavigation": {
+    "message": " menu navigation"
   },
   "peoplechatting": {
     "message": " people chatting"
+  },
+  "secondarynavigation": {
+    "message": " secondary navigation"
   },
   "extensionName": {
     "message": "D-Chat"

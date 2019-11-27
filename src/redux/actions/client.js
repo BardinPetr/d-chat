@@ -1,48 +1,11 @@
 /**
- * Contains actions for /wallets/*
+ * Contains actions for `nkn/` family.
  */
-
-export const switchedToClient = (address) => ({
-	type: 'nkn/SWITCHED_TO_CLIENT',
-	payload: {
-		address,
-	},
-});
-
-export const switchToClient = (address) => ({
-	type: 'nkn/SWITCH_TO_CLIENT_ALIAS',
-	payload: {
-		address,
-	},
-});
 
 export const createNewClient = (client) => ({
 	type: 'nkn/CREATE_NEW_CLIENT',
 	payload: {
 		client,
-	},
-});
-
-export const importWallet = ({walletJSON, password, username}) => ({
-	type: 'nkn/IMPORT_WALLET_ALIAS',
-	payload: {
-		walletJSON,
-		password,
-		username,
-	},
-});
-
-export const newClient = (username) => ({
-	type: 'nkn/NEW_CLIENT_ALIAS',
-	payload: {
-		username,
-	},
-});
-
-export const exportWallet = (address) => ({
-	type: 'nkn/EXPORT_WALLET_ALIAS',
-	payload: {
-		address,
 	},
 });
 
@@ -54,14 +17,39 @@ export const setBalance = (address, balance) => ({
 	}
 });
 
-export const importWalletSeed = ({walletSeed, username}) => ({
-	type: 'nkn/IMPORT_WALLETSEED',
+export const deactivateClients = () => ({
+	type: 'nkn/DEACTIVATE_CLIENTS',
+});
+
+export const activateClient = (client) => ({
+	type: 'nkn/ACTIVATE_CLIENT',
 	payload: {
-		walletSeed,
-		username
+		client,
 	},
 });
 
-export const deactivateClients = () => ({
-	type: 'nkn/DEACTIVATE_CLIENTS',
+export const newTransaction = ({
+	content,
+	recipient,
+	targetID,
+	topic,
+	value,
+	...rest
+}) => ({
+	type: 'nkn/NEW_TRANSACTION_ALIAS',
+	payload: {
+		content,
+		recipient,
+		targetID,
+		topic,
+		value: value * 10 ** -8,
+		...rest,
+	},
+});
+
+export const getBalance = address => ({
+	type: 'nkn/GET_BALANCE_ALIAS',
+	payload: {
+		address,
+	},
 });

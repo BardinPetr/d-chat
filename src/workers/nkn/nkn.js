@@ -87,6 +87,9 @@ class NKN extends nkn {
 		const fee = options.fee || 0;
 
 		// TODO add better error handling for timeouts; should retry a few times.
+		// Actually, it's not timeouts, because it doesn't throw?
+		// The "joined channel" message is only put out if sub is resolved.
+		// Still, sometimes people don't get subbed.
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
@@ -122,8 +125,6 @@ class NKN extends nkn {
 					inPool
 				) {
 					return info;
-				} else if (inPool) {
-					throw 'In mempool';
 				}
 			},
 		);
@@ -146,12 +147,10 @@ class NKN extends nkn {
 		if (to === this.addr) {
 			return;
 		}
-		try {
-			return this.send(to, JSON.stringify(message), options);
-		} catch (e) {
-			console.error('Error when sending', e);
-			throw e;
-		}
+		// Add this every time for now.
+		message.isPrivate = true;
+		// Ignore errors.
+		return this.send(to, JSON.stringify(message), options).catch(() => {});
 	};
 
 	getSubs = (topic, options = {}) => {

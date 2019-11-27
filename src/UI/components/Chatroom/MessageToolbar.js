@@ -12,7 +12,7 @@ import { IoMdChatboxes } from 'react-icons/io';
 const Toolbar = ({ id, topic, addr, addReaction }) => {
 	return (
 		<div className="x-is-hover buttons has-addons are-small">
-			<TipJar className="" messageID={id} topic={topic} addr={addr} value={5} />
+			<TipJar messageID={id} topic={topic} addr={addr} value={5} />
 			<a
 				className="button tooltip is-tooltip-left"
 				onClick={() => {
