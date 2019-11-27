@@ -23,7 +23,7 @@ const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => 
 	return (
 		<a
 			className={`button tooltip is-tooltip-left ${className}`}
-			data-tooltip={`Tip ${value} sats to ${addr.slice(25)}...`}
+			data-tooltip={`Tip ${value} sats to ${addr?.slice(25) || ''}...`}
 			onClick={() => send(value)}
 		>
 			{'' + value}
