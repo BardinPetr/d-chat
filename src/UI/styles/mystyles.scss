@@ -15,7 +15,7 @@ $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
 $text: hsl(0, 0%, 14%);
 $message-header-color: hsl(222.2, 88.6%, 44.7%);
-$message-header-color-me: darken($message-header-color, 20%);
+$message-header-color-me: hsl(103.8, 100%, 17.5%);
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -24,7 +24,7 @@ $message-header-color-me: darken($message-header-color, 20%);
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
 .input::placeholder {
-	color: $grey-dark;
+	color: $grey;
 }
 .x-has-opacity-1 {
 	opacity: 1 !important;
