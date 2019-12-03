@@ -14,6 +14,10 @@ const DotRoutes = () => (
 			<Route path="/chat/:topic" component={LazyChatroomDots} />
 			<Route path="/whisper/:recipient" component={LazyChatroomDots} />
 		</Suspense>
+		<Route
+			path="/(chat|whisper)/"
+			render={() => (<hr className="is-divider menu-label" />)}
+		/>
 		<Route path="/" component={DefaultDots} />
 	</>
 );
