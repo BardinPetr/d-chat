@@ -15,6 +15,7 @@ $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
 $text: hsl(0, 0%, 14%);
 $message-header-color: hsl(222.2, 88.6%, 44.7%);
+$message-header-color-me: hsl(104.1, 100%, 19.2%);
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -163,10 +164,7 @@ $message-header-color: hsl(222.2, 88.6%, 44.7%);
 
 	.x-me {
 		.message-header {
-			color: lighten($message-header-color, 10%);
-		}
-		.message-body {
-			color: lighten($text, 10%);
+			color: $message-header-color-me;
 		}
 	}
 
