@@ -13,6 +13,8 @@ $accordion-header-color: black;
 $accordion-header-padding: 1rem 0.75rem;
 $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
+$text: hsl(0, 0%, 14%);
+$message-header-color: hsl(222.2, 88.6%, 44.7%);
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -99,10 +101,6 @@ $content-pre-padding: 0.5em 1em;
 .x-is-hover {
 	visibility: hidden;
 }
-.message-body .content {
-	margin-bottom: 0;
-	font-size: 0.9375rem;
-}
 
 .x-is-align-start {
 	align-items: flex-start !important;
@@ -163,17 +161,15 @@ $content-pre-padding: 0.5em 1em;
 	.message-header {
 		margin: 0.8rem 0 0.1rem 0;
 		background-color: transparent;
-		color: $primary;
+		color: $message-header-color;
 	}
 
 	.x-me {
 		.message-header {
-			color: #9b1a34;
+			color: lighten($message-header-color, 10%);
 		}
-		&.x-notice {
-			.message-header {
-				color: $primary;
-			}
+		.message-body {
+			color: lighten($text, 10%);
 		}
 	}
 
@@ -184,6 +180,8 @@ $content-pre-padding: 0.5em 1em;
 		padding-right: 1rem;
 
 		.content {
+			margin-bottom: 0;
+			font-size: 0.9375rem;
 			white-space: initial;
 			pre, code {
 				background-color: $grey-lighter;
