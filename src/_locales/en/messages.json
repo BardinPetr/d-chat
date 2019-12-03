@@ -167,6 +167,9 @@
   "Reload": {
     "message": " Reload"
   },
+  "SharethisforreceivingNKNpayments": {
+    "message": " Share this for receiving NKN payments."
+  },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
   },

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import OldWalletExporter from './ExportOldWallet-APP_TARGET';
 import WalletExporter from './WalletExporter';
+import { IoIosHelpCircleOutline as IoIosHelpCircle } from 'react-icons/io';
 
 const ClientInfo = ({ client, children }) => {
 	const [expanded, setExpanded] = useState(false);
@@ -11,15 +12,18 @@ const ClientInfo = ({ client, children }) => {
 			style={{ overflowWrap: 'anywhere', wordBreak: 'all' }}
 		>
 			<div className="tile is-parent is-vertical">
-				<div className="tile is-child">
+				<div className="tile">
 					<div className="field">
 						<div className="field">
-							<p className="is-size-7">{__('Contact address')}</p>
+							<p className="is-size-7 has-text-grey-darker">
+								{__('Contact address')}
+							</p>
 							<p className="x-address-broken x-address">{client.addr}</p>
 						</div>
+						<hr className="is-divider" />
 						{!expanded && (
 							<a
-								className="button is-light is-size-7"
+								className="button is-link is-outlined is-size-7"
 								title={__('Expands on click')}
 								onClick={() => setExpanded(true)}
 							>
@@ -32,13 +36,16 @@ const ClientInfo = ({ client, children }) => {
 					<div className="tile is-vertical">
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7">{__('Wallet address')}</p>
+								<p className="is-size-7 has-text-grey-darker">
+									{__('Wallet address')}
+									<span className="icon tooltip is-size-5" data-tooltip={__('Share this for receiving NKN payments.')}><IoIosHelpCircle className="is-size-5" /></span>
+								</p>
 								<p className="x-address-broken x-address">{client.wallet.Address}</p>
 							</div>
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7">{__('Wallet balance')}</p>
+								<p className="is-size-7 has-text-grey-darker">{__('Wallet balance')}</p>
 								<p>{client.balance || '?'} NKN</p>
 							</div>
 							{children}

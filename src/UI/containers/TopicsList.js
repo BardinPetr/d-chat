@@ -20,7 +20,6 @@ const Element = ({ chat }) => (
 				topic={chat.topic}
 				className={classnames('x-topic-link is-clearfix x-truncate', {
 					'is-active': chat.active,
-					'has-text-black': chat.unread?.length > 0,
 					'has-text-grey': chat.muted,
 				})}
 			>

@@ -13,6 +13,9 @@ $accordion-header-color: black;
 $accordion-header-padding: 1rem 0.75rem;
 $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
+$text: hsl(0, 0%, 14%);
+$message-header-color: hsl(222.2, 88.6%, 44.7%);
+$message-header-color-me: hsl(103.8, 100%, 17.5%);
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -20,6 +23,9 @@ $content-pre-padding: 0.5em 1em;
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
+.input::placeholder {
+	color: $grey;
+}
 .x-has-opacity-1 {
 	opacity: 1 !important;
 }
@@ -56,9 +62,6 @@ $content-pre-padding: 0.5em 1em;
 }
 .emoji-mart-scroll {
 	overflow-x: hidden;
-}
-.accordions .accordion {
-	background: linear-gradient(white, $grey-lighter);
 }
 .x-white-space {
 	white-space: pre-wrap;
@@ -98,10 +101,6 @@ $content-pre-padding: 0.5em 1em;
 }
 .x-is-hover {
 	visibility: hidden;
-}
-.message-body .content {
-	margin-bottom: 0;
-	font-size: 0.9375rem;
 }
 
 .x-is-align-start {
@@ -155,7 +154,7 @@ $content-pre-padding: 0.5em 1em;
 				position: absolute;
 				right: 0.3rem;
 				bottom: 0;
-				color: $grey;
+				color: $grey-dark;
 			}
 		}
 	}
@@ -163,17 +162,12 @@ $content-pre-padding: 0.5em 1em;
 	.message-header {
 		margin: 0.8rem 0 0.1rem 0;
 		background-color: transparent;
-		color: $primary;
+		color: $message-header-color;
 	}
 
 	.x-me {
 		.message-header {
-			color: #9b1a34;
-		}
-		&.x-notice {
-			.message-header {
-				color: $primary;
-			}
+			color: $message-header-color-me;
 		}
 	}
 
@@ -184,6 +178,8 @@ $content-pre-padding: 0.5em 1em;
 		padding-right: 1rem;
 
 		.content {
+			margin-bottom: 0;
+			font-size: 0.9375rem;
 			white-space: initial;
 			pre, code {
 				background-color: $grey-lighter;
