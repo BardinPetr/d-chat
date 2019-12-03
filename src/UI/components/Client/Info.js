@@ -14,9 +14,10 @@ const ClientInfo = ({ client, children }) => {
 				<div className="tile is-child">
 					<div className="field">
 						<div className="field">
-							<p className="is-size-7">{__('Contact address')}</p>
+							<p className="is-size-7 has-text-grey-dark">{__('Contact address')}</p>
 							<p className="x-address-broken x-address">{client.addr}</p>
 						</div>
+						<hr className="is-divider" />
 						{!expanded && (
 							<a
 								className="button is-light is-size-7"
@@ -32,13 +33,13 @@ const ClientInfo = ({ client, children }) => {
 					<div className="tile is-vertical">
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7">{__('Wallet address')}</p>
+								<p className="is-size-7 has-text-grey-dark">{__('Wallet address')}</p>
 								<p className="x-address-broken x-address">{client.wallet.Address}</p>
 							</div>
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7">{__('Wallet balance')}</p>
+								<p className="is-size-7 has-text-grey-dark">{__('Wallet balance')}</p>
 								<p>{client.balance || '?'} NKN</p>
 							</div>
 							{children}
