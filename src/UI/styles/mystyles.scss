@@ -23,6 +23,9 @@ $message-header-color-me: hsl(104.1, 100%, 19.2%);
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 
+.input::placeholder {
+	color: $grey-dark;
+}
 .x-has-opacity-1 {
 	opacity: 1 !important;
 }

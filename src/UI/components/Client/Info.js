@@ -14,7 +14,7 @@ const ClientInfo = ({ client, children }) => {
 				<div className="tile is-child" style={{marginBottom: '0 !important'}}>
 					<div className="field">
 						<div className="field">
-							<p className="is-size-7 has-text-grey-dark">{__('Contact address')}</p>
+							<p className="is-size-7 has-text-grey-darker">{__('Contact address')}</p>
 							<p className="x-address-broken x-address">{client.addr}</p>
 						</div>
 						<hr className="is-divider" />
@@ -33,13 +33,13 @@ const ClientInfo = ({ client, children }) => {
 					<div className="tile is-vertical">
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7 has-text-grey-dark">{__('Wallet address')}</p>
+								<p className="is-size-7 has-text-grey-darker">{__('Wallet address')}</p>
 								<p className="x-address-broken x-address">{client.wallet.Address}</p>
 							</div>
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7 has-text-grey-dark">{__('Wallet balance')}</p>
+								<p className="is-size-7 has-text-grey-darker">{__('Wallet balance')}</p>
 								<p>{client.balance || '?'} NKN</p>
 							</div>
 							{children}

@@ -76,6 +76,7 @@ const Home = ({ client }) => (
 							</div>
 						)}
 					</div>
+
 				</div>
 			</div>
 		</div>
