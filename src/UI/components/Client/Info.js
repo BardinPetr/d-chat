@@ -20,7 +20,7 @@ const ClientInfo = ({ client, children }) => {
 						<hr className="is-divider" />
 						{!expanded && (
 							<a
-								className="button is-light is-size-7"
+								className="button is-link is-outlined is-size-7"
 								title={__('Expands on click')}
 								onClick={() => setExpanded(true)}
 							>

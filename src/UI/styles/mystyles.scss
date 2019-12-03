@@ -59,9 +59,6 @@ $message-header-color: hsl(222.2, 88.6%, 44.7%);
 .emoji-mart-scroll {
 	overflow-x: hidden;
 }
-.accordions .accordion {
-	background: linear-gradient(white, $grey-lighter);
-}
 .x-white-space {
 	white-space: pre-wrap;
 }
@@ -153,7 +150,7 @@ $message-header-color: hsl(222.2, 88.6%, 44.7%);
 				position: absolute;
 				right: 0.3rem;
 				bottom: 0;
-				color: $grey;
+				color: $grey-dark;
 			}
 		}
 	}
