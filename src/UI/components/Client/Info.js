@@ -11,7 +11,7 @@ const ClientInfo = ({ client, children }) => {
 			style={{ overflowWrap: 'anywhere', wordBreak: 'all' }}
 		>
 			<div className="tile is-parent is-vertical">
-				<div className="tile is-child">
+				<div className="tile is-child" style={{marginBottom: '0 !important'}}>
 					<div className="field">
 						<div className="field">
 							<p className="is-size-7 has-text-grey-dark">{__('Contact address')}</p>
