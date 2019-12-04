@@ -81,7 +81,7 @@ const messages = (state = {}, action) => {
 			break;
 
 		case 'chat/MODIFY_MESSAGE':
-			initial = [...state[topic]] || [];
+			initial = state[topic] || [];
 			newState = {
 				...state,
 				[topic]: initial.map(message => {
