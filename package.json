@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -58,11 +58,11 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "@babel/core": "7.2.2",
+    "@babel/core": "^7.7.4",
     "@babel/plugin-proposal-optional-chaining": "^7.7.4",
     "@babel/runtime": "^7.7.4",
-    "@rooks/use-interval": "^3.4.1",
-    "@rooks/use-timeout": "^3.4.1",
+    "@rooks/use-interval": "^3.4.2",
+    "@rooks/use-timeout": "^3.4.2",
     "@sharyn/react-router.privateroute": "^1.0.3",
     "@svgr/webpack": "2.4.1",
     "@webscopeio/react-textarea-autocomplete": "^4.6.1",
@@ -115,6 +115,7 @@
     "mini-css-extract-plugin": "0.4.3",
     "nkn-client": "^0.6.8",
     "nkn-multiclient": "0.0.7",
+    "nkn-ordered-multiclient": "git+https://gitlab.com/losnappas/nkn-ordered-multiclient.git",
     "nkn-wallet": "^0.4.7",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "ora": "^3.4.0",
@@ -123,7 +124,7 @@
     "postcss-loader": "3.0.0",
     "postcss-preset-env": "^6.7.0",
     "postcss-safe-parser": "4.0.1",
-    "rc-table": "^6.10.4",
+    "rc-table": "^6.10.5",
     "react": "^16.12.0",
     "react-app-polyfill": "^0.2.2",
     "react-dom": "^16.12.0",

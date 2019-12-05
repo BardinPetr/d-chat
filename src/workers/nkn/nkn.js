@@ -1,9 +1,10 @@
-import nkn from 'nkn-multiclient';
+import nkn from 'nkn-ordered-multiclient';
 import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 const FORBLOCKS = 400000;
+const NUMBER_OF_SUBSCRIPTION_TRIES = 3;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -86,20 +87,31 @@ class NKN extends nkn {
 
 		const fee = options.fee || 0;
 
-		// TODO add better error handling for timeouts; should retry a few times.
-		// Actually, it's not timeouts, because it doesn't throw?
-		// The "joined channel" message is only put out if sub is resolved.
-		// Still, sometimes people don't get subbed.
+		return this._subscribe(
+			topicID,
+			JSON.stringify(metadata),
+			{
+				fee,
+			}
+		);
+	};
+
+	// Tries to subscribe many times.
+	_subscribe = (topicID, metadata, options, _recurse = 0) => {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
 			this.identifier,
-			JSON.stringify(metadata),
-			{
-				fee,
-			},
-		);
-	};
+			metadata,
+			options
+		).catch(e => {
+			if (_recurse < NUMBER_OF_SUBSCRIPTION_TRIES) {
+				return this._subscribe(topicID, metadata, options, _recurse + 1);
+			} else {
+				throw e;
+			}
+		});
+	}
 
 	/**
 	 * There is no "memPool: true" argument for this one.
