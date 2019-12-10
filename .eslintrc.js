@@ -43,7 +43,6 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
     semi: ['error', 'always'],
-    'space-in-parens': ['warn', 'always', { 'exceptions': [ '()', '{}' ] }],
     'react/jsx-uses-vars': 1,
     'react/jsx-uses-react': 1,
     'spaced-comment': ['error', 'always', { exceptions: ['-', '+'] }],

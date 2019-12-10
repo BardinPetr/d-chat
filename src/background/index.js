@@ -11,10 +11,8 @@ import { login } from '../redux/actions';
 import passworder from 'browser-passworder';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
-import confirmerMiddleware from 'Approot/redux/middleware/messageSentConfirmer';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
-import { storeMessagesToDb } from 'Approot/database/messages';
 
 const password = 'd-chat!!!';
 
@@ -36,14 +34,8 @@ if ( IS_EXTENSION ) {
 
 const creatingStore = configs.$loaded.then( async () => {
 
-	// They were fresh before, so store them now.
-	await storeMessagesToDb( configs.messages );
-	configs.messages = {};
-
 	const persistedState = {
 		clients: configs.clientsMeta,
-		messages: {},
-		reactions: configs.reactions,
 		chatSettings: configs.chatSettings,
 	};
 
@@ -54,7 +46,6 @@ const creatingStore = configs.$loaded.then( async () => {
 			applyMiddleware(
 				workerMiddleware,
 				alias( aliases ),
-				confirmerMiddleware,
 				notifierMiddleware,
 				subscribersFetcher,
 				thunkMiddleware
@@ -77,6 +68,6 @@ const creatingStore = configs.$loaded.then( async () => {
 	return store;
 });
 
-creatingStore.then( store => onInstalled( store ));
+onInstalled( creatingStore );
 
 export default creatingStore;

@@ -46,8 +46,8 @@ const TopicsList = ({ topics, whispers, showWhispers }) => (
 
 // Sorts newest messages on top.
 const sorter = (a, b) => {
-	const lastMessageA = a.lastMessage;
-	const lastMessageB = b.lastMessage;
+	const lastMessageA = a || 0;
+	const lastMessageB = b || 0;
 
 	if (!lastMessageA) {
 		return 1;
@@ -63,7 +63,7 @@ const sorter = (a, b) => {
 	}
 
 	const latest =
-		new Date(lastMessageA) - new Date(lastMessageB) > 0
+		lastMessageA - lastMessageB > 0
 			? -1
 			: 1;
 	if (a.unread?.length > 0) {
@@ -90,7 +90,7 @@ const mapStateToProps = state => {
 				topic: key,
 				unread: settings.unread,
 				active: history.location.pathname === getChatURL(key),
-				lastMessage: state.messages[key]?.[state.messages[key].length - 1]?.timestamp,
+				lastMessage: settings.receivedAt,
 				muted: settings.muted,
 			};
 

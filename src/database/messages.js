@@ -6,6 +6,12 @@ export const PAGE_SIZE = 25;
 const messageEvents = new EventEmitter();
 let hasSubscription = false;
 
+/**
+ * Messages:
+ * subscribeToMessageChanges(topic, cb)
+ * Reactions:
+ * subscribeToReactions({topic, targetID}, cb)
+ */
 export function getChangesEmitter() {
 	if ( !hasSubscription ) {
 		db.on( 'changes', changesListener );
@@ -14,6 +20,13 @@ export function getChangesEmitter() {
 	return messageEvents;
 }
 
+/**
+ * Emits events for new messages. To subscribe, use -
+ * ```
+ * const events = getChangesEmitter()
+ * const unsub = evens.on( 'topicname', callback(message, isModification) );
+ * ```
+ */
 function changesListener( changes ) {
 	changes.forEach( change => {
 		if ( ! ['messages', 'reactions'].includes( change.table )) {
@@ -32,7 +45,6 @@ function changesListener( changes ) {
 }
 
 export function subscribeToMessageChanges( topic, callback ) {
-
 	const messageEvents = getChangesEmitter();
 
 	messageEvents.on( topic, callback );
@@ -40,6 +52,9 @@ export function subscribeToMessageChanges( topic, callback ) {
 	return () => messageEvents.removeListener( topic, callback );
 }
 
+/**
+ * Loads message history for topic.
+ */
 export function loadMessagesFromDb({
 	topic,
 	previous = {}
@@ -54,23 +69,6 @@ export function loadMessagesFromDb({
 		.sortBy( 'createdAt' )
 		// Kinda crazy how we unreverse it like this.
 		.then( arr => arr.reverse());
-}
-
-export async function storeMessagesToDb( allMessages ) {
-	const now = Date.now();
-	// Add messages that haven't already been added into the db.
-	const messages = Object.values( allMessages ).flat().filter( msg => !msg.addedToDatabase );
-	messages.forEach(( msg, index ) => {
-		msg.addedToDatabase = true;
-		// Primary key compound indexes are broken in Firefox,
-		// we will keep track with a timestamp.
-		msg.createdAt = now + index;
-	});
-
-	if ( messages.length ) {
-		return db.messages
-			.bulkAdd( messages );
-	}
 }
 
 export async function storeMessageToDb( message ) {
