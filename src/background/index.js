@@ -18,21 +18,21 @@ const password = 'd-chat!!!';
 
 const nknWorker = new NKNWorker();
 
-const workerMiddleware = createWorkerMiddleware( nknWorker );
+const workerMiddleware = createWorkerMiddleware(nknWorker);
 
 let credentials;
-if ( IS_EXTENSION ) {
-	credentials = localStorage.getItem( 'credentials' );
-	if ( credentials ) {
+if (IS_EXTENSION) {
+	credentials = localStorage.getItem('credentials');
+	if (credentials) {
 		try {
-			credentials = JSON.parse( credentials );
-		} catch( e ) {
+			credentials = JSON.parse(credentials);
+		} catch(e) {
 			credentials = undefined;
 		}
 	}
 }
 
-const creatingStore = configs.$loaded.then( async () => {
+const creatingStore = configs.$loaded.then(async () => {
 
 	const persistedState = {
 		clients: configs.clientsMeta,
@@ -45,7 +45,7 @@ const creatingStore = configs.$loaded.then( async () => {
 		composeWithDevTools(
 			applyMiddleware(
 				workerMiddleware,
-				alias( aliases ),
+				alias(aliases),
 				notifierMiddleware,
 				subscribersFetcher,
 				thunkMiddleware
@@ -53,21 +53,21 @@ const creatingStore = configs.$loaded.then( async () => {
 		)
 	);
 
-	wrapStore( store );
+	wrapStore(store);
 
-	if ( IS_EXTENSION && credentials ) {
-		passworder.decrypt( password, credentials )
-			.then( creds => {
-				const activeClient = store.getState().clients.find( c => c.active );
+	if (IS_EXTENSION && credentials) {
+		passworder.decrypt(password, credentials)
+			.then(creds => {
+				const activeClient = store.getState().clients.find(c => c.active);
 				const address = activeClient?.wallet.Address;
-				if ( address ) {
-					store.dispatch( login( creds, address ));
+				if (address) {
+					store.dispatch(login(creds, address));
 				}
 			});
 	}
 	return store;
 });
 
-onInstalled( creatingStore );
+onInstalled(creatingStore);
 
 export default creatingStore;

@@ -8,17 +8,17 @@ import highlight from 'highlight.js';
 import shasum from 'shasum';
 
 const renderer = new marked.Renderer();
-renderer.image = ( href, title, text ) => {
-	if ( href.startsWith( 'data' )) {
+renderer.image = (href, title, text) => {
+	if (href.startsWith('data')) {
 		return '';
 	} else {
 		return `<img src="${href}" alt=${text}>`;
 	}
 };
-renderer.link = ( href, title, text ) =>
-	( `<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>` );
+renderer.link = (href, title, text) =>
+	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
 marked.setOptions({
-	highlight: ( code, lang ) => highlight.highlightAuto( code, [lang] ).value,
+	highlight: (code, lang) => highlight.highlightAuto(code, [lang]).value,
 	renderer,
 });
 
@@ -54,7 +54,7 @@ const allowedTags = [
 	'ul',
 ];
 const allowedSchemes = ['http', 'https'];
-const allowedAttributes = JSON.parse( JSON.stringify(
+const allowedAttributes = JSON.parse(JSON.stringify(
 	sanitize.defaults.allowedAttributes
 ));
 allowedAttributes.image = ['src', 'alt'];
@@ -65,44 +65,44 @@ allowedAttributes['*'] = ['class'];
 const dataUrl = /data:[^\s)]*/gi;
 
 class IncomingMessage extends Message {
-	constructor( message ) {
-		super( message );
+	constructor(message) {
+		super(message);
 
 		this.createdAt = Date.now();
 
 		// Heartbeats should not be received as messages.
-		if ( ['heartbeat', 'background'].includes( this.contentType )) {
+		if (['heartbeat', 'background'].includes(this.contentType)) {
 			this.unreceivable = true;
 		}
 
 		// Handling receipts as reactions.
-		if ( this.contentType === 'receipt' ) {
+		if (this.contentType === 'receipt') {
 			this.contentType = 'reaction';
 			// Override content so we don't get any smart stuff.
 			this.content = '✔';
 		}
 
-		this.content = sanitize( this.content, {
+		this.content = sanitize(this.content, {
 			allowedTags: [],
 			allowedAttributes: {},
 		}) || '';
 
-		if ( this.contentType !== 'reaction' ) {
-			if ( this.contentType === 'media' ) {
-				const dataURLs = this.content.match( dataUrl ) || [];
-				this.attachments = dataURLs.map( data => saveAttachment({
+		if (this.contentType !== 'reaction') {
+			if (this.contentType === 'media') {
+				const dataURLs = this.content.match(dataUrl) || [];
+				this.attachments = dataURLs.map(data => saveAttachment({
 					data,
-					hash: shasum( data ),
+					hash: shasum(data),
 				}));
 			}
 
 			// Sanitize first so we only use markdown stuff.
 			// Replace &gt; with > to make blockquotes work.
-			const sanitized = this.content.replace( /&gt;/g, '>' );
-			const markdowned = marked( sanitized, {
+			const sanitized = this.content.replace(/&gt;/g, '>');
+			const markdowned = marked(sanitized, {
 				breaks: true,
 			});
-			const handled = sanitize( markdowned, {
+			const handled = sanitize(markdowned, {
 				allowedTags,
 				allowedSchemes,
 				allowedAttributes,
@@ -118,29 +118,29 @@ class IncomingMessage extends Message {
 	 * Othewise you will send a message to `/whisper/your_addr`, when -
 	 * you want `/whisper/their_addr`.
 	 */
-	from( src, opts = {}) {
-		if ( src === 'me' ) {
+	from(src, opts = {}) {
+		if (src === 'me') {
 			src = NKN.instance.addr;
 		}
 
-		if ( src === NKN.instance.addr ) {
+		if (src === NKN.instance.addr) {
 			this.isMe = true;
 		}
 
 		// So why is topic set here and not the constructor?
 		// Well, when sending whispers we want to omit topic, rather than -
 		// using "/whisper/their_addr" at send time.
-		if ( this.topic == null ) {
+		if (this.topic == null) {
 			// Because we can receive a whisper locally, we sometimes -
 			// need to override the topic manually.
-			this.topic = opts.overrideTopic || genPrivateChatName( src );
+			this.topic = opts.overrideTopic || genPrivateChatName(src);
 		}
 
-		const [name, pubKey] = parseAddr( src );
+		const [name, pubKey] = parseAddr(src);
 		this.addr = src;
 		this.username = name;
 		this.pubKey = pubKey;
-		this.refersToMe = this.content?.includes( formatAddr( NKN.instance.addr ));
+		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
 
 		return this;
 	}

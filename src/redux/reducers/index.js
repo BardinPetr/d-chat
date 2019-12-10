@@ -2,15 +2,15 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
-const login = ( state = {}, action ) => {
+const login = (state = {}, action) => {
 	let newState;
-	switch ( action.type ) {
+	switch (action.type) {
 		case 'LOGIN':
 			newState = action.payload.credentials;
 			break;
 
 		case 'LOGIN_STATUS':
-			if ( action.error ) {
+			if (action.error) {
 				newState = { error: action.error };
 			} else {
 				newState = action.payload;
@@ -34,9 +34,9 @@ const login = ( state = {}, action ) => {
 	return newState;
 };
 
-const draftMessage = ( state = '', action ) => {
+const draftMessage = (state = '', action) => {
 	let newState;
-	switch ( action.type ) {
+	switch (action.type) {
 		case 'SAVE_DRAFT':
 			newState = action.payload.content;
 			break;
@@ -55,11 +55,11 @@ const draftMessage = ( state = '', action ) => {
  *
  * TODO "remove chat", which unsubscribes.
  */
-const chatSettings = ( state = {}, action ) => {
+const chatSettings = (state = {}, action) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
-	switch ( action.type ) {
+	switch (action.type) {
 		case 'chat/REMOVE':
 			newState = {
 				...state,
@@ -95,7 +95,7 @@ const chatSettings = ( state = {}, action ) => {
 				[topic]: {
 					...state[topic],
 					// Filter out newly read message from unread messages.
-					unread: initial.filter( i => !action.payload.ids.some( id => i === id )),
+					unread: initial.filter(i => !action.payload.ids.some(id => i === id)),
 				},
 			};
 			configs.chatSettings = newState;
@@ -157,9 +157,9 @@ const chatSettings = ( state = {}, action ) => {
 };
 
 // Most recent open page, where re-opening popup will start.
-const navigation = ( state = { mostRecentPage: '/' }, action ) => {
+const navigation = (state = { mostRecentPage: '/' }, action) => {
 	let newState;
-	switch ( action.type ) {
+	switch (action.type) {
 		case 'ui/NAVIGATED':
 			newState = {
 				...state,

@@ -2,10 +2,10 @@ import React, { useEffect, useReducer } from 'react';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb, subscribeToReactions } from 'Approot/database/reactions';
 
-function reducer( state, action ) {
+function reducer(state, action) {
 
 	const changes = action.payload;
-	switch( action.type ) {
+	switch(action.type) {
 		case 'new':
 			return [...state, changes];
 
@@ -20,14 +20,14 @@ const Reactions = ({
 	stayScrolled,
 	...rest
 }) => {
-	const [reactions, dispatch] = useReducer( reducer, [] );
+	const [reactions, dispatch] = useReducer(reducer, []);
 
 	useEffect(() => {
 		const loading = loadReactionsFromDb({
 			topic,
 			targetID: messageID,
 		});
-		loading.then( prevMessages => {
+		loading.then(prevMessages => {
 			dispatch({ type: 'old', payload: prevMessages });
 			stayScrolled();
 		});
@@ -43,7 +43,7 @@ const Reactions = ({
 		return () => {
 			unsub();
 		};
-	}, [] );
+	}, []);
 
 	return (
 		<ReactionsComponent

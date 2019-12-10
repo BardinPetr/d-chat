@@ -6,9 +6,9 @@ import base64Mime from 'base64mime';
 // https://dexie.org/docs/API-Reference (ctrl+f 'blob')
 // Although, not sure what the Firefox note there means.
 export function saveAttachment({data, hash}) {
-	const mime = base64Mime( data );
-	data = data.slice( data.indexOf( ',' ) + 1 );
-	data = base64ToBlob( data, mime );
+	const mime = base64Mime(data);
+	data = data.slice(data.indexOf(',') + 1);
+	data = base64ToBlob(data, mime);
 	db.attachments.add({
 		hash,
 		data,
@@ -16,7 +16,7 @@ export function saveAttachment({data, hash}) {
 	return hash;
 }
 
-export async function loadAttachment( hash ) {
+export async function loadAttachment(hash) {
 	return db.attachments.get({
 		hash,
 	});

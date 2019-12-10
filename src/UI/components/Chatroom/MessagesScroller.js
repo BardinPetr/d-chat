@@ -14,7 +14,7 @@ const MessagesScroller = ({
 	topic,
 }) => {
 	const listRef = useRef();
-	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled( listRef, {
+	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
 		inaccuracy: 15,
 	});
@@ -22,17 +22,17 @@ const MessagesScroller = ({
 	useLayoutEffect(() => {
 		stayScrolled();
 
-		if ( isScrolled()) {
+		if (isScrolled()) {
 			markAllMessagesRead();
 		}
-	}, scrollTriggers );
+	}, scrollTriggers);
 
 	// When changing topic, we want to stay bottom.
 	useLayoutEffect(() => {
 		scrollBottom();
-	}, [topic] );
+	}, [topic]);
 
-	const stay = debounce( stayScrolled, 50 );
+	const stay = debounce(stayScrolled, 50);
 
 	return (
 		<div

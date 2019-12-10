@@ -2,13 +2,13 @@ import React, { useEffect, useState, useReducer } from 'react';
 import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
 import { loadMessagesFromDb, PAGE_SIZE, subscribeToMessageChanges } from 'Approot/database/messages';
 
-function reducer( state, action ) {
+function reducer(state, action) {
 
 	const changes = action.payload;
-	switch( action.type ) {
+	switch(action.type) {
 		case 'modify':
-			return state.map( msg => {
-				if ( msg.id === changes.id ) {
+			return state.map(msg => {
+				if (msg.id === changes.id) {
 					return changes;
 				}
 				return msg;
@@ -29,11 +29,11 @@ const Messages = ({
 	topic,
 	...rest
 }) => {
-	const [messages, dispatch] = useReducer( reducer, [] );
-	const [hasMore, setHasMore] = useState( true );
+	const [messages, dispatch] = useReducer(reducer, []);
+	const [hasMore, setHasMore] = useState(true);
 
 	const loadMore = () => {
-		if ( !topic ) {
+		if (!topic) {
 			return;
 		}
 		const previous =
@@ -44,23 +44,23 @@ const Messages = ({
 		loadMessagesFromDb({
 			topic,
 			previous: previous,
-		}).then( prevMessages => {
-			if ( prevMessages.length < PAGE_SIZE ) {
-				setHasMore( false );
+		}).then(prevMessages => {
+			if (prevMessages.length < PAGE_SIZE) {
+				setHasMore(false);
 			}
 			dispatch({ type: 'old', payload: prevMessages });
 		});
 	};
 
 	useEffect(() => {
-		if ( ! topic ) {
+		if (!topic) {
 			return;
 		}
 
 		const unsub = subscribeToMessageChanges(
 			topic,
-			( message, modifies ) => {
-				if ( modifies ) {
+			(message, modifies) => {
+				if (modifies) {
 					dispatch({ type: 'modify', payload: message });
 				} else {
 					dispatch({ type: 'new', payload: message });
@@ -69,14 +69,14 @@ const Messages = ({
 		);
 
 		loadMessagesFromDb({ topic })
-			.then( prevMessages => dispatch({ type: 'next', payload: prevMessages }))
+			.then(prevMessages => dispatch({ type: 'next', payload: prevMessages }))
 			// New chat -> assume has messages.
-			.then(() => setHasMore( true ));
+			.then(() => setHasMore(true));
 
 		return () => {
 			unsub();
 		};
-	}, [topic] );
+	}, [topic]);
 
 	return (
 		<MessagesComponent

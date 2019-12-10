@@ -7,11 +7,11 @@ export function loadReactionsFromDb({ topic, targetID }) {
 		.toArray();
 }
 
-export function subscribeToReactions({ topic, targetID }, callback ) {
+export function subscribeToReactions({ topic, targetID }, callback) {
 	const emitter = getChangesEmitter();
 	const event = `${topic}-${targetID}`;
 
-	emitter.on( event, callback );
+	emitter.on(event, callback);
 
-	return () => emitter.removeListener( event, callback );
+	return () => emitter.removeListener(event, callback);
 }

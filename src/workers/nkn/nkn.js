@@ -52,7 +52,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0044.nkn.org:30003',
 ];
 const getRandomSeed = () =>
-	SEED_ADDRESSES[Math.floor( Math.random() * SEED_ADDRESSES.length )];
+	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
 const randomSeed = getRandomSeed();
 
 nknWallet.configure({
@@ -76,12 +76,12 @@ class NKN extends nkn {
 		this.wallet = wallet;
 	}
 
-	subscribe = async ( topic, options = {}) => {
+	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
-		const topicID = genChatID( topic );
-		const isSubbed = await this.isSubscribed( topic );
+		const topicID = genChatID(topic);
+		const isSubbed = await this.isSubscribed(topic);
 
-		if ( isSubbed && topic !== DCHAT_PUBLIC_TOPICS ) {
+		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
 			throw 'Too soon';
 		}
 
@@ -89,7 +89,7 @@ class NKN extends nkn {
 
 		return this._subscribe(
 			topicID,
-			JSON.stringify( metadata ),
+			JSON.stringify(metadata),
 			{
 				fee,
 			}
@@ -97,16 +97,16 @@ class NKN extends nkn {
 	};
 
 	// Tries to subscribe many times.
-	_subscribe = ( topicID, metadata, options, _recurse = 0 ) => {
+	_subscribe = (topicID, metadata, options, _recurse = 0) => {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
 			this.identifier,
 			metadata,
 			options
-		).catch( e => {
-			if ( _recurse < NUMBER_OF_SUBSCRIPTION_TRIES ) {
-				return this._subscribe( topicID, metadata, options, _recurse + 1 );
+		).catch(e => {
+			if (_recurse < NUMBER_OF_SUBSCRIPTION_TRIES) {
+				return this._subscribe(topicID, metadata, options, _recurse + 1);
 			} else {
 				throw e;
 			}
@@ -118,54 +118,54 @@ class NKN extends nkn {
 	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
 	 */
 	isSubscribed = topic => {
-		const topicID = genChatID( topic );
-		const subInfo = this.defaultClient.getSubscription( topicID, this.addr );
+		const topicID = genChatID(topic);
+		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
 		);
 
-		return Promise.all( [ subInfo, latestBlockHeight ] )
-			.then( async ( [ info, blockHeight ] ) => {
-				if ( blockHeight === 0 ) {
+		return Promise.all([ subInfo, latestBlockHeight ])
+			.then(async ([ info, blockHeight ]) => {
+				if (blockHeight === 0) {
 					return false;
 				}
-				if ( info.expiresAt - blockHeight > 5000 ) {
+				if (info.expiresAt - blockHeight > 5000) {
 					return info;
 				} else {
 					throw 'Maybe in pool?';
 				}
-			}).catch( async () => {
-				const subs = await this.getSubs( topic );
-				const inPool = subs.subscribersInTxPool.some( sub => sub === this.addr );
+			}).catch(async () => {
+				const subs = await this.getSubs(topic);
+				const inPool = subs.subscribersInTxPool.some(sub => sub === this.addr);
 				return inPool;
 			});
 	};
 
-	publishMessage = async ( topic, message, options = {}) => {
+	publishMessage = async (topic, message, options = {}) => {
 		options = {
 			txPool: true,
 			...options,
 		};
 		try {
-			return this.publish( genChatID( topic ), JSON.stringify( message ), options );
-		} catch ( e ) {
-			console.error( 'Error when publishing', e );
+			return this.publish(genChatID(topic), JSON.stringify(message), options);
+		} catch (e) {
+			console.error('Error when publishing', e);
 			throw e;
 		}
 	};
 
-	sendMessage = async ( to, message, options = {}) => {
-		if ( to === this.addr ) {
+	sendMessage = async (to, message, options = {}) => {
+		if (to === this.addr) {
 			return;
 		}
 		// Add this every time for now.
 		message.isPrivate = true;
 		// Ignore errors.
-		return this.send( to, JSON.stringify( message ), options ).catch(() => {});
+		return this.send(to, JSON.stringify(message), options).catch(() => {});
 	};
 
-	getSubs = ( topic, options = {}) => {
+	getSubs = (topic, options = {}) => {
 		options = {
 			offset: 0,
 			limit: 1000,
@@ -173,8 +173,8 @@ class NKN extends nkn {
 			txPool: true,
 			...options,
 		};
-		topic = genChatID( topic );
-		return this.defaultClient.getSubscribers( topic, options );
+		topic = genChatID(topic);
+		return this.defaultClient.getSubscribers(topic, options);
 	};
 
 	/**
@@ -183,18 +183,18 @@ class NKN extends nkn {
 	 * @return [{user, data}]
 	 */
 	fetchSubscriptions = async topic => {
-		const subs = await this.getSubs( topic, {
+		const subs = await this.getSubs(topic, {
 			meta: true,
 		});
 
 		const promises = [];
 
-		const data = Object.entries( subs.subscribers ).reduce(( acc, sub ) => {
+		const data = Object.entries(subs.subscribers).reduce((acc, sub) => {
 			let subscriberData;
-			if ( sub[1] && typeof sub[1] === 'string' && sub[1] !== '' ) {
+			if (sub[1] && typeof sub[1] === 'string' && sub[1] !== '') {
 				try {
-					subscriberData = JSON.parse( sub[1] );
-				} catch ( e ) {
+					subscriberData = JSON.parse(sub[1]);
+				} catch (e) {
 					return acc;
 				}
 			} else {
@@ -202,28 +202,28 @@ class NKN extends nkn {
 			}
 
 			// If this is for the list of public chats, then get sub counts.
-			if ( topic === DCHAT_PUBLIC_TOPICS && subscriberData.name ) {
+			if (topic === DCHAT_PUBLIC_TOPICS && subscriberData.name) {
 				promises.push(
 					this.defaultClient
-						.getSubscribersCount( genChatID( subscriberData.name ))
-						.then( count => {
+						.getSubscribersCount(genChatID(subscriberData.name))
+						.then(count => {
 							subscriberData.subscribersCount = count;
 						})
-						.catch( console.error ),
+						.catch(console.error),
 				);
 			}
 
 			subscriberData._user = sub[0];
-			return acc.concat( subscriberData );
-		}, [] );
+			return acc.concat(subscriberData);
+		}, []);
 
-		await Promise.all( promises );
+		await Promise.all(promises);
 
 		return data;
 	};
 
 	toJSON() {
-		return JSON.stringify( this.neutered());
+		return JSON.stringify(this.neutered());
 	}
 
 	/**
@@ -231,7 +231,7 @@ class NKN extends nkn {
 	 * it contains no sensitive information.
 	 */
 	neutered = () => {
-		const w = JSON.parse( this.wallet.toJSON());
+		const w = JSON.parse(this.wallet.toJSON());
 		w.address = w.Address;
 		const c = {
 			...this,
@@ -239,8 +239,8 @@ class NKN extends nkn {
 		};
 
 		const preservedKeys = ['addr', 'identifier', 'wallet'];
-		for ( let key in c ) {
-			preservedKeys.includes( key ) || delete c[key];
+		for (let key in c) {
+			preservedKeys.includes(key) || delete c[key];
 		}
 		return c;
 	};

@@ -6,18 +6,18 @@ import Message from './Message';
 import { isNotice } from 'Approot/misc/util';
 
 // 1min 30seconds seconds.
-const SEPARATE_MESSAGE_TIME = ( 60 + 30 ) * 1000;
+const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
 
 const LastRead = () => {
 	const lastReadRef = useRef();
 	useEffect(() => {
 		lastReadRef.current.scrollIntoView();
-	}, [] );
+	}, []);
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (
 		<React.Fragment>
 			<div style={{ marginBottom: '1rem' }} ref={lastReadRef} />
-			<div className="is-divider" data-content={__( 'New messages below' )} />
+			<div className="is-divider" data-content={__('New messages below')} />
 		</React.Fragment>
 	);
 };
@@ -32,11 +32,11 @@ const MessagesList = ({
 	stayScrolled,
 }) => {
 	let previousMessage;
-	const messageList = messages.reduce(( acc, message ) => {
+	const messageList = messages.reduce((acc, message) => {
 		let includeHeader = true;
-		const messageIsNotice = isNotice( message );
-		if ( message.id === lastReadId ) {
-			acc.push( <LastRead key={'lastRead'} /> );
+		const messageIsNotice = isNotice(message);
+		if (message.id === lastReadId) {
+			acc.push(<LastRead key={'lastRead'} />);
 		}
 
 		// TODO fix the toolbar reaction button.
@@ -46,13 +46,13 @@ const MessagesList = ({
 				targetID: message.id,
 			});
 
-		if ( previousMessage ) {
+		if (previousMessage) {
 			// Same sender, max n minutes apart.
 			if (
-				!isNotice( previousMessage ) &&
+				!isNotice(previousMessage) &&
 				!messageIsNotice &&
 				previousMessage.addr === message.addr &&
-				new Date( message.timestamp ) - new Date( previousMessage.timestamp ) <
+				new Date(message.timestamp) - new Date(previousMessage.timestamp) <
 					SEPARATE_MESSAGE_TIME
 			) {
 				includeHeader = false;
@@ -64,14 +64,14 @@ const MessagesList = ({
 		return acc.concat(
 			<Message
 				isNotice={messageIsNotice}
-				className={classnames( 'is-relative', {
+				className={classnames('is-relative', {
 					'x-me': message.isMe,
 					'x-refers-to-me': message.refersToMe,
 				})}
 				includeHeader={includeHeader}
 				refer={refer}
 				message={message}
-				isSubscribed={subs.includes( message.addr )}
+				isSubscribed={subs.includes(message.addr)}
 				key={message.id}
 				isNotice={'dchat/subscribe' === message.contentType}
 				topic={message.topic}
@@ -86,7 +86,7 @@ const MessagesList = ({
 				/>
 			</Message>
 		);
-	}, [] );
+	}, []);
 
 	return messageList;
 };

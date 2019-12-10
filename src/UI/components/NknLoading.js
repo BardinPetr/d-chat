@@ -1,7 +1,7 @@
 import React from 'react';
 
 const NknLoading = ({white, black}) => (
-	( white ?
+	(white ?
 		<img src="img/white-animatedlogo-fixed.gif" />
 		: black ?
 			<img src="img/black-animatedlogo.gif" />
