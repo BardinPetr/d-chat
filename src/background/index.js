@@ -14,40 +14,46 @@ import notifierMiddleware from 'Approot/redux/middleware/notifier';
 import confirmerMiddleware from 'Approot/redux/middleware/messageSentConfirmer';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
+import { storeMessagesToDb } from 'Approot/database/messages';
 
 const password = 'd-chat!!!';
 
 const nknWorker = new NKNWorker();
 
-const workerMiddleware = createWorkerMiddleware(nknWorker);
+const workerMiddleware = createWorkerMiddleware( nknWorker );
 
 let credentials;
-if (IS_EXTENSION) {
-	credentials = localStorage.getItem('credentials');
-	if (credentials) {
+if ( IS_EXTENSION ) {
+	credentials = localStorage.getItem( 'credentials' );
+	if ( credentials ) {
 		try {
-			credentials = JSON.parse(credentials);
-		} catch(e) {
+			credentials = JSON.parse( credentials );
+		} catch( e ) {
 			credentials = undefined;
 		}
 	}
 }
 
-let store;
-export default configs.$loaded.then(() => {
+const creatingStore = configs.$loaded.then( async () => {
+
+	// They were fresh before, so store them now.
+	await storeMessagesToDb( configs.messages );
+	configs.messages = {};
+
 	const persistedState = {
 		clients: configs.clientsMeta,
-		messages: configs.messages,
+		messages: {},
 		reactions: configs.reactions,
 		chatSettings: configs.chatSettings,
 	};
-	store = createStore(
+
+	const store = createStore(
 		rootReducer,
 		persistedState,
 		composeWithDevTools(
 			applyMiddleware(
 				workerMiddleware,
-				alias(aliases),
+				alias( aliases ),
 				confirmerMiddleware,
 				notifierMiddleware,
 				subscribersFetcher,
@@ -59,14 +65,18 @@ export default configs.$loaded.then(() => {
 	wrapStore( store );
 
 	if ( IS_EXTENSION && credentials ) {
-		passworder.decrypt(password, credentials)
-			.then(creds => {
-				const activeClient = store.getState().clients.find(c => c.active);
+		passworder.decrypt( password, credentials )
+			.then( creds => {
+				const activeClient = store.getState().clients.find( c => c.active );
 				const address = activeClient?.wallet.Address;
-				store.dispatch(login(creds, address));
+				if ( address ) {
+					store.dispatch( login( creds, address ));
+				}
 			});
 	}
 	return store;
 });
 
-onInstalled(store);
+creatingStore.then( store => onInstalled( store ));
+
+export default creatingStore;

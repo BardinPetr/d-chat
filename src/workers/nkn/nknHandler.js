@@ -8,31 +8,33 @@ import nknWallet from 'nkn-wallet';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import {
 	connected,
-	receiveMessage,
 } from 'Approot/redux/actions';
+import receiveMessage from './messageReceiver';
 
-function addNKNListeners (client) {
+function addNKNListeners ( client ) {
 
-	client.on('ordered-message', (...args) => {
-		handleIncomingMessage(...args);
+	client.on( 'ordered-message', ( ...args ) => {
+		console.log( 'huh?' );
+		handleIncomingMessage( ...args );
 	});
 	// Do not send ack-messages.
-	client.on('message', () => false);
+	client.on( 'message', () => false );
+	client.on( 'message', () => console.log( 'cmon' ));
 
-	client.on('connect', async () => {
-		postMessage(connected());
-		postMessage(getBalance(client.wallet.address));
+	client.on( 'connect', async () => {
+		postMessage( connected());
+		postMessage( getBalance( client.wallet.address ));
 	});
 }
 
-async function handleIncomingMessage(src, payload, payloadType) {
+async function handleIncomingMessage( src, payload, payloadType ) {
 	if ( payloadType === PayloadType.TEXT ) {
 		const data = payload;
-		const message = new IncomingMessage(data).from(src);
+		const message = new IncomingMessage( data ).from( src );
 
-		if (!message.unreceivable) {
-			postMessage(receiveMessage(message));
-		}
+		console.log( 'huh?', message );
+
+		receiveMessage( message );
 	}
 }
 
@@ -53,15 +55,15 @@ class NKNHandler {
 	static start({ username, password, wallet, seed }) {
 		const isNewWallet = !wallet;
 
-		if (seed) {
-			wallet = nknWallet.restoreWalletBySeed(seed, password);
-		} else if (!isNewWallet) {
-			wallet = nknWallet.loadJsonWallet(JSON.stringify(wallet), password);
-			if (!wallet || !wallet.getPrivateKey) {
+		if ( seed ) {
+			wallet = nknWallet.restoreWalletBySeed( seed, password );
+		} else if ( !isNewWallet ) {
+			wallet = nknWallet.loadJsonWallet( JSON.stringify( wallet ), password );
+			if ( !wallet || !wallet.getPrivateKey ) {
 				throw 'Invalid credentials.';
 			}
 		} else {
-			wallet = nknWallet.newWallet(password);
+			wallet = nknWallet.newWallet( password );
 		}
 
 		const realClient = new NKN({
@@ -69,11 +71,11 @@ class NKNHandler {
 			wallet,
 		});
 
-		if (isNewWallet) {
+		if ( isNewWallet ) {
 			const c = realClient.neutered();
-			postMessage(createNewClient(c));
+			postMessage( createNewClient( c ));
 		}
-		addNKNListeners(realClient);
+		addNKNListeners( realClient );
 
 		this.#instance?.close();
 

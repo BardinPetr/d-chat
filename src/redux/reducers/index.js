@@ -3,11 +3,11 @@ import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
 // Going to move reactions completely into indexedDb at some point.
-const reactions = (state = {}, action) => {
+const reactions = ( state = {}, action ) => {
 	let newState, initial, targetID;
 	const topic = action.payload?.topic;
 
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'chat/CLEAN_REACTIONS':
 		case 'chat/CLEAN_ALL':
 			newState = {};
@@ -49,22 +49,22 @@ const reactions = (state = {}, action) => {
  *
  * Will make sense once things are in indexeddb.
  */
-const messages = (state = {}, action) => {
+const messages = ( state = {}, action ) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'chat/REMOVE_MESSAGE_BY_ID':
 			newState = {
 				...state,
-				[topic]: state[topic].filter(msg => msg.id !== action.payload.id),
+				[topic]: state[topic].filter( msg => msg.id !== action.payload.id ),
 			};
-			configs.messages = newState;
+			// configs.messages = newState;
 			break;
 
 		case 'chat/CLEAN_ALL':
 			newState = {};
-			configs.messages = {};
+			// configs.messages = {};
 			break;
 
 		case 'chat/REMOVE':
@@ -77,21 +77,21 @@ const messages = (state = {}, action) => {
 				...state,
 				[topic]: [...initial, action.payload.message],
 			};
-			configs.messages = newState;
+			// configs.messages = newState;
 			break;
 
 		case 'chat/MODIFY_MESSAGE':
 			initial = state[topic] || [];
 			newState = {
 				...state,
-				[topic]: initial.map(message => {
-					if (message.id === action.payload.id) {
+				[topic]: initial.map( message => {
+					if ( message.id === action.payload.id ) {
 						return action.payload.modifiedMessage;
 					}
 					return message;
 				}),
 			};
-			configs.messages = newState;
+			// configs.messages = newState;
 			break;
 
 		// This one is for displaying all rooms in the chatlist.
@@ -100,7 +100,7 @@ const messages = (state = {}, action) => {
 				...state,
 				[topic]: state[topic] || [],
 			};
-			configs.messages = newState;
+			// configs.messages = newState;
 			break;
 
 		case 'chat/PUBLISH_MESSAGE':
@@ -110,15 +110,15 @@ const messages = (state = {}, action) => {
 	return newState;
 };
 
-const login = (state = {}, action) => {
+const login = ( state = {}, action ) => {
 	let newState;
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'LOGIN':
 			newState = action.payload.credentials;
 			break;
 
 		case 'LOGIN_STATUS':
-			if (action.error) {
+			if ( action.error ) {
 				newState = { error: action.error };
 			} else {
 				newState = action.payload;
@@ -142,9 +142,9 @@ const login = (state = {}, action) => {
 	return newState;
 };
 
-const draftMessage = (state = '', action) => {
+const draftMessage = ( state = '', action ) => {
 	let newState;
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'SAVE_DRAFT':
 			newState = action.payload.content;
 			break;
@@ -163,11 +163,11 @@ const draftMessage = (state = '', action) => {
  *
  * TODO "remove chat", which unsubscribes.
  */
-const chatSettings = (state = {}, action) => {
+const chatSettings = ( state = {}, action ) => {
 	let newState, initial;
 	const topic = action.payload?.topic;
 
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'chat/REMOVE':
 			newState = {
 				...state,
@@ -202,7 +202,7 @@ const chatSettings = (state = {}, action) => {
 				[topic]: {
 					...state[topic],
 					// Filter out newly read message from unread messages.
-					unread: initial.filter(i => !action.payload.ids.some(id => i === id)),
+					unread: initial.filter( i => !action.payload.ids.some( id => i === id )),
 				},
 			};
 			configs.chatSettings = newState;
@@ -263,9 +263,9 @@ const chatSettings = (state = {}, action) => {
 };
 
 // Most recent open page, where re-opening popup will start.
-const navigation = (state = { mostRecentPage: '/' }, action) => {
+const navigation = ( state = { mostRecentPage: '/' }, action ) => {
 	let newState;
-	switch (action.type) {
+	switch ( action.type ) {
 		case 'ui/NAVIGATED':
 			newState = {
 				...state,
