@@ -1,3 +1,6 @@
+/**
+ * Upgrades from < 5.0.0.
+ */
 import db from 'Approot/database/db';
 
 // 5.0.0: indexeddb
@@ -9,10 +12,10 @@ export default async function upgrade(configs) {
 async function storeMessagesToDb(allMessages) {
 	const now = Date.now();
 	// Add messages that haven't already been added into the db.
-	const messages = Object.values(allMessages).flat().filter(msg => !msg.addedToDatabase);
+	const messages = Object.values(allMessages).flat();
 	messages.forEach((msg, index) => {
-		// Primary key compound indexes are broken in Firefox,
-		// we will keep track with a timestamp.
+		// Primary key compound indexes are broken in Firefox, so -
+		// we will keep track with a timestamp. Old messages didn't have this.
 		msg.createdAt = now + index;
 	});
 

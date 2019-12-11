@@ -69,6 +69,7 @@ class IncomingMessage extends Message {
 		super(message);
 
 		this.createdAt = Date.now();
+		this.receivedAs = NKN.instance.addr;
 
 		// Heartbeats should not be received as messages.
 		if (['heartbeat', 'background'].includes(this.contentType)) {

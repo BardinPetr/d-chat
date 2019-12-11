@@ -20,9 +20,11 @@ const NewTopicForm = ({ privateChat }) => {
 	return (
 		<form className="field" onSubmit={submit}>
 			<div className="control">
+				<span className="is-sr-only">{__('No slashes')}</span>
 				<input
 					placeholder={privateChat ? __('Contact address') : __('Topic')}
 					value={target}
+					type="text"
 					className="input is-small"
 					onChange={e => setTarget(e.target.value)}
 					pattern="[^\/]*"
@@ -37,32 +39,25 @@ const Home = ({ client }) => (
 		<div className="container">
 			<div className="columns">
 				<div className="column">
-					<div className="columns">
-						<div className="column">
-							<div className="field">
-								<label className="label has-text-weight-normal">
-									{__('Join a chatroom')}
-								</label>
-								<div className="control">
-									<NewTopicForm />
-								</div>
-							</div>
+					<div className="field">
+						<label className="label has-text-weight-normal">
+							{__('Join a chatroom')}
+						</label>
+						<div className="control">
+							<NewTopicForm />
 						</div>
-						<div className="column">
-							<div className="field">
-								<label className="label has-text-weight-normal">
-									{__('Private message')}
-								</label>
-								<div className="control">
-									<NewTopicForm privateChat />
-								</div>
-							</div>
+					</div>
+					<div className="field">
+						<label className="label has-text-weight-normal">
+							{__('Private message')}
+						</label>
+						<div className="control">
+							<NewTopicForm privateChat />
 						</div>
-						<div className="column">
-							<div className="content">
-								<p><Link to="/topics">{__('Public chat index')}</Link></p>
-							</div>
-						</div>
+					</div>
+					<div className="content">
+						<p className="has-text-italic">{__('Chat names should not contain slashes.')}</p>
+						<p><Link to="/topics">{__('Public chat index')}</Link></p>
 					</div>
 
 					<Info />

@@ -9,10 +9,10 @@ db.version(1).stores({
 db.version(2).stores({
 	attachments: '++id, &hash',
 	// Primary key [topic+id] so they can be easily updated with `.put`.
-	// createdAt was for sorting or something, I suppose?
+	// createdAt used for sorting.
 	messages: '[topic+id+addr], [topic+createdAt], createdAt',
 	// reactions: '++_id, [topic+message_id], reaction_id'
-	reactions: '++_id, [topic+targetID]',
+	reactions: '[topic+id+addr], [topic+targetID]',
 });
 
 // Observable has some issue and first change (this here) isn't reported.

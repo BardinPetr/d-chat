@@ -37,7 +37,7 @@ function changesListener(changes) {
 			return;
 		}
 		if (msg.contentType === 'reaction') {
-			messageEvents.emit(`${msg.topic}-${msg.targetID}`, msg);
+			messageEvents.emit(`${msg.topic}-${msg.targetID}`, msg, change.mods);
 		} else {
 			messageEvents.emit(msg.topic, msg, change.mods);
 		}
