@@ -19,7 +19,7 @@ export const onInstalled = storePromise =>
 			// Upgrade to indexeddb.
 			if (semver.lt(details.previousVersion, '5.0.0')) {
 				await configs.$loaded;
-				const data = {
+				let data = {
 					messages: { ...configs.messages },
 					reactions: { ...configs.reactions },
 				};
