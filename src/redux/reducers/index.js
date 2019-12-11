@@ -108,7 +108,7 @@ const chatSettings = (state = {}, action) => {
 					unread: [],
 					subscribers: [],
 					subscribersMeta: [],
-					receivedAt: 0,
+					receivedAt: 1,
 					...state[topic],
 					hidden: false,
 				},

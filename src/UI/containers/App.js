@@ -34,13 +34,15 @@ const App = async (store) => {
 
 	subscribeToChatOnNavigation(history.location);
 
-	// Only popup deals with navigation saving.
-	if (window.location.pathname.includes('popup.html')) {
-		history.listen((location) => {
-			subscribeToChatOnNavigation(location);
+	const isPopup = window.location.pathname.includes('popup.html');
+
+	history.listen((location) => {
+		subscribeToChatOnNavigation(location);
+		// Only popup deals with navigation saving.
+		if (isPopup) {
 			store.dispatch(navigated(location.pathname));
-		});
-	}
+		}
+	});
 
 	ReactDOM.render(
 		<Provider store={store}>

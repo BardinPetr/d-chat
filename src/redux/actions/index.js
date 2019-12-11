@@ -103,16 +103,6 @@ export const publishMessage = message => ({
 	},
 });
 
-// Used in marking message-received.
-export const modifyMessage = (topic, id, modifiedMessage) => ({
-	type: 'chat/MODIFY_MESSAGE',
-	payload: {
-		topic,
-		id,
-		modifiedMessage,
-	},
-});
-
 export const receiveMessage = message => {
 	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';

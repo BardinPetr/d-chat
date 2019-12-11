@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
+import uniqBy from 'lodash.uniqby';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb, subscribeToReactions } from 'Approot/database/reactions';
 
@@ -7,7 +8,10 @@ function reducer(state, action) {
 	const changes = action.payload;
 	switch(action.type) {
 		case 'new':
-			return [...state, changes];
+			// Our own reactions get received twice.
+			// This is the easiest solution, and considering -
+			// the array is always quite small, it's alright.
+			return uniqBy([...state, changes], 'id');
 
 		case 'old':
 			return [...changes, ...state];
@@ -23,11 +27,10 @@ const Reactions = ({
 	const [reactions, dispatch] = useReducer(reducer, []);
 
 	useEffect(() => {
-		const loading = loadReactionsFromDb({
+		loadReactionsFromDb({
 			topic,
 			targetID: messageID,
-		});
-		loading.then(prevMessages => {
+		}).then(prevMessages => {
 			dispatch({ type: 'old', payload: prevMessages });
 			stayScrolled();
 		});

@@ -1,5 +1,9 @@
 # Src folder
 
+## Key technologies and packages
+
+IndexedDB (Dexie.js), NKN (nkn-ordered-multiclient), Redux (and webext-redux), React (and Babel), Web Workers, Webpack, markdown parser, html sanitizer, and webext-lib-configs.
+
 ## Message schema
 
 Plenty of comments in `workers/nkn/Message.js`.
@@ -24,6 +28,12 @@ From web worker, another round of actions is dispatched, and these again go thro
 
 The web version is nice for development, since react/redux devtools don't work in web-exts.
 
+## Messages, indexeddb, and the UI
+
+Dexie.js has this fantastic thing add-on called "observable" which, unexpectedly and correctly, works from background page's web worker into popup's UI.
+
+When a new message arrives, it is added into the database in the web worker, and UIs can pick it up with the observable, like that.
+
 ## Folder structure
 
 > UI, workers, misc, and redux folders are the honey.
@@ -38,10 +48,10 @@ lib/js: 2 web extension libraries: lib-configs & lib-options. Lib-configs is for
 
 misc: 
 * browser-util.js: utilities that use web extension specific `browser.` functions. They have to be separated because web worker cannot use them, and importing the file throws errors in webpack. 
-* configs.js: settings stored in `browser.storage`, using lib-configs.
-* util.js: other utils.
+* configs.js: Settings stored in `browser.storage`, using lib-configs.
+* util.js: Other utils.
 
-options: options page. largely unused.
+options: options page. Largely unused.
 
 popup & sidebar: html files that import UI.
 
@@ -49,6 +59,7 @@ redux: actions, middleware, aliases, reducers.
 
 workers: NKN worker: everything in/out of NKN.
 * nkn folder:
-  * incoming, outgoing, and BaseMessage classes. 
+  * Incoming, outgoing, and message classes. 
   * nkn.js: nkn-client. Changing this file and nknHandler (and touch on aliases.js), one could plug in a different backend, so the code works as a chat boilerplate.
-  * nknHandler: keeps track of active, connected, client.
+
+database: indexeddb, as you would expect.

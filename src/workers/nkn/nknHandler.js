@@ -14,12 +14,10 @@ import receiveMessage from './messageReceiver';
 function addNKNListeners (client) {
 
 	client.on('ordered-message', (...args) => {
-		console.log('huh?');
 		handleIncomingMessage(...args);
 	});
 	// Do not send ack-messages.
 	client.on('message', () => false);
-	client.on('message', () => console.log('cmon'));
 
 	client.on('connect', async () => {
 		postMessage(connected());
@@ -31,8 +29,6 @@ async function handleIncomingMessage(src, payload, payloadType) {
 	if (payloadType === PayloadType.TEXT) {
 		const data = payload;
 		const message = new IncomingMessage(data).from(src);
-
-		console.log('huh?', message);
 
 		receiveMessage(message);
 	}
