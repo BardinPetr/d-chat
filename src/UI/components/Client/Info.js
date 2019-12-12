@@ -1,3 +1,6 @@
+/**
+ * Used in containers/Home.js, quite useless otherwise.
+ */
 import React, { useState } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import OldWalletExporter from './ExportOldWallet-APP_TARGET';

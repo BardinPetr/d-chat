@@ -71,7 +71,6 @@ const Home = ({ client }) => (
 						<Info />
 					</div>
 
-
 					<div className="container">
 						{client && (
 							<ClientInfo client={client}>
