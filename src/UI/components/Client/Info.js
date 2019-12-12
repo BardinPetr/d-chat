@@ -14,13 +14,6 @@ const ClientInfo = ({ client, children }) => {
 			<div className="tile is-parent is-vertical">
 				<div className="tile">
 					<div className="field">
-						<div className="field">
-							<p className="is-size-7 has-text-grey-darker">
-								{__('Contact address')}
-							</p>
-							<p className="x-address-broken x-address">{client.addr}</p>
-						</div>
-						<hr className="is-divider" />
 						{!expanded && (
 							<a
 								className="button is-link is-outlined is-size-7"
@@ -45,17 +38,17 @@ const ClientInfo = ({ client, children }) => {
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7 has-text-grey-darker">{__('Wallet balance')}</p>
-								<p>{client.balance || '?'} NKN</p>
-							</div>
-							{children}
-						</div>
-						<div className="tile is-child">
-							<div className="field">
 								<WalletExporter wallet={client.wallet}>
 									{__('Export wallet')}
 								</WalletExporter>
 							</div>
+						</div>
+						<div className="tile is-child">
+							<div className="field">
+								<p className="is-size-7 has-text-grey-darker">{__('Wallet balance')}</p>
+								<p>{client.balance || '?'} NKN</p>
+							</div>
+							{children}
 						</div>
 						<div className="tile is-child">
 							<div className="field">

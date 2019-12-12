@@ -39,6 +39,16 @@ const Home = ({ client }) => (
 		<div className="container">
 			<div className="columns">
 				<div className="column">
+					<div className="container">
+						<div className="notification">
+							<div className="field">
+								<p className="is-size-7 has-text-grey-darker">
+									{__('Contact address')}
+								</p>
+								<p className="x-address-broken x-address">{client.addr}</p>
+							</div>
+						</div>
+					</div>
 					<div className="field">
 						<label className="label has-text-weight-normal">
 							{__('Join a chatroom')}
@@ -58,17 +68,15 @@ const Home = ({ client }) => (
 					<div className="content">
 						<p className="has-text-italic">{__('Chat names should not contain slashes.')}</p>
 						<p><Link to="/topics">{__('Public chat index')}</Link></p>
+						<Info />
 					</div>
 
-					<Info />
 
 					<div className="container">
 						{client && (
-							<div className="notification">
-								<ClientInfo client={client}>
-									<Version />
-								</ClientInfo>
-							</div>
+							<ClientInfo client={client}>
+								<Version />
+							</ClientInfo>
 						)}
 					</div>
 
