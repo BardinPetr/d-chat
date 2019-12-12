@@ -10,7 +10,6 @@ db.version(2).stores({
 	// Primary key [topic+id] so they can be easily updated with `.put`.
 	// createdAt used for sorting.
 	messages: '[topic+id+addr], [topic+createdAt], createdAt',
-	// reactions: '++_id, [topic+message_id], reaction_id'
 	reactions: '[topic+id+addr], [topic+targetID]',
 });
 
