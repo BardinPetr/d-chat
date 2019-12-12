@@ -44,8 +44,8 @@ const TopicsList = ({ topics, whispers, showWhispers }) => (
 
 // Sorts newest messages on top.
 const sorter = (a, b) => {
-	const lastMessageA = a || 1;
-	const lastMessageB = b || 1;
+	const lastMessageA = a.lastMessage || 1;
+	const lastMessageB = b.lastMessage || 1;
 
 	if (!lastMessageA) {
 		return 1;
