@@ -119,6 +119,15 @@ export const receiveMessage = message => {
 	};
 };
 
+// The modified message's ID will be used for matching.
+export const modifyMessage = (modified) => ({
+	type: 'chat/MODIFY_MESSAGE',
+	payload: {
+		topic: getChatName(modified.topic),
+		message: modified,
+	},
+});
+
 export const markRead = (topic, ids) => ({
 	type: 'chat/MARK_READ',
 	payload: {

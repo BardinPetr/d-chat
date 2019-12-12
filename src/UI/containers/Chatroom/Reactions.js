@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
+import { connect } from 'react-redux';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
-import { loadReactionsFromDb, subscribeToReactions } from 'Approot/database/reactions';
+import { loadReactionsFromDb } from 'Approot/database/reactions';
 
 function reducer(state, action) {
 
@@ -18,34 +19,47 @@ const Reactions = ({
 	topic,
 	messageID,
 	stayScrolled,
+	messageEvent,
 	...rest
 }) => {
 	const [reactions, dispatch] = useReducer(reducer, []);
+	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
 		loadReactionsFromDb({
 			topic,
 			targetID: messageID,
 		}).then(prevMessages => {
-			dispatch({ type: 'old', payload: prevMessages });
-			stayScrolled();
-		});
-
-		const unsub = subscribeToReactions({
-			topic,
-			targetID: messageID,
-		}, (reaction, isModification) => {
-			if (isModification) {
+			if (!mounted) {
 				return;
 			}
-			dispatch({ type: 'new', payload: reaction });
-			stayScrolled();
+			dispatch({ type: 'old', payload: prevMessages });
 		});
-
 		return () => {
-			unsub();
+			setMounted(false);
 		};
-	}, []);
+	}, [mounted, messageID]);
+
+	useEffect(() => {
+		stayScrolled();
+	}, [reactions]);
+
+	useEffect(() => {
+		if (
+			!mounted
+			|| !messageEvent.reaction
+			|| !topic
+			|| topic !== messageEvent.topic
+			|| messageEvent.reaction.targetID !== messageID
+		) {
+			return;
+		}
+
+		dispatch({
+			type: 'new',
+			payload: messageEvent.reaction,
+		});
+	}, [messageEvent, topic, mounted, messageID]);
 
 	return (
 		<ReactionsComponent
@@ -55,4 +69,8 @@ const Reactions = ({
 	);
 };
 
-export default Reactions;
+const mapStateToProps = state => ({
+	messageEvent: state.messageEvent,
+});
+
+export default connect(mapStateToProps)(Reactions);

@@ -2,6 +2,37 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
+// Used for detecting changes in database from UI.
+const messageEvent = (_, action) => {
+	let newState = {};
+	switch (action.type) {
+		case 'chat/MODIFY_MESSAGE':
+			newState = {
+				topic: action.payload.topic,
+				message: action.payload.message,
+				type: 'modify',
+			};
+			break;
+
+		case 'chat/RECEIVE_MESSAGE':
+			newState = {
+				topic: action.payload.topic,
+				message: action.payload.message,
+				type: 'new',
+			};
+			break;
+
+		case 'chat/RECEIVE_REACTION':
+			newState = {
+				topic: action.payload.topic,
+				reaction: action.payload.message,
+				type: 'new',
+			};
+			break;
+	}
+	return newState;
+};
+
 const login = (state = {}, action) => {
 	let newState;
 	switch (action.type) {
@@ -178,6 +209,8 @@ export default combineReducers({
 	clients,
 	// Chat.
 	chatSettings,
+
+	messageEvent,
 
 	// UI
 	draftMessage,

@@ -1,5 +1,4 @@
 import Dexie from 'dexie';
-import 'dexie-observable';
 
 const db = new Dexie('dchat');
 db.version(1).stores({
@@ -14,10 +13,6 @@ db.version(2).stores({
 	// reactions: '++_id, [topic+message_id], reaction_id'
 	reactions: '[topic+id+addr], [topic+targetID]',
 });
-
-// Observable has some issue and first change (this here) isn't reported.
-db.attachments.put({ fixing: 'observable bug' })
-	.then(item => db.attachments.delete(item));
 
 export const maxKey = Dexie.maxKey;
 export const minKey = Dexie.minKey;

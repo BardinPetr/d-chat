@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
+import { connect } from 'react-redux';
 import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
-import { loadMessagesFromDb, PAGE_SIZE, subscribeToMessageChanges } from 'Approot/database/messages';
+import { loadMessagesFromDb, PAGE_SIZE } from 'Approot/database/messages';
 
 function reducer(state, action) {
 
@@ -27,6 +28,7 @@ function reducer(state, action) {
 
 const Messages = ({
 	topic,
+	messageEvent,
 	...rest
 }) => {
 	const [messages, dispatch] = useReducer(reducer, []);
@@ -53,29 +55,30 @@ const Messages = ({
 	};
 
 	useEffect(() => {
-		if (!topic) {
+		if (
+			!messageEvent.message
+			|| !topic
+			|| topic !== messageEvent.topic
+		) {
 			return;
 		}
 
-		const unsub = subscribeToMessageChanges(
-			topic,
-			(message, modifies) => {
-				if (modifies) {
-					dispatch({ type: 'modify', payload: message });
-				} else {
-					dispatch({ type: 'new', payload: message });
-				}
-			}
-		);
+		dispatch({
+			type: messageEvent.type,
+			payload: messageEvent.message,
+		});
+
+	}, [messageEvent, topic]);
+
+	useEffect(() => {
+		if (!topic) {
+			return;
+		}
 
 		loadMessagesFromDb({ topic })
 			.then(prevMessages => dispatch({ type: 'next', payload: prevMessages }))
 			// New chat -> assume has messages.
 			.then(() => setHasMore(true));
-
-		return () => {
-			unsub();
-		};
 	}, [topic]);
 
 	return (
@@ -89,4 +92,8 @@ const Messages = ({
 	);
 };
 
-export default Messages;
+const mapStateToProps = state => ({
+	messageEvent: state.messageEvent,
+});
+
+export default connect(mapStateToProps)(Messages);
