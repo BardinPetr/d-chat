@@ -35,20 +35,20 @@ const NewTopicForm = ({ privateChat }) => {
 };
 
 const Home = ({ client }) => (
-	<section className="section">
-		<div className="container">
-			<div className="columns">
-				<div className="column">
-					<div className="container">
-						<div className="notification">
-							<div className="field">
-								<p className="is-size-7 has-text-grey-darker">
-									{__('Contact address')}
-								</p>
-								<p className="x-address-broken x-address">{client.addr}</p>
-							</div>
-						</div>
+	<div className="container">
+		<div className="columns">
+			<div className="column">
+				<div className="section">
+
+					<div className="field">
+						<p className="label has-text-weight-normal">
+							{__('Contact address')}
+						</p>
+						<p className="x-address-broken x-address has-text-black">{client.addr}</p>
 					</div>
+
+					<hr className="is-divider" />
+
 					<div className="field">
 						<label className="label has-text-weight-normal">
 							{__('Join a chatroom')}
@@ -57,6 +57,7 @@ const Home = ({ client }) => (
 							<NewTopicForm />
 						</div>
 					</div>
+
 					<div className="field">
 						<label className="label has-text-weight-normal">
 							{__('Private message')}
@@ -65,24 +66,29 @@ const Home = ({ client }) => (
 							<NewTopicForm privateChat />
 						</div>
 					</div>
+
 					<div className="content">
 						<p className="has-text-italic">{__('Chat names should not contain slashes.')}</p>
+					</div>
+
+				</div>
+
+				<div className="section">
+					<div className="content">
 						<p><Link to="/topics">{__('Public chat index')}</Link></p>
 						<Info />
 					</div>
 
-					<div className="container">
-						{client && (
-							<ClientInfo client={client}>
-								<Version />
-							</ClientInfo>
-						)}
-					</div>
-
+					{client && (
+						<ClientInfo client={client}>
+							<Version />
+						</ClientInfo>
+					)}
 				</div>
+
 			</div>
 		</div>
-	</section>
+	</div>
 );
 
 const mapStateToProps = state => ({

@@ -1,6 +1,9 @@
 /**
  * 1. Creates notifications and changes badge text.
  * 2. Sends back 'received' acknowledgements for private messages.
+ *
+ * TODO: when browser is restarted, some messages are received a second time.
+ *  Need to figure out a way to not create a notification for these messages.
  */
 
 import sanitize from 'striptags';
