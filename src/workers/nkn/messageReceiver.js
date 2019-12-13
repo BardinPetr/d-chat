@@ -13,6 +13,10 @@ export default async function receivingMessage(message) {
 		} else if (messagesWaitingForConfirmation.includes(message.id)) {
 			postMessage(modifyMessage(message));
 			posted = true;
+			// Drop.
+			messagesWaitingForConfirmation = messagesWaitingForConfirmation.filter(
+				id => id !== message.id
+			);
 		}
 
 		if (!posted) {
