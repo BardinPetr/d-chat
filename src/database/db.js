@@ -10,9 +10,9 @@ db.version(2).stores({
 	// Primary key [topic+id+addr] so they can be easily updated with `.put` -
 	// and only message owner can update their message.
 	// createdAt used for sorting.
-	// [topic+id] (will be) used for getting unread messages.
 	// [topic+createdAt] used for loading more history.
-	messages: '[topic+id+addr], [topic+createdAt], createdAt, [topic+id]',
+	// [topic+id] (will be) used for getting unread messages.
+	messages: '[topic+id+addr], [topic+createdAt], createdAt', // [topic+id]
 	reactions: '[topic+id+addr], [topic+targetID]',
 });
 
