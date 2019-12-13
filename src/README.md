@@ -28,12 +28,6 @@ From web worker, another round of actions is dispatched, and these again go thro
 
 The web version is nice for development, since react/redux devtools don't work in web-exts.
 
-## Messages, indexeddb, and the UI
-
-Dexie.js has this fantastic thing add-on called "observable" which, unexpectedly and correctly, works from background page's web worker into popup's UI.
-
-When a new message arrives, it is added into the database in the web worker, and UIs can pick it up with the observable, like that.
-
 ## Folder structure
 
 > UI, workers, misc, and redux folders are the honey.
