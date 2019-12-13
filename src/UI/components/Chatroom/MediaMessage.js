@@ -9,6 +9,9 @@ const MediaMessage = ({ content, attachments }) => {
 		attachments.forEach(attachment =>
 			loadAttachment(attachment)
 				.then(fileInfo => {
+					if (!fileInfo) {
+						return;
+					}
 					const blob = fileInfo.data;
 					const src = URL.createObjectURL(blob);
 					setAttaches([...attaches, {
@@ -43,7 +46,6 @@ const MediaMessage = ({ content, attachments }) => {
 							<img
 								className="x-oc-content"
 								src={attach.src}
-								decoding="sync"
 							/>)
 						|| (attach.type.includes('video') &&
 							<video
