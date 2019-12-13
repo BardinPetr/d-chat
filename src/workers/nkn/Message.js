@@ -19,7 +19,8 @@ import uuidv4 from 'uuid/v4';
  *   content: 'some _markdown_ format text',
  *   id: '{123-321-3213-21435tr}', // uuidv4(). Do not use uuidv1, because it will create duplicates.
  *   topic: 'topic-name-without-hash',
- *   timestamp: ${new Date().toUTCString()},
+ *   // Older versions used .toUTCString(), so do take care before assuming it is integer.
+ *   timestamp: ${Date.now()},
  * }
  * ```
  *
@@ -53,7 +54,7 @@ class Message {
 		this.id = message.id || uuidv4();
 
 		this.topic = message.topic;
-		this.timestamp = message.timestamp || new Date().toUTCString();
+		this.timestamp = message.timestamp || Date.now();
 
 		// Another message's ID.
 		// Useful for reactions, tips, etc. Anything you use on a specific message.
