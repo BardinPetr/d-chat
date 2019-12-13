@@ -7,9 +7,12 @@ db.version(1).stores({
 
 db.version(2).stores({
 	attachments: '++id, &hash',
-	// Primary key [topic+id] so they can be easily updated with `.put`.
+	// Primary key [topic+id+addr] so they can be easily updated with `.put` -
+	// and only message owner can update their message.
 	// createdAt used for sorting.
-	messages: '[topic+id+addr], [topic+createdAt], createdAt',
+	// [topic+id] (will be) used for getting unread messages.
+	// [topic+createdAt] used for loading more history.
+	messages: '[topic+id+addr], [topic+createdAt], createdAt, [topic+id]',
 	reactions: '[topic+id+addr], [topic+targetID]',
 });
 
