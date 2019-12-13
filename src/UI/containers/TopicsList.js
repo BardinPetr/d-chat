@@ -6,12 +6,10 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
 import {
-	getChatURL,
 	getChatDisplayName,
 	DCHAT_PUBLIC_TOPICS,
 	isWhisperTopic,
 } from 'Approot/misc/util';
-import history from 'Approot/UI/history';
 
 const Element = ({ chat }) => (
 	!chat.hidden && (
@@ -19,9 +17,9 @@ const Element = ({ chat }) => (
 			<TopicLink
 				topic={chat.topic}
 				className={classnames('x-topic-link is-clearfix x-truncate', {
-					'is-active': chat.active,
 					'has-text-grey': chat.muted,
 				})}
+				activeClassName="is-active"
 			>
 				<span>{getChatDisplayName(chat.topic)}</span>
 				<span className="is-pulled-right">
@@ -46,8 +44,8 @@ const TopicsList = ({ topics, whispers, showWhispers }) => (
 
 // Sorts newest messages on top.
 const sorter = (a, b) => {
-	const lastMessageA = a.lastMessage;
-	const lastMessageB = b.lastMessage;
+	const lastMessageA = a.lastMessage || 1;
+	const lastMessageB = b.lastMessage || 1;
 
 	if (!lastMessageA) {
 		return 1;
@@ -63,7 +61,7 @@ const sorter = (a, b) => {
 	}
 
 	const latest =
-		new Date(lastMessageA) - new Date(lastMessageB) > 0
+		lastMessageA - lastMessageB > 0
 			? -1
 			: 1;
 	if (a.unread?.length > 0) {
@@ -89,8 +87,7 @@ const mapStateToProps = state => {
 			const element = {
 				topic: key,
 				unread: settings.unread,
-				active: history.location.pathname === getChatURL(key),
-				lastMessage: state.messages[key]?.[state.messages[key].length - 1]?.timestamp,
+				lastMessage: settings.receivedAt,
 				muted: settings.muted,
 			};
 

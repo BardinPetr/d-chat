@@ -56,10 +56,10 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 
 	return (
 		<div className="x-reactions">
-			{countedReactions.map((reaction, idx) => reaction._isAck ? (
-				<Ack key={idx} />
+			{countedReactions.map((reaction) => reaction._isAck ? (
+				<Ack key={reaction.id} />
 			) : (
-				<Reaction reaction={reaction} addReaction={addReaction} key={idx} />
+				<Reaction reaction={reaction} addReaction={addReaction} key={reaction.id} />
 			))}
 		</div>
 	);

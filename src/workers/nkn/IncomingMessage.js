@@ -1,4 +1,6 @@
 import { saveAttachment } from 'Approot/database/attachments';
+import { genPrivateChatName, parseAddr, formatAddr } from 'Approot/misc/util';
+import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
 import Message from './Message';
@@ -65,7 +67,9 @@ const dataUrl = /data:[^\s)]*/gi;
 class IncomingMessage extends Message {
 	constructor(message) {
 		super(message);
-		this.messageClass = 'IncomingMessage';
+
+		this.createdAt = Date.now();
+		this.receivedAs = NKN.instance.addr;
 
 		// Heartbeats should not be received as messages.
 		if (['heartbeat', 'background'].includes(this.contentType)) {
@@ -79,12 +83,14 @@ class IncomingMessage extends Message {
 			this.content = '✔';
 		}
 
-		let content = this.content || '';
-		if (this.contentType === 'reaction') {
-			this.content = sanitize(content);
-		} else {
+		this.content = sanitize(this.content, {
+			allowedTags: [],
+			allowedAttributes: {},
+		}) || '';
+
+		if (this.contentType !== 'reaction') {
 			if (this.contentType === 'media') {
-				const dataURLs = content.match(dataUrl) || [];
+				const dataURLs = this.content.match(dataUrl) || [];
 				this.attachments = dataURLs.map(data => saveAttachment({
 					data,
 					hash: shasum(data),
@@ -93,10 +99,7 @@ class IncomingMessage extends Message {
 
 			// Sanitize first so we only use markdown stuff.
 			// Replace &gt; with > to make blockquotes work.
-			const sanitized = sanitize(content, {
-				allowedTags: [],
-				allowedAttributes: {},
-			}).replace(/&gt;/g, '>');
+			const sanitized = this.content.replace(/&gt;/g, '>');
 			const markdowned = marked(sanitized, {
 				breaks: true,
 			});
@@ -107,6 +110,40 @@ class IncomingMessage extends Message {
 			}).trim();
 			this.content = handled;
 		}
+	}
+
+	/**
+	 * Adds sender information to message.
+	 *
+	 * opts has `overrideTopic` to override topics.
+	 * Othewise you will send a message to `/whisper/your_addr`, when -
+	 * you want `/whisper/their_addr`.
+	 */
+	from(src, opts = {}) {
+		if (src === 'me') {
+			src = NKN.instance.addr;
+		}
+
+		if (src === NKN.instance.addr) {
+			this.isMe = true;
+		}
+
+		// So why is topic set here and not the constructor?
+		// Well, when sending whispers we want to omit topic, rather than -
+		// using "/whisper/their_addr" at send time.
+		if (this.topic == null) {
+			// Because we can receive a whisper locally, we sometimes -
+			// need to override the topic manually.
+			this.topic = opts.overrideTopic || genPrivateChatName(src);
+		}
+
+		const [name, pubKey] = parseAddr(src);
+		this.addr = src;
+		this.username = name;
+		this.pubKey = pubKey;
+		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
+
+		return this;
 	}
 }
 

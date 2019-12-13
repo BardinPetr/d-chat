@@ -20,9 +20,11 @@ const NewTopicForm = ({ privateChat }) => {
 	return (
 		<form className="field" onSubmit={submit}>
 			<div className="control">
+				<span className="is-sr-only">{__('No slashes')}</span>
 				<input
 					placeholder={privateChat ? __('Contact address') : __('Topic')}
 					value={target}
+					type="text"
 					className="input is-small"
 					onChange={e => setTarget(e.target.value)}
 					pattern="[^\/]*"
@@ -33,54 +35,60 @@ const NewTopicForm = ({ privateChat }) => {
 };
 
 const Home = ({ client }) => (
-	<section className="section">
-		<div className="container">
-			<div className="columns">
-				<div className="column">
-					<div className="columns">
-						<div className="column">
-							<div className="field">
-								<label className="label has-text-weight-normal">
-									{__('Join a chatroom')}
-								</label>
-								<div className="control">
-									<NewTopicForm />
-								</div>
-							</div>
-						</div>
-						<div className="column">
-							<div className="field">
-								<label className="label has-text-weight-normal">
-									{__('Private message')}
-								</label>
-								<div className="control">
-									<NewTopicForm privateChat />
-								</div>
-							</div>
-						</div>
-						<div className="column">
-							<div className="content">
-								<p><Link to="/topics">{__('Public chat index')}</Link></p>
-							</div>
+	<div className="container">
+		<div className="columns">
+			<div className="column">
+				<div className="section">
+
+					<div className="field">
+						<p className="label has-text-weight-normal">
+							{__('Contact address')}
+						</p>
+						<p className="x-address-broken x-address has-text-black">{client.addr}</p>
+					</div>
+
+					<hr className="is-divider" />
+
+					<div className="field">
+						<label className="label has-text-weight-normal">
+							{__('Join a chatroom')}
+						</label>
+						<div className="control">
+							<NewTopicForm />
 						</div>
 					</div>
 
-					<Info />
+					<div className="field">
+						<label className="label has-text-weight-normal">
+							{__('Private message')}
+						</label>
+						<div className="control">
+							<NewTopicForm privateChat />
+						</div>
+					</div>
 
-					<div className="container">
-						{client && (
-							<div className="notification">
-								<ClientInfo client={client}>
-									<Version />
-								</ClientInfo>
-							</div>
-						)}
+					<div className="content">
+						<p className="has-text-italic">{__('Chat names should not contain slashes.')}</p>
 					</div>
 
 				</div>
+
+				<div className="section">
+					<div className="content">
+						<p><Link to="/topics">{__('Public chat index')}</Link></p>
+						<Info />
+					</div>
+
+					{client && (
+						<ClientInfo client={client}>
+							<Version />
+						</ClientInfo>
+					)}
+				</div>
+
 			</div>
 		</div>
-	</section>
+	</div>
 );
 
 const mapStateToProps = state => ({

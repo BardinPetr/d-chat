@@ -14,6 +14,9 @@
   "Channels": {
     "message": " Channels"
   },
+  "Chatnamesshouldnotcontainslashes": {
+    "message": " Chat names should not contain slashes."
+  },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
   },
@@ -137,6 +140,9 @@
   "Nickname": {
     "message": " Nickname"
   },
+  "Noslashes": {
+    "message": " No slashes"
+  },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
   },
@@ -169,6 +175,9 @@
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
+  },
+  "Slashesdisallowed": {
+    "message": " Slashes \"/\" disallowed"
   },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."

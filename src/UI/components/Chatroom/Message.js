@@ -90,20 +90,18 @@ class Message extends React.PureComponent {
 					</div>
 				)}
 
-				{!isNotice && (
-					<div className="x-toolbar">
-						<Toolbar
-							id={message.id}
-							addr={message.addr}
-							topic={topic}
-							addReaction={content =>
-								addReaction({
-									content,
-								})
-							}
-						/>
-					</div>
-				)}
+				<div className="x-toolbar">
+					<Toolbar
+						id={message.id}
+						addr={message.addr}
+						topic={topic}
+						addReaction={content =>
+							addReaction({
+								content,
+							})
+						}
+					/>
+				</div>
 
 				<div className="message-body x-is-small-padding">
 					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}

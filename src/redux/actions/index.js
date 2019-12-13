@@ -103,16 +103,6 @@ export const publishMessage = message => ({
 	},
 });
 
-// Used in marking message-received.
-export const modifyMessage = (topic, id, modifiedMessage) => ({
-	type: 'chat/MODIFY_MESSAGE',
-	payload: {
-		topic,
-		id,
-		modifiedMessage,
-	},
-});
-
 export const receiveMessage = message => {
 	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';
@@ -128,6 +118,15 @@ export const receiveMessage = message => {
 		},
 	};
 };
+
+// The modified message's ID will be used for matching.
+export const modifyMessage = (modified) => ({
+	type: 'chat/MODIFY_MESSAGE',
+	payload: {
+		topic: getChatName(modified.topic),
+		message: modified,
+	},
+});
 
 export const markRead = (topic, ids) => ({
 	type: 'chat/MARK_READ',

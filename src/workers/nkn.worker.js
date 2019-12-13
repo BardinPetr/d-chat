@@ -6,9 +6,9 @@ import {
 	genPrivateChatName,
 	isWhisper,
 } from 'Approot/misc/util';
+import receiveMessage from 'Approot/workers/nkn/messageReceiver';
 import {
 	setLoginStatus,
-	receiveMessage,
 	setSubscribers,
 	setSubscriptionInfos,
 	sendPrivateMessage,
@@ -18,11 +18,6 @@ import {
 	setBalance,
 	activateClient,
 } from 'Approot/redux/actions/client';
-
-// Receivin a lot of messages in short time causes UI to lag.
-// It is probably because each message is transmitted to state separately.
-// Might want to throttle receiveMessage and receive chunks of multiple messages.
-// Or maybe deep diff between store and proxy store will fix it?
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
@@ -65,7 +60,7 @@ onmessage = async ({ data: action }) => {
 
 			// Will display message as greyed out. Removed once it is received.
 			data.isNotConfirmed = true;
-			postMessage(receiveMessage(data));
+			receiveMessage(data);
 			break;
 
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
@@ -79,7 +74,7 @@ onmessage = async ({ data: action }) => {
 			data = data.from('me', {
 				overrideTopic: genPrivateChatName(payload.recipient),
 			});
-			postMessage(receiveMessage(data));
+			receiveMessage(data);
 			break;
 
 		// TODO may want some "insufficient funds" check in place.
@@ -108,7 +103,7 @@ onmessage = async ({ data: action }) => {
 
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
-			await NKN.instance
+			data = await NKN.instance
 				.subscribe(topic, {
 					metadata: action.payload.options.metadata,
 					fee: action.payload.options.fee,

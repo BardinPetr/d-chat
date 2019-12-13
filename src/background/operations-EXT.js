@@ -1,13 +1,12 @@
 export { wrapStore, alias } from 'webext-redux';
-import sleep from 'sleep-promise';
 import semver from 'semver';
 import { runtime } from 'webextension-polyfill';
+import upgrade from 'Approot/background/upgrade';
+import configs from 'Approot/misc/configs-APP_TARGET';
 
-export const onInstalled = store =>
+export const onInstalled = storePromise =>
 	runtime.onInstalled.addListener(async details => {
-		if (!store) {
-			await sleep(200);
-		}
+		const store = await storePromise;
 		if (details.previousVersion) {
 			// From v4.0.0, we parse messages when we receive them, instead of when they're displayed. Older messages will be bad, so remove them.
 			if (semver.lt(details.previousVersion, '4.0.0')) {
@@ -16,6 +15,15 @@ export const onInstalled = store =>
 			// There was an error in 4.0.0.
 			if (semver.lt(details.previousVersion, '4.0.4')) {
 				store.dispatch({ type: 'chat/CLEAN_REACTIONS' });
+			}
+			// Upgrade to indexeddb.
+			if (semver.lt(details.previousVersion, '5.0.0')) {
+				await configs.$loaded;
+				let data = {
+					messages: { ...configs.messages },
+					reactions: { ...configs.reactions },
+				};
+				upgrade(data);
 			}
 		}
 

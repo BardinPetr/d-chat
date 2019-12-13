@@ -1,11 +1,11 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { getChatURL, getChatDisplayName } from 'Approot/misc/util';
-import { Link } from 'react-router-dom';
 
-const TopicLink = ({ topic, children, className }) => (
-	<Link to={getChatURL(topic)} className={className}>
+const TopicLink = ({ topic, children, className, activeClassName }) => (
+	<NavLink to={getChatURL(topic)} className={className} activeClassName={activeClassName}>
 		{children ? children : getChatDisplayName(topic)}
-	</Link>
+	</NavLink>
 );
 
 export default TopicLink;

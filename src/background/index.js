@@ -11,7 +11,6 @@ import { login } from '../redux/actions';
 import passworder from 'browser-passworder';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
-import confirmerMiddleware from 'Approot/redux/middleware/messageSentConfirmer';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
 
@@ -33,22 +32,20 @@ if (IS_EXTENSION) {
 	}
 }
 
-let store;
-export default configs.$loaded.then(() => {
+const creatingStore = configs.$loaded.then(async () => {
+
 	const persistedState = {
 		clients: configs.clientsMeta,
-		messages: configs.messages,
-		reactions: configs.reactions,
 		chatSettings: configs.chatSettings,
 	};
-	store = createStore(
+
+	const store = createStore(
 		rootReducer,
 		persistedState,
 		composeWithDevTools(
 			applyMiddleware(
 				workerMiddleware,
 				alias(aliases),
-				confirmerMiddleware,
 				notifierMiddleware,
 				subscribersFetcher,
 				thunkMiddleware
@@ -56,17 +53,21 @@ export default configs.$loaded.then(() => {
 		)
 	);
 
-	wrapStore( store );
+	wrapStore(store);
 
-	if ( IS_EXTENSION && credentials ) {
+	if (IS_EXTENSION && credentials) {
 		passworder.decrypt(password, credentials)
 			.then(creds => {
 				const activeClient = store.getState().clients.find(c => c.active);
 				const address = activeClient?.wallet.Address;
-				store.dispatch(login(creds, address));
+				if (address) {
+					store.dispatch(login(creds, address));
+				}
 			});
 	}
 	return store;
 });
 
-onInstalled(store);
+onInstalled(creatingStore);
+
+export default creatingStore;

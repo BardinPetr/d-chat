@@ -1,3 +1,4 @@
+import { activateClient } from 'Approot/redux/actions/client';
 export { alias } from 'webext-redux';
 /**
  * Adds created wallet to localStorage.
@@ -14,6 +15,9 @@ export const wrapStore = store => {
 				unsub();
 			}
 		});
+	} else {
+		const client = JSON.parse(localStorage.getItem('dchat'));
+		store.dispatch(activateClient(client));
 	}
 };
 export const onInstalled = () => {};

@@ -8,16 +8,16 @@ import nknWallet from 'nkn-wallet';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import {
 	connected,
-	receiveMessage,
 } from 'Approot/redux/actions';
+import receiveMessage from './messageReceiver';
 
 function addNKNListeners (client) {
 
-	client.on('message', (...args) => {
+	client.on('ordered-message', (...args) => {
 		handleIncomingMessage(...args);
-		// Do not send ack-messages.
-		return false;
 	});
+	// Do not send ack-messages.
+	client.on('message', () => false);
 
 	client.on('connect', async () => {
 		postMessage(connected());
@@ -26,13 +26,11 @@ function addNKNListeners (client) {
 }
 
 async function handleIncomingMessage(src, payload, payloadType) {
-	if ( payloadType === PayloadType.TEXT ) {
-		const data = JSON.parse(payload);
+	if (payloadType === PayloadType.TEXT) {
+		const data = payload;
 		const message = new IncomingMessage(data).from(src);
 
-		if (!message.unreceivable) {
-			postMessage(receiveMessage(message));
-		}
+		receiveMessage(message);
 	}
 }
 

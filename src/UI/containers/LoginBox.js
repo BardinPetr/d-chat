@@ -209,6 +209,11 @@ class LoginBox extends React.Component {
 											<div className="field">
 												<label className="label">
 													{__('Nickname')}
+													<span className={classnames('help is-inline has-text-grey-dark', {
+														'is-hidden': !this.state.username.includes('/'),
+													})}>
+														{' '}{__('Slashes "/" disallowed')}
+													</span>
 												</label>
 												<div className="control">
 													<input

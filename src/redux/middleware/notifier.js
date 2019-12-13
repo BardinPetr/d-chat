@@ -1,7 +1,9 @@
 /**
- * 1. Filters out duplicate messages by comparing their id.
- * 2. Creates notifications and changes badge text.
- * 3. Sends back 'received' acknowledgements for private messages.
+ * 1. Creates notifications and changes badge text.
+ * 2. Sends back 'received' acknowledgements for private messages.
+ *
+ * TODO: when browser is restarted, some messages are received a second time.
+ *  Need to figure out a way to not create a notification for these messages.
  */
 
 import sanitize from 'striptags';
@@ -34,29 +36,14 @@ const getUnreadMessages = state => {
 
 const shouldNotify = message => !(isNotice(message) || message.isMe || message.isSeen);
 
-const hasDupe = (initial, message) => initial.some(msg => msg.id === message.id);
-
 const notifier = store => next => action => {
 	const message = action.payload?.message;
 	const topic = action.payload?.topic;
 	const state = store.getState();
-	let w, initial, targetID, content = message?.content || '';
+	let w, content = message?.content || '';
 
 	switch (action.type) {
-		case 'chat/RECEIVE_REACTION':
-			targetID = action.payload.message.targetID;
-			initial = state.reactions[topic]?.[targetID] || [];
-			if (hasDupe(initial, message)) {
-				return;
-			}
-			break;
-
 		case 'chat/RECEIVE_MESSAGE':
-			initial = state.messages[topic] || [];
-			// Check if duplicate and ignore.
-			if (hasDupe(initial, message)) {
-				return;
-			}
 			// Only mark unread if chat isn't currently open in popup.
 			w = getPopupURL();
 			if (
@@ -91,7 +78,6 @@ const notifier = store => next => action => {
 	}
 	next(action);
 
-	// Should've put this thing in messageSentConfirmer instead, huh.
 	function sendAck(toMessage) {
 		const { id, topic, isMe } = toMessage;
 		if (!isMe) {

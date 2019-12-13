@@ -5,7 +5,7 @@ import { newTransaction } from 'Approot/redux/actions/client';
 const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => {
 
 	const send = (value) => {
-		if ( !addr ) {
+		if (!addr) {
 			return;
 		}
 		// A nice way would be to get `.then()` working, and send a regular reaction.
@@ -23,7 +23,7 @@ const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => 
 	return (
 		<a
 			className={`button tooltip is-tooltip-left ${className}`}
-			data-tooltip={`Tip ${value} sats to ${addr?.slice(15) || ''}...`}
+			data-tooltip={`Tip ${value} sats to ${addr?.slice(0, 15) || '???'}...`}
 			onClick={() => send(value)}
 		>
 			{'' + value}

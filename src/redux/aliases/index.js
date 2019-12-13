@@ -40,7 +40,7 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 
 		case 'LOGIN_ALIAS':
 			credentials = originalAction.payload.credentials;
-			if ( credentials.rememberMe ) {
+			if (credentials.rememberMe) {
 				passworder.encrypt(password, credentials)
 					.then(blob =>
 						localStorage.setItem('credentials', JSON.stringify(blob))
@@ -52,7 +52,7 @@ const delegateToWorker = originalAction => (dispatch, getState) => {
 
 const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
-	if ( topic ) {
+	if (topic) {
 		dispatch(createChat(topic));
 		dispatch(subscribeToChat(topic));
 	}

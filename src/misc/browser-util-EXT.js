@@ -25,7 +25,7 @@ export const setBadgeText = txt => {
 
 export const createNotification = throttle((options) => {
 	if (configs.showNotifications) {
-		return notifications.create( 'd-chat', {
+		return notifications.create('d-chat', {
 			type: 'basic',
 			title: options.title || '',
 			message: options.message || '',
