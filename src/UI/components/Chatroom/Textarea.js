@@ -1,132 +1,132 @@
-import React, { useState, forwardRef, lazy, Suspense } from 'react';
-import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import classnames from 'classnames';
-import TextareaAutosize from 'react-textarea-autosize';
-import TextareaAutoCompleter from './TextareaAutoCompleter';
-import Uploader from './Uploader';
-import { IoMdHappy, IoMdPaperPlane } from 'react-icons/io';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
+import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
-const LazyMarkdown = lazy(() => import('./Markdown'));
+import MarkdownEditor from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
+import 'font-awesome/css/font-awesome.css';
 
-const Textarea = forwardRef(
-	(
-		{
-			addToDraftMessage,
-			children,
-			innerRef,
-			mention,
-			onEnterPress,
-			placeholder,
-			submitText,
-			submitUpload,
-			subs,
-			source,
-		},
-		ref,
-	) => {
-		const [showingPreview, setShowingPreview] = useState(false);
-		const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
-		return (
-			<form className="card" onSubmit={e => submitText(e)}>
-				<div className="card-content x-is-padded-sides">
-					<div
-						className={classnames('control')}
-						onClick={() => setEmojiPickerVisible(false)}
-					>
-						<TextareaAutoCompleter
-							className={classnames('textarea', {
-								'is-hidden': showingPreview,
-							})}
-							innerRef={innerRef}
-							ref={ref}
-							onKeyDown={onEnterPress}
-							autoFocus
-							textAreaComponent={{
-								component: TextareaAutosize,
-								ref: 'inputRef',
-							}}
-							placeholder={placeholder}
-							subs={subs}
-							mention={mention}
-						/>
-						{showingPreview && (
-							<Suspense fallback={<div className="loader" />}>
-								<LazyMarkdown source={source} className="x-white-space" />
-							</Suspense>
-						)}
-					</div>
+const startUpload = (onUploaded) => {
+	let el = document.createElement('input');
+	el.type = 'file';
+	el.accept = 'image/*,audio/*,video/*';
+	el.onchange = upload;
+	el.click();
 
-					<div className="level is-mobile">
-						<div className="level-left">
-							<div className="level-item tabs is-small x-tabs-has-bigger-border">
-								<ul>
-									<li
-										className={classnames('', {
-											'is-active': !showingPreview,
-										})}
-										onClick={() => setShowingPreview(false)}
-									>
-										<a>{__('Text')}</a>
-									</li>
-									<li
-										className={classnames('', {
-											'is-active': showingPreview,
-										})}
-										onClick={() => setShowingPreview(true)}
-									>
-										<a>{__('Preview')}</a>
-									</li>
-								</ul>
-							</div>
-						</div>
+	function upload(e) {
+		if (e.target.files.length) {
+			const reader = new FileReader();
+			reader.onload = e => {
+				onUploaded(e.target.result);
+				el = null;
+			};
+			if (e.target.files[0].size <= 4194304) {
+				reader.readAsDataURL(e.target.files[0]);
+			}
+		}
+	}
+};
 
-						<div className="level-right">
-							{children && (
-								<div className="level-item is-hidden-mobile">{children}</div>
-							)}
-
-							<Uploader
-								className="button is-text level-item is-size-7"
-								onUploaded={submitUpload}
-							>
-								{__('Upload')}
-							</Uploader>
-
-							<a
-								className="level-item button is-white has-text-grey-dark is-hidden-mobile"
-								onClick={() => {
-									setEmojiPickerVisible(!emojiPickerVisible);
-								}}
-							>
-								<span className="icon is-small">
-									<IoMdHappy />
-								</span>
-							</a>
-							{emojiPickerVisible && (
-								<Suspense fallback={<div className="loader" />}>
-									<LazyEmojiPicker
-										onSelect={emoji => {
-											addToDraftMessage(emoji.native);
-											setEmojiPickerVisible(false);
-										}}
-										visible={emojiPickerVisible}
-										setVisible={setEmojiPickerVisible}
-									/>
-								</Suspense>
-							)}
-
-							<button type="submit" className="button is-small level-item is-hidden-desktop">
-								<span className="icon">
-									<IoMdPaperPlane className="is-size-5" />
-								</span>
-							</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		);
-	},
-);
+const Textarea = ({
+	onEnterPress,
+	mdeInstance,
+	placeholder,
+	submitUpload,
+}) => {
+	const [visible, setEmojiPickerVisible] = useState(false);
+	useEffect(() => {
+		const cm = mdeInstance.current?.codemirror;
+		if (!cm) {
+			return;
+		}
+		// Liftman, last char of last line, please!
+		cm.doc.setCursor(9999, 9999);
+	}, []);
+	return (
+		<>
+			{visible &&
+				<Suspense fallback={<div className="loader" />}>
+					<LazyEmojiPicker
+						visible={visible}
+						setVisible={setEmojiPickerVisible}
+						onSelect={emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native)}
+					/>
+				</Suspense>
+			}
+			<MarkdownEditor
+				id="main-textarea"
+				options={{
+					autofocus: true,
+					placeholder,
+					autoDownloadFontAwesome: false,
+					autosave: {
+						enabled: true,
+						delay: 1000,
+						uniqueId: 'main-textarea',
+					},
+					promptURLs: IS_SIDEBAR,
+					spellChecker: false,
+					status: false,
+					minHeight: 'auto',
+					renderingConfig: {
+						codeSyntaxHighlighting: true,
+					},
+					toolbar: [{
+						name: 'bold',
+						action: editor => editor.toggleBold(),
+						className: 'fa fa-bold',
+						title: __('Bold'),
+					}, {
+						name: 'x-heading',
+						action: editor => editor.toggleHeading3(),
+						className: 'fa fa-header',
+						title: __('Heading')
+					}, '|', {
+						name: 'quote',
+						action: editor => editor.toggleBlockquote(),
+						className: 'fa fa-quote-left',
+						title: __('Quote'),
+					}, {
+						name: 'unordered-list',
+						action: editor => editor.toggleUnorderedList(),
+						className: 'fa fa-list-ul',
+						title: __('Unordered list'),
+					}, '|', {
+						name: 'image',
+						action: editor => editor.drawImage(),
+						className: 'fa fa-picture-o',
+						title: __('Image from URL'),
+					}, {
+						name: 'upload',
+						action: () => startUpload(submitUpload),
+						className: 'fa fa-file-picture-o',
+						title: __('Upload media and post it immediately. Max 4MB'),
+					}, '|', {
+						name: 'fullscreen',
+						action: editor => editor.toggleFullScreen(),
+						className: 'fa fa-arrows-alt no-disable no-mobile',
+						title: __('Toggle fullscreen'),
+					}, '|', {
+						name: 'emoji',
+						action: () => setEmojiPickerVisible(true),
+						className: 'fa fa-smile-o',
+						title: __('Emoji picker'),
+					}, {
+						name: 'submit is-pulled-right',
+						action: editor => onEnterPress(editor.codemirror),
+						className: 'fa fa-paper-plane-o',
+						title: __('Send'),
+					}]
+				}}
+				extraKeys={{
+					Enter: onEnterPress,
+					// TODO bind Shift-Enter to Enter, to improve newline mechanics.
+				}}
+				className="x-main-editor"
+				getMdeInstance={i => mdeInstance.current = i}
+			/>
+		</>
+	);
+};
 
 export default Textarea;

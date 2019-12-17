@@ -14,6 +14,8 @@ class OutgoingMessage extends Message {
 		this.isSeen = undefined;
 		this.ping = undefined;
 		this.messageClass = undefined;
+		this.createdAt = undefined;
+		this.receivedAs = undefined;
 	}
 }
 

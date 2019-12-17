@@ -71,6 +71,8 @@ class NKN extends nkn {
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
+		}, {
+			timeout: 10,
 		});
 
 		this.wallet = wallet;

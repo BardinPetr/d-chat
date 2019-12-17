@@ -35,26 +35,28 @@ const MediaMessage = ({ content, attachments }) => {
 			<div className="x-media-container">
 				{attaches.map((attach, i) => (
 					<p key={i}>
-						{(attach.type.includes('audio') &&
-							<audio
-								className="x-oc-content"
-								controls
-								loop
-								src={attach.src}
-							/>)
-						|| (attach.type.includes('image') &&
-							<img
-								className="x-oc-content"
-								src={attach.src}
-							/>)
-						|| (attach.type.includes('video') &&
-							<video
-								className="x-oc-content"
-								controls
-								playsInline
-								loop
-								src={attach.src}
-							/>)}
+						<a href={attach.src} target="_blank">
+							{(attach.type.includes('audio') &&
+								<audio
+									className="x-oc-content"
+									controls
+									loop
+									src={attach.src}
+								/>)
+							|| (attach.type.includes('image') &&
+								<img
+									className="x-oc-content"
+									src={attach.src}
+								/>)
+							|| (attach.type.includes('video') &&
+								<video
+									className="x-oc-content"
+									controls
+									playsInline
+									loop
+									src={attach.src}
+								/>)}
+						</a>
 					</p>
 				))}
 			</div>

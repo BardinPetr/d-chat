@@ -8,6 +8,9 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
+  "Bold": {
+    "message": " Bold"
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -44,6 +47,9 @@
   "Description": {
     "message": " Description"
   },
+  "Emojipicker": {
+    "message": " Emoji picker"
+  },
   "Emojipickerdialog": {
     "message": " Emoji picker dialog"
   },
@@ -71,6 +77,9 @@
   "HTTPSiscentralizedandthisappmightnotworkonitbecauseofmixedcontentrestrictionsYoushouldconnecttoHTTPversionofthissiteinstead": {
     "message": " HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead."
   },
+  "Heading": {
+    "message": " Heading"
+  },
   "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
     "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
@@ -82,6 +91,9 @@
   },
   "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
     "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
+  },
+  "ImagefromURL": {
+    "message": " Image from URL"
   },
   "Importwallet": {
     "message": " Import wallet"
@@ -155,9 +167,6 @@
   "Postedmedia": {
     "message": " Posted media."
   },
-  "Preview": {
-    "message": " Preview"
-  },
   "Privatemessage": {
     "message": " Private message"
   },
@@ -170,8 +179,14 @@
   "Quitealongstring": {
     "message": " Quite a long string"
   },
+  "Quote": {
+    "message": " Quote"
+  },
   "Reload": {
     "message": " Reload"
+  },
+  "Send": {
+    "message": " Send"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
@@ -203,11 +218,11 @@
   "Tab": {
     "message": " Tab"
   },
-  "Text": {
-    "message": " Text"
-  },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Togglefullscreen": {
+    "message": " Toggle fullscreen"
   },
   "Topic": {
     "message": " Topic"
@@ -215,8 +230,11 @@
   "Unmutechat": {
     "message": " Unmute chat"
   },
-  "Upload": {
-    "message": " Upload"
+  "Unorderedlist": {
+    "message": " Unordered list"
+  },
+  "UploadmediaandpostitimmediatelyMaxMB": {
+    "message": " Upload media and post it immediately. Max 4MB"
   },
   "Walletaddress": {
     "message": " Wallet address"

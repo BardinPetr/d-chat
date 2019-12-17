@@ -65,19 +65,6 @@ const login = (state = {}, action) => {
 	return newState;
 };
 
-const draftMessage = (state = '', action) => {
-	let newState;
-	switch (action.type) {
-		case 'SAVE_DRAFT':
-			newState = action.payload.content;
-			break;
-
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
 /**
  * Handles individual chat (topic) settings.
  *
@@ -213,6 +200,5 @@ export default combineReducers({
 	messageEvent,
 
 	// UI
-	draftMessage,
 	navigation,
 });
