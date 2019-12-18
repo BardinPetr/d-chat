@@ -1,7 +1,13 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
+import { mention } from 'Approot/misc/util';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
+import { Pos } from 'codemirror';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/show-hint.css';
+import { emojiIndex } from 'emoji-mart';
+
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import 'font-awesome/css/font-awesome.css';
@@ -32,6 +38,7 @@ const Textarea = ({
 	mdeInstance,
 	placeholder,
 	submitUpload,
+	subs,
 }) => {
 	const [visible, setEmojiPickerVisible] = useState(false);
 	useEffect(() => {
@@ -40,12 +47,73 @@ const Textarea = ({
 			return;
 		}
 		// Liftman, last char of last line, please!
-		cm.doc.setCursor(9999, 9999);
+		cm.doc.setCursor(Infinity, Infinity);
 	}, []);
+
+	// Autocomplete.
+	useEffect(() => {
+		const cm = mdeInstance.current?.codemirror;
+		if (!cm) {
+			return;
+		}
+
+		// Don't mind me, codemirror api is complex, hopefully don't have to touch this again.
+		const listener = () => {
+			// For some reason cm does not like different listeners.
+			// Subs + emoji autocomplete.
+			cm.showHint({
+				completeSingle: false,
+				hint: () => {
+					const cur = cm.getCursor();
+					const end = cur.ch;
+					let line = cur.line;
+					const foundWord = cm.findWordAt(cur);
+					const anchor = {
+						...foundWord.anchor,
+						ch: foundWord.anchor.ch - 1,
+					};
+					const word = cm.getRange(anchor, foundWord.head).trimLeft();
+
+					if (word.startsWith(':')) {
+						// Emoji autocomplete.
+						const theWord = word.slice(1);
+						const filteredList = emojiIndex.search(theWord || 'smile').map(e => ({
+							text: e.native,
+							displayText: `${e.native} ${e.colons}`
+						}));
+						if (filteredList.length >= 1) {
+							return {
+								list: filteredList,
+								from: anchor,
+								to: Pos(line, end)
+							};
+						}
+					} else if (word.startsWith('@')) {
+						// Subs autocomplete.
+						const theWord = word.slice(1);
+						const things = subs.filter(sub => sub.startsWith(theWord)).map(sub => mention(sub) + ' ');
+						if (things.length) {
+							return ({
+								list: things,
+								from: anchor,
+								to: Pos(line, end),
+							});
+						}
+					}
+				},
+			});
+		};
+		cm.on('inputRead', listener);
+
+		return () => {
+			cm.off('inputRead', listener);
+		};
+	}, [subs]);
+
 	return (
 		<>
 			{visible &&
-				<Suspense fallback={<div className="loader" />}>
+				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
 						visible={visible}
 						setVisible={setEmojiPickerVisible}
@@ -59,9 +127,13 @@ const Textarea = ({
 					autofocus: true,
 					placeholder,
 					autoDownloadFontAwesome: false,
+					insertTexts: {
+						image: ['![](', ')']
+					},
 					autosave: {
 						enabled: true,
-						delay: 1000,
+						// TODO maybe manually save instead? Have to experiment.
+						delay: 500,
 						uniqueId: 'main-textarea',
 					},
 					promptURLs: IS_SIDEBAR,

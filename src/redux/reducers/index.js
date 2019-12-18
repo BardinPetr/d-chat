@@ -106,14 +106,11 @@ const chatSettings = (state = {}, action) => {
 			break;
 
 		case 'chat/MARK_READ':
-			// Grab all unread messages.
-			initial = state[topic]?.unread || [];
 			newState = {
 				...state,
 				[topic]: {
 					...state[topic],
-					// Filter out newly read message from unread messages.
-					unread: initial.filter(i => !action.payload.ids.some(id => i === id)),
+					unread: [],
 				},
 			};
 			configs.chatSettings = newState;

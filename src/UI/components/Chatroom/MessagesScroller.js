@@ -1,4 +1,7 @@
-import React, { useRef, useLayoutEffect } from 'react';
+/**
+ * Keeps chat scrolled. Marks messages as read.
+ */
+import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import { ResizeReporter } from 'react-resize-reporter/scroll';
 import InfiniteScroller from 'react-infinite-scroller';
 import useStayScrolled from 'react-stay-scrolled';
@@ -19,11 +22,25 @@ const MessagesScroller = ({
 		inaccuracy: 15,
 	});
 
+	useEffect(() => {
+		const onVisibilityChange = () => {
+			if (!document.hidden && isScrolled()) {
+				markAllMessagesRead();
+			}
+		};
+		document.addEventListener('visibilitychange', onVisibilityChange);
+		return () => {
+			document.removeEventListener('visibilitychange', onVisibilityChange);
+		};
+	}, []);
+
 	useLayoutEffect(() => {
 		stayScrolled();
 
 		if (isScrolled()) {
-			markAllMessagesRead();
+			if (!document.hidden) {
+				markAllMessagesRead();
+			}
 		}
 	}, scrollTriggers);
 

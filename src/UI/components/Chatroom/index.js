@@ -8,11 +8,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { formatAddr } from 'Approot/misc/util';
+import { mention, getChatDisplayName } from 'Approot/misc/util';
 import Messages from 'Approot/UI/containers/Chatroom/Messages';
 import Textarea from 'Approot/UI/components/Chatroom/Textarea';
 
-const mention = addr => '@' + formatAddr(addr);
 const quote = (addr, text) => {
 	if (text) {
 		/*
@@ -53,6 +52,11 @@ const Chatroom = ({
 	const [placeholder] = useState(
 		`${__('Message as')} ${client.addr}`.slice(0, 30) + '...' + client.addr?.slice(-5)
 	);
+
+	useEffect(() => {
+		const displayTopic = getChatDisplayName(topic).slice(0, 8);
+		document.title = `(${unreadMessages.length}) ${displayTopic} - D-Chat`;
+	}, [unreadMessages.length, topic]);
 
 	useEffect(() => {
 		getSubs();
@@ -154,6 +158,7 @@ const Chatroom = ({
 				mdeInstance={mdeInstance}
 				placeholder={placeholder}
 				submitUpload={submitUpload}
+				subs={subs}
 			/>
 
 		</div>
