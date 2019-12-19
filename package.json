@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-transform-runtime": "^7.7.6",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
     "@storybook/addon-actions": "^4.1.18",
     "@storybook/addon-links": "^4.1.18",
@@ -58,9 +58,9 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.7.5",
+    "@babel/core": "^7.7.7",
     "@babel/plugin-proposal-optional-chaining": "^7.7.5",
-    "@babel/runtime": "^7.7.6",
+    "@babel/runtime": "^7.7.7",
     "@rooks/use-interval": "^3.5.0",
     "@rooks/use-timeout": "^3.5.0",
     "@sharyn/react-router.privateroute": "^1.0.3",
@@ -74,10 +74,10 @@
     "base64mime": "0.0.3",
     "bfj": "6.1.1",
     "browser-passworder": "^2.0.3",
-    "bulma": "^0.7.5",
-    "bulma-dashboard": "^0.1.40",
-    "bulma-divider": "^0.2.0",
-    "bulma-tooltip": "^2.0.2",
+    "bulma": "^0.8.0",
+    "bulma-dashboard": "^0.3.1",
+    "bulma-divider": "0.x",
+    "bulma-tooltip": "^3.0.2",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "chrome-launch": "^1.1.4",
@@ -114,7 +114,7 @@
     "lodash.last": "^3.0.0",
     "lodash.throttle": "^4.1.1",
     "lodash.uniqby": "^4.7.0",
-    "marked": "^0.7.0",
+    "marked": "^0.8.0",
     "mini-css-extract-plugin": "0.4.3",
     "nkn-client": "^0.7.0",
     "nkn-multiclient": "^0.0.9",

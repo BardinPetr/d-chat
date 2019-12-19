@@ -56,6 +56,9 @@
   "Emojis": {
     "message": " Emojis"
   },
+  "Error": {
+    "message": " Error!"
+  },
   "Expandsonclick": {
     "message": " Expands on click"
   },
@@ -64,6 +67,9 @@
   },
   "Exportwallet": {
     "message": " Export wallet"
+  },
+  "Filetoobig": {
+    "message": " File too big!"
   },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
@@ -167,6 +173,9 @@
   "Postedmedia": {
     "message": " Posted media."
   },
+  "Preview": {
+    "message": " Preview"
+  },
   "Privatemessage": {
     "message": " Private message"
   },
@@ -187,6 +196,9 @@
   },
   "Send": {
     "message": " Send"
+  },
+  "SendmediabyuploadingdraganddroppingorpastingMaxMB": {
+    "message": " Send media by uploading, drag and dropping, or pasting. Max 4MB"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
@@ -233,8 +245,8 @@
   "Unorderedlist": {
     "message": " Unordered list"
   },
-  "UploadmediaandpostitimmediatelyMaxMB": {
-    "message": " Upload media and post it immediately. Max 4MB"
+  "Uploading": {
+    "message": " Uploading..."
   },
   "Walletaddress": {
     "message": " Wallet address"

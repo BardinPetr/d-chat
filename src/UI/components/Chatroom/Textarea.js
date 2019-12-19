@@ -12,22 +12,47 @@ import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import 'font-awesome/css/font-awesome.css';
 
-const startUpload = (onUploaded) => {
-	let el = document.createElement('input');
-	el.type = 'file';
-	el.accept = 'image/*,audio/*,video/*';
-	el.onchange = upload;
-	el.click();
+const startUpload = (file, onUploaded, errCb) => {
+	let el;
+	if (typeof file === 'function') {
+		errCb = onUploaded;
+		onUploaded = file;
+		file = null;
+	}
+	if (!file) {
+		el = document.createElement('input');
+		el.type = 'file';
+		el.accept = 'image/*,audio/*,video/*';
+		el.onchange = upload;
+		el.click();
+	} else {
+		upload({ target: {files: [file]} });
+	}
 
 	function upload(e) {
+		const statusEl = document.querySelector('.editor-statusbar');
+		statusEl.innerText = __('Uploading...');
 		if (e.target.files.length) {
+			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
+				errCb();
+				return;
+			}
 			const reader = new FileReader();
 			reader.onload = e => {
 				onUploaded(e.target.result);
 				el = null;
 			};
+			reader.onerror = e => {
+				console.error('FileReader error:', e);
+				errCb('Error');
+				statusEl.innerText = __('Error!');
+			};
 			if (e.target.files[0].size <= 4194304) {
 				reader.readAsDataURL(e.target.files[0]);
+			} else {
+				console.error('FileReader error file too big.');
+				statusEl.innerText = __('File too big!');
+				errCb('Error: > 4MB');
 			}
 		}
 	}
@@ -110,6 +135,15 @@ const Textarea = ({
 		};
 	}, [subs]);
 
+	const imageUploadFunction = (file, cb, errCb) => {
+		document.querySelector('.editor-statusbar').className = 'editor-statusbar is-not-hidden';
+		startUpload(file, x => {
+			cb(x);
+			submitUpload();
+			document.querySelector('.editor-statusbar').className = 'editor-statusbar';
+		}, errCb);
+	};
+
 	return (
 		<>
 			{visible &&
@@ -127,22 +161,20 @@ const Textarea = ({
 					autofocus: true,
 					placeholder,
 					autoDownloadFontAwesome: false,
-					insertTexts: {
-						image: ['![](', ')']
-					},
+					uploadImage: true,
+					imageUploadFunction,
+					status: ['upload-image'],
 					autosave: {
 						enabled: true,
 						// TODO maybe manually save instead? Have to experiment.
-						delay: 500,
+						delay: 5000,
 						uniqueId: 'main-textarea',
 					},
+					previewClass: 'content editor-preview',
 					promptURLs: IS_SIDEBAR,
 					spellChecker: false,
-					status: false,
+					// status: true,
 					minHeight: 'auto',
-					renderingConfig: {
-						codeSyntaxHighlighting: true,
-					},
 					toolbar: [{
 						name: 'bold',
 						action: editor => editor.toggleBold(),
@@ -170,10 +202,15 @@ const Textarea = ({
 						title: __('Image from URL'),
 					}, {
 						name: 'upload',
-						action: () => startUpload(submitUpload),
+						action: editor => editor.uploadImageUsingCustomFunction(imageUploadFunction),
 						className: 'fa fa-file-picture-o',
-						title: __('Upload media and post it immediately. Max 4MB'),
+						title: __('Send media by uploading, drag and dropping, or pasting. Max 4MB'),
 					}, '|', {
+						name: 'preview',
+						action: editor => editor.togglePreview(),
+						className: 'fa fa-eye no-disable',
+						title: __('Preview'),
+					}, {
 						name: 'fullscreen',
 						action: editor => editor.toggleFullScreen(),
 						className: 'fa fa-arrows-alt no-disable no-mobile',

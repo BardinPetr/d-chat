@@ -111,6 +111,9 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 .x-is-small-padding {
 	padding: 1vh 1vw;
 }
+.x-is-margin-left {
+	margin-left: 0.4em;
+}
 .x-is-padding-left {
 	padding-left: 0.4em;
 }
@@ -165,6 +168,14 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 		margin: 0.8rem 0 0.1rem 0;
 		background-color: transparent;
 		color: $message-header-color;
+		.x-is-hover {
+			visibility: hidden !important;
+		}
+		&:hover {
+			.x-is-hover {
+				visibility: visible !important;
+			}
+		}
 	}
 
 	.x-me {
@@ -253,11 +264,6 @@ body, html, #root {
 		align-items: flex-start;
 	}
 }
-.x-toolbar {
-    position: absolute;
-    right: 1rem;
-    top: -1rem;
-}
 .x-not-confirmed {
     opacity: 0.6;
 }
@@ -326,15 +332,19 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-main-editor {
 	flex-flow: column-reverse;
 	display: flex;
+	.CodeMirror {
+		padding-bottom: 5px;
+	}
 	.editor-toolbar {
+		border-top: 0;
+		border-radius: 0;
 		&.fullscreen {
 			z-index: $z-index + 1;
 		}
-		border-top: 0;
-		border-radius: 0;
 		& button {
 			font-size: 0.85rem;
 			height: 1.5rem;
+			color: $grey-dark;
 		}
 		&::before {
 			margin-bottom: 4px;
@@ -344,3 +354,15 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 		}
 	}
 }
+.x-toolbar {
+	* {
+		height: 25px !important;
+	}
+}
+.editor-statusbar {
+	display: none !important;
+	&.is-not-hidden {
+		display: inline-block !important;
+	}
+}
+

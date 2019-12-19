@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions/client';
 
-const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => {
+const TipJar = ({ className = '', tooltip, value, topic, addr, dispatch, messageID }) => {
 
 	const send = (value) => {
 		if (!addr) {
@@ -22,8 +22,8 @@ const TipJar = ({ className = '', value, topic, addr, dispatch, messageID }) => 
 	// TODO need to i18n the data-tooltip. Should fix the placeholder feature b4 that.
 	return (
 		<a
-			className={`button tooltip is-tooltip-left ${className}`}
-			data-tooltip={`Tip ${value} sats to ${addr?.slice(0, 15) || '???'}...`}
+			className={className}
+			data-tooltip={tooltip}
 			onClick={() => send(value)}
 		>
 			{'' + value}

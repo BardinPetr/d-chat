@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classnames from 'classnames';
 import { loadAttachment } from 'Approot/database/attachments';
 
 const MediaMessage = ({ content, attachments }) => {
@@ -26,13 +27,12 @@ const MediaMessage = ({ content, attachments }) => {
 		};
 	}, []);
 
-	// TODO: multiple media elements and stayScroll is bugged -
-	// because only one x-media-container right now.
 	return (
 		<div
-			className="content"
+			className=""
 		>
-			<div className="x-media-container">
+			<div className={classnames('x-media-container is-flex', {
+			})}>
 				{attaches.map((attach, i) => (
 					<p key={i}>
 						<a href={attach.src} target="_blank">
@@ -60,7 +60,7 @@ const MediaMessage = ({ content, attachments }) => {
 					</p>
 				))}
 			</div>
-			<div dangerouslySetInnerHTML={{ __html: displayContent }} />
+			<div className="content" dangerouslySetInnerHTML={{ __html: displayContent }} />
 		</div>
 	);
 };

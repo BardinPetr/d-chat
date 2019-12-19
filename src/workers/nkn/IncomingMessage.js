@@ -15,12 +15,10 @@ renderer.image = (href, title, text) => {
 		return `<img src="${href}" alt=${text}>`;
 	}
 };
+// Tried settings links like 'wikipedia.org', but that makes '@someone.12345678' a link too.
+// The canonical markdown way is '<wikipedia.org>'.
 renderer.link = (href, title, text) =>
 	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
-// Replace `wikipedia.org` with a link.
-// It is sanitized afterwards, so not too worried here.
-renderer.text = text =>
-	(text.replace(/(\S+\b\.\b\S+)/g, match => `<a href="https://${match}" target="_blank" rel="noopener noreferrer">${match}</a>`));
 marked.setOptions({
 	highlight: (code, lang) => highlight.highlightAuto(code, [lang]).value,
 	renderer,

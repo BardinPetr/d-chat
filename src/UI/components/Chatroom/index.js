@@ -1,8 +1,5 @@
 /**
  * Contains messages list + submit box.
- *
- * Note about lazy textarea: refs will mess it up and it doesn't make that -
- * much sense in the first place.
  */
 import React, { useState, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
@@ -31,11 +28,6 @@ ${text.replace(/^/mg, '> ')}
 	}
 };
 
-/**
- * Consists of existing messages and the text form.
- *
- * Marks messages read as well.
- */
 const Chatroom = ({
 	client,
 	subs,
@@ -97,17 +89,23 @@ const Chatroom = ({
 		createMessage(message);
 	};
 
-	const submitUpload = data => {
-		if (!/^(data:video|data:audio|data:image)/.test(data)) {
+	const submitUpload = () => {
+		const cm = mdeInstance.current?.codemirror;
+		if (!cm) {
 			return;
 		}
-		const content = `![](${data})`;
+		const data = cm.getValue();
+		if (!/(data:video|data:audio|data:image)/.test(data)) {
+			return;
+		}
+		const content = data;
 		const message = {
 			content: content,
 			contentType: 'media',
 			topic,
 		};
 		createMessage(message);
+		cm.setValue('');
 	};
 
 	/**
