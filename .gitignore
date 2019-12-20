@@ -10,3 +10,4 @@ extension.crx
 extension.pem
 storybook-static
 .DS_Store
+tsfmt.json

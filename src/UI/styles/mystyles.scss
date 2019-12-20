@@ -366,3 +366,6 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	}
 }
 
+.CodeMirror-hints * {
+	font-family: $family-primary;
+}
