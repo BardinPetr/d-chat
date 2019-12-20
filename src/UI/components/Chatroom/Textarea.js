@@ -167,7 +167,7 @@ const Textarea = ({
 					autosave: {
 						enabled: true,
 						// TODO maybe manually save instead? Have to experiment.
-						delay: 5000,
+						delay: 500,
 						uniqueId: 'main-textarea',
 					},
 					previewClass: 'content editor-preview',
