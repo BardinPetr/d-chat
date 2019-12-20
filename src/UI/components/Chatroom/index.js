@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import useInterval from '@rooks/use-interval';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, getChatDisplayName } from 'Approot/misc/util';
+import { mention, getChatDisplayName, formatAddr } from 'Approot/misc/util';
 import Messages from 'Approot/UI/containers/Chatroom/Messages';
 import Textarea from 'Approot/UI/components/Chatroom/Textarea';
 
@@ -41,9 +41,7 @@ const Chatroom = ({
 	const getSubs = () => getSubscribers(topic);
 	const { start, stop } = useInterval(getSubs, 25 * 1000);
 	const mdeInstance = useRef();
-	const [placeholder] = useState(
-		`${__('Message as')} ${client.addr}`.slice(0, 30) + '...' + client.addr?.slice(-5)
-	);
+	const [placeholder] = useState(`${__('Message as')} ${formatAddr(client.addr)}...`);
 
 	useEffect(() => {
 		const displayTopic = getChatDisplayName(topic).slice(0, 8);

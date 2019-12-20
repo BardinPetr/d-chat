@@ -9,8 +9,6 @@ export function __(str, ...placeholders) {
 	return i18n.getMessage(str.replace(/[^a-zA-Z_]/g, ''), placeholders).trim();
 }
 
-export const IS_FIREFOX = runtime.id === 'dchat@losnappas';
-
 export const setBadgeText = txt => {
 	if (isNumber(txt)) {
 		if (+txt < 0) {

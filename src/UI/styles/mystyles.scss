@@ -317,27 +317,40 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	z-index: 99;
 	overflow-y: scroll;
 }
-.CodeMirror {
-	border: 1px solid #bbb !important;
-	border-radius: 0 !important;
-	.CodeMirror-scroll {
-		max-height: 150px;
-	}
-	&-fullscreen {
-		.CodeMirror-scroll {
-			max-height: inherit;
-		}
-	}
-}
 .x-main-editor {
 	flex-flow: column-reverse;
 	display: flex;
 	.CodeMirror {
+		border: 1px solid #bbb !important;
+		border-radius: 0 !important;
 		padding-bottom: 5px;
+		min-height: 3.4rem;
+		&-scroll {
+			max-height: 150px;
+		}
+		&-fullscreen {
+			.CodeMirror-scroll {
+				max-height: inherit;
+			}
+		}
 	}
 	.editor-toolbar {
-		border-top: 0;
-		border-radius: 0;
+		// expanding toolbar looks nice, but terrible ux.
+		// TODO figure it out.
+		// transition: width 0.2s ease;
+		// width: 3.5rem;
+		// height: 2.3rem;
+		// overflow: hidden;
+		position: absolute;
+		right: 0;
+		opacity: 0.8;
+		z-index: $z-index + 1;
+		overflow: hidden;
+		&:hover {
+			opacity: 1;
+			// width: 13rem;
+			// transition: width 0.2s ease;
+		}
 		&.fullscreen {
 			z-index: $z-index + 1;
 		}
@@ -365,7 +378,6 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 		display: inline-block !important;
 	}
 }
-
 .CodeMirror-hints * {
 	font-family: $family-primary;
 }

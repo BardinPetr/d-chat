@@ -14,6 +14,8 @@ import 'font-awesome/css/font-awesome.css';
 
 const startUpload = (file, onUploaded, errCb) => {
 	let el;
+	const statusEl = document.querySelector('.editor-statusbar');
+	statusEl.innerText = __('Attach files by drag and dropping, pasting from clipboard, or selecting.');
 	if (typeof file === 'function') {
 		errCb = onUploaded;
 		onUploaded = file;
@@ -26,11 +28,10 @@ const startUpload = (file, onUploaded, errCb) => {
 		el.onchange = upload;
 		el.click();
 	} else {
-		upload({ target: {files: [file]} });
+		upload({ target: { files: [file] } });
 	}
 
 	function upload(e) {
-		const statusEl = document.querySelector('.editor-statusbar');
 		statusEl.innerText = __('Uploading...');
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
@@ -54,6 +55,9 @@ const startUpload = (file, onUploaded, errCb) => {
 				statusEl.innerText = __('File too big!');
 				errCb('Error: > 4MB');
 			}
+		} else {
+			statusEl.className = 'editor-statusbar';
+			statusEl.innerText = '';
 		}
 	}
 };
@@ -176,35 +180,15 @@ const Textarea = ({
 					// status: true,
 					minHeight: 'auto',
 					toolbar: [{
-						name: 'bold',
-						action: editor => editor.toggleBold(),
-						className: 'fa fa-bold',
-						title: __('Bold'),
-					}, {
-						name: 'x-heading',
-						action: editor => editor.toggleHeading3(),
-						className: 'fa fa-header',
-						title: __('Heading')
-					}, '|', {
-						name: 'quote',
-						action: editor => editor.toggleBlockquote(),
-						className: 'fa fa-quote-left',
-						title: __('Quote'),
-					}, {
-						name: 'unordered-list',
-						action: editor => editor.toggleUnorderedList(),
-						className: 'fa fa-list-ul',
-						title: __('Unordered list'),
-					}, '|', {
-						name: 'image',
-						action: editor => editor.drawImage(),
-						className: 'fa fa-picture-o',
-						title: __('Image from URL'),
-					}, {
 						name: 'upload',
 						action: editor => editor.uploadImageUsingCustomFunction(imageUploadFunction),
 						className: 'fa fa-file-picture-o',
 						title: __('Send media by uploading, drag and dropping, or pasting. Max 4MB'),
+					}, {
+						name: 'emoji',
+						action: () => setEmojiPickerVisible(true),
+						className: 'fa fa-smile-o',
+						title: __('Emoji picker'),
 					}, '|', {
 						name: 'preview',
 						action: editor => editor.togglePreview(),
@@ -216,12 +200,7 @@ const Textarea = ({
 						className: 'fa fa-arrows-alt no-disable no-mobile',
 						title: __('Toggle fullscreen'),
 					}, '|', {
-						name: 'emoji',
-						action: () => setEmojiPickerVisible(true),
-						className: 'fa fa-smile-o',
-						title: __('Emoji picker'),
-					}, {
-						name: 'submit is-pulled-right',
+						name: 'submit',
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',
 						title: __('Send'),
