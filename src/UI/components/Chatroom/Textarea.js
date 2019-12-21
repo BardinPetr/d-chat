@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention } from 'Approot/misc/util';
+import { mention, formatAddr } from 'Approot/misc/util';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 import { Pos } from 'codemirror';
@@ -12,27 +12,10 @@ import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import 'font-awesome/css/font-awesome.css';
 
-const startUpload = (file, onUploaded, errCb) => {
-	let el;
-	const statusEl = document.querySelector('.editor-statusbar');
-	statusEl.innerText = __('Attach files by drag and dropping, pasting from clipboard, or selecting.');
-	if (typeof file === 'function') {
-		errCb = onUploaded;
-		onUploaded = file;
-		file = null;
-	}
-	if (!file) {
-		el = document.createElement('input');
-		el.type = 'file';
-		el.accept = 'image/*,audio/*,video/*';
-		el.onchange = upload;
-		el.click();
-	} else {
-		upload({ target: { files: [file] } });
-	}
+const startUpload = async (file, onUploaded, errCb) => {
+	upload({ target: { files: [file] } });
 
 	function upload(e) {
-		statusEl.innerText = __('Uploading...');
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
 				errCb();
@@ -41,23 +24,16 @@ const startUpload = (file, onUploaded, errCb) => {
 			const reader = new FileReader();
 			reader.onload = e => {
 				onUploaded(e.target.result);
-				el = null;
 			};
 			reader.onerror = e => {
 				console.error('FileReader error:', e);
 				errCb('Error');
-				statusEl.innerText = __('Error!');
 			};
 			if (e.target.files[0].size <= 4194304) {
 				reader.readAsDataURL(e.target.files[0]);
 			} else {
-				console.error('FileReader error file too big.');
-				statusEl.innerText = __('File too big!');
 				errCb('Error: > 4MB');
 			}
-		} else {
-			statusEl.className = 'editor-statusbar';
-			statusEl.innerText = '';
 		}
 	}
 };
@@ -120,11 +96,16 @@ const Textarea = ({
 					} else if (word.startsWith('@')) {
 						// Subs autocomplete.
 						const theWord = word.slice(1);
-						const things = subs.filter(sub => sub.startsWith(theWord)).map(sub => mention(sub) + ' ');
+						const things = subs.filter(sub => sub.startsWith(theWord)).map(sub => ({
+							text: mention(sub) + ' ',
+							displayText: formatAddr(sub)
+						}));
 						if (things.length) {
 							return ({
 								list: things,
-								from: anchor,
+								// Without this, typing 'xx @' would cause autocomplete to 'xx@something.34...' -
+								// (the space is removed).
+								from: theWord ? anchor : foundWord.anchor,
 								to: Pos(line, end),
 							});
 						}
@@ -141,11 +122,11 @@ const Textarea = ({
 
 	const imageUploadFunction = (file, cb, errCb) => {
 		document.querySelector('.editor-statusbar').className = 'editor-statusbar is-not-hidden';
-		startUpload(file, x => {
+		setTimeout(() => startUpload(file, x => {
 			cb(x);
 			submitUpload();
 			document.querySelector('.editor-statusbar').className = 'editor-statusbar';
-		}, errCb);
+		}, errCb), 30);
 	};
 
 	return (
@@ -167,43 +148,40 @@ const Textarea = ({
 					autoDownloadFontAwesome: false,
 					uploadImage: true,
 					imageUploadFunction,
+					imageAccept: 'image/*,audio/*,video/*',
+					imageMaxSize: 4194304, // 4MB
 					status: ['upload-image'],
+					toolbarTips: false,
+					imageTexts: {
+						sbInit: __('Post media by pasting or dropping it in the textarea.'),
+						sbOnDragEnter: __('Drop media to upload.'),
+						sbOnDrop: __('Uploading #images_names#.'),
+						sbProgress: __('Uploading #file_name#: #progress#%.'),
+						sbOnUploaded: __('Uploaded #image_name#.'),
+					},
 					autosave: {
 						enabled: true,
 						// TODO maybe manually save instead? Have to experiment.
 						delay: 500,
 						uniqueId: 'main-textarea',
 					},
+					errorCallback(err) {
+						mdeInstance.current?.setStatusbar('upload-image', err);
+					},
 					previewClass: 'content editor-preview',
 					promptURLs: IS_SIDEBAR,
 					spellChecker: false,
-					// status: true,
 					minHeight: 'auto',
-					toolbar: [{
-						name: 'upload',
-						action: editor => editor.uploadImageUsingCustomFunction(imageUploadFunction),
-						className: 'fa fa-file-picture-o',
-						title: __('Send media by uploading, drag and dropping, or pasting. Max 4MB'),
-					}, {
+					toolbar: ['upload-image', {
 						name: 'emoji',
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
-						title: __('Emoji picker'),
-					}, '|', {
-						name: 'preview',
-						action: editor => editor.togglePreview(),
-						className: 'fa fa-eye no-disable',
-						title: __('Preview'),
-					}, {
-						name: 'fullscreen',
-						action: editor => editor.toggleFullScreen(),
-						className: 'fa fa-arrows-alt no-disable no-mobile',
-						title: __('Toggle fullscreen'),
-					}, '|', {
+						title: '',
+					}, '|', 'side-by-side', 'fullscreen', '|', {
 						name: 'submit',
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',
-						title: __('Send'),
+						title: '',
 					}]
 				}}
 				extraKeys={{

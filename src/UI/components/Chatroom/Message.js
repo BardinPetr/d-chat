@@ -103,7 +103,7 @@ const  Message = ({
 				</div>
 			)}
 
-			<div className="x-toolbar is-pulled-right">
+			<div className="x-toolbar x-toolbar-side">
 				<Toolbar
 					id={message.id}
 					addr={message.addr}

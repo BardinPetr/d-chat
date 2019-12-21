@@ -8,9 +8,6 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
-  "Attachfilesbydraganddroppingpastingfromclipboardorselecting": {
-    "message": " Attach files by drag and dropping, pasting from clipboard, or selecting."
-  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -47,17 +44,14 @@
   "Description": {
     "message": " Description"
   },
-  "Emojipicker": {
-    "message": " Emoji picker"
+  "Dropmediatoupload": {
+    "message": " Drop media to upload."
   },
   "Emojipickerdialog": {
     "message": " Emoji picker dialog"
   },
   "Emojis": {
     "message": " Emojis"
-  },
-  "Error": {
-    "message": " Error!"
   },
   "Expandsonclick": {
     "message": " Expands on click"
@@ -67,9 +61,6 @@
   },
   "Exportwallet": {
     "message": " Export wallet"
-  },
-  "Filetoobig": {
-    "message": " File too big!"
   },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
@@ -164,11 +155,11 @@
   "Password": {
     "message": " Password"
   },
+  "Postmediabypastingordroppingitinthetextarea": {
+    "message": " Post media by pasting or dropping it in the textarea."
+  },
   "Postedmedia": {
     "message": " Posted media."
-  },
-  "Preview": {
-    "message": " Preview"
   },
   "Privatemessage": {
     "message": " Private message"
@@ -184,12 +175,6 @@
   },
   "Reload": {
     "message": " Reload"
-  },
-  "Send": {
-    "message": " Send"
-  },
-  "SendmediabyuploadingdraganddroppingorpastingMaxMB": {
-    "message": " Send media by uploading, drag and dropping, or pasting. Max 4MB"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
@@ -224,17 +209,20 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "Togglefullscreen": {
-    "message": " Toggle fullscreen"
-  },
   "Topic": {
     "message": " Topic"
   },
   "Unmutechat": {
     "message": " Unmute chat"
   },
-  "Uploading": {
-    "message": " Uploading..."
+  "Uploadedimage_name": {
+    "message": " Uploaded #image_name#."
+  },
+  "Uploadingfile_nameprogress": {
+    "message": " Uploading #file_name#: #progress#%."
+  },
+  "Uploadingimages_names": {
+    "message": " Uploading #images_names#."
   },
   "Walletaddress": {
     "message": " Wallet address"

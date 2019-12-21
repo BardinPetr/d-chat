@@ -147,6 +147,10 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 		}
 		.x-media-container {
 			height: 300px;
+			img,video {
+				height: auto;
+				max-height: 300px;
+			}
 		}
 		.x-reactions {
 			.button {
@@ -318,8 +322,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	overflow-y: scroll;
 }
 .x-main-editor {
-	flex-flow: column-reverse;
-	display: flex;
+	position: relative;
 	.CodeMirror {
 		border: 1px solid #bbb !important;
 		border-radius: 0 !important;
@@ -333,23 +336,45 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 				max-height: inherit;
 			}
 		}
+		&-cursor {
+			// Fix cursor not appearing on chrome popup.
+			padding-left: 1px;
+		}
 	}
-	.editor-toolbar {
-		// expanding toolbar looks nice, but terrible ux.
-		// TODO figure it out.
-		// transition: width 0.2s ease;
-		// width: 3.5rem;
-		// height: 2.3rem;
-		// overflow: hidden;
+	.editor-statusbar {
+		top: -1rem;
+		padding: 0;
+		padding-right: 0.8rem;
+		padding-bottom: 0.2rem;
 		position: absolute;
 		right: 0;
-		opacity: 0.8;
 		z-index: $z-index + 1;
-		overflow: hidden;
 		&:hover {
-			opacity: 1;
-			// width: 13rem;
-			// transition: width 0.2s ease;
+			display: inherit !important;
+		}
+	}
+	.editor-toolbar {
+		&:not(.fullscreen) {
+			.side-by-side {
+				display: none;
+			}
+			top: 0;
+			right: 1rem;
+			transition: height 1s ease;
+			height: 1rem;
+			opacity: 0.8;
+			background-color: white;
+			position: absolute;
+			z-index: $z-index + 1;
+			overflow: hidden;
+			&:hover {
+				opacity: 1;
+				transition: height 0.2s ease;
+				height: 3rem;
+				& ~ .editor-statusbar {
+					display: inherit !important;
+				}
+			}
 		}
 		&.fullscreen {
 			z-index: $z-index + 1;
@@ -370,6 +395,11 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-toolbar {
 	* {
 		height: 25px !important;
+	}
+	&-side {
+		position: absolute;
+		right: 0;
+		z-index: $z-index + 1;
 	}
 }
 .editor-statusbar {
