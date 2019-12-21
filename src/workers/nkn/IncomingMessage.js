@@ -15,6 +15,8 @@ renderer.image = (href, title, text) => {
 		return `<img src="${href}" alt=${text}>`;
 	}
 };
+// Tried settings links like 'wikipedia.org', but that makes '@someone.12345678' a link too.
+// The canonical markdown way is '<wikipedia.org>'.
 renderer.link = (href, title, text) =>
 	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
 marked.setOptions({
@@ -61,14 +63,22 @@ allowedAttributes.image = ['src', 'alt'];
 allowedAttributes.a = ['rel', 'target', 'href', 'title'];
 allowedAttributes['*'] = ['class'];
 
-// Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}
+// Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}.
 const dataUrl = /data:[^\s)]*/gi;
 
 class IncomingMessage extends Message {
+
+	// Firefox with privacy.resistFingerprinting has reduced time precision -
+	// of 100ms, which makes Date.now() create dupes, -
+	// and then messages get shuffled on startup. Workaround.
+	static nonce = 0.0001;
+
 	constructor(message) {
 		super(message);
 
-		this.createdAt = Date.now();
+		this.createdAt = Date.now() + IncomingMessage.nonce;
+		IncomingMessage.nonce += 0.0001;
+
 		this.receivedAs = NKN.instance.addr;
 
 		// Heartbeats should not be received as messages.

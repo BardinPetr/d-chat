@@ -9,6 +9,10 @@ import classnames from 'classnames';
 import Toolbar from './MessageToolbar';
 import TimeAgo from './TimeAgo';
 import MediaMessage from './MediaMessage';
+import { IoMdChatboxes } from 'react-icons/io';
+import { Link } from 'react-router-dom';
+import { getWhisperURL } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const Nickname = ({
 	addr,
@@ -42,87 +46,95 @@ const Nickname = ({
 	);
 };
 
-class Message extends React.PureComponent {
-	render() {
-		const {
-			addReaction,
-			topic,
-			refer,
-			message,
-			isSubscribed,
-			className,
-			includeHeader,
-			children,
-			isNotice,
-		} = this.props;
-		const unsubscribed = !isSubscribed;
+const  Message = ({
+	addReaction,
+	topic,
+	refer,
+	message,
+	isSubscribed,
+	className,
+	includeHeader,
+	children,
+	isNotice,
+}) => {
+	const unsubscribed = !isSubscribed;
 
-		const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
-			message.contentType,
-		);
+	const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
+		message.contentType,
+	);
 
-		const isMedia = message.contentType === 'media';
+	const isMedia = message.contentType === 'media';
 
-		return (
-			<div
-				className={classnames(`message ${className}`, {
-					'has-background-grey-lighter': isGreyed,
-					'x-notice': isGreyed,
-					'x-not-confirmed': message.isNotConfirmed,
-				})}
-			>
-				{(includeHeader || isNotice) && (
-					<div className="message-header is-paddingless has-text-weight-light">
-						<div className="level is-mobile is-marginless is-paddingless">
-							<div className="level-left">
-								<div className="level-item">
-									<Nickname
-										refer={refer}
-										addr={message.addr}
-										username={message.username}
-										timestamp={message.timestamp}
-										unsubscribed={unsubscribed}
-										pubKey={message.pubKey || ''}
-									/>
-								</div>
+	return (
+		<div
+			className={classnames(`message ${className}`, {
+				'has-background-grey-lighter': isGreyed,
+				'x-notice': isGreyed,
+				'x-not-confirmed': message.isNotConfirmed,
+			})}
+		>
+			{(includeHeader || isNotice) && (
+				<div className="message-header is-paddingless has-text-weight-light">
+					<div className="level is-mobile is-marginless is-paddingless">
+						<div className="level-left">
+							<div className="level-item">
+								<Nickname
+									refer={refer}
+									addr={message.addr}
+									username={message.username}
+									timestamp={message.timestamp}
+									unsubscribed={unsubscribed}
+									pubKey={message.pubKey || ''}
+								/>
+								<span className="x-is-hover x-is-margin-left x-toolbar">
+									<Link
+										to={getWhisperURL(message.addr)}
+										className="is-small button has-tooltip-top"
+										data-tooltip={__('Start a private conversation')}
+									>
+										<span className="icon is-small">
+											<IoMdChatboxes />
+										</span>
+									</Link>
+								</span>
 							</div>
 						</div>
 					</div>
-				)}
-
-				<div className="x-toolbar">
-					<Toolbar
-						id={message.id}
-						addr={message.addr}
-						topic={topic}
-						addReaction={content =>
-							addReaction({
-								content,
-							})
-						}
-					/>
 				</div>
+			)}
 
-				<div className="message-body x-is-small-padding">
-					{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-					{ isMedia ?
-						(
-							<MediaMessage
-								content={message.content}
-								attachments={message.attachments || []}
-							/>
-						) : (
-							<div
-								className="content"
-								dangerouslySetInnerHTML={{ __html: message.content }}
-							></div>
-						)
+			<div className="x-toolbar x-toolbar-side">
+				<Toolbar
+					id={message.id}
+					addr={message.addr}
+					topic={topic}
+					addReaction={content =>
+						addReaction({
+							content,
+						})
 					}
-					{children}
-				</div>
+				/>
 			</div>
-		);
-	}
-}
+
+			<div className="message-body x-is-small-padding">
+				{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
+				{ isMedia ?
+					(
+						<MediaMessage
+							content={message.content}
+							attachments={message.attachments || []}
+						/>
+					) : (
+						<div
+							className="content"
+							dangerouslySetInnerHTML={{ __html: message.content }}
+						></div>
+					)
+				}
+				{children}
+			</div>
+		</div>
+	);
+};
 
 export default Message;

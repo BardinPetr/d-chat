@@ -65,19 +65,6 @@ const login = (state = {}, action) => {
 	return newState;
 };
 
-const draftMessage = (state = '', action) => {
-	let newState;
-	switch (action.type) {
-		case 'SAVE_DRAFT':
-			newState = action.payload.content;
-			break;
-
-		default:
-			newState = state;
-	}
-	return newState;
-};
-
 /**
  * Handles individual chat (topic) settings.
  *
@@ -119,14 +106,11 @@ const chatSettings = (state = {}, action) => {
 			break;
 
 		case 'chat/MARK_READ':
-			// Grab all unread messages.
-			initial = state[topic]?.unread || [];
 			newState = {
 				...state,
 				[topic]: {
 					...state[topic],
-					// Filter out newly read message from unread messages.
-					unread: initial.filter(i => !action.payload.ids.some(id => i === id)),
+					unread: [],
 				},
 			};
 			configs.chatSettings = newState;
@@ -213,6 +197,5 @@ export default combineReducers({
 	messageEvent,
 
 	// UI
-	draftMessage,
 	navigation,
 });

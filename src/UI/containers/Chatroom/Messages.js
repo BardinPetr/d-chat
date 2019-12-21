@@ -2,6 +2,7 @@ import React, { useEffect, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
 import { loadMessagesFromDb, PAGE_SIZE } from 'Approot/database/messages';
+import uniqBy from 'lodash.uniqby';
 
 function reducer(state, action) {
 
@@ -16,7 +17,8 @@ function reducer(state, action) {
 			});
 
 		case 'new':
-			return [...state, changes];
+			// TODO instead of checking uniq, maybe add index to the react key prop.
+			return uniqBy([...state, changes], 'id');
 
 		case 'old':
 			return [...changes, ...state];
@@ -29,6 +31,7 @@ function reducer(state, action) {
 const Messages = ({
 	topic,
 	messageEvent,
+	unreadCount,
 	...rest
 }) => {
 	const [messages, dispatch] = useReducer(reducer, []);
@@ -70,12 +73,16 @@ const Messages = ({
 
 	}, [messageEvent, topic]);
 
+	// Loads initial messages.
 	useEffect(() => {
 		if (!topic) {
 			return;
 		}
 
-		loadMessagesFromDb({ topic })
+		loadMessagesFromDb({
+			topic,
+			extra: unreadCount,
+		})
 			.then(prevMessages => dispatch({ type: 'next', payload: prevMessages }))
 			// New chat -> assume has messages.
 			.then(() => setHasMore(true));
@@ -92,8 +99,9 @@ const Messages = ({
 	);
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
 	messageEvent: state.messageEvent,
+	unreadCount: state.chatSettings[ownProps.topic]?.unread?.length || 0,
 });
 
 export default connect(mapStateToProps)(Messages);

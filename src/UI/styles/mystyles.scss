@@ -7,15 +7,17 @@ $navbar-height: 3rem;
 $section-padding: 1.5rem;
 $section-padding-medium: 3rem 1.5rem;
 $section-padding-large: 9rem 1.5rem;
-$accordion-background-color: transparent;
-$accordion-header-background-color: white;
-$accordion-header-color: black;
-$accordion-header-padding: 1rem 0.75rem;
 $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
-$text: hsl(0, 0%, 14%);
+/* hsl(0, 0%, 14%); */
+$text: black;
+$code: $text;
+$label-color: $text;
 $message-header-color: hsl(222.2, 88.6%, 44.7%);
 $message-header-color-me: hsl(103.8, 100%, 17.5%);
+$message-body-color: $text;
+$z-index: 30;
+$pre-background: hsla(0, 0%, 0%, 0.05);
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -44,13 +46,13 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 	position:absolute;
 	bottom: 1.8rem;
 	right: 0;
-	z-index: 30;
+	z-index: $z-index;
 }
 .x-is-fullwidth {
 	width: 100%;
 }
 .ReactModal__Overlay {
-	z-index: 30;
+	z-index: $z-index;
 	background-color: transparent !important;
 	top: 0;
 	left: 0;
@@ -109,6 +111,9 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 .x-is-small-padding {
 	padding: 1vh 1vw;
 }
+.x-is-margin-left {
+	margin-left: 0.4em;
+}
 .x-is-padding-left {
 	padding-left: 0.4em;
 }
@@ -142,6 +147,10 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 		}
 		.x-media-container {
 			height: 300px;
+			img,video {
+				height: auto;
+				max-height: 300px;
+			}
 		}
 		.x-reactions {
 			.button {
@@ -163,6 +172,14 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 		margin: 0.8rem 0 0.1rem 0;
 		background-color: transparent;
 		color: $message-header-color;
+		.x-is-hover {
+			visibility: hidden !important;
+		}
+		&:hover {
+			.x-is-hover {
+				visibility: visible !important;
+			}
+		}
 	}
 
 	.x-me {
@@ -182,7 +199,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 			font-size: 0.9375rem;
 			white-space: initial;
 			pre, code {
-				background-color: $grey-lighter;
+				background-color: $pre-background;
 			}
 		}
 	}
@@ -251,11 +268,6 @@ body, html, #root {
 		align-items: flex-start;
 	}
 }
-.x-toolbar {
-    position: absolute;
-    right: 1rem;
-    top: -1rem;
-}
 .x-not-confirmed {
     opacity: 0.6;
 }
@@ -308,4 +320,94 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-is-login-overlay {
 	z-index: 99;
 	overflow-y: scroll;
+}
+.x-main-editor {
+	position: relative;
+	.CodeMirror {
+		border: 1px solid #bbb !important;
+		border-radius: 0 !important;
+		padding-bottom: 5px;
+		min-height: 3.4rem;
+		&-scroll {
+			max-height: 150px;
+		}
+		&-fullscreen {
+			.CodeMirror-scroll {
+				max-height: inherit;
+			}
+		}
+		&-cursor {
+			// Fix cursor not appearing on chrome popup.
+			padding-left: 1px;
+		}
+	}
+	.editor-statusbar {
+		top: -1rem;
+		padding: 0;
+		padding-right: 0.8rem;
+		padding-bottom: 0.2rem;
+		position: absolute;
+		right: 0;
+		z-index: $z-index + 1;
+		&:hover {
+			display: inherit !important;
+		}
+	}
+	.editor-toolbar {
+		&:not(.fullscreen) {
+			.side-by-side {
+				display: none;
+			}
+			top: 0;
+			right: 1rem;
+			transition: height 1s ease;
+			height: 1rem;
+			opacity: 0.8;
+			background-color: white;
+			position: absolute;
+			z-index: $z-index + 1;
+			overflow: hidden;
+			&:hover {
+				opacity: 1;
+				transition: height 0.2s ease;
+				height: 3rem;
+				& ~ .editor-statusbar {
+					display: inherit !important;
+				}
+			}
+		}
+		&.fullscreen {
+			z-index: $z-index + 1;
+		}
+		& button {
+			font-size: 0.85rem;
+			height: 1.5rem;
+			color: $grey-dark;
+		}
+		&::before {
+			margin-bottom: 4px;
+		}
+		&::after {
+			margin-top: 4px;
+		}
+	}
+}
+.x-toolbar {
+	* {
+		height: 25px !important;
+	}
+	&-side {
+		position: absolute;
+		right: 0;
+		z-index: $z-index + 1;
+	}
+}
+.editor-statusbar {
+	display: none !important;
+	&.is-not-hidden {
+		display: inline-block !important;
+	}
+}
+.CodeMirror-hints * {
+	font-family: $family-primary;
 }

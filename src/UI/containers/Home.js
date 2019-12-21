@@ -68,7 +68,7 @@ const Home = ({ client }) => (
 					</div>
 
 					<div className="content">
-						<p className="has-text-italic">{__('Chat names should not contain slashes.')}</p>
+						<p className="has-text-italic has-text-dark">{__('Chat names should not contain slashes.')}</p>
 					</div>
 
 				</div>

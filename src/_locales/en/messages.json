@@ -44,6 +44,9 @@
   "Description": {
     "message": " Description"
   },
+  "Dropmediatoupload": {
+    "message": " Drop media to upload."
+  },
   "Emojipickerdialog": {
     "message": " Emoji picker dialog"
   },
@@ -152,11 +155,11 @@
   "Password": {
     "message": " Password"
   },
+  "Postmediabypastingordroppingitinthetextarea": {
+    "message": " Post media by pasting or dropping it in the textarea."
+  },
   "Postedmedia": {
     "message": " Posted media."
-  },
-  "Preview": {
-    "message": " Preview"
   },
   "Privatemessage": {
     "message": " Private message"
@@ -203,9 +206,6 @@
   "Tab": {
     "message": " Tab"
   },
-  "Text": {
-    "message": " Text"
-  },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
@@ -215,8 +215,14 @@
   "Unmutechat": {
     "message": " Unmute chat"
   },
-  "Upload": {
-    "message": " Upload"
+  "Uploadedimage_name": {
+    "message": " Uploaded #image_name#."
+  },
+  "Uploadingfile_nameprogress": {
+    "message": " Uploading #file_name#: #progress#%."
+  },
+  "Uploadingimages_names": {
+    "message": " Uploading #images_names#."
   },
   "Walletaddress": {
     "message": " Wallet address"

@@ -7,7 +7,8 @@ export const PAGE_SIZE = 25;
  */
 export function loadMessagesFromDb({
 	topic,
-	previous = {}
+	previous = {},
+	extra = 0,
 }) {
 	const createdAt = previous.createdAt || maxKey;
 
@@ -15,7 +16,7 @@ export function loadMessagesFromDb({
 		.where('[topic+createdAt]')
 		.between([topic, minKey], [topic, createdAt], false, false)
 		.reverse()
-		.limit(PAGE_SIZE)
+		.limit(PAGE_SIZE + extra)
 		.sortBy('createdAt')
 		// Kinda crazy how we unreverse it like this.
 		.then(arr => arr.reverse());
@@ -30,13 +31,29 @@ export async function storeMessageToDb(message) {
 }
 
 function storeToReactionDb(message) {
-	if (message.contentType === 'reaction') {
-		return db.reactions.put(message)
-			.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
-	}
+	return db.reactions.put(message)
+		.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
 }
 
-function storeToMessagesDb(message) {
+/**
+ * Adding key to database: let's first make sure a createdAt isn't -
+ * being changed. Otherwise chat history will go wrong.
+ *
+ * TODO db.transaction ?
+ */
+async function storeToMessagesDb(message) {
+	const existing = await db.messages.get(getMessagePK(message));
+	if (existing) {
+		message.createdAt = existing.createdAt;
+	}
 	return db.messages.put(message)
 		.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
+}
+
+function getMessagePK(message) {
+	return {
+		topic: message.topic,
+		id: message.id,
+		addr: message.addr,
+	};
 }

@@ -19,14 +19,6 @@ export const logout = () => ({
 	type: 'LOGOUT_ALIAS',
 });
 
-// So that next time you open popup, it continues where you left off.
-export const saveDraft = text => ({
-	type: 'SAVE_DRAFT',
-	payload: {
-		content: text,
-	},
-});
-
 export const connected = () => ({
 	type: 'CONNECTED',
 });

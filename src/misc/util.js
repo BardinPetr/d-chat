@@ -146,3 +146,6 @@ export const ONE_SATOSHI = 0.00000001;
 export const IS_EXTENSION = APP_TARGET === 'EXT';
 
 export const isAck = reaction => reaction?.content === '✔';
+
+// @someone.12345678
+export const mention = addr => '@' + formatAddr(addr);

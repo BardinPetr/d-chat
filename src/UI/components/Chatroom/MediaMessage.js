@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classnames from 'classnames';
 import { loadAttachment } from 'Approot/database/attachments';
 
 const MediaMessage = ({ content, attachments }) => {
@@ -26,39 +27,40 @@ const MediaMessage = ({ content, attachments }) => {
 		};
 	}, []);
 
-	// TODO: multiple media elements and stayScroll is bugged -
-	// because only one x-media-container right now.
 	return (
 		<div
-			className="content"
+			className=""
 		>
-			<div className="x-media-container">
+			<div className={classnames('x-media-container is-flex', {
+			})}>
 				{attaches.map((attach, i) => (
 					<p key={i}>
-						{(attach.type.includes('audio') &&
-							<audio
-								className="x-oc-content"
-								controls
-								loop
-								src={attach.src}
-							/>)
-						|| (attach.type.includes('image') &&
-							<img
-								className="x-oc-content"
-								src={attach.src}
-							/>)
-						|| (attach.type.includes('video') &&
-							<video
-								className="x-oc-content"
-								controls
-								playsInline
-								loop
-								src={attach.src}
-							/>)}
+						<a href={attach.src} target="_blank">
+							{(attach.type.includes('audio') &&
+								<audio
+									className="x-oc-content"
+									controls
+									loop
+									src={attach.src}
+								/>)
+							|| (attach.type.includes('image') &&
+								<img
+									className="x-oc-content"
+									src={attach.src}
+								/>)
+							|| (attach.type.includes('video') &&
+								<video
+									className="x-oc-content"
+									controls
+									playsInline
+									loop
+									src={attach.src}
+								/>)}
+						</a>
 					</p>
 				))}
 			</div>
-			<div dangerouslySetInnerHTML={{ __html: displayContent }} />
+			<div className="content" dangerouslySetInnerHTML={{ __html: displayContent }} />
 		</div>
 	);
 };
