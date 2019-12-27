@@ -1,7 +1,7 @@
 /**
  * Contains messages list + submit box.
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import useInterval from '@rooks/use-interval';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -44,7 +44,7 @@ const Chatroom = ({
 	const [placeholder] = useState(`${__('Message as')} ${formatAddr(client.addr)}...`);
 
 	useEffect(() => {
-		const displayTopic = getChatDisplayName(topic).slice(0, 8);
+		const displayTopic = getChatDisplayName(topic);
 		document.title = `(${unreadMessages.length}) ${displayTopic} - D-Chat`;
 	}, [unreadMessages.length, topic]);
 
@@ -58,16 +58,16 @@ const Chatroom = ({
 		};
 	}, [topic]);
 
-	const markAllMessagesRead = () => {
+	const markAllMessagesRead = useCallback(() => {
 		if (unreadMessages.length > 0) {
 			if (unreadMessages.length < 4) {
 				setLastReadId(null);
 			}
 			markAsRead(topic, unreadMessages);
 		}
-	};
+	}, [topic, unreadMessages]);
 
-	const submitText = (inputValue) => {
+	const submitText = useCallback((inputValue) => {
 		inputValue = inputValue.trim();
 
 		if (inputValue === '') {
@@ -85,9 +85,9 @@ const Chatroom = ({
 		};
 
 		createMessage(message);
-	};
+	}, [topic]);
 
-	const submitUpload = () => {
+	const submitUpload = useCallback(() => {
 		const cm = mdeInstance.current?.codemirror;
 		if (!cm) {
 			return;
@@ -104,15 +104,7 @@ const Chatroom = ({
 		};
 		createMessage(message);
 		cm.setValue('');
-	};
-
-	/**
-	 * Makes enter submit, shift enter insert newline.
-	 */
-	const onEnterPress = cm => {
-		submitText(cm.getValue());
-		cm.setValue('');
-	};
+	});
 
 	/**
 	 * Add to textarea.
@@ -150,11 +142,12 @@ const Chatroom = ({
 			/>
 
 			<Textarea
-				onEnterPress={onEnterPress}
+				submitText={submitText}
 				mdeInstance={mdeInstance}
 				placeholder={placeholder}
 				submitUpload={submitUpload}
 				subs={subs}
+				topic={topic}
 			/>
 
 		</div>
