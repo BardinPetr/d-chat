@@ -85,7 +85,7 @@ onmessage = async ({ data: action }) => {
 					return false;
 				});
 
-			if (data) {
+			if (data !== false) {
 				message = new OutgoingMessage({
 					contentType: 'reaction',
 					content: payload.content,
@@ -107,15 +107,17 @@ onmessage = async ({ data: action }) => {
 				.subscribe(topic, {
 					metadata: action.payload.options.metadata,
 					fee: action.payload.options.fee,
-				});
+				}).catch(() => false);
 
-			data = new OutgoingMessage({
-				contentType: 'dchat/subscribe',
-				topic,
-				// No i18n here.
-				content: 'Joined channel.',
-			});
-			NKN.instance.publishMessage(topic, data);
+			if (data !== false) {
+				data = new OutgoingMessage({
+					contentType: 'dchat/subscribe',
+					topic,
+					// No i18n here.
+					content: 'Joined channel.',
+				});
+				NKN.instance.publishMessage(topic, data);
+			}
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':

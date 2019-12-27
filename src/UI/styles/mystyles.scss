@@ -359,7 +359,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 				display: none;
 			}
 			top: 0;
-			right: 1rem;
+			right: 0;
 			transition: height 1s ease;
 			height: 1rem;
 			opacity: 0.8;
@@ -367,6 +367,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 			position: absolute;
 			z-index: $z-index + 1;
 			overflow: hidden;
+			height: 3rem;
 			&:hover {
 				opacity: 1;
 				transition: height 0.2s ease;
@@ -394,7 +395,8 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 }
 .x-toolbar {
 	* {
-		height: 25px !important;
+		// height: 25px !important;
+		height: 1rem !important;
 	}
 	&-side {
 		position: absolute;
@@ -410,4 +412,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 }
 .CodeMirror-hints * {
 	font-family: $family-primary;
+}
+.CodeMirror-lines {
+	width: 80%;
 }

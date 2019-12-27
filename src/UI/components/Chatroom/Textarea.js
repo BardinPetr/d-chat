@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useCallback } from 'react';
 import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, formatAddr } from 'Approot/misc/util';
 
@@ -39,11 +39,12 @@ const startUpload = async (file, onUploaded, errCb) => {
 };
 
 const Textarea = ({
-	onEnterPress,
+	submitText,
 	mdeInstance,
 	placeholder,
 	submitUpload,
 	subs,
+	topic,
 }) => {
 	const [visible, setEmojiPickerVisible] = useState(false);
 	useEffect(() => {
@@ -53,7 +54,8 @@ const Textarea = ({
 		}
 		// Liftman, last char of last line, please!
 		cm.doc.setCursor(Infinity, Infinity);
-	}, []);
+		cm.focus();
+	}, [topic]);
 
 	// Autocomplete.
 	useEffect(() => {
@@ -129,8 +131,17 @@ const Textarea = ({
 		}, errCb), 30);
 	};
 
+	/**
+	 * Makes enter submit, shift enter insert newline.
+	 */
+	const onEnterPress = useCallback((cm) => {
+		submitText(cm.getValue());
+		cm.setValue('');
+	}, [topic]);
+
+	// Without key={topic}, things go wrong.
 	return (
-		<>
+		<React.Fragment key={topic}>
 			{visible &&
 				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
@@ -172,7 +183,7 @@ const Textarea = ({
 					promptURLs: IS_SIDEBAR,
 					spellChecker: false,
 					minHeight: 'auto',
-					toolbar: ['upload-image', {
+					toolbar: IS_SIDEBAR ? ['upload-image', {
 						name: 'emoji',
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
@@ -182,16 +193,26 @@ const Textarea = ({
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',
 						title: '',
+					}] : [{
+						name: 'emoji',
+						action: () => setEmojiPickerVisible(true),
+						className: 'fa fa-smile-o',
+						title: '',
+					}, '|', {
+						name: 'submit',
+						action: editor => onEnterPress(editor.codemirror),
+						className: 'fa fa-paper-plane-o',
+						title: '',
 					}]
 				}}
 				extraKeys={{
-					Enter: onEnterPress,
+					Enter: cm => onEnterPress(cm),
 					// TODO bind Shift-Enter to Enter, to improve newline mechanics.
 				}}
 				className="x-main-editor"
 				getMdeInstance={i => mdeInstance.current = i}
 			/>
-		</>
+		</React.Fragment>
 	);
 };
 
