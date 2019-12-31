@@ -22,11 +22,14 @@ export function loadMessagesFromDb({
 		.then(arr => arr.reverse());
 }
 
+/**
+ * Adds a message or reaction to relevant db table.
+ */
 export async function storeMessageToDb(message) {
 	if (message.contentType === 'reaction') {
 		return storeToReactionDb(message);
 	} else {
-		return storeToMessagesDb(message);
+		return _storeMessage(message);
 	}
 }
 
@@ -41,7 +44,7 @@ function storeToReactionDb(message) {
  *
  * TODO db.transaction ?
  */
-async function storeToMessagesDb(message) {
+async function _storeMessage(message) {
 	const existing = await db.messages.get(getMessagePK(message));
 	if (existing) {
 		message.createdAt = existing.createdAt;

@@ -4,13 +4,17 @@ import { __, reload } from 'Approot/misc/browser-util-APP_TARGET';
 import { IS_EXTENSION } from 'Approot/misc/util';
 import { HTTPSInfo } from 'Approot/UI/components/Info-APP_TARGET';
 
+/**
+ * The spinning NKN icon.
+ * margin-top 1rem so it doesn't overlap the blue line.
+ */
 const LoadingScreen = ({ loading, children }) => (
 	loading ?
 		(
 			<div className="hero">
 				<div className="hero-body">
 					<div className="columns is-centered">
-						<div className="column is-half">
+						<div className="column is-half" style={{marginTop: '1rem'}}>
 							<div className="notification is-white">
 								<figure className="image container is-64x64">
 									<NknLoading trans />

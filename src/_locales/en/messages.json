@@ -17,6 +17,9 @@
   "Chatnamesshouldnotcontainslashes": {
     "message": " Chat names should not contain slashes."
   },
+  "Chatsettings": {
+    "message": " Chat settings"
+  },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
   },
@@ -119,8 +122,8 @@
   "LostawalletyouhadinanolderversionofDChat": {
     "message": " Lost a wallet you had in an older version of D-Chat?"
   },
-  "Messageas": {
-    "message": " Message as"
+  "Messagetopicasuser_identifier": {
+    "message": " Message #topic# as #user_identifier#..."
   },
   "More": {
     "message": " More..."

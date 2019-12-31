@@ -15,7 +15,6 @@ const EmojiPicker = ({ onSelect, visible, setVisible }) => (
 	>
 		<div className="x-emoji-mart-container">
 			<Picker
-				autoFocus
 				title={__('Emojis')}
 				native={true}
 				backgroundImageFn={() => {}}

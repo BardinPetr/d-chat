@@ -1,5 +1,11 @@
 # Notes for translators
 
+Leave any content surrounded by hashes (#) as is!
+
+For example `Good #topic# night #user_identifier#...` translates so that #topic# and #addr# still exist; they are placeholders and will be replaced afterwards. `Buenos #topic# noches #user_identifier#...` will turn into `Buenos #d-chat noches Lynn.74760...`.
+
+## Extra
+
 There are some helper utilities for translations.
 
 * ChromeExtensionI18nHelper for Sublime Text plug-in: it is designed for Google Chrome extensions, but it is also available WebExtensions-based Firefox addons.

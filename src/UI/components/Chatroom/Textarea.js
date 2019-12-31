@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect, useCallback } from 'react';
-import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, formatAddr } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 import { Pos } from 'codemirror';
@@ -173,7 +173,7 @@ const Textarea = ({
 					autosave: {
 						enabled: true,
 						// TODO maybe manually save instead? Have to experiment.
-						delay: 500,
+						delay: 1500,
 						uniqueId: 'main-textarea',
 					},
 					errorCallback(err) {
@@ -188,7 +188,7 @@ const Textarea = ({
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', 'side-by-side', 'fullscreen', '|', {
+					}, '|', 'side-by-side', 'fullscreen', {
 						name: 'submit',
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',

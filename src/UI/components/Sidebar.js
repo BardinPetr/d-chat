@@ -15,11 +15,7 @@ const Sidebar = () => (
 			</li>
 		</ul>
 
-		<p className="menu-label">{__('Channels')}</p>
-		<TopicsList />
-
-		<p className="menu-label">{__('Whispers')}</p>
-		<TopicsList showWhispers />
+		<TopicsList labelClassName="menu-label" wrapperClassName="x-has-margin-top-bottom" />
 
 		<Popout />
 

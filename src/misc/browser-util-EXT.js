@@ -32,8 +32,6 @@ export const createNotification = throttle((options) => {
 	}
 }, 250, { trailing: false });
 
-export const IS_SIDEBAR = window.location.href.includes('sidebar.html');
-
 /**
  * Checks if popup view is open, returns path or false.
  */
