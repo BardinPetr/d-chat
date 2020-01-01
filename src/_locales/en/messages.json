@@ -8,6 +8,9 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
+  "AnyonewiththisseedcanrecoveryourfullyfunctionalaccountDonotmishandleit": {
+    "message": " Anyone with this seed can recover your fully functional account. Do not mishandle it."
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -22,6 +25,9 @@
   },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
+  },
+  "Close": {
+    "message": " Close"
   },
   "Comeandsayhionchannel": {
     "message": " Come and say hi on channel"
@@ -182,6 +188,9 @@
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
   },
+  "Showsecretseed": {
+    "message": " Show secret seed"
+  },
   "Slashesdisallowed": {
     "message": " Slashes \"/\" disallowed"
   },
@@ -227,6 +236,9 @@
   "Uploadingimages_names": {
     "message": " Uploading #images_names#."
   },
+  "UsethisseedforexportingimportingyourDChataccountbetweendevices": {
+    "message": " Use this seed for exporting/importing your D-Chat account between devices."
+  },
   "Walletaddress": {
     "message": " Wallet address"
   },
@@ -244,6 +256,9 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
+  },
+  "YourWalletSeed": {
+    "message": " Your Wallet Seed"
   },
   "Yourmessageswillbeencryptedanyways": {
     "message": " Your messages will be encrypted, anyways."

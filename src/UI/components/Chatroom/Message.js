@@ -89,7 +89,7 @@ const  Message = ({
 								<span className="x-is-hover x-is-margin-left x-toolbar">
 									<Link
 										to={getWhisperURL(message.addr)}
-										className="is-small button has-tooltip-top"
+										className="is-small button has-tooltip-right"
 										data-tooltip={__('Start a private conversation')}
 									>
 										<span className="icon is-small">

@@ -32,6 +32,7 @@ $toolbar-width: 30%;
 }
 .x-has-opacity-1 {
 	opacity: 1 !important;
+	transition: opacity 0ms !important;
 }
 .emoji-mart-emoji-native {
 	font-family: inherit !important;
@@ -380,7 +381,7 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 			opacity: 0.8;
 			background-color: white;
 			position: absolute;
-			z-index: $z-index + 1;
+			z-index: $z-index;
 			overflow: hidden;
 			height: 3rem;
 			&:hover {
@@ -436,10 +437,26 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	min-width: 30%;
 	max-width: 100%;
 	border-bottom: 1px solid $link;
-	* {
-		height: 100%;
-		border-radius: 0 !important;
-		border-bottom-width: 0 !important;
+	.tabs {
+		a {
+			justify-content: space-between;
+		}
+		&.is-toggle li:first-child a,
+		&.is-toggle li:last-child a {
+			border-radius: 0;
+			border-bottom-width: 0;
+		}
+	}
+	.x-topic-tab {
+		justify-content: space-between;
+		width: 10rem;
+		.x-topic-link {
+			cursor: auto;
+			height: 100%;
+			&.is-active .delete {
+				display: none;
+			}
+		}
 	}
 	.tabs.is-toggle a.is-active {
 		border-radius: 4px 4px 0 0 !important;
@@ -449,6 +466,9 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 		border-color: $link;
 	}
 }
+.x-active-topics, .x-topic-tab {
+	height: 100%;
+}
 .x-has-unread {
 	text-decoration: underline tan 3px;
 	background: linear-gradient(to top left, white 60%, tan 100%);
@@ -456,4 +476,8 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 .x-has-margin-top-bottom {
 	margin-top: 1em;
 	margin-bottom: 1em;
+}
+.x-seed {
+	text-decoration: underline;
+	user-select: all;
 }

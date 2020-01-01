@@ -41,9 +41,7 @@ const ClientInfo = ({ client, children }) => {
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<WalletExporter wallet={client.wallet}>
-									{__('Export wallet')}
-								</WalletExporter>
+								<WalletExporter wallet={client.wallet} />
 							</div>
 						</div>
 						<div className="tile is-child">

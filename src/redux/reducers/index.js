@@ -4,9 +4,14 @@ import clients from './client';
 
 const activeTopics = (state = new Set, action) => {
 	let newState = new Set(state);
+	const topic = action.payload?.topic;
 	switch (action.type) {
 		case 'chat/CREATE_CHAT':
-			newState.add(action.payload.topic);
+			newState.add(topic);
+			break;
+
+		case 'ui/REMOVE_ACTIVE_TOPIC_TAB':
+			newState.delete(topic);
 			break;
 
 		default:

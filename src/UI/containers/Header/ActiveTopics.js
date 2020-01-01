@@ -1,19 +1,21 @@
 /**
- * Has a small container for displaying chat tabs on header.
- * Container because Header itself is component...
+ * Does a container for displaying chat tabs on header.
  */
 import React from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
-import TopicLink from 'Approot/UI/components/TopicLink';
-import { getChatDisplayName } from 'Approot/misc/util';
 import HorizontalScroll from 'react-overflow-wrapper';
 
-const ActiveTopics = ({ topics }) => (
+import { removeActiveTopicTab } from 'Approot/redux/actions';
+import TopicLink from 'Approot/UI/components/TopicLink';
+import { getChatDisplayName } from 'Approot/misc/util';
+
+// Alternating key to make sure it updates on modifications.
+const ActiveTopics = ({ topics, removeActiveTopicTab }) => (
 	<HorizontalScroll key={topics.length} sensibility={300}>
 		<ul className="x-active-topics">
 			{topics.map(topic => (
-				<li key={topic._id} title={getChatDisplayName(topic._id)}>
+				<li key={topic._id} title={getChatDisplayName(topic._id)} className="x-topic-tab">
 					<TopicLink
 						topic={topic._id}
 						className={classnames('x-topic-link x-truncate x-truncate-limited-width', {
@@ -21,6 +23,10 @@ const ActiveTopics = ({ topics }) => (
 						})}
 					>
 						<span className="x-truncate">{getChatDisplayName(topic._id)}</span>
+						<span className="delete" onClick={e => {
+							e.preventDefault();
+							removeActiveTopicTab(topic._id);
+						}}></span>
 					</TopicLink>
 				</li>
 			))}
@@ -35,4 +41,8 @@ const mapStateToProps = state => ({
 	})),
 });
 
-export default connect(mapStateToProps)(ActiveTopics);
+const mapDispatchToProps = dispatch => ({
+	removeActiveTopicTab: topic => dispatch(removeActiveTopicTab(topic)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActiveTopics);
