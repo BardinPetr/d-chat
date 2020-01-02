@@ -56,7 +56,7 @@ const MessagesScroller = ({
 			className={listClassname}
 			ref={listRef}
 		>
-			<ResizeReporter onSizeChanged={() => stay()} />
+			<ResizeReporter onSizeChanged={stay} />
 			<InfiniteScroller
 				pageStart={0}
 				isReverse

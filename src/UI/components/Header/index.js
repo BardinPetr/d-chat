@@ -5,6 +5,7 @@ import { getChatDisplayName } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 
+import HorizontalScroll from 'Approot/UI/components/HorizontalScroll';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import ActiveChatsList from 'Approot/UI/containers/Header/ActiveTopics';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
@@ -64,9 +65,9 @@ class Header extends React.Component {
 						</span>
 					) : (
 						<div className="x-active-tabs-container navbar-tabs">
-							<div className="tabs is-toggle">
+							<HorizontalScroll className="tabs is-toggle">
 								<ActiveChatsList />
-							</div>
+							</HorizontalScroll>
 						</div>
 					)}
 

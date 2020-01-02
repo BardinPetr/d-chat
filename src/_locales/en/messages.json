@@ -8,8 +8,8 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
-  "AnyonewiththisseedcanrecoveryourfullyfunctionalaccountDonotmishandleit": {
-    "message": " Anyone with this seed can recover your fully functional account. Do not mishandle it."
+  "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
+    "message": " Anyone with this seed can recover your account. Do not mishandle it."
   },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
@@ -113,9 +113,6 @@
   "Keepitshort": {
     "message": " Keep it short."
   },
-  "Like": {
-    "message": " Like"
-  },
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
@@ -154,6 +151,9 @@
   },
   "Noslashes": {
     "message": " No slashes"
+  },
+  "OK": {
+    "message": " OK"
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."

@@ -4,15 +4,11 @@
  * Maybe remove the message-not-confirmed, and use same style as whispers.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import classnames from 'classnames';
-import Toolbar from './MessageToolbar';
 import TimeAgo from './TimeAgo';
 import MediaMessage from './MediaMessage';
-import { IoMdChatboxes } from 'react-icons/io';
-import { Link } from 'react-router-dom';
-import { getWhisperURL } from 'Approot/misc/util';
-import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import MessageToolbar from './MessageToolbar';
 
 const Nickname = ({
 	addr,
@@ -24,11 +20,15 @@ const Nickname = ({
 }) => {
 	// Use selected text for quoting.
 	const [text, setText] = useState('');
+	const onMouseDown = () => setText(window.getSelection().toString());
+	const onClick= useCallback(() => {
+		refer(addr, text);
+	}, [addr, text]);
 	return (
 		<span>
 			<span
-				onMouseDown={() => setText(window.getSelection().toString())}
-				onClick={() => refer(addr, text)}
+				onMouseDown={onMouseDown}
+				onClick={onClick}
 				className={classnames('x-avatar', {
 					'has-text-grey': unsubscribed,
 				})}
@@ -46,9 +46,7 @@ const Nickname = ({
 	);
 };
 
-const  Message = ({
-	addReaction,
-	topic,
+const Message = ({
 	refer,
 	message,
 	isSubscribed,
@@ -87,15 +85,11 @@ const  Message = ({
 									pubKey={message.pubKey || ''}
 								/>
 								<span className="x-is-hover x-is-margin-left x-toolbar">
-									<Link
-										to={getWhisperURL(message.addr)}
-										className="is-small button has-tooltip-right"
-										data-tooltip={__('Start a private conversation')}
-									>
-										<span className="icon is-small">
-											<IoMdChatboxes />
-										</span>
-									</Link>
+									<MessageToolbar
+										id={message.id}
+										topic={message.topic}
+										addr={message.addr}
+									/>
 								</span>
 							</div>
 						</div>
@@ -104,16 +98,6 @@ const  Message = ({
 			)}
 
 			<div className="x-toolbar x-toolbar-side">
-				<Toolbar
-					id={message.id}
-					addr={message.addr}
-					topic={topic}
-					addReaction={content =>
-						addReaction({
-							content,
-						})
-					}
-				/>
 			</div>
 
 			<div className="message-body x-is-small-padding">

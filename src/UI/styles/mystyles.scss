@@ -155,6 +155,7 @@ $toolbar-width: 30%;
 			}
 		}
 		.x-reactions {
+			user-select: none;
 			.button {
 				height: 1.2rem;
 				box-sizing: content-box;
@@ -273,7 +274,7 @@ body, html, #root {
 .x-not-confirmed {
     opacity: 0.6;
 }
-body *:not(.x-chatroom-messages):not(.x-main) {
+body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
     scrollbar-width: thin;
     &::-webkit-scrollbar {
         width: 5px;
@@ -457,6 +458,9 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 				display: none;
 			}
 		}
+		&-ghost {
+			width: 4rem;
+		}
 	}
 	.tabs.is-toggle a.is-active {
 		border-radius: 4px 4px 0 0 !important;
@@ -478,6 +482,41 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	margin-bottom: 1em;
 }
 .x-seed {
-	text-decoration: underline;
-	user-select: all;
+	display: flex;
+	flex-flow: column;
+	&-text {
+		text-decoration: underline;
+		user-select: all;
+	}
+}
+.x-qr-code {
+	background: white;
+	height: 250px;
+	display: flex;
+	justify-content: center;
+	&-icon {
+		height: 250px;
+		width: 250px;
+	}
+}
+.react-overflow-wrapper {
+	svg {
+		top: 25%;
+		path:first-child {
+			fill: $grey-dark;
+		}
+	}
+	&__icon-left {
+		background-image: linear-gradient(to right, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
+	}
+	&__icon-right {
+		background-image: linear-gradient(to left, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
+	}
+}
+.x-horizontal-scroll {
+	scrollbar-width: none !important;
+	overflow: scroll;
+	::-webkit-scrollbar {
+		display: none !important;
+	}
 }

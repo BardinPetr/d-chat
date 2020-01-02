@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 import Message from './Message';
-import { isNotice } from 'Approot/misc/util';
+import { isNotice, formatAddr } from 'Approot/misc/util';
 
 // 1min 30seconds seconds.
 const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
@@ -61,19 +61,24 @@ const MessagesList = ({
 
 		previousMessage = message;
 
+		const isSubscribed = subs.includes(message.addr);
+		// Instead of marking them when message is received, check dynamically.
+		// Otherwise changing accounts makes them go wrong.
+		const isMe = message.addr === myAddr;
+		const refersToMe = !isMe && message.content?.includes(formatAddr(myAddr));
+
 		return acc.concat(
 			<Message
 				isNotice={messageIsNotice}
 				className={classnames('is-relative', {
-					'x-me': message.isMe,
-					'x-refers-to-me': message.refersToMe,
+					'x-me': isMe,
+					'x-refers-to-me': refersToMe,
 				})}
 				includeHeader={includeHeader}
 				refer={refer}
 				message={message}
-				isSubscribed={subs.includes(message.addr)}
+				isSubscribed={isSubscribed}
 				key={message.id}
-				isNotice={'dchat/subscribe' === message.contentType}
 				topic={message.topic}
 				addReaction={addReaction}
 			>
@@ -87,6 +92,7 @@ const MessagesList = ({
 			</Message>
 		);
 	}, []);
+	previousMessage = null;
 
 	return messageList;
 };

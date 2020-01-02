@@ -2,16 +2,21 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
-const activeTopics = (state = new Set, action) => {
-	let newState = new Set(state);
+const activeTopics = (state = [], action) => {
+	let newState;
 	const topic = action.payload?.topic;
+
 	switch (action.type) {
 		case 'chat/CREATE_CHAT':
+			newState = new Set(state);
 			newState.add(topic);
+			newState = Array.from(newState);
 			break;
 
-		case 'ui/REMOVE_ACTIVE_TOPIC_TAB':
+		case 'ui/REMOVE_ACTIVE_TOPIC':
+			newState = new Set(state);
 			newState.delete(topic);
+			newState = Array.from(newState);
 			break;
 
 		default:

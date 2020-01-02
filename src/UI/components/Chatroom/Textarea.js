@@ -141,7 +141,7 @@ const Textarea = ({
 
 	// Without key={topic}, things go wrong.
 	return (
-		<React.Fragment key={topic}>
+		<React.Fragment>
 			{visible &&
 				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
@@ -152,6 +152,7 @@ const Textarea = ({
 				</Suspense>
 			}
 			<MarkdownEditor
+				key={topic}
 				id="main-textarea"
 				options={{
 					autofocus: true,

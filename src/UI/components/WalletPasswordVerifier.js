@@ -17,7 +17,7 @@ const WalletPasswordVerifier = ({ wallet, onSuccess }) => {
 							'x-has-opacity-1': !error,
 						})}>{error}</span>
 					</label>
-					<input type="text" className="input text" onChange={e => setPassword(e.target.value)} value={password} />
+					<input placeholder={__('Password')} type="text" className="input text" onChange={e => setPassword(e.target.value)} value={password} />
 				</div>
 			</div>
 			<div className="field">

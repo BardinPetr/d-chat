@@ -7,6 +7,11 @@ import { getChatURL, getWhisperURL } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 import Version from 'Approot/UI/components/Version';
+import { FaQrcode } from 'react-icons/fa';
+import { getBalance } from 'Approot/redux/actions/client';
+
+import ModalOpener from 'Approot/UI/components/ModalOpener';
+import QRCode from 'Approot/UI/components/QRCode';
 
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
@@ -34,16 +39,24 @@ const NewTopicForm = ({ privateChat }) => {
 	);
 };
 
-const Home = ({ client }) => (
+const Home = ({ client, getBalance }) => (
 	<div className="container">
-		<div className="columns">
-			<div className="column">
+		<div className="">
+			<div className="">
 				<div className="section">
 
 					<div className="field">
-						<p className="label has-text-weight-normal">
-							{__('Contact address')}
-						</p>
+						<div className="label has-text-weight-normal level is-mobile">
+							<span className="level-left">{__('Contact address')}</span>
+							<span className="level-right">
+								<ModalOpener
+									openerButtonClassName="button level-item"
+									openerButtonContent={<span className="icon"><FaQrcode /></span>}
+								>
+									<QRCode value={client.addr} />
+								</ModalOpener>
+							</span>
+						</div>
 						<p className="x-address-broken x-address has-text-black">{client.addr}</p>
 					</div>
 
@@ -80,7 +93,7 @@ const Home = ({ client }) => (
 					</div>
 
 					{client && (
-						<ClientInfo client={client}>
+						<ClientInfo client={client} getBalance={getBalance}>
 							<Version />
 						</ClientInfo>
 					)}
@@ -95,4 +108,8 @@ const mapStateToProps = state => ({
 	client: state.clients.find(i => i.active),
 });
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = dispatch => ({
+	getBalance: address => dispatch(getBalance(address)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

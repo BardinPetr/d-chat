@@ -20,7 +20,7 @@ const Element = ({ chat }) => (
 				className={classnames('x-topic-link is-clearfix x-truncate', {
 					'has-text-grey': chat.muted,
 				})}
-				activeClassName="x-sidebar-is-active"
+				activeClassName="is-active"
 			>
 				<span>{getChatDisplayName(chat.topic)}</span>
 				<span className="is-pulled-right">

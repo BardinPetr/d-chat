@@ -123,27 +123,30 @@ const Chatroom = ({
 		cm.focus();
 	};
 
+	const createReaction = useCallback(msg => {
+		createMessage({
+			...msg,
+			topic,
+			contentType: 'reaction',
+		});
+	}, [topic]);
+
+	const refer = (addr, text) =>
+		addToDraftMessage(quote(
+			addr,
+			text
+		));
+
 	return (
 		<div className="x-chatroom">
 			<Messages
 				topic={topic}
-				refer={(addr, text) => addToDraftMessage(
-					quote(
-						addr,
-						text
-					)
-				)}
+				refer={refer}
 				lastReadId={lastReadId}
 				subs={subs}
 				markAllMessagesRead={markAllMessagesRead}
 				myAddr={client.addr}
-				createReaction={msg =>
-					createMessage({
-						...msg,
-						contentType: 'reaction',
-						topic,
-					})
-				}
+				createReaction={createReaction}
 			/>
 
 			<Textarea

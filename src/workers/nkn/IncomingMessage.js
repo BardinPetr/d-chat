@@ -1,5 +1,5 @@
 import { saveAttachment } from 'Approot/database/attachments';
-import { genPrivateChatName, parseAddr, formatAddr } from 'Approot/misc/util';
+import { genPrivateChatName, parseAddr } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
@@ -134,10 +134,6 @@ class IncomingMessage extends Message {
 			src = NKN.instance.addr;
 		}
 
-		if (src === NKN.instance.addr) {
-			this.isMe = true;
-		}
-
 		// So why is topic set here and not the constructor?
 		// Well, when sending whispers we want to omit topic, rather than -
 		// using "/whisper/their_addr" at send time.
@@ -151,7 +147,6 @@ class IncomingMessage extends Message {
 		this.addr = src;
 		this.username = name;
 		this.pubKey = pubKey;
-		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
 
 		return this;
 	}
