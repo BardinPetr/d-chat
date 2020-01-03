@@ -14,7 +14,7 @@ const SubscriberList = ({ subscribers, className, active, onClick }) => {
 			<a
 				className="navbar-link"
 			>
-				{subscribers.length} {__('people chatting')}
+				{subscribers.length}<span className="is-hidden-touch">&nbsp;{__('people chatting')}</span>
 			</a>
 			<div className={classnames('x-has-max-width x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !active,

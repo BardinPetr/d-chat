@@ -2,6 +2,29 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
+const activeTopics = (state = [], action) => {
+	let newState;
+	const topic = action.payload?.topic;
+
+	switch (action.type) {
+		case 'chat/CREATE_CHAT':
+			newState = new Set(state);
+			newState.add(topic);
+			newState = Array.from(newState);
+			break;
+
+		case 'ui/REMOVE_ACTIVE_TOPIC':
+			newState = new Set(state);
+			newState.delete(topic);
+			newState = Array.from(newState);
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
 // Used for detecting changes in database from UI.
 const messageEvent = (_, action) => {
 	let newState = {};
@@ -95,6 +118,7 @@ const chatSettings = (state = {}, action) => {
 			newState = {
 				...state,
 				[topic]: {
+					name: topic,
 					...state[topic],
 					unread: [...initial, action.payload.message.id],
 					receivedAt: Date.now(),
@@ -120,6 +144,7 @@ const chatSettings = (state = {}, action) => {
 			newState = {
 				...state,
 				[topic]: {
+					name: topic,
 					unread: [],
 					subscribers: [],
 					subscribersMeta: [],
@@ -198,4 +223,5 @@ export default combineReducers({
 
 	// UI
 	navigation,
+	activeTopics,
 });

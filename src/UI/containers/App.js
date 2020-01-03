@@ -4,10 +4,11 @@ import { HashRouter as Router, matchPath, Route, Switch } from 'react-router-dom
 import { Provider } from 'react-redux';
 import PrivateRoute from 'Approot/UI/containers/PrivateRoute';
 import LoginBox from 'Approot/UI/containers/LoginBox';
-import Routes from 'Approot/UI/components/Routes';
+import Portals from 'Approot/UI/components/Portals';
 import 'Approot/UI/styles/mystyles.scss';
 import history from 'Approot/UI/history';
 import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
+import { IS_SIDEBAR } from 'Approot/misc/util';
 
 const App = async (store) => {
 	/**
@@ -34,12 +35,10 @@ const App = async (store) => {
 
 	subscribeToChatOnNavigation(history.location);
 
-	const isPopup = window.location.pathname.includes('popup.html');
-
 	history.listen((location) => {
 		subscribeToChatOnNavigation(location);
 		// Only popup deals with navigation saving.
-		if (isPopup) {
+		if (!IS_SIDEBAR) {
 			store.dispatch(navigated(location.pathname));
 		}
 	});
@@ -51,7 +50,7 @@ const App = async (store) => {
 					<Route path="/login" component={LoginBox} />
 					<PrivateRoute
 						path="/"
-						component={Routes}
+						component={Portals}
 					/>
 				</Switch>
 			</Router>

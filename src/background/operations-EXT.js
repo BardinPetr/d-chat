@@ -1,8 +1,7 @@
 export { wrapStore, alias } from 'webext-redux';
 import semver from 'semver';
-import { runtime } from 'webextension-polyfill';
+import { runtime, storage } from 'webextension-polyfill';
 import upgrade from 'Approot/background/upgrade';
-import configs from 'Approot/misc/configs-APP_TARGET';
 
 export const onInstalled = storePromise =>
 	runtime.onInstalled.addListener(async details => {
@@ -18,7 +17,7 @@ export const onInstalled = storePromise =>
 			}
 			// Upgrade to indexeddb.
 			if (semver.lt(details.previousVersion, '5.0.0')) {
-				await configs.$loaded;
+				const configs = await storage.local.get(['messages', 'reactions']);
 				let data = {
 					messages: { ...configs.messages },
 					reactions: { ...configs.reactions },

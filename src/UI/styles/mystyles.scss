@@ -1,4 +1,5 @@
 $primary: #1791f2;
+$secondary: #233a9a;
 $info: rgba(29,155,209,.1);
 $tablet: 680px;
 $desktop: 1024px;
@@ -18,6 +19,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
+$toolbar-width: 30%;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -30,6 +32,7 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 }
 .x-has-opacity-1 {
 	opacity: 1 !important;
+	transition: opacity 0ms !important;
 }
 .emoji-mart-emoji-native {
 	font-family: inherit !important;
@@ -95,6 +98,9 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 	max-height: 11.5em;
 	overflow-y: auto !important;
 }
+.navbar-dropdown {
+	min-width: 20em;
+}
 .x-has-max-width {
 	max-width: 300px;
 	@media (max-width: $tablet) {
@@ -121,10 +127,6 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 	padding: 0.5em 0.75em;
 	width: 80%;
 }
-.x-tabs-has-bigger-border a {
-	border-bottom-width: 3px;
-
-}
 .x-chat {
 	padding: 0.4em;
 	padding-bottom: 1em;
@@ -147,12 +149,9 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 		}
 		.x-media-container {
 			height: 300px;
-			img,video {
-				height: auto;
-				max-height: 300px;
-			}
 		}
 		.x-reactions {
+			user-select: none;
 			.button {
 				height: 1.2rem;
 				box-sizing: content-box;
@@ -271,7 +270,7 @@ body, html, #root {
 .x-not-confirmed {
     opacity: 0.6;
 }
-body *:not(.x-chatroom-messages):not(.x-main) {
+body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
     scrollbar-width: thin;
     &::-webkit-scrollbar {
         width: 5px;
@@ -294,18 +293,20 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 }
 .x-header-dots {
 	order: 99;
-	width: $navbar-height;
-	height: $navbar-height;
+	padding: 0 1rem;
+	min-height: $navbar-height;
+	vertical-align: top;
+	align-items: center;
+	float: right;
 }
 .x-navbar-buttons {
 	flex: 1;
 }
 .x-navbar-brand {
 	flex-grow: 2;
-}
-.x-navbar-brand {
 	max-width: calc(100% - #{$navbar-height});
 	position: relative;
+	width: 75%;
 	@media (max-width: $navbar-breakpoint - 1) {
 		width: 100%;
 	}
@@ -337,14 +338,20 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 			}
 		}
 		&-cursor {
-			// Fix cursor not appearing on chrome popup.
+			// Fix cursor not appearing in chrome popup.
 			padding-left: 1px;
+		}
+		&-hints * {
+			font-family: $family-primary;
+		}
+		&-lines {
+			width: 100% - $toolbar-width;
 		}
 	}
 	.editor-statusbar {
 		top: -1rem;
 		padding: 0;
-		padding-right: 0.8rem;
+		padding-right: 1rem;
 		padding-bottom: 0.2rem;
 		position: absolute;
 		right: 0;
@@ -355,23 +362,28 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 	}
 	.editor-toolbar {
 		&:not(.fullscreen) {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.fullscreen, .emoji {
+				@extend .is-hidden-mobile;
+			}
+			width: $toolbar-width;
 			.side-by-side {
 				display: none;
 			}
 			top: 0;
 			right: 0;
 			transition: height 1s ease;
-			height: 1rem;
 			opacity: 0.8;
 			background-color: white;
 			position: absolute;
-			z-index: $z-index + 1;
+			z-index: $z-index;
 			overflow: hidden;
 			height: 3rem;
 			&:hover {
 				opacity: 1;
 				transition: height 0.2s ease;
-				height: 3rem;
 				& ~ .editor-statusbar {
 					display: inherit !important;
 				}
@@ -381,8 +393,6 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 			z-index: $z-index + 1;
 		}
 		& button {
-			font-size: 0.85rem;
-			height: 1.5rem;
 			color: $grey-dark;
 		}
 		&::before {
@@ -395,13 +405,15 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 }
 .x-toolbar {
 	* {
-		// height: 25px !important;
-		height: 1rem !important;
+		height: 25px !important;
+		// height: 2rem !important;
 	}
 	&-side {
 		position: absolute;
 		right: 0;
 		z-index: $z-index + 1;
+		/* TODO figure out something better. */
+		display: none;
 	}
 }
 .editor-statusbar {
@@ -410,9 +422,97 @@ body *:not(.x-chatroom-messages):not(.x-main) {
 		display: inline-block !important;
 	}
 }
-.CodeMirror-hints * {
-	font-family: $family-primary;
+.x-header-root {
+	border-bottom: 1px solid $link;
 }
-.CodeMirror-lines {
-	width: 80%;
+.x-active-tabs-container {
+	flex: 0;
+	flex-basis: 100%;
+	@media (min-width: $desktop) {
+		flex-basis: 90%;
+	}
+	min-width: 30%;
+	max-width: 100%;
+	border-bottom: 1px solid $link;
+	.tabs {
+		a {
+			justify-content: space-between;
+		}
+		&.is-toggle li:first-child a,
+		&.is-toggle li:last-child a {
+			border-radius: 0;
+			border-bottom-width: 0;
+		}
+	}
+	.x-topic-tab {
+		justify-content: space-between;
+		width: 10rem;
+		.x-topic-link {
+			cursor: auto;
+			height: 100%;
+			&.is-active .delete {
+				display: none;
+			}
+		}
+		&-ghost {
+			width: 4rem;
+		}
+	}
+	.tabs.is-toggle a.is-active {
+		border-radius: 4px 4px 0 0 !important;
+		background-color: $link;
+		color: $link-invert;
+		z-index: 1;
+		border-color: $link;
+	}
+}
+.x-active-topics, .x-topic-tab {
+	height: 100%;
+}
+.x-has-unread {
+	text-decoration: underline tan 3px;
+	background: linear-gradient(to top left, white 60%, tan 100%);
+}
+.x-has-margin-top-bottom {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.x-seed {
+	display: flex;
+	flex-flow: column;
+	&-text {
+		text-decoration: underline;
+		user-select: all;
+	}
+}
+.x-qr-code {
+	background: white;
+	height: 250px;
+	display: flex;
+	justify-content: center;
+	&-icon {
+		height: 250px;
+		width: 250px;
+	}
+}
+.react-overflow-wrapper {
+	svg {
+		top: 25%;
+		path:first-child {
+			fill: $grey-dark;
+		}
+	}
+	&__icon-left {
+		background-image: linear-gradient(to right, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
+	}
+	&__icon-right {
+		background-image: linear-gradient(to left, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
+	}
+}
+.x-horizontal-scroll {
+	scrollbar-width: none !important;
+	overflow: scroll;
+	&::-webkit-scrollbar {
+		display: none !important;
+	}
 }

@@ -9,31 +9,20 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TipJar from 'Approot/UI/containers/TipJar';
 import { IoMdChatboxes } from 'react-icons/io';
 
-const Toolbar = ({ id, topic, addr, addReaction }) => {
+const Toolbar = ({ id, topic, addr }) => {
 	return (
-		<div className="x-is-hover buttons has-addons are-small">
+		<div className="x-toolbar-content buttons">
 			<TipJar
 				messageID={id}
 				topic={topic}
 				addr={addr}
 				value={5}
-				className="button has-tooltip-left"
+				className="button has-tooltip-bottom"
 				tooltip={`Tip 5 sats to ${formatAddr(addr) || '???'}...`}
 			/>
-			<a
-				className="button has-tooltip-left"
-				onClick={() => {
-					addReaction('👍');
-				}}
-				data-tooltip={__('Like')}
-			>
-				<span className="icon is-small">
-					👍
-				</span>
-			</a>
 			<Link
 				to={getWhisperURL(addr)}
-				className="button has-tooltip-left"
+				className="button has-tooltip-bottom"
 				data-tooltip={__('Start a private conversation')}
 			>
 				<span className="icon is-small">

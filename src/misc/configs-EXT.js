@@ -5,15 +5,16 @@ export default new Configs({
 	clientsMeta: [],
 
 	chatSettings: {},
+	// Extension options page setting.
 	showNotifications: true,
 
 	/** Deprecated configs */
 	// message: { [topic]: [] }
-	messages: {},
+	// messages: {},
 	// reactions: { [topic]: { [messageId]: [] } }
-	reactions: {},
+	// reactions: {},
 	// Confirmed transactions only.
-	transactions: {
-		confirmed: [],
-	},
+	// transactions: {
+	// 	confirmed: [],
+	// },
 });

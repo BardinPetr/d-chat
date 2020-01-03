@@ -5,6 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import {
 	getChatDisplayName,
 	DCHAT_PUBLIC_TOPICS,
@@ -30,16 +31,25 @@ const Element = ({ chat }) => (
 	)
 );
 
-const TopicsList = ({ topics, whispers, showWhispers }) => (
-	<ul className="menu-list">
-		{showWhispers
-			? whispers.map((chat, key) => (
-				<Element key={key} chat={chat} />
-			))
-			: topics.map((chat, key) => (
-				<Element key={key} chat={chat} />
-			))}
-	</ul>
+const TopicsList = ({ topics, whispers, labelClassName = '', wrapperClassName = '' }) => (
+	<React.Fragment key="topics-list">
+		<div className={wrapperClassName}>
+			<p className={labelClassName}>{__('Channels')}</p>
+			<ul className="menu-list">
+				{topics.map((chat, key) => (
+					<Element key={key} chat={chat} />
+				))}
+			</ul>
+		</div>
+		<div className={wrapperClassName}>
+			<p className={labelClassName}>{__('Whispers')}</p>
+			<ul className="menu-list">
+				{whispers.map((chat, key) => (
+					<Element key={key} chat={chat} />
+				))}
+			</ul>
+		</div>
+	</React.Fragment>
 );
 
 // Sorts newest messages on top.
@@ -94,7 +104,7 @@ const mapStateToProps = state => {
 			if (isWhisperTopic(key)) {
 				whispers.push(element);
 				// Ignore __dchat topic.
-			} else if (key !== DCHAT_PUBLIC_TOPICS){
+			} else if (key !== DCHAT_PUBLIC_TOPICS) {
 				topics.push(element);
 			}
 		}

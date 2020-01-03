@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect, useCallback } from 'react';
-import { __, IS_SIDEBAR } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, formatAddr } from 'Approot/misc/util';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 import { Pos } from 'codemirror';
@@ -18,7 +18,7 @@ const startUpload = async (file, onUploaded, errCb) => {
 	function upload(e) {
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
-				errCb();
+				errCb('Wrong filetype.');
 				return;
 			}
 			const reader = new FileReader();
@@ -139,19 +139,23 @@ const Textarea = ({
 		cm.setValue('');
 	}, [topic]);
 
+	const setRef = i => mdeInstance.current = i;
+	const onSelect = emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native);
+
 	// Without key={topic}, things go wrong.
 	return (
-		<React.Fragment key={topic}>
+		<React.Fragment>
 			{visible &&
 				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
 						visible={visible}
 						setVisible={setEmojiPickerVisible}
-						onSelect={emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native)}
+						onSelect={onSelect}
 					/>
 				</Suspense>
 			}
 			<MarkdownEditor
+				key={topic}
 				id="main-textarea"
 				options={{
 					autofocus: true,
@@ -173,7 +177,7 @@ const Textarea = ({
 					autosave: {
 						enabled: true,
 						// TODO maybe manually save instead? Have to experiment.
-						delay: 500,
+						delay: 1500,
 						uniqueId: 'main-textarea',
 					},
 					errorCallback(err) {
@@ -188,7 +192,7 @@ const Textarea = ({
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', 'side-by-side', 'fullscreen', '|', {
+					}, '|', 'side-by-side', 'fullscreen', {
 						name: 'submit',
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',
@@ -206,11 +210,11 @@ const Textarea = ({
 					}]
 				}}
 				extraKeys={{
-					Enter: cm => onEnterPress(cm),
+					Enter: onEnterPress,
 					// TODO bind Shift-Enter to Enter, to improve newline mechanics.
 				}}
 				className="x-main-editor"
-				getMdeInstance={i => mdeInstance.current = i}
+				getMdeInstance={setRef}
 			/>
 		</React.Fragment>
 	);

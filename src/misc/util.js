@@ -149,3 +149,5 @@ export const isAck = reaction => reaction?.content === '✔';
 
 // @someone.12345678
 export const mention = addr => '@' + formatAddr(addr);
+
+export const IS_SIDEBAR = location?.href.includes('popup.html') === false;

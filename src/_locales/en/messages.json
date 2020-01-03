@@ -8,6 +8,9 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
+  "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
+    "message": " Anyone with this seed can recover your account. Do not mishandle it."
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"#d-chat\", for example."
   },
@@ -17,8 +20,14 @@
   "Chatnamesshouldnotcontainslashes": {
     "message": " Chat names should not contain slashes."
   },
+  "Chatsettings": {
+    "message": " Chat settings"
+  },
   "Clearyourbrowsercacheifyoukeepgettingredirected": {
     "message": " Clear your browser cache if you keep getting redirected."
+  },
+  "Close": {
+    "message": " Close"
   },
   "Comeandsayhionchannel": {
     "message": " Come and say hi on channel"
@@ -104,9 +113,6 @@
   "Keepitshort": {
     "message": " Keep it short."
   },
-  "Like": {
-    "message": " Like"
-  },
   "ListofPublicChannels": {
     "message": " List of Public Channels"
   },
@@ -119,8 +125,8 @@
   "LostawalletyouhadinanolderversionofDChat": {
     "message": " Lost a wallet you had in an older version of D-Chat?"
   },
-  "Messageas": {
-    "message": " Message as"
+  "Messagetopicasuser_identifier": {
+    "message": " Message #topic# as #user_identifier#..."
   },
   "More": {
     "message": " More..."
@@ -145,6 +151,9 @@
   },
   "Noslashes": {
     "message": " No slashes"
+  },
+  "OK": {
+    "message": " OK"
   },
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
@@ -178,6 +187,9 @@
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
+  },
+  "Showsecretseed": {
+    "message": " Show secret seed"
   },
   "Slashesdisallowed": {
     "message": " Slashes \"/\" disallowed"
@@ -224,6 +236,9 @@
   "Uploadingimages_names": {
     "message": " Uploading #images_names#."
   },
+  "UsethisseedforexportingimportingyourDChataccountbetweendevices": {
+    "message": " Use this seed for exporting/importing your D-Chat account between devices."
+  },
   "Walletaddress": {
     "message": " Wallet address"
   },
@@ -241,6 +256,9 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
+  },
+  "YourWalletSeed": {
+    "message": " Your Wallet Seed"
   },
   "Yourmessageswillbeencryptedanyways": {
     "message": " Your messages will be encrypted, anyways."

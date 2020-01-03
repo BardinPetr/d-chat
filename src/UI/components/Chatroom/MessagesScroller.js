@@ -45,7 +45,8 @@ const MessagesScroller = ({
 	}, scrollTriggers);
 
 	// When changing topic, we want to stay bottom.
-	useLayoutEffect(() => {
+	// useLayoutEffect doesn't have the effect we are hoping for here.
+	useEffect(() => {
 		scrollBottom();
 	}, [topic]);
 
@@ -56,7 +57,7 @@ const MessagesScroller = ({
 			className={listClassname}
 			ref={listRef}
 		>
-			<ResizeReporter onSizeChanged={() => stay()} />
+			<ResizeReporter onSizeChanged={stay} />
 			<InfiniteScroller
 				pageStart={0}
 				isReverse

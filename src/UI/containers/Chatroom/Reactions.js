@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import useTimeout from '@rooks/use-timeout';
 import { connect } from 'react-redux';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
@@ -23,18 +23,28 @@ const Reactions = ({
 	messageEvent,
 	...rest
 }) => {
+	const [mounted, setMounted] = useState(false);
 	const [reactions, dispatch] = useReducer(reducer, []);
-	const { start } = useTimeout(() => stayScrolled(), 0);
+	const { start } = useTimeout(() => mounted && stayScrolled(), 0, [mounted]);
+
+	useEffect(() => {
+		setMounted(true);
+		return () => {
+			setMounted(false);
+		};
+	}, []);
 
 	useEffect(() => {
 		loadReactionsFromDb({
 			topic,
 			targetID: messageID,
 		}).then(prevMessages => {
-			dispatch({ type: 'old', payload: prevMessages });
-			stayScrolled();
+			if (mounted) {
+				dispatch({ type: 'old', payload: prevMessages });
+				stayScrolled();
+			}
 		});
-	}, [messageID]);
+	}, [messageID, mounted]);
 
 	useEffect(() => {
 		if (
@@ -42,6 +52,7 @@ const Reactions = ({
 			|| !topic
 			|| topic !== messageEvent.topic
 			|| messageEvent.reaction.targetID !== messageID
+			|| !mounted
 		) {
 			return;
 		}
@@ -51,7 +62,7 @@ const Reactions = ({
 			payload: messageEvent.reaction,
 		});
 		start();
-	}, [messageEvent, topic, messageID]);
+	}, [messageEvent, topic, messageID, mounted]);
 
 	return (
 		<ReactionsComponent

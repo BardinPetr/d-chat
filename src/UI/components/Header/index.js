@@ -5,7 +5,9 @@ import { getChatDisplayName } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 
+import HorizontalScroll from 'Approot/UI/components/HorizontalScroll';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
+import ActiveChatsList from 'Approot/UI/containers/Header/ActiveTopics';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 import TopicsList from 'Approot/UI/containers/TopicsList';
 import SubscriberList from 'Approot/UI/containers/SubscriberList';
@@ -35,7 +37,7 @@ class Header extends React.Component {
 	}
 
 	handleTopicChange = (e) => {
-		this.setState({topic: e.target.value});
+		this.setState({ topic: e.target.value });
 	}
 
 	render() {
@@ -49,16 +51,25 @@ class Header extends React.Component {
 		const topic = path?.params.topic || path?.url;
 		const topicName = getChatDisplayName(topic);
 		const isPrivateChat = topic?.startsWith('/whisper/');
+		const notChat = !topic;
 
 		return (
-			<React.Fragment>
+			<React.Fragment key="header-frag">
 				<div className="navbar-brand x-navbar-brand is-inline-flex x-navbar-brand" aria-label={__('menu navigation')} role="navigation">
-					<span className="navbar-item">
-						<figure className="image is-32x32">
-							<DchatLogo white />
-						</figure>
-						<h5 title={topicName} className="x-truncate x-truncate-limited-width title is-5 has-text-white x-is-padding-left">{topicName || __('D-Chat')}</h5>
-					</span>
+					{notChat ? (
+						<span className="navbar-item">
+							<figure className="image is-32x32">
+								<DchatLogo blue />
+							</figure>
+							<h5 title={topicName} className="x-truncate x-truncate-limited-width title is-5 x-is-padding-left">{topicName || __('D-Chat')}</h5>
+						</span>
+					) : (
+						<div className="x-active-tabs-container navbar-tabs">
+							<HorizontalScroll className="tabs is-toggle">
+								<ActiveChatsList />
+							</HorizontalScroll>
+						</div>
+					)}
 
 					<a
 						className={classnames('navbar-burger', {
@@ -73,12 +84,14 @@ class Header extends React.Component {
 						<span aria-hidden="true"></span>
 						<span aria-hidden="true"></span>
 					</a>
+
 				</div>
 
 				<DotDotDot
-					className="navbar-item x-header-dots button is-primary is-inline-flex"
+					className="navbar-item x-header-dots is-inline-flex"
 					aria-label={__('secondary navigation')}
 					role="navigation"
+					title={__('Chat settings')}
 				>
 					<DotDotDotRoutes />
 				</DotDotDot>
@@ -98,7 +111,7 @@ class Header extends React.Component {
 							})}
 							active={this.state.expanded}
 							topic={topic}
-							onClick={() => this.setState({expanded: !this.state.expanded})}
+							onClick={() => this.setState({ expanded: !this.state.expanded })}
 						/>
 
 					</div>
@@ -107,15 +120,7 @@ class Header extends React.Component {
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
 						<Link className="navbar-item" to="/topics">{__('Public')}</Link>
 
-						<div className="navbar-item">
-							<p className="menu-label">{__('Channels')}</p>
-							<TopicsList />
-						</div>
-
-						<div className="navbar-item">
-							<p className="menu-label">{__('Whispers')}</p>
-							<TopicsList showWhispers />
-						</div>
+						<TopicsList labelClassName="menu-label" wrapperClassName="navbar-item" />
 
 						<div className="navbar-item">
 							<Popout />

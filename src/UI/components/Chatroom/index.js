@@ -3,6 +3,7 @@
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import useInterval from '@rooks/use-interval';
+import truncate from 'truncate';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, getChatDisplayName, formatAddr } from 'Approot/misc/util';
@@ -41,7 +42,11 @@ const Chatroom = ({
 	const getSubs = () => getSubscribers(topic);
 	const { start, stop } = useInterval(getSubs, 25 * 1000);
 	const mdeInstance = useRef();
-	const [placeholder] = useState(`${__('Message as')} ${formatAddr(client.addr)}...`);
+	const [placeholder] = useState(
+		__('Message #topic# as #user_identifier#...')
+			.replace('#topic#', truncate(getChatDisplayName(topic), 8))
+			.replace('#user_identifier#', formatAddr(client.addr))
+	);
 
 	useEffect(() => {
 		const displayTopic = getChatDisplayName(topic);
@@ -96,7 +101,10 @@ const Chatroom = ({
 		if (!/(data:video|data:audio|data:image)/.test(data)) {
 			return;
 		}
-		const content = data;
+		const content = data.trim();
+		if (!content) {
+			return;
+		}
 		const message = {
 			content: content,
 			contentType: 'media',
@@ -118,27 +126,30 @@ const Chatroom = ({
 		cm.focus();
 	};
 
+	const createReaction = useCallback(msg => {
+		createMessage({
+			...msg,
+			topic,
+			contentType: 'reaction',
+		});
+	}, [topic]);
+
+	const refer = (addr, text) =>
+		addToDraftMessage(quote(
+			addr,
+			text
+		));
+
 	return (
 		<div className="x-chatroom">
 			<Messages
 				topic={topic}
-				refer={(addr, text) => addToDraftMessage(
-					quote(
-						addr,
-						text
-					)
-				)}
+				refer={refer}
 				lastReadId={lastReadId}
 				subs={subs}
 				markAllMessagesRead={markAllMessagesRead}
 				myAddr={client.addr}
-				createReaction={msg =>
-					createMessage({
-						...msg,
-						contentType: 'reaction',
-						topic,
-					})
-				}
+				createReaction={createReaction}
 			/>
 
 			<Textarea

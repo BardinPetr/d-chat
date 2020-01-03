@@ -185,3 +185,10 @@ export const muteChat = (topic, muted) => ({
 		muted,
 	},
 });
+
+export const removeActiveTopic = topic => ({
+	type: 'ui/REMOVE_ACTIVE_TOPIC',
+	payload: {
+		topic,
+	},
+});

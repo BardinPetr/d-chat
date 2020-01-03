@@ -1,14 +1,24 @@
 /**
  * Used in containers/Home.js, quite useless otherwise.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import OldWalletExporter from './ExportOldWallet-APP_TARGET';
 import WalletExporter from './WalletExporter';
 import { IoIosHelpCircleOutline as IoIosHelpCircle } from 'react-icons/io';
+import ModalOpener from 'Approot/UI/components/ModalOpener';
+import QRCode from 'Approot/UI/components/QRCode';
+import { FaQrcode } from 'react-icons/fa';
+import useInterval from '@rooks/use-interval';
 
-const ClientInfo = ({ client, children }) => {
+const ClientInfo = ({ client, children, getBalance }) => {
 	const [expanded, setExpanded] = useState(false);
+	const { start } = useInterval(() => {
+		getBalance(client.wallet.Address);
+	}, 10000);
+	useEffect(() => {
+		start();
+	}, []);
 	return (
 		<div
 			className={'tile is-ancestor'}
@@ -32,18 +42,31 @@ const ClientInfo = ({ client, children }) => {
 					<div className="tile is-vertical">
 						<div className="tile is-child">
 							<div className="field">
-								<p className="is-size-7 has-text-grey-darker">
-									{__('Wallet address')}
-									<span className="icon tooltip is-size-5" data-tooltip={__('Share this for receiving NKN payments.')}><IoIosHelpCircle className="is-size-5" /></span>
-								</p>
+								<div className="label has-text-weight-normal level is-mobile">
+									<span className="level-left">
+										{__('Wallet address')}
+										<span
+											className="icon tooltip is-size-5"
+											data-tooltip={__('Share this for receiving NKN payments.')}
+										>
+											<IoIosHelpCircle className="is-size-5" />
+										</span>
+									</span>
+									<span className="level-right">
+										<ModalOpener
+											openerButtonClassName="button level-item"
+											openerButtonContent={<span className="icon"><FaQrcode /></span>}
+										>
+											<QRCode value={client.wallet.Address} />
+										</ModalOpener>
+									</span>
+								</div>
 								<p className="x-address-broken x-address">{client.wallet.Address}</p>
 							</div>
 						</div>
 						<div className="tile is-child">
 							<div className="field">
-								<WalletExporter wallet={client.wallet}>
-									{__('Export wallet')}
-								</WalletExporter>
+								<WalletExporter wallet={client.wallet} />
 							</div>
 						</div>
 						<div className="tile is-child">
