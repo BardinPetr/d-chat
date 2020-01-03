@@ -516,7 +516,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-horizontal-scroll {
 	scrollbar-width: none !important;
 	overflow: scroll;
-	::-webkit-scrollbar {
+	&::-webkit-scrollbar {
 		display: none !important;
 	}
 }
