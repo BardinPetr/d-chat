@@ -62,8 +62,7 @@ const MessagesList = ({
 		previousMessage = message;
 
 		const isSubscribed = subs.includes(message.addr);
-		// Instead of marking them when message is received, check dynamically.
-		// Otherwise changing accounts makes them go wrong.
+		// Check dynamically, otherwise changing accounts makes them go wrong.
 		const isMe = message.addr === myAddr;
 		const refersToMe = !isMe && message.content?.includes(formatAddr(myAddr));
 
