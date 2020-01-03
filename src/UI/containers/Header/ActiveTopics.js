@@ -9,7 +9,7 @@ import { removeActiveTopic } from 'Approot/redux/actions';
 import TopicLink from 'Approot/UI/components/TopicLink';
 import { getChatDisplayName } from 'Approot/misc/util';
 
-const ActiveTopics = ({ topics, removeActiveTopicTab }) => (
+const ActiveTopics = ({ topics, removeActiveTopic }) => (
 	<ul className="x-active-topics">
 		{topics.map(topic => (
 			<li key={topic._id} title={getChatDisplayName(topic._id)} className="x-topic-tab">
@@ -20,7 +20,10 @@ const ActiveTopics = ({ topics, removeActiveTopicTab }) => (
 					})}
 				>
 					<span className="x-truncate">{getChatDisplayName(topic._id)}</span>
-					<span className="delete" onClick={() => removeActiveTopicTab(topic._id)}></span>
+					<span className="delete" onClick={e => {
+						e.preventDefault();
+						removeActiveTopic(topic._id);
+					}}></span>
 				</TopicLink>
 			</li>
 		))}
