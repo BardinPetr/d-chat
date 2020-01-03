@@ -105,6 +105,13 @@ class IncomingMessage extends Message {
 					data,
 					hash: shasum(data),
 				}));
+
+				/**
+				 * Add space before to avoid bug where -
+				 * things like "https://example.org/![](data:LONG_LONG_LONG)" -
+				 * would prevent data url from getting parsed and removed, ruining chat history.
+				 */
+				this.content = this.content.replace('![]', ' ![]');
 			}
 
 			// Sanitize first so we only use markdown stuff.

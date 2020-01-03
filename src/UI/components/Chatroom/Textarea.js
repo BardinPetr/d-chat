@@ -18,7 +18,7 @@ const startUpload = async (file, onUploaded, errCb) => {
 	function upload(e) {
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
-				errCb();
+				errCb('Wrong filetype.');
 				return;
 			}
 			const reader = new FileReader();
@@ -139,6 +139,9 @@ const Textarea = ({
 		cm.setValue('');
 	}, [topic]);
 
+	const setRef = i => mdeInstance.current = i;
+	const onSelect = emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native);
+
 	// Without key={topic}, things go wrong.
 	return (
 		<React.Fragment>
@@ -147,7 +150,7 @@ const Textarea = ({
 					<LazyEmojiPicker
 						visible={visible}
 						setVisible={setEmojiPickerVisible}
-						onSelect={emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native)}
+						onSelect={onSelect}
 					/>
 				</Suspense>
 			}
@@ -207,11 +210,11 @@ const Textarea = ({
 					}]
 				}}
 				extraKeys={{
-					Enter: cm => onEnterPress(cm),
+					Enter: onEnterPress,
 					// TODO bind Shift-Enter to Enter, to improve newline mechanics.
 				}}
 				className="x-main-editor"
-				getMdeInstance={i => mdeInstance.current = i}
+				getMdeInstance={setRef}
 			/>
 		</React.Fragment>
 	);

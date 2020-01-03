@@ -101,7 +101,10 @@ const Chatroom = ({
 		if (!/(data:video|data:audio|data:image)/.test(data)) {
 			return;
 		}
-		const content = data;
+		const content = data.trim();
+		if (!content) {
+			return;
+		}
 		const message = {
 			content: content,
 			contentType: 'media',
