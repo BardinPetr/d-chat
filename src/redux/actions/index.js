@@ -2,7 +2,7 @@
  * Contains almost all actions.
  */
 import {
-	genPrivateChatName,
+	getWhisperTopic,
 	getChatName,
 	getWhisperRecipient,
 } from 'Approot/misc/util';
@@ -53,7 +53,7 @@ export const setSubscribers = (topic, subscribers) => ({
 });
 
 export const enterPrivateChat = recipient =>
-	createChat(genPrivateChatName(recipient));
+	createChat(getWhisperTopic(recipient));
 
 // Join chat dispatches createChat and subscribeToChat.
 export const joinChat = topic => ({

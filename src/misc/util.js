@@ -1,29 +1,32 @@
+/**
+ * Contains a variety of utility functions.
+ *
+ * They are all over the place. TODO make some sense of these.
+ */
 import shasum from 'shasum';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
+import { matchPath } from 'react-router-dom';
 
 export const isWhisperTopic = topic => !!topic?.startsWith('/whisper/');
+export const isWhisper = message => isWhisperTopic(message.topic);
 
 /**
- * Extracts the whisper recipient from whisper topic.
+ * Extracts the whisper recipient from whisper "topic".
  */
 export const getWhisperRecipient = topic =>
 	isWhisperTopic(topic) ?
 		topic.slice('/whisper/'.length) :
 		topic;
 
-function unleadingHashIt(str) {
-	return str.replace(/^#*/, '');
-}
-
-function leadingHashIt(str) {
-	return '#' + unleadingHashIt(str);
-}
-
+/**
+ * Turns chat name into subscription target.
+ *
+ * When you subscribe to '#d-chat', you actually sub to `'dchat'+shasum('d-chat')`.
+ */
 export function genChatID(topic) {
 	if (!topic) {
 		return null;
 	}
-	topic = unleadingHashIt(String(topic));
 	// Api/code somewhere does not like strings that start with numbers.
 	return 'dchat' + shasum(topic);
 }
@@ -35,34 +38,36 @@ export function getChatDisplayName(topic) {
 	if (isWhisperTopic(topic)) {
 		return getWhisperRecipient(topic);
 	}
-	return leadingHashIt(String(topic));
+	return topic;
 }
 
+/**
+ * Encodes topics for URL.
+ */
 export function getChatURL(topic) {
+	topic = topic.replace(/%/g, '%25');
 	if (isWhisperTopic(topic)) {
-		return topic;
+		return getWhisperURL(topic);
 	}
 
-	topic = getChatDisplayName(topic);
+	topic = getChatName(topic);
 	if (!topic) {
 		return '';
 	}
 	// Usually shoved to <Link to={} /> so remember to prepend '#' on form actions etc.
-	return '/chat/' + topic.slice(1);
+	return '/chat/' + topic;
 }
 
-export const isWhisper = message => isWhisperTopic(message.topic);
-
+/**
+ * Topics without hash, whispers as they come.
+ * URL decoded.
+ */
 export function getChatName(topic) {
 	if (!topic) {
 		return null;
 	}
 	if (isWhisperTopic(topic)) {
-		return topic;
-	}
-	topic = unleadingHashIt(String(topic));
-	if (!topic) {
-		return null;
+		return getWhisperTopic(topic);
 	}
 	return topic;
 }
@@ -118,11 +123,21 @@ export const getAddressFromAddr = theAddr => {
 	return nknAddress;
 };
 
-// 3 of the same, I think the naming makes sense...?
-export const getWhisperURL = recipient =>
-	isWhisperTopic(recipient) ? recipient : `/whisper/${recipient}`;
-export const genPrivateChatName = getWhisperURL;
-export const getWhisperTopic = getWhisperURL;
+/**
+ * Encodes whisper topics for URL.
+ *
+ * Example: sending whispers to 'hi # my name is /not too good/.'
+ * turns to '/whisper/hi%20%23%20my%20name%20is%20%2Fnot%20too%20good%2F.'
+ */
+export function getWhisperURL(topic) {
+	const recipient = getWhisperRecipient(topic);
+	return `/whisper/${recipient}`;
+}
+
+export function getWhisperTopic(topic) {
+	topic = getWhisperRecipient(topic);
+	return `/whisper/${topic}`;
+}
 
 export const importWallet = file => {
 	return new Promise((resolve, reject) => {
@@ -151,3 +166,20 @@ export const isAck = reaction => reaction?.content === '✔';
 export const mention = addr => '@' + formatAddr(addr);
 
 export const IS_SIDEBAR = location?.href.includes('popup.html') === false;
+
+export function getTopicFromPathname(pathname) {
+	pathname = pathname.replace(/^#/, '');
+	let path = matchPath(pathname, {
+		path: '/chat/*',
+	})?.params?.[0];
+	if (!path) {
+		path = matchPath(pathname, {
+			path: '/whisper/*',
+		})?.params?.[0];
+		if (path) {
+			return getWhisperTopic(path);
+		}
+	} else {
+		return path;
+	}
+}

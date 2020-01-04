@@ -51,6 +51,10 @@ const Chatroom = ({
 	useEffect(() => {
 		const displayTopic = getChatDisplayName(topic);
 		document.title = `(${unreadMessages.length}) ${displayTopic} - D-Chat`;
+
+		return () => {
+			document.title = 'D-Chat';
+		};
 	}, [unreadMessages.length, topic]);
 
 	useEffect(() => {

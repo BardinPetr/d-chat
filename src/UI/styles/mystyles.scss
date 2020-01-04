@@ -19,7 +19,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
-$toolbar-width: 30%;
+$toolbar-width: 20%;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -515,4 +515,13 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	&::-webkit-scrollbar {
 		display: none !important;
 	}
+}
+.x-sidebar {
+	.x-topic-icon {
+		display: none;
+	}
+}
+.x-topic-icon {
+	opacity: 0.8;
+	vertical-align: top;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { matchPath, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classnames from 'classnames';
-import { getChatDisplayName } from 'Approot/misc/util';
+import { getChatDisplayName, getTopicFromPathname } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 
@@ -41,14 +41,9 @@ class Header extends React.Component {
 	}
 
 	render() {
-
-		const path = matchPath(
-			history.location.pathname,
-			{
-				path: ['/chat/:topic', '/whisper/:whisper']
-			}
-		);
-		const topic = path?.params.topic || path?.url;
+		// NOTE: we are using 'location.hash', instead of 'history.location.pathname',
+		// because the latter does not work with topics like '#d-chat' (with hash).
+		const topic = getTopicFromPathname(location.hash);
 		const topicName = getChatDisplayName(topic);
 		const isPrivateChat = topic?.startsWith('/whisper/');
 		const notChat = !topic;

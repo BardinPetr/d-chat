@@ -19,7 +19,6 @@ const ActiveTopics = ({ topics, removeActiveTopic }) => (
 						'x-has-unread': topic.unread?.length,
 					})}
 				>
-					<span className="x-truncate">{getChatDisplayName(topic._id)}</span>
 					<span className="delete" onClick={e => {
 						e.preventDefault();
 						removeActiveTopic(topic._id);

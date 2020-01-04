@@ -5,7 +5,7 @@ import TopicsList from 'Approot/UI/containers/TopicsList';
 import Popout from 'Approot/UI/components/Popout-APP_TARGET';
 
 const Sidebar = () => (
-	<aside className="menu">
+	<aside className="menu x-sidebar">
 		<ul className="menu-list">
 			<li>
 				<Link to="/">{__('Home')}</Link>

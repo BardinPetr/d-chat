@@ -10,8 +10,8 @@ const LazyTopicInfoList = lazy(() => import('Approot/UI/containers/Topics'));
 const MainRoutes = () => (
 	<Suspense fallback={Loader}>
 		<Switch>
-			<Route path="/chat/:topic" component={LazyPublicChatroom} />
-			<Route path="/whisper/:recipient" component={LazyPrivateChatroom} />
+			<Route path="/chat/*" component={LazyPublicChatroom} />
+			<Route path="/whisper/*" component={LazyPrivateChatroom} />
 			<Route path="/topics" component={LazyTopicInfoList} />
 			<Route path="/" component={LazyHome} />
 		</Switch>

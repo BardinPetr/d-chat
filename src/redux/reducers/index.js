@@ -14,9 +14,8 @@ const activeTopics = (state = [], action) => {
 			break;
 
 		case 'ui/REMOVE_ACTIVE_TOPIC':
-			newState = new Set(state);
-			newState.delete(topic);
-			newState = Array.from(newState);
+		case 'chat/REMOVE':
+			newState = state.filter(i => i !== topic);
 			break;
 
 		default:

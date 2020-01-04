@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter as Router, matchPath, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import PrivateRoute from 'Approot/UI/containers/PrivateRoute';
 import LoginBox from 'Approot/UI/containers/LoginBox';
@@ -8,38 +8,32 @@ import Portals from 'Approot/UI/components/Portals';
 import 'Approot/UI/styles/mystyles.scss';
 import history from 'Approot/UI/history';
 import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
-import { IS_SIDEBAR } from 'Approot/misc/util';
+import { IS_SIDEBAR, getTopicFromPathname, isWhisperTopic } from 'Approot/misc/util';
 
 const App = async (store) => {
 	/**
 	 * Subscribes to chats when they're opened.
 	 * Very separated from other logic, but it's fine.
 	 */
-	const subscribeToChatOnNavigation = (location) => {
-		let match = matchPath(location.pathname, {
-			path: '/chat/:topic',
-		});
+	const subscribeToChatOnNavigation = () => {
+		let topic = getTopicFromPathname(location.hash);
 
-		if (match != null) {
-			store.dispatch(joinChat(match.params.topic));
+		if (topic == null) {
+			return;
+		}
+
+		if (isWhisperTopic(topic)) {
+			store.dispatch(enterPrivateChat(topic));
 		} else {
-			match = matchPath(location.pathname, {
-				path: '/whisper/:topic',
-			});
-
-			if (match != null) {
-				store.dispatch(enterPrivateChat(match.params.topic));
-			}
+			store.dispatch(joinChat(topic));
 		}
 	};
 
-	subscribeToChatOnNavigation(history.location);
-
-	history.listen((location) => {
-		subscribeToChatOnNavigation(location);
+	history.listen(() => {
+		subscribeToChatOnNavigation();
 		// Only popup deals with navigation saving.
 		if (!IS_SIDEBAR) {
-			store.dispatch(navigated(location.pathname));
+			store.dispatch(navigated(location.hash.slice(1)));
 		}
 	});
 
