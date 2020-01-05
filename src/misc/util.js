@@ -167,6 +167,12 @@ export const mention = addr => '@' + formatAddr(addr);
 
 export const IS_SIDEBAR = location?.href.includes('popup.html') === false;
 
+/**
+ * Extracts topic from url.
+ *
+ * Most likely you feed this the 'window.location.hash' instead of 'history' stuff.
+ * That is to avoid 'a#b#c' breaking everything.
+ */
 export function getTopicFromPathname(pathname) {
 	pathname = pathname.replace(/^#/, '');
 	let path = matchPath(pathname, {

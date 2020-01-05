@@ -15,9 +15,10 @@ const ActiveTopics = ({ topics, removeActiveTopic }) => (
 			<li key={topic._id} title={getChatDisplayName(topic._id)} className="x-topic-tab">
 				<TopicLink
 					topic={topic._id}
-					className={classnames('x-topic-link x-truncate x-truncate-limited-width', {
+					className={classnames('x-topic-link', {
 						'x-has-unread': topic.unread?.length,
 					})}
+					textWrapClassName="x-truncate x-truncate-limited-width x-topic-link-wrap"
 				>
 					<span className="delete" onClick={e => {
 						e.preventDefault();

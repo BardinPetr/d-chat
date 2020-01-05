@@ -78,6 +78,9 @@ $toolbar-width: 20%;
 	&:hover .x-is-hover-hidden {
 		display: inline-block;
 	}
+	&-wrap {
+		display: inline-block;
+	}
 }
 .x-truncate {
 	text-overflow: ellipsis;

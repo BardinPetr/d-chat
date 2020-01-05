@@ -12,13 +12,10 @@
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
   },
   "Channelnamelikedchatforexample": {
-    "message": " Channel name, like \"#d-chat\", for example."
+    "message": " Channel name, like \"d-chat\", for example."
   },
   "Channels": {
     "message": " Channels"
-  },
-  "Chatnamesshouldnotcontainslashes": {
-    "message": " Chat names should not contain slashes."
   },
   "Chatsettings": {
     "message": " Chat settings"
@@ -79,6 +76,9 @@
   },
   "GettheaddonforFirefox": {
     "message": " Get the add-on for Firefox"
+  },
+  "Givethemobileappatry": {
+    "message": " Give the mobile app a try!"
   },
   "HTTPSiscentralizedandthisappmightnotworkonitbecauseofmixedcontentrestrictionsYoushouldconnecttoHTTPversionofthissiteinstead": {
     "message": " HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead."
@@ -149,9 +149,6 @@
   "Nickname": {
     "message": " Nickname"
   },
-  "Noslashes": {
-    "message": " No slashes"
-  },
   "OK": {
     "message": " OK"
   },
@@ -190,9 +187,6 @@
   },
   "Showsecretseed": {
     "message": " Show secret seed"
-  },
-  "Slashesdisallowed": {
-    "message": " Slashes \"/\" disallowed"
   },
   "SourcecodeonGitLab": {
     "message": " Source code on GitLab."
@@ -268,6 +262,9 @@
   },
   "menunavigation": {
     "message": " menu navigation"
+  },
+  "nMobileprebeta": {
+    "message": " nMobile pre-beta"
   },
   "peoplechatting": {
     "message": " people chatting"

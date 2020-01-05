@@ -118,6 +118,7 @@ class NKN extends nkn {
 	/**
 	 * There is no "memPool: true" argument for this one.
 	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
+	 * Note: the txPool fallback is quite unreliable.
 	 */
 	isSubscribed = topic => {
 		const topicID = genChatID(topic);

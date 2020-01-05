@@ -1,11 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { getChatURL, getChatDisplayName, isWhisperTopic } from 'Approot/misc/util';
+import { getChatURL, getChatDisplayName, isWhisperTopic, getTopicFromPathname } from 'Approot/misc/util';
 import { IoIosPeople } from 'react-icons/io';
 
-const TopicLink = ({ topic, children, className = '', activeClassName = 'is-active' }) => (
-	<NavLink to={getChatURL(topic)} className={className} activeClassName={activeClassName}>
-		<span>
+// Again using location.hash instead of the history. See Header.
+const TopicLink = ({ topic, children, textWrapClassName = '', className = '', activeClassName = 'is-active' }) => (
+	<NavLink
+		to={getChatURL(topic)}
+		className={className}
+		activeClassName={activeClassName}
+		isActive={() => getTopicFromPathname(location.hash) === topic}
+	>
+		<span className={textWrapClassName}>
 			{!isWhisperTopic(topic) ? (
 				<span className="icon x-topic-icon"><IoIosPeople /></span>
 			): null}

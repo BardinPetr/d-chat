@@ -120,6 +120,7 @@ onmessage = async ({ data: action }) => {
 					contentType: 'dchat/subscribe',
 					topic,
 					// No i18n here.
+					// TODO should probably send this one without content, then display static content.
 					content: 'Joined channel.',
 				});
 				NKN.instance.publishMessage(topic, data);
