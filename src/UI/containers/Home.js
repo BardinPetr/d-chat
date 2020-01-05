@@ -91,16 +91,13 @@ const Home = ({ client, getBalance }) => (
 						</div>
 					</div>
 
-					<div className="content">
-						<p className="has-text-italic has-text-dark">{__('Chat names should not contain slashes.')}</p>
-					</div>
-
 				</div>
 
 				<div className="section">
 					<div className="content">
 						<p><Link to="/topics">{__('Public chat index')}</Link></p>
 						<Info />
+						<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://forum.nkn.org/t/nmobile-pre-beta-community-testing-and-simple-guide/2012">{__('nMobile pre-beta')}</a>.</p>
 					</div>
 
 					{client && (
