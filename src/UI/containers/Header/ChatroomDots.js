@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import history from 'Approot/UI/history';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { getTopicFromPathname } from 'Approot/misc/util';
 
 import { muteChat, removeChat } from 'Approot/redux/actions';
 
@@ -28,10 +29,8 @@ const ChatroomDots = ({ dispatch, topic, chatSettings, }) => (
 	</>
 );
 
-const mapStateToProps = (state, ownProps) => {
-	const topic = ownProps.match.params.topic
-		// Whisper
-		|| ownProps.match.url;
+const mapStateToProps = (state) => {
+	const topic = getTopicFromPathname(location.hash);
 	return ({
 		chatSettings: state.chatSettings[topic] || {},
 		topic: topic,
