@@ -45,7 +45,6 @@ export function getChatDisplayName(topic) {
  * Encodes topics for URL.
  */
 export function getChatURL(topic) {
-	topic = topic.replace(/%/g, '%25');
 	if (isWhisperTopic(topic)) {
 		return getWhisperURL(topic);
 	}
