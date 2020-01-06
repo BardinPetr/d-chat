@@ -10,7 +10,6 @@ import { emojiIndex } from 'emoji-mart';
 
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import 'font-awesome/css/font-awesome.css';
 
 const startUpload = async (file, onUploaded, errCb) => {
 	upload({ target: { files: [file] } });

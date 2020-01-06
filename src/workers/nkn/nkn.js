@@ -22,7 +22,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0014.nkn.org:30003',
 	'http://mainnet-seed-0015.nkn.org:30003',
 	'http://mainnet-seed-0016.nkn.org:30003',
-	// 'http://mainnet-seed-0017.nkn.org:30003',
+	'http://mainnet-seed-0017.nkn.org:30003',
 	'http://mainnet-seed-0018.nkn.org:30003',
 	'http://mainnet-seed-0019.nkn.org:30003',
 	'http://mainnet-seed-0020.nkn.org:30003',
@@ -47,7 +47,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0039.nkn.org:30003',
 	'http://mainnet-seed-0040.nkn.org:30003',
 	'http://mainnet-seed-0041.nkn.org:30003',
-	// 'http://mainnet-seed-0042.nkn.org:30003',
+	'http://mainnet-seed-0042.nkn.org:30003',
 	'http://mainnet-seed-0043.nkn.org:30003',
 	'http://mainnet-seed-0044.nkn.org:30003',
 ];
@@ -71,8 +71,6 @@ class NKN extends nkn {
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
-		}, {
-			timeout: 5,
 		});
 
 		this.wallet = wallet;
