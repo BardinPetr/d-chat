@@ -76,6 +76,17 @@ class NKN extends nkn {
 		this.wallet = wallet;
 	}
 
+	unsubscribe = async topic => {
+		const topicID = genChatID(topic);
+		return this.wallet.unsubscribe(topicID, this.identifier, {
+			fee: 0,
+		});
+	};
+
+	/**
+	 * TODO return true/false/null here to mark as "rejoined"?
+	 * to avoid re-sending "joined channel"s.
+	 */
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
@@ -114,9 +125,8 @@ class NKN extends nkn {
 	}
 
 	/**
-	 * There is no "memPool: true" argument for this one.
-	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
-	 * Note: the txPool fallback is quite unreliable.
+	 * There is no "memPool: true" argument for this one,
+	 * but we keep track of 'Joined channel.' messages on the other side.
 	 */
 	isSubscribed = topic => {
 		const topicID = genChatID(topic);
@@ -133,13 +143,8 @@ class NKN extends nkn {
 				}
 				if (info.expiresAt - blockHeight > 5000) {
 					return info;
-				} else {
-					throw 'Maybe in pool?';
 				}
-			}).catch(async () => {
-				const subs = await this.getSubs(topic);
-				const inPool = subs.subscribersInTxPool.some(sub => sub === this.addr);
-				return inPool;
+				return null;
 			});
 	};
 

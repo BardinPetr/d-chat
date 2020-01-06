@@ -11,8 +11,8 @@ const LazyChatroomDots = lazy(() => import('Approot/UI/containers/Header/Chatroo
 const DotRoutes = () => (
 	<>
 		<Suspense fallback={Loader}>
-			<Route path="/chat/:topic*" component={LazyChatroomDots} />
-			<Route path="/whisper/:recipient*" component={LazyChatroomDots} />
+			<Route path="/chat/*" component={LazyChatroomDots} />
+			<Route path="/whisper/*" component={LazyChatroomDots} />
 		</Suspense>
 		<Route
 			path="/(chat|whisper)/"

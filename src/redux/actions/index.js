@@ -154,6 +154,13 @@ export const removeChat = topic => ({
 	},
 });
 
+export const unsubscribeChat = topic => ({
+	type: 'chat/UNSUBSCRIBE_ALIAS',
+	payload: {
+		topic,
+	},
+});
+
 // Get everyone's subscription metadata.
 export const fetchSubscriptionInfos = topic => ({
 	type: 'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS',

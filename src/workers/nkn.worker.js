@@ -125,6 +125,11 @@ onmessage = async ({ data: action }) => {
 			}
 			break;
 
+		case 'chat/UNSUBSCRIBE_ALIAS':
+			topic = payload.topic;
+			NKN.instance.unsubscribe(topic);
+			break;
+
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
 			topic = payload.topic;
 			NKN.instance
