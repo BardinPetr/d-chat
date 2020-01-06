@@ -38,7 +38,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	opacity: 1 !important;
 	transition: opacity 0ms !important;
 }
-.emoji-mart-emoji-native {
+.emoji-mart-emoji-native, .CodeMirror-hints {
 	font-family: $family-primary !important;
 }
 .textarea:not([rows]) {
@@ -170,6 +170,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				right: 0.3rem;
 				bottom: 0;
 				color: $grey-dark;
+				font-family: $family-monospace;
 			}
 		}
 	}
@@ -555,7 +556,4 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	&-smile-o {
 		background-image: url(../../img/fa/font-awesome_4-7-0_smile-o_468_0_000000_none.png);
 	}
-}
-.CodeMirror-hints {
-	font-family: $family-primary !important;
 }

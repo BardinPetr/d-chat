@@ -83,9 +83,7 @@ onmessage = async ({ data: action }) => {
 		case 'nkn/NEW_TRANSACTION_ALIAS':
 			data = await NKN.instance.wallet
 				.transferTo(getAddressFromAddr(payload.recipient), payload.value)
-				.catch(() => {
-					return false;
-				});
+				.catch(() =>  false);
 
 			if (data !== false) {
 				message = new OutgoingMessage({
