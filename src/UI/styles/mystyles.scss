@@ -503,20 +503,6 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		width: 250px;
 	}
 }
-.react-overflow-wrapper {
-	svg {
-		top: 25%;
-		path:first-child {
-			fill: $grey-dark;
-		}
-	}
-	&__icon-left {
-		background-image: linear-gradient(to right, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
-	}
-	&__icon-right {
-		background-image: linear-gradient(to left, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
-	}
-}
 .x-horizontal-scroll {
 	scrollbar-width: none !important;
 	overflow: scroll;
