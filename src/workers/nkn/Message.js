@@ -7,7 +7,7 @@ import uuidv4 from 'uuid/v4';
  *  Topic is chatroom topic.
  *   Omit `topic` in whispers.
  *  Specify a unique ID so people can react to certain messages via `targetID`.
- *  `timestamp` from toUTCString.
+ *  `timestamp` from Date.now() (ms since epoch).
  *
  * `targetID` is like "reply to message that has this ID".
  *
@@ -32,13 +32,17 @@ import uuidv4 from 'uuid/v4';
  * Whispers have field `isPrivate: true` set, so that -
  * in the future, you can whisper to people inside a topic -
  * and not create a new private chatroom, but just display -
- * the message in the topic chatroom. It is not used in D-Chat for anything, -
+ * the message in the topic chatroom. It is not used in D-Chat for anything yet, -
  * and is mostly optional for now.
  * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
  *
- * There is also a contentType: 'dchat/subscribe', that is used when announcing -
- * joining the chat, and contentType: 'receipt', that is is like reaction without content.
- * Receipt is used for notifying "message received".
+ * Aside from 'text', 'reaction', and 'media', there are also contentTypes:
+ * - 'dchat/subscribe', that is used when announcing -
+ *   joining the chat. In D-Chat, receiving one triggers a "getSubscribers".
+ * - 'receipt', that is is like reaction without content.
+ *   Receipt is used for notifying "message received".
+ * - 'nkn/tip': was used before but not currently, but might make a -
+ *   comeback at some point in time.
  *
  * For messages that don't want user reaction, you might use `contentType: 'background'`.
  *
