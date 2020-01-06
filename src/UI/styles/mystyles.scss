@@ -10,7 +10,6 @@ $section-padding-medium: 3rem 1.5rem;
 $section-padding-large: 9rem 1.5rem;
 $content-blockquote-padding: 0.5em 1em;
 $content-pre-padding: 0.5em 1em;
-/* hsl(0, 0%, 14%); */
 $text: black;
 $code: $text;
 $label-color: $text;
@@ -19,7 +18,12 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
-$toolbar-width: 30%;
+$toolbar-width: 20%;
+/**
+ * Added stuff before sans-serif for emojis.
+ * Doesn't work if I add it after sans-serif, but it should? So weird.
+*/
+$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -34,8 +38,8 @@ $toolbar-width: 30%;
 	opacity: 1 !important;
 	transition: opacity 0ms !important;
 }
-.emoji-mart-emoji-native {
-	font-family: inherit !important;
+.emoji-mart-emoji-native, .CodeMirror-hints {
+	font-family: $family-primary !important;
 }
 .textarea:not([rows]) {
 	max-height: 16rem;
@@ -76,6 +80,9 @@ $toolbar-width: 30%;
 		display: none;
 	}
 	&:hover .x-is-hover-hidden {
+		display: inline-block;
+	}
+	&-wrap {
 		display: inline-block;
 	}
 }
@@ -163,6 +170,7 @@ $toolbar-width: 30%;
 				right: 0.3rem;
 				bottom: 0;
 				color: $grey-dark;
+				font-family: $family-monospace;
 			}
 		}
 	}
@@ -495,24 +503,43 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		width: 250px;
 	}
 }
-.react-overflow-wrapper {
-	svg {
-		top: 25%;
-		path:first-child {
-			fill: $grey-dark;
-		}
-	}
-	&__icon-left {
-		background-image: linear-gradient(to right, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
-	}
-	&__icon-right {
-		background-image: linear-gradient(to left, rgb(213, 210, 210) 25%, rgba(0, 0, 0, 0)) !important;
-	}
-}
 .x-horizontal-scroll {
 	scrollbar-width: none !important;
 	overflow: scroll;
 	&::-webkit-scrollbar {
 		display: none !important;
+	}
+}
+.x-sidebar {
+	.x-topic-icon {
+		display: none;
+	}
+}
+.x-topic-icon {
+	opacity: 0.8;
+	vertical-align: top;
+}
+.fa {
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	opacity: 0.6;
+	&-arrows-alt {
+		background-image: url(../../img/fa/font-awesome_4-7-0_arrows-alt_468_0_000000_none.png);
+	}
+	&-columns {
+		background-image: url(../../img/fa/font-awesome_4-7-0_columns_362_0_000000_none.png);
+	}
+	&-image {
+		background-image: url(../../img/fa/font-awesome_4-7-0_image_468_0_000000_none.png);
+	}
+	&-paper-plane-o {
+		background-image: url(../../img/fa/font-awesome_4-7-0_paper-plane-o_362_0_000000_none.png);
+	}
+	&-smile-o {
+		background-image: url(../../img/fa/font-awesome_4-7-0_smile-o_468_0_000000_none.png);
 	}
 }

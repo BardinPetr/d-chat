@@ -3,7 +3,7 @@ import OutgoingMessage from 'Approot/workers/nkn/OutgoingMessage';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import {
 	getAddressFromAddr,
-	genPrivateChatName,
+	getWhisperTopic,
 	isWhisper,
 } from 'Approot/misc/util';
 import receiveMessage from 'Approot/workers/nkn/messageReceiver';
@@ -18,6 +18,8 @@ import {
 	setBalance,
 	activateClient,
 } from 'Approot/redux/actions/client';
+
+const notified = {};
 
 onmessage = async ({ data: action }) => {
 	const payload = action.payload;
@@ -72,7 +74,7 @@ onmessage = async ({ data: action }) => {
 			data = new IncomingMessage(payload.message);
 			data.id = message.id;
 			data = data.from('me', {
-				overrideTopic: genPrivateChatName(payload.recipient),
+				overrideTopic: getWhisperTopic(payload.recipient),
 			});
 			receiveMessage(data);
 			break;
@@ -81,9 +83,7 @@ onmessage = async ({ data: action }) => {
 		case 'nkn/NEW_TRANSACTION_ALIAS':
 			data = await NKN.instance.wallet
 				.transferTo(getAddressFromAddr(payload.recipient), payload.value)
-				.catch(() => {
-					return false;
-				});
+				.catch(() =>  false);
 
 			if (data !== false) {
 				message = new OutgoingMessage({
@@ -109,15 +109,25 @@ onmessage = async ({ data: action }) => {
 					fee: action.payload.options.fee,
 				}).catch(() => false);
 
-			if (data !== false) {
+			// Only yell out "Joined channel." once in a session.
+			if (!notified[topic] && data !== false) {
+
+				notified[topic] = true;
+
 				data = new OutgoingMessage({
 					contentType: 'dchat/subscribe',
 					topic,
 					// No i18n here.
+					// TODO should probably send this one without content, then display static content.
 					content: 'Joined channel.',
 				});
 				NKN.instance.publishMessage(topic, data);
 			}
+			break;
+
+		case 'chat/UNSUBSCRIBE_ALIAS':
+			topic = payload.topic;
+			NKN.instance.unsubscribe(topic);
 			break;
 
 		case 'chat/GET_SUBSCRIBERS_ALIAS':

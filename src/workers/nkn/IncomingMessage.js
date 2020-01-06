@@ -1,5 +1,5 @@
 import { saveAttachment } from 'Approot/database/attachments';
-import { genPrivateChatName, parseAddr, formatAddr } from 'Approot/misc/util';
+import { getWhisperTopic, parseAddr, formatAddr } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
@@ -151,7 +151,7 @@ class IncomingMessage extends Message {
 		if (this.topic == null) {
 			// Because we can receive a whisper locally, we sometimes -
 			// need to override the topic manually.
-			this.topic = opts.overrideTopic || genPrivateChatName(src);
+			this.topic = opts.overrideTopic || getWhisperTopic(src);
 		}
 
 		const [name, pubKey] = parseAddr(src);

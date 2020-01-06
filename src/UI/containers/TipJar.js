@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions/client';
 
-const TipJar = ({ className = '', tooltip, value, topic, addr, dispatch, messageID }) => {
+const TipJar = ({ className = '', title, value, topic, addr, dispatch, messageID }) => {
 
 	const send = (value) => {
 		if (!addr) {
@@ -23,7 +23,7 @@ const TipJar = ({ className = '', tooltip, value, topic, addr, dispatch, message
 	return (
 		<a
 			className={className}
-			data-tooltip={tooltip}
+			title={title}
 			onClick={() => send(value)}
 		>
 			{'' + value}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info-APP_TARGET';
-import { getChatURL, getWhisperURL } from 'Approot/misc/util';
+import { getChatURL, getWhisperURL, isWhisperTopic, getWhisperRecipient } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 import Version from 'Approot/UI/components/Version';
@@ -17,7 +17,20 @@ const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
 	const submit = e => {
 		e.preventDefault();
-		let t = privateChat ? getWhisperURL(target) : getChatURL(target);
+		if (!target) {
+			return;
+		}
+		let topic = target;
+		let isPrivateChat = privateChat;
+		// Kind of a hack: if you try to join topic '/whisper/asdf', then we will -
+		// assume that you are trying to whisper 'asdf' instead.
+		// We are doing this because otherwise you could join a valid whisper chat -
+		// as a public chat, and chat histories, etc. would not like that.
+		if (!isPrivateChat && isWhisperTopic(topic)) {
+			isPrivateChat = true;
+			topic = getWhisperRecipient(topic);
+		}
+		const t = isPrivateChat ? getWhisperURL(target) : getChatURL(target);
 		history.push(t);
 		setTarget('');
 	};
@@ -25,14 +38,12 @@ const NewTopicForm = ({ privateChat }) => {
 	return (
 		<form className="field" onSubmit={submit}>
 			<div className="control">
-				<span className="is-sr-only">{__('No slashes')}</span>
 				<input
 					placeholder={privateChat ? __('Contact address') : __('Topic')}
 					value={target}
 					type="text"
 					className="input is-small"
 					onChange={e => setTarget(e.target.value)}
-					pattern="[^\/]*"
 				/>
 			</div>
 		</form>
@@ -80,16 +91,13 @@ const Home = ({ client, getBalance }) => (
 						</div>
 					</div>
 
-					<div className="content">
-						<p className="has-text-italic has-text-dark">{__('Chat names should not contain slashes.')}</p>
-					</div>
-
 				</div>
 
 				<div className="section">
 					<div className="content">
 						<p><Link to="/topics">{__('Public chat index')}</Link></p>
 						<Info />
+						<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://forum.nkn.org/t/nmobile-pre-beta-community-testing-and-simple-guide/2012">{__('nMobile pre-beta')}</a>.</p>
 					</div>
 
 					{client && (

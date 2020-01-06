@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import history from 'Approot/UI/history';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { getTopicFromPathname, isWhisperTopic } from 'Approot/misc/util';
 
-import { muteChat, removeChat } from 'Approot/redux/actions';
+import { muteChat, removeChat, unsubscribeChat } from 'Approot/redux/actions';
 
 const ChatroomDots = ({ dispatch, topic, chatSettings, }) => (
 	<>
@@ -25,13 +26,22 @@ const ChatroomDots = ({ dispatch, topic, chatSettings, }) => (
 		>
 			{__('Hide chat')}
 		</a></li>
+		{!isWhisperTopic(topic) && (
+			<li><a
+				onClick={() => {
+					history.push('/');
+					dispatch(removeChat(topic));
+					dispatch(unsubscribeChat(topic));
+				}}
+			>
+				{__('Leave chat')}
+			</a></li>
+		)}
 	</>
 );
 
-const mapStateToProps = (state, ownProps) => {
-	const topic = ownProps.match.params.topic
-		// Whisper
-		|| ownProps.match.url;
+const mapStateToProps = (state) => {
+	const topic = getTopicFromPathname(location.hash);
 	return ({
 		chatSettings: state.chatSettings[topic] || {},
 		topic: topic,

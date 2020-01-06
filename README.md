@@ -2,7 +2,7 @@
 
 A decentralized chat on NKN as an extension for Chrome and Firefox.
 
-Join *#d-chat* on D-Chat!
+Join channel *d-chat* on D-Chat!
 
 http://losnappas.gitlab.io/d-chat/
 

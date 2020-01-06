@@ -2,14 +2,14 @@
  * Handles #/topics/, which is the public channels list page.
  */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchSubscriptionInfos, subscribeToChat } from 'Approot/redux/actions';
 import { DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { getChatDisplayName, getChatURL } from 'Approot/misc/util';
+import { getChatDisplayName } from 'Approot/misc/util';
 import Table from 'rc-table';
 import useInterval from '@rooks/use-interval';
+import TopicLink from 'Approot/UI/components/TopicLink';
 
 const defaults = {
 	name: '',
@@ -47,7 +47,8 @@ const TopicInfoList = ({ dispatch, topics }) => {
 			title: __('Name'),
 			key: 'name',
 			dataIndex: 'name',
-			render: value => <Link to={getChatURL(value)}>{value}</Link>,
+			// Due to historical reasons, we have to remove any leading hash here.
+			render: value => <TopicLink topic={value.replace(/^#/, '')} />,
 		},
 		{
 			title: __('Subscribers'),
@@ -93,7 +94,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 								<p className="has-text-success">{status}</p>
 								<div className="field">
 									<p className="label">{__('Name')}</p>
-									<p>{__('Channel name, like "#d-chat", for example.')}</p>
+									<p>{__('Channel name, like "d-chat", for example.')}</p>
 									<div className="control">
 										<input
 											name="name"

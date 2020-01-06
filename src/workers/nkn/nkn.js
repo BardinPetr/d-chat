@@ -22,7 +22,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0014.nkn.org:30003',
 	'http://mainnet-seed-0015.nkn.org:30003',
 	'http://mainnet-seed-0016.nkn.org:30003',
-	// 'http://mainnet-seed-0017.nkn.org:30003',
+	'http://mainnet-seed-0017.nkn.org:30003',
 	'http://mainnet-seed-0018.nkn.org:30003',
 	'http://mainnet-seed-0019.nkn.org:30003',
 	'http://mainnet-seed-0020.nkn.org:30003',
@@ -47,7 +47,7 @@ const SEED_ADDRESSES = [
 	'http://mainnet-seed-0039.nkn.org:30003',
 	'http://mainnet-seed-0040.nkn.org:30003',
 	'http://mainnet-seed-0041.nkn.org:30003',
-	// 'http://mainnet-seed-0042.nkn.org:30003',
+	'http://mainnet-seed-0042.nkn.org:30003',
 	'http://mainnet-seed-0043.nkn.org:30003',
 	'http://mainnet-seed-0044.nkn.org:30003',
 ];
@@ -71,13 +71,22 @@ class NKN extends nkn {
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
-		}, {
-			timeout: 5,
 		});
 
 		this.wallet = wallet;
 	}
 
+	unsubscribe = async topic => {
+		const topicID = genChatID(topic);
+		return this.wallet.unsubscribe(topicID, this.identifier, {
+			fee: 0,
+		});
+	};
+
+	/**
+	 * TODO return true/false/null here to mark as "rejoined"?
+	 * to avoid re-sending "joined channel"s.
+	 */
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
@@ -116,8 +125,8 @@ class NKN extends nkn {
 	}
 
 	/**
-	 * There is no "memPool: true" argument for this one.
-	 * First isSubscribed. Then, if not subscribed, get subs from tx pool, check if in there.
+	 * There is no "memPool: true" argument for this one,
+	 * but we keep track of 'Joined channel.' messages on the other side.
 	 */
 	isSubscribed = topic => {
 		const topicID = genChatID(topic);
@@ -134,13 +143,8 @@ class NKN extends nkn {
 				}
 				if (info.expiresAt - blockHeight > 5000) {
 					return info;
-				} else {
-					throw 'Maybe in pool?';
 				}
-			}).catch(async () => {
-				const subs = await this.getSubs(topic);
-				const inPool = subs.subscribersInTxPool.some(sub => sub === this.addr);
-				return inPool;
+				return null;
 			});
 	};
 

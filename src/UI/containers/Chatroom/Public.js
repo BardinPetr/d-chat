@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getTopicFromPathname } from 'Approot/misc/util';
 import Chatroom from 'Approot/UI/components/Chatroom';
 import {
 	getSubscribers,
@@ -9,8 +10,8 @@ import {
 	publishMessage,
 } from 'Approot/redux/actions';
 
-const mapStateToProps = (state, ownProps) => {
-	const topic = ownProps.match.params.topic;
+const mapStateToProps = (state) => {
+	const topic = getTopicFromPathname(location.hash);
 	return {
 		client: state.clients.find(c => c.active),
 		subs: state.chatSettings[topic]?.subscribers || [],

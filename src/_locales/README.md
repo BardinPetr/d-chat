@@ -2,7 +2,7 @@
 
 Leave any content surrounded by hashes (#) as is!
 
-For example `Good #topic# night #user_identifier#...` translates so that #topic# and #addr# still exist; they are placeholders and will be replaced afterwards. `Buenos #topic# noches #user_identifier#...` will turn into `Buenos #d-chat noches Lynn.74760...`.
+For example `Good #topic# night #user_identifier#...` is `Buenos #topic# noches #user_identifier#...` and will turn into `Buenos d-chat noches Lynn.74760...`.
 
 ## Extra
 

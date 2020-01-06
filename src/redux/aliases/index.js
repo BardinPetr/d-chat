@@ -69,6 +69,7 @@ export default {
 	'SEND_PRIVATE_MESSAGE_ALIAS': delegateToWorker,
 	'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS': delegateToWorker,
 	'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS': delegateToWorker,
+	'chat/UNSUBSCRIBE_ALIAS': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
 };

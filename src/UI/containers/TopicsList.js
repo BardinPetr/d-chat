@@ -22,7 +22,6 @@ const Element = ({ chat }) => (
 				})}
 				activeClassName="is-active"
 			>
-				<span>{getChatDisplayName(chat.topic)}</span>
 				<span className="is-pulled-right">
 					{chat.unread?.length > 0 ? chat.unread.length : ''}
 				</span>
