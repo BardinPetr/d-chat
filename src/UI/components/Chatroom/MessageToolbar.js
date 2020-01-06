@@ -11,19 +11,19 @@ import { IoMdChatboxes } from 'react-icons/io';
 
 const Toolbar = ({ id, topic, addr }) => {
 	return (
-		<div className="x-toolbar-content buttons">
+		<div className="x-toolbar-content buttons has-addons x-is-padding-left">
 			<TipJar
 				messageID={id}
 				topic={topic}
 				addr={addr}
 				value={5}
-				className="button has-tooltip-bottom"
-				tooltip={`Tip 5 sats to ${formatAddr(addr) || '???'}...`}
+				className="button is-black is-inverted is-text"
+				title={`Tip 5 sats to ${formatAddr(addr) || '???'}...`}
 			/>
 			<Link
 				to={getWhisperURL(addr)}
-				className="button has-tooltip-bottom"
-				data-tooltip={__('Start a private conversation')}
+				className="button is-black is-inverted is-text"
+				title={__('Start a private conversation')}
 			>
 				<span className="icon is-small">
 					<IoMdChatboxes />
