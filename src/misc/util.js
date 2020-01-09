@@ -35,6 +35,8 @@ export function getChatDisplayName(topic) {
 	if (!topic) {
 		return '';
 	}
+	// These don't get displayed right for whatever reason.
+	topic = topic.replace(/%20/g, ' ');
 	if (isWhisperTopic(topic)) {
 		return getWhisperRecipient(topic);
 	}
