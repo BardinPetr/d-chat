@@ -411,10 +411,6 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	}
 }
 .x-toolbar {
-	* {
-		height: 25px !important;
-		// height: 2rem !important;
-	}
 	&-side {
 		position: absolute;
 		right: 0;

@@ -2,7 +2,7 @@
  * The 3 vertical dots button in header.
  * Pass in children like <li>something</li>.
  */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { IoMdMore } from 'react-icons/io';
 import Modal from 'react-modal';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -10,11 +10,17 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 Modal.setAppElement('.dashboard');
 
 const DotDotDot = ({ className = '', children, ...props }) => {
+	const ref = useRef();
 	const [expanded, setExpanded] = useState(false);
 
 	return (
 		<>
-			<a {...props} className={className} onClick={() => setExpanded(true)}>
+			<a
+				{...props}
+				ref={ref}
+				className={className}
+				onClick={() => setExpanded(true)}
+			>
 				<div className="icon">
 					<IoMdMore className="is-size-3" />
 				</div>
@@ -25,7 +31,13 @@ const DotDotDot = ({ className = '', children, ...props }) => {
 				contentLabel={__('Actions menu')}
 				className="x-modal x-dot-dot-dot-container"
 			>
-				<div className="x-dot-dot-dot">
+				<div
+					className="x-dot-dot-dot"
+					style={ref.current ? {
+						top: ref.current.offsetTop,
+						left: ref.current.offsetLeft,
+					} : {}}
+				>
 					<div className="menu">
 						<ul className="menu-list" onClick={() => setExpanded(false)}>
 							{children}

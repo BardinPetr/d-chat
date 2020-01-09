@@ -1,0 +1,1 @@
+../../../../nkn-permissioned-pubsub/index.js

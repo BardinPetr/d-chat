@@ -199,3 +199,19 @@ export const removeActiveTopic = topic => ({
 		topic,
 	},
 });
+
+// Permissioned pubsub.
+export const acceptPermission = (addr, topic) => ({
+	type: 'chat/ACCEPT_TO_CHATROOM_ALIAS',
+	payload: {
+		addr,
+		topic,
+	},
+});
+export const removePermission = (addr, topic) => ({
+	type: 'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS',
+	payload: {
+		addr,
+		topic,
+	},
+});

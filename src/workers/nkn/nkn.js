@@ -2,9 +2,11 @@ import nkn from 'nkn-ordered-multiclient';
 import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
+import permissionsMixin, { isTopicPermissioned } from './nkn-permissioned-pubsub';
+import sleep from 'sleep-promise';
 
 const FORBLOCKS = 400000;
-const NUMBER_OF_SUBSCRIPTION_TRIES = 3;
+const NUMBER_OF_SUBSCRIPTION_TRIES = 2;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -62,7 +64,7 @@ nknWallet.configure({
 /**
  * Couple of helpers for nkn module.
  */
-class NKN extends nkn {
+class NKN extends permissionsMixin(nkn) {
 	constructor({ wallet, username }) {
 		// TODO : connection fail here will majorly break things.
 		super({
@@ -90,33 +92,42 @@ class NKN extends nkn {
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
-		const isSubbed = await this.isSubscribed(topic);
+		let isSubbed;
+		if (!options.settingPermissions) {
+			isSubbed = await this.isSubscribed(topic);
+		}
 
+		console.log('GOING TO SUBSCRIBE?', isSubbed);
+		// Always resub the public topic list when we're adding our thing.
 		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
 			throw 'Too soon';
 		}
 
 		const fee = options.fee || 0;
+		const identifier = options.identifier;
 
 		return this._subscribe(
 			topicID,
 			JSON.stringify(metadata),
 			{
 				fee,
+				identifier,
 			}
 		);
 	};
 
 	// Tries to subscribe many times.
 	_subscribe = (topicID, metadata, options, _recurse = 0) => {
+		console.log('subscribing.', options, metadata);
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
-			this.identifier,
+			options.identifier || this.identifier,
 			metadata,
 			options
-		).catch(e => {
+		).catch(async e => {
 			if (_recurse < NUMBER_OF_SUBSCRIPTION_TRIES) {
+				await sleep(200);
 				return this._subscribe(topicID, metadata, options, _recurse + 1);
 			} else {
 				throw e;
@@ -124,22 +135,28 @@ class NKN extends nkn {
 		});
 	}
 
+	getSubscription = (topic, addr) =>
+		this.defaultClient.getSubscription(genChatID(topic), addr);
+
 	/**
 	 * There is no "memPool: true" argument for this one,
 	 * but we keep track of 'Joined channel.' messages on the other side.
 	 */
 	isSubscribed = topic => {
-		const topicID = genChatID(topic);
-		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
+		const subInfo = this.getSubscription(topic, this.addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
 		);
 
-		return Promise.all([ subInfo, latestBlockHeight ])
-			.then(async ([ info, blockHeight ]) => {
+		return Promise.all([subInfo, latestBlockHeight])
+			.then(async ([info, blockHeight]) => {
 				if (blockHeight === 0) {
 					return false;
+				}
+				// This gets returned all the time, probably best to not rely on it.
+				if (info.expiresAt === 0) {
+					return info;
 				}
 				if (info.expiresAt - blockHeight > 5000) {
 					return info;
@@ -153,11 +170,17 @@ class NKN extends nkn {
 			txPool: true,
 			...options,
 		};
-		try {
-			return this.publish(genChatID(topic), JSON.stringify(message), options);
-		} catch (e) {
-			console.error('Error when publishing', e);
-			throw e;
+
+		if (isTopicPermissioned(topic)) {
+			const subs = await this.getSubscribersWithPermission(topic);
+			return this.sendMessage(subs, message);
+		} else {
+			try {
+				return this.publish(genChatID(topic), JSON.stringify(message), options);
+			} catch (e) {
+				console.error('Error when publishing', e);
+				throw e;
+			}
 		}
 	};
 
@@ -165,13 +188,16 @@ class NKN extends nkn {
 		if (to === this.addr) {
 			return;
 		}
-		// Add this every time for now.
-		message.isPrivate = true;
-		// Ignore errors.
-		return this.send(to, JSON.stringify(message), options).catch(() => {});
+
+		if (!Array.isArray(to)) {
+			// Whisper
+			message.isPrivate = true;
+		}
+
+		return this.send(to, JSON.stringify(message), options).catch(() => { });
 	};
 
-	getSubs = (topic, options = {}) => {
+	getSubscribers = (topic, options = {}) => {
 		options = {
 			offset: 0,
 			limit: 1000,
@@ -179,6 +205,7 @@ class NKN extends nkn {
 			txPool: true,
 			...options,
 		};
+		console.log('getting subs', topic, options);
 		topic = genChatID(topic);
 		return this.defaultClient.getSubscribers(topic, options);
 	};
@@ -189,7 +216,7 @@ class NKN extends nkn {
 	 * @return [{user, data}]
 	 */
 	fetchSubscriptions = async topic => {
-		const subs = await this.getSubs(topic, {
+		const subs = await this.getSubscribers(topic, {
 			meta: true,
 		});
 

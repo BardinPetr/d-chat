@@ -133,9 +133,8 @@ onmessage = async ({ data: action }) => {
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
 			topic = payload.topic;
 			NKN.instance
-				.getSubs(topic)
-				.then(({ subscribers, subscribersInTxPool }) => {
-					subscribers = subscribers.concat(subscribersInTxPool);
+				.getSubscribersWithPermission(topic)
+				.then(subscribers => {
 					postMessage(setSubscribers(topic, subscribers));
 				});
 			break;
@@ -153,6 +152,16 @@ onmessage = async ({ data: action }) => {
 			topic = payload.topic;
 			data = await NKN.instance.fetchSubscriptions(topic);
 			postMessage(setSubscriptionInfos(topic, data));
+			break;
+
+		case 'chat/ACCEPT_TO_CHATROOM_ALIAS':
+			topic = payload.topic;
+			data = await NKN.instance.acceptPermission(topic, payload.addr);
+			break;
+
+		case 'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS':
+			topic = payload.topic;
+			data = await NKN.instance.removePermission(topic, payload.addr);
 			break;
 
 		default:

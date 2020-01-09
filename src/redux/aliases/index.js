@@ -70,6 +70,8 @@ export default {
 	'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS': delegateToWorker,
 	'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS': delegateToWorker,
 	'chat/UNSUBSCRIBE_ALIAS': delegateToWorker,
+	'chat/ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
+	'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
 };
