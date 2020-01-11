@@ -369,6 +369,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	}
 	.editor-toolbar {
 		&:not(.fullscreen) {
+			border-left: none;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;

@@ -85,10 +85,6 @@ class NKN extends permissionsMixin(nkn) {
 		});
 	};
 
-	/**
-	 * TODO return true/false/null here to mark as "rejoined"?
-	 * to avoid re-sending "joined channel"s.
-	 */
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
