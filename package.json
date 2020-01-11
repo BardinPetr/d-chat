@@ -77,6 +77,7 @@
     "bulma": "^0.8.0",
     "bulma-dashboard": "^0.3.1",
     "bulma-divider": "0.x",
+    "bulma-switch": "^2.0.0",
     "bulma-tooltip": "^3.0.2",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",

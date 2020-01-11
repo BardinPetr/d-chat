@@ -2,23 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { acceptPermission, removePermission } from 'Approot/redux/actions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { IoMdCheckmarkCircleOutline, IoMdCheckmarkCircle } from 'react-icons/io';
+import Switch from 'Approot/UI/components/Switch';
 
 const Admin = ({ accept, remove, isApproved }) => (
 	<div className="x-admin">
-		<a
-			className="button"
-			onClick={isApproved ? remove : accept}
+		<Switch
+			className="is-small"
+			onChange={isApproved ? remove : accept}
+			checked={!!isApproved}
 			title={isApproved ? __('Remove from group.') : __('Allow this person to join.')}
-		>
-			<span className="icon">
-				{isApproved ? (
-					<IoMdCheckmarkCircle />
-				) : (
-					<IoMdCheckmarkCircleOutline />
-				)}
-			</span>
-		</a>
+		/>
 	</div>
 );
 

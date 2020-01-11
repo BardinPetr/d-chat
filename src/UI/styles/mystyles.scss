@@ -29,6 +29,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 @import "../../../node_modules/bulma-tooltip";
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
+@import "../../../node_modules/bulma-switch/src/sass/index.sass";
 
 .input::placeholder {
 	color: $grey;
@@ -139,7 +140,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 
 	.message {
 		margin: 0.2rem 0;
-		padding: 0 0.4rem;
+		padding: 0 0.4rem 0.4rem;
 		&:hover {
 			background-color: $white-ter;
 
@@ -412,12 +413,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	}
 }
 .x-toolbar {
-	&-side {
-		position: absolute;
-		right: 0;
-		z-index: $z-index + 1;
-		/* TODO figure out something better. */
-		display: none;
+	height: 2rem;
+	&-content {
+		display: inline-flex;
+	}
+	&-buttons {
+		.button {
+			margin: 0;
+			align-self: flex-start;
+			&:hover {
+				background-color: $grey-lighter;
+			}
+		}
 	}
 }
 .editor-statusbar {

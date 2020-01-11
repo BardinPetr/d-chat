@@ -2,7 +2,8 @@ import nkn from 'nkn-ordered-multiclient';
 import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
-import permissionsMixin, { isTopicPermissioned } from './nkn-permissioned-pubsub';
+import permissionsMixin from './nkn-permissioned-pubsub-mixin';
+import { isTopicPermissioned } from './nkn-permissioned-pubsub';
 import sleep from 'sleep-promise';
 
 const FORBLOCKS = 400000;
@@ -93,7 +94,6 @@ class NKN extends permissionsMixin(nkn) {
 			isSubbed = await this.isSubscribed(topic);
 		}
 
-		console.log('GOING TO SUBSCRIBE?', isSubbed);
 		// Always resub the public topic list when we're adding our thing.
 		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
 			throw 'Too soon';
@@ -114,7 +114,6 @@ class NKN extends permissionsMixin(nkn) {
 
 	// Tries to subscribe many times.
 	_subscribe = (topicID, metadata, options, _recurse = 0) => {
-		console.log('subscribing.', options, metadata);
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
@@ -150,10 +149,6 @@ class NKN extends permissionsMixin(nkn) {
 				if (blockHeight === 0) {
 					return false;
 				}
-				// This gets returned all the time, probably best to not rely on it.
-				if (info.expiresAt === 0) {
-					return info;
-				}
 				if (info.expiresAt - blockHeight > 5000) {
 					return info;
 				}
@@ -168,7 +163,7 @@ class NKN extends permissionsMixin(nkn) {
 		};
 
 		if (isTopicPermissioned(topic)) {
-			const subs = await this.getSubscribersWithPermission(topic);
+			const subs = await this.Permissions.getSubscribers(topic);
 			return this.sendMessage(subs, message);
 		} else {
 			try {
@@ -201,7 +196,6 @@ class NKN extends permissionsMixin(nkn) {
 			txPool: true,
 			...options,
 		};
-		console.log('getting subs', topic, options);
 		topic = genChatID(topic);
 		return this.defaultClient.getSubscribers(topic, options);
 	};

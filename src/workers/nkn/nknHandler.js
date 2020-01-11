@@ -31,7 +31,7 @@ function addNKNListeners (client) {
 			const message = new IncomingMessage(data).from(src);
 
 			const permitted =
-				isNotice(message) || await client.checkPermission(message.topic, src);
+				isNotice(message) || await client.Permissions.check(message.topic, src);
 
 			if (permitted) {
 				receiveMessage(message);

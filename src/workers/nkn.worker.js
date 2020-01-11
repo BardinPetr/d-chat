@@ -133,16 +133,13 @@ onmessage = async ({ data: action }) => {
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
 			topic = payload.topic;
 			NKN.instance
-				.getSubscribersWithPermission(topic)
+				.Permissions.getSubscribers(topic)
 				.then(subscribers => {
 					postMessage(setSubscribers(topic, subscribers));
 				});
 			break;
 
 		case 'nkn/GET_BALANCE_ALIAS':
-			if (!NKN.instance) {
-				return;
-			}
 			NKN.instance.wallet
 				.getBalance()
 				.then(balance => postMessage(setBalance(payload.address, balance)));
@@ -156,12 +153,28 @@ onmessage = async ({ data: action }) => {
 
 		case 'chat/ACCEPT_TO_CHATROOM_ALIAS':
 			topic = payload.topic;
-			data = await NKN.instance.acceptPermission(topic, payload.addr);
+			NKN.instance.Permissions.accept(topic, payload.addr)
+				.then(() => {
+					const message = new OutgoingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						content: `Accepted user ${payload.addr}.`,
+					});
+					postMessage(publishMessage(message));
+				});
 			break;
 
 		case 'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS':
 			topic = payload.topic;
-			data = await NKN.instance.removePermission(topic, payload.addr);
+			NKN.instance.Permissions.remove(topic, payload.addr)
+				.then(() => {
+					const message = new OutgoingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						content: `Kicked user ${payload.addr}.`,
+					});
+					postMessage(publishMessage(message));
+				});
 			break;
 
 		default:

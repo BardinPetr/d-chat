@@ -190,3 +190,7 @@ export function getTopicFromPathname(pathname) {
 		return path;
 	}
 }
+
+export function isPermissioned(topic) {
+	return topic.slice(topic.lastIndexOf('.') + 1).length === 64;
+}
