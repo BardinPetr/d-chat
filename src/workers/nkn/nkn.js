@@ -4,7 +4,6 @@ import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 
 const FORBLOCKS = 400000;
-const NUMBER_OF_SUBSCRIPTION_TRIES = 3;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -83,6 +82,9 @@ class NKN extends nkn {
 		});
 	};
 
+	// Only one suscription per address in the pool at a time.
+	// That means that changing channels rapidly keeps re-subbing,
+	// which explains the "Joined channel." spam that happens.
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
@@ -94,31 +96,17 @@ class NKN extends nkn {
 
 		const fee = options.fee || 0;
 
-		return this._subscribe(
-			topicID,
-			JSON.stringify(metadata),
-			{
-				fee,
-			}
-		);
-	};
-
-	// Tries to subscribe many times.
-	_subscribe = (topicID, metadata, options, _recurse = 0) => {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
 			this.identifier,
-			metadata,
-			options
-		).catch(e => {
-			if (_recurse < NUMBER_OF_SUBSCRIPTION_TRIES) {
-				return this._subscribe(topicID, metadata, options, _recurse + 1);
-			} else {
-				throw e;
+			JSON.stringify(metadata),
+			{
+				...options,
+				fee,
 			}
-		});
-	}
+		);
+	};
 
 	/**
 	 * There is no "memPool: true" argument for this one,
