@@ -19,11 +19,6 @@ $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 20%;
-/**
- * Added stuff before sans-serif for emojis.
- * Doesn't work if I add it after sans-serif, but it should? So weird.
-*/
-$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -78,9 +73,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 .x-topic-link {
 	.x-is-hover-hidden {
 		display: none;
-	}
-	&:hover .x-is-hover-hidden {
-		display: inline-block;
 	}
 	&-wrap {
 		display: inline-block;
@@ -139,8 +131,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	padding-bottom: 1em;
 
 	.message {
-		margin: 0.2rem 0;
-		padding: 0 0.4rem;
+		margin: 0;
+		padding: 0 0.4rem 0.4rem;
 		&:hover {
 			background-color: $white-ter;
 
@@ -152,9 +144,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		word-wrap: break-word;
 
 		img, video {
-			height: 300px;
-		}
-		.x-media-container {
 			height: 300px;
 		}
 		.x-reactions {
@@ -370,6 +359,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	}
 	.editor-toolbar {
 		&:not(.fullscreen) {
+			border-left: none;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
@@ -412,16 +402,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	}
 }
 .x-toolbar {
-	* {
-		height: 25px !important;
-		// height: 2rem !important;
+	height: 2rem;
+	&-content {
+		display: inline-flex;
 	}
-	&-side {
-		position: absolute;
-		right: 0;
-		z-index: $z-index + 1;
-		/* TODO figure out something better. */
-		display: none;
+	&-buttons {
+		.button {
+			margin: 0;
+			align-self: flex-start;
+			&:hover {
+				background-color: $grey-lighter;
+			}
+		}
 	}
 }
 .editor-statusbar {
@@ -479,7 +471,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 .x-has-unread {
 	text-decoration: underline tan 3px;
-	background: linear-gradient(to top left, white 60%, tan 100%);
+	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
 }
 .x-has-margin-top-bottom {
 	margin-top: 1em;
@@ -513,6 +505,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-sidebar {
 	.x-topic-icon {
 		display: none;
+	}
+	li {
+		position: relative;
+	}
+	.delete {
+		display: none;
+		position: absolute;
+		left: -0.65rem;
+		top: 20%;
+	}
+	li:hover .delete {
+		display: block;
 	}
 }
 .x-topic-icon {

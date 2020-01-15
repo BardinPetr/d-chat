@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
+import { removeChat } from 'Approot/redux/actions';
 import classnames from 'classnames';
 import TopicLink from 'Approot/UI/components/TopicLink';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
@@ -12,9 +13,13 @@ import {
 	isWhisperTopic,
 } from 'Approot/misc/util';
 
-const Element = ({ chat }) => (
+const Element = ({ hide, chat }) => (
 	!chat.hidden && (
 		<li title={getChatDisplayName(chat.topic)}>
+			<span className="delete" onClick={e => {
+				e.preventDefault();
+				hide(chat.topic);
+			}} />
 			<TopicLink
 				topic={chat.topic}
 				className={classnames('x-topic-link is-clearfix x-truncate', {
@@ -30,13 +35,13 @@ const Element = ({ chat }) => (
 	)
 );
 
-const TopicsList = ({ topics, whispers, labelClassName = '', wrapperClassName = '' }) => (
+const TopicsList = ({ hide, topics, whispers, labelClassName = '', wrapperClassName = '' }) => (
 	<React.Fragment key="topics-list">
 		<div className={wrapperClassName}>
 			<p className={labelClassName}>{__('Channels')}</p>
 			<ul className="menu-list">
 				{topics.map((chat, key) => (
-					<Element key={key} chat={chat} />
+					<Element key={key} chat={chat} hide={hide} />
 				))}
 			</ul>
 		</div>
@@ -44,7 +49,7 @@ const TopicsList = ({ topics, whispers, labelClassName = '', wrapperClassName = 
 			<p className={labelClassName}>{__('Whispers')}</p>
 			<ul className="menu-list">
 				{whispers.map((chat, key) => (
-					<Element key={key} chat={chat} />
+					<Element key={key} chat={chat} hide={hide} />
 				))}
 			</ul>
 		</div>
@@ -119,4 +124,8 @@ const mapStateToProps = state => {
 	};
 };
 
-export default connect(mapStateToProps)(TopicsList);
+const mapDispatchToProps = dispatch => ({
+	hide: topic => dispatch(removeChat(topic)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopicsList);

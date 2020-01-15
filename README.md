@@ -54,19 +54,11 @@ React boilerplate from https://github.com/kryptokinght/react-extension-boilerpla
 
 Send a merge request if you've got something nice. Make issues and so forth. All help is appreciated.
 
-### Reimbursement for Your Efforts
-
-You may get "paid" NKN in exchange for *anything* useful. Could be code, issues, or posting about D-Chat somewhere.
-
-The point is to get more coin spread; when subscriptions start costing coins, it will a problem if nobody has any. D-Chat fund: 
-
-https://explorer.nknx.org/addresses/NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
-
 ## Supporting
 
 ERC20: 0x87107249Bf26A6c5CA9D55E05b7BF29aD50CD7C8
 
-NKN coin dev fund (mining rewards, for example): NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
+NKN coin (mining rewards, for example): NKNaaUAAYNoZoDyRF3LoJLSsczo77vU38yz1
 
 ## License
 

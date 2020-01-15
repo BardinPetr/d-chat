@@ -97,9 +97,6 @@ const Message = ({
 				</div>
 			)}
 
-			<div className="x-toolbar x-toolbar-side">
-			</div>
-
 			<div className="message-body x-is-small-padding">
 				{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
 				{ isMedia ?
