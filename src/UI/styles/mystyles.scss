@@ -74,9 +74,6 @@ $toolbar-width: 20%;
 	.x-is-hover-hidden {
 		display: none;
 	}
-	&:hover .x-is-hover-hidden {
-		display: inline-block;
-	}
 	&-wrap {
 		display: inline-block;
 	}
@@ -508,6 +505,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-sidebar {
 	.x-topic-icon {
 		display: none;
+	}
+	li {
+		position: relative;
+	}
+	.delete {
+		display: none;
+		position: absolute;
+		left: -0.65rem;
+		top: 20%;
+	}
+	li:hover .delete {
+		display: block;
 	}
 }
 .x-topic-icon {
