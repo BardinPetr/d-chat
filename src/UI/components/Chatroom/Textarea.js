@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect, useCallback } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
 
@@ -133,18 +133,19 @@ const Textarea = ({
 	/**
 	 * Makes enter submit, shift enter insert newline.
 	 */
-	const onEnterPress = useCallback((cm) => {
+	const onEnterPress = (cm) => {
 		submitText(cm.getValue());
 		cm.setValue('');
-	}, [topic]);
+		localStorage['smde_main-textarea'] = '';
+	};
 
 	const setRef = i => mdeInstance.current = i;
 	const onSelect = emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native);
 
-	// Without key={topic}, things go wrong.
+	// Without key={topic}, things go wrong. No idea how to fix that.
 	return (
 		<React.Fragment>
-			{visible &&
+			{visible && (
 				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
 						visible={visible}
@@ -152,7 +153,7 @@ const Textarea = ({
 						onSelect={onSelect}
 					/>
 				</Suspense>
-			}
+			)}
 			<MarkdownEditor
 				key={topic}
 				id="main-textarea"
@@ -191,17 +192,12 @@ const Textarea = ({
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', 'side-by-side', 'fullscreen', {
-						name: 'submit',
-						action: editor => onEnterPress(editor.codemirror),
-						className: 'fa fa-paper-plane-o',
-						title: '',
-					}] : [{
+					}, '|', 'side-by-side', 'fullscreen'] : [{
 						name: 'emoji',
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', {
+					}, {
 						name: 'submit',
 						action: editor => onEnterPress(editor.codemirror),
 						className: 'fa fa-paper-plane-o',

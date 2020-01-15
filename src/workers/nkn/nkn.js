@@ -94,17 +94,12 @@ class NKN extends nkn {
 			throw 'Too soon';
 		}
 
-		const fee = options.fee || 0;
-
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
 			this.identifier,
 			JSON.stringify(metadata),
-			{
-				...options,
-				fee,
-			}
+			options
 		);
 	};
 
