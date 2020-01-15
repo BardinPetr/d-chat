@@ -139,7 +139,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	padding-bottom: 1em;
 
 	.message {
-		margin: 0.2rem 0;
+		margin: 0;
 		padding: 0 0.4rem 0.4rem;
 		&:hover {
 			background-color: $white-ter;
@@ -152,9 +152,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		word-wrap: break-word;
 
 		img, video {
-			height: 300px;
-		}
-		.x-media-container {
 			height: 300px;
 		}
 		.x-reactions {
@@ -516,6 +513,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-sidebar {
 	.x-topic-icon {
 		display: none;
+	}
+	li {
+		position: relative;
+	}
+	.delete {
+		display: none;
+		position: absolute;
+		left: -0.65rem;
+		top: 20%;
+	}
+	li:hover .delete {
+		display: block;
 	}
 }
 .x-topic-icon {

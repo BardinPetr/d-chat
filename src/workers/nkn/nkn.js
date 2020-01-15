@@ -4,10 +4,8 @@ import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 import permissionsMixin from './nkn-permissioned-pubsub-mixin';
 import { isTopicPermissioned } from './nkn-permissioned-pubsub';
-import sleep from 'sleep-promise';
 
 const FORBLOCKS = 400000;
-const NUMBER_OF_SUBSCRIPTION_TRIES = 2;
 const SEED_ADDRESSES = [
 	'http://mainnet-seed-0001.nkn.org:30003',
 	'http://mainnet-seed-0002.nkn.org:30003',
@@ -86,6 +84,9 @@ class NKN extends permissionsMixin(nkn) {
 		});
 	};
 
+	// Only one suscription per address in the pool at a time.
+	// That means that changing channels rapidly keeps re-subbing,
+	// which explains the "Joined channel." spam that happens.
 	subscribe = async (topic, options = {}) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
@@ -99,36 +100,14 @@ class NKN extends permissionsMixin(nkn) {
 			throw 'Too soon';
 		}
 
-		const fee = options.fee || 0;
-		const identifier = options.identifier;
-
-		return this._subscribe(
-			topicID,
-			JSON.stringify(metadata),
-			{
-				fee,
-				identifier,
-			}
-		);
-	};
-
-	// Tries to subscribe many times.
-	_subscribe = (topicID, metadata, options, _recurse = 0) => {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
 			options.identifier || this.identifier,
-			metadata,
+			JSON.stringify(metadata),
 			options
-		).catch(async e => {
-			if (_recurse < NUMBER_OF_SUBSCRIPTION_TRIES) {
-				await sleep(200);
-				return this._subscribe(topicID, metadata, options, _recurse + 1);
-			} else {
-				throw e;
-			}
-		});
-	}
+		);
+	};
 
 	getSubscription = (topic, addr) =>
 		this.defaultClient.getSubscription(genChatID(topic), addr);
@@ -144,8 +123,8 @@ class NKN extends permissionsMixin(nkn) {
 			'getlatestblockheight',
 		);
 
-		return Promise.all([subInfo, latestBlockHeight])
-			.then(async ([info, blockHeight]) => {
+		return Promise.all([ subInfo, latestBlockHeight ])
+			.then(async ([ info, blockHeight ]) => {
 				if (blockHeight === 0) {
 					return false;
 				}
@@ -166,12 +145,7 @@ class NKN extends permissionsMixin(nkn) {
 			const subs = await this.Permissions.getSubscribers(topic);
 			return this.sendMessage(subs, message);
 		} else {
-			try {
-				return this.publish(genChatID(topic), JSON.stringify(message), options);
-			} catch (e) {
-				console.error('Error when publishing', e);
-				throw e;
-			}
+			return this.publish(genChatID(topic), JSON.stringify(message), options).catch(() => {});
 		}
 	};
 

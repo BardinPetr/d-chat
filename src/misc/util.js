@@ -5,7 +5,6 @@
  */
 import shasum from 'shasum';
 import protocol from 'nkn-wallet/lib/crypto/protocol';
-import { matchPath } from 'react-router-dom';
 
 export const isWhisperTopic = topic => !!topic?.startsWith('/whisper/');
 export const isWhisper = message => isWhisperTopic(message.topic);
@@ -35,40 +34,27 @@ export function getChatDisplayName(topic) {
 	if (!topic) {
 		return '';
 	}
-	// These don't get displayed right for whatever reason.
-	topic = topic.replace(/%20/g, ' ');
 	if (isWhisperTopic(topic)) {
 		return getWhisperRecipient(topic);
 	}
 	return topic;
 }
 
-/**
- * Encodes topics for URL.
- */
 export function getChatURL(topic) {
+	if (!topic) {
+		throw new Error('No topic: ' + topic);
+	}
 	if (isWhisperTopic(topic)) {
 		return getWhisperURL(topic);
 	}
 
-	topic = getChatName(topic);
-	if (!topic) {
-		return '';
-	}
 	// Usually shoved to <Link to={} /> so remember to prepend '#' on form actions etc.
 	return '/chat/' + topic;
 }
 
-/**
- * Topics without hash, whispers as they come.
- * URL decoded.
- */
 export function getChatName(topic) {
 	if (!topic) {
 		return null;
-	}
-	if (isWhisperTopic(topic)) {
-		return getWhisperTopic(topic);
 	}
 	return topic;
 }
@@ -124,20 +110,12 @@ export const getAddressFromAddr = theAddr => {
 	return nknAddress;
 };
 
-/**
- * Encodes whisper topics for URL.
- *
- * Example: sending whispers to 'hi # my name is /not too good/.'
- * turns to '/whisper/hi%20%23%20my%20name%20is%20%2Fnot%20too%20good%2F.'
- */
 export function getWhisperURL(topic) {
 	const recipient = getWhisperRecipient(topic);
 	return `/whisper/${recipient}`;
 }
-
 export function getWhisperTopic(topic) {
-	topic = getWhisperRecipient(topic);
-	return `/whisper/${topic}`;
+	return getWhisperURL(topic);
 }
 
 export const importWallet = file => {
@@ -176,18 +154,27 @@ export const IS_SIDEBAR = location?.href.includes('popup.html') === false;
  */
 export function getTopicFromPathname(pathname) {
 	pathname = pathname.replace(/^#/, '');
-	let path = matchPath(pathname, {
-		path: '/chat/*',
-	})?.params?.[0];
-	if (!path) {
-		path = matchPath(pathname, {
-			path: '/whisper/*',
-		})?.params?.[0];
-		if (path) {
-			return getWhisperTopic(path);
-		}
-	} else {
-		return path;
+	// Get the '/chat/', or '/whisper/' part.
+	const type = pathname.slice(
+		0,
+		pathname.indexOf('/', pathname.indexOf('/') + 1) + 1
+	);
+	let topic = pathname.slice(type.length);
+	try {
+		topic = decodeURIComponent(topic);
+	} catch(e) {
+		// If we got here, that means that -
+		// there is a lone percentage-sign in topic name.
+		// History module does not like it, at all.
+		// This will be fixed in a future patch by 'history', probably.
+	}
+
+	switch (type) {
+		case '/chat/':
+			return topic;
+
+		case '/whisper/':
+			return getWhisperTopic(topic);
 	}
 }
 
