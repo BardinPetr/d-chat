@@ -5,11 +5,11 @@
   "s": {
     "message": " < 30 s"
   },
+  "Acceptedtochat": {
+    "message": " Accepted to chat"
+  },
   "Actionsmenu": {
     "message": " Actions menu"
-  },
-  "Allowthispersontojoin": {
-    "message": " Allow this person to join."
   },
   "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
@@ -161,6 +161,9 @@
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
   },
+  "Open": {
+    "message": " Open"
+  },
   "Panel": {
     "message": " Panel"
   },
@@ -187,9 +190,6 @@
   },
   "Reload": {
     "message": " Reload"
-  },
-  "Removefromgroup": {
-    "message": " Remove from group."
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
@@ -223,6 +223,9 @@
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Tipvaluesats": {
+    "message": " Tip #value# sats"
   },
   "Topic": {
     "message": " Topic"

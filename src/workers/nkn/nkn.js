@@ -3,7 +3,7 @@ import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 import permissionsMixin from './nkn-permissioned-pubsub-mixin';
-import { isTopicPermissioned } from './nkn-permissioned-pubsub';
+import { isPermissionedTopic } from './nkn-permissioned-pubsub';
 
 const FORBLOCKS = 400000;
 const SEED_ADDRESSES = [
@@ -72,6 +72,9 @@ class NKN extends permissionsMixin(nkn) {
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
+		}, {
+			startTimeout: 4000,
+			timeout: 10,
 		});
 
 		this.wallet = wallet;
@@ -131,10 +134,6 @@ class NKN extends permissionsMixin(nkn) {
 				if (info.expiresAt - blockHeight > 5000) {
 					return info;
 				}
-				if (info.expiresAt === 0) {
-					// Going to assume we're in mempool if we get here.
-					return info;
-				}
 				return null;
 			});
 	};
@@ -145,7 +144,7 @@ class NKN extends permissionsMixin(nkn) {
 			...options,
 		};
 
-		if (isTopicPermissioned(topic)) {
+		if (isPermissionedTopic(topic)) {
 			const subs = await this.Permissions.getSubscribers(topic);
 			return this.sendMessage(subs, message);
 		} else {

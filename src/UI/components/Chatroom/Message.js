@@ -84,7 +84,7 @@ const Message = ({
 									unsubscribed={unsubscribed}
 									pubKey={message.pubKey || ''}
 								/>
-								<span className="x-is-hover x-is-margin-left x-toolbar">
+								<span className="x-is-margin-left x-toolbar">
 									<MessageToolbar
 										id={message.id}
 										topic={message.topic}

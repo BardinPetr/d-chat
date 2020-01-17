@@ -1,15 +1,15 @@
 import React from 'react';
 
-const Switch = ({ onChange, checked, className = '', title = '' }) => {
+const Switch = ({ onChange, className, title = '', ...props }) => {
 	const key = Math.random();
 	return (
 		<>
 			<input
 				onChange={onChange}
-				checked={checked}
 				type="checkbox"
 				className={`switch ${className}`}
 				id={key}
+				{...props}
 			/>
 			<label
 				title={title}

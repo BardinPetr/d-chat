@@ -2,7 +2,6 @@
  * Contains almost all actions.
  */
 import {
-	getWhisperTopic,
 	getChatName,
 	getWhisperRecipient,
 } from 'Approot/misc/util';
@@ -51,9 +50,6 @@ export const setSubscribers = (topic, subscribers) => ({
 		subscribers,
 	},
 });
-
-export const enterPrivateChat = recipient =>
-	createChat(getWhisperTopic(recipient));
 
 // Join chat dispatches createChat and subscribeToChat.
 export const joinChat = topic => ({

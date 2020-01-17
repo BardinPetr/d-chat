@@ -178,6 +178,14 @@ export function getTopicFromPathname(pathname) {
 	}
 }
 
-export function isPermissioned(topic) {
-	return topic.slice(topic.lastIndexOf('.') + 1).length === 64;
+export function isPermissionedTopic(topic) {
+	if (isWhisperTopic(topic)) {
+		return false;
+	}
+	topic = topic.slice(topic.lastIndexOf('.') + 1);
+	return topic.length === 64 && topic.slice(topic.lastIndexOf('.') + 1);
+}
+
+export function isPublicTopic(topic) {
+	return !isWhisperTopic(topic);
 }

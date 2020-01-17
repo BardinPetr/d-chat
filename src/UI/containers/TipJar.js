@@ -1,10 +1,12 @@
 import React from 'react';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions/client';
+import { FaDollarSign } from 'react-icons/fa';
 
 const TipJar = ({ className = '', title, value, topic, addr, dispatch, messageID }) => {
 
-	const send = (value) => {
+	const send = () => {
 		if (!addr) {
 			return;
 		}
@@ -24,9 +26,10 @@ const TipJar = ({ className = '', title, value, topic, addr, dispatch, messageID
 		<a
 			className={className}
 			title={title}
-			onClick={() => send(value)}
+			onClick={send}
 		>
-			{'' + value}
+			<span className="icon"><FaDollarSign /></span>
+			<span>{__('Tip #value# sats').replace('#value#', value)}</span>
 		</a>
 	);
 };

@@ -97,7 +97,9 @@ const Textarea = ({
 					} else if (word.startsWith('@')) {
 						// Subs autocomplete.
 						const theWord = word.slice(1);
-						const things = subs.filter(sub => sub.startsWith(theWord)).map(sub => ({
+						const things = subs.filter(sub => sub.toLowerCase().startsWith(
+							theWord.toLowerCase())
+						).map(sub => ({
 							text: mention(sub) + ' ',
 							displayText: formatAddr(sub)
 						}));
