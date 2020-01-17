@@ -8,6 +8,9 @@
   "Actionsmenu": {
     "message": " Actions menu"
   },
+  "Allowthispersontojoin": {
+    "message": " Allow this person to join."
+  },
   "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
   },
@@ -184,6 +187,9 @@
   },
   "Reload": {
     "message": " Reload"
+  },
+  "Removefromgroup": {
+    "message": " Remove from group."
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."

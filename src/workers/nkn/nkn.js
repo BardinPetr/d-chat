@@ -77,21 +77,25 @@ class NKN extends permissionsMixin(nkn) {
 		this.wallet = wallet;
 	}
 
-	unsubscribe = async topic => {
+	unsubscribe = async (
+		topic,
+		{ identifier = this.identifier, ...opts } = {}
+	) => {
 		const topicID = genChatID(topic);
-		return this.wallet.unsubscribe(topicID, this.identifier, {
-			fee: 0,
-		});
+		return this.wallet.unsubscribe(topicID, identifier, opts);
 	};
 
 	// Only one suscription per address in the pool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
-	subscribe = async (topic, options = {}) => {
+	subscribe = async (
+		topic,
+		{ settingPermissions, identifier = this.identifier, ...options } = {}
+	) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
 		let isSubbed;
-		if (!options.settingPermissions) {
+		if (!settingPermissions) {
 			isSubbed = await this.isSubscribed(topic);
 		}
 
@@ -103,21 +107,17 @@ class NKN extends permissionsMixin(nkn) {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
-			options.identifier || this.identifier,
+			identifier,
 			JSON.stringify(metadata),
 			options
 		);
 	};
 
-	getSubscription = (topic, addr) =>
+	getSubscription = (topic, addr = this.addr) =>
 		this.defaultClient.getSubscription(genChatID(topic), addr);
 
-	/**
-	 * There is no "memPool: true" argument for this one,
-	 * but we keep track of 'Joined channel.' messages on the other side.
-	 */
-	isSubscribed = topic => {
-		const subInfo = this.getSubscription(topic, this.addr);
+	isSubscribed = (topic, addr = this.addr) => {
+		const subInfo = this.getSubscription(topic, addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
@@ -129,6 +129,10 @@ class NKN extends permissionsMixin(nkn) {
 					return false;
 				}
 				if (info.expiresAt - blockHeight > 5000) {
+					return info;
+				}
+				if (info.expiresAt === 0) {
+					// Going to assume we're in mempool if we get here.
 					return info;
 				}
 				return null;
