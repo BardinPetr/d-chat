@@ -119,6 +119,7 @@
     "nkn-client": "^0.7.3",
     "nkn-multiclient": "^0.1.2",
     "nkn-ordered-multiclient": "git+https://gitlab.com/losnappas/nkn-ordered-multiclient.git",
+    "nkn-permissioned-pubsub": "git+https://gitlab.com/losnappas/nkn-permissioned-pubsub.git",
     "nkn-wallet": "^0.4.8",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "ora": "^3.4.0",

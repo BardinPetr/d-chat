@@ -2,8 +2,8 @@ import nkn from 'nkn-ordered-multiclient';
 import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
-import permissionsMixin from './nkn-permissioned-pubsub-mixin';
-import { isPermissionedTopic } from './nkn-permissioned-pubsub';
+import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
+import { isPermissionedTopic } from 'nkn-permissioned-pubsub';
 
 const FORBLOCKS = 400000;
 const SEED_ADDRESSES = [
