@@ -457,16 +457,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 .x-header-root {
 	border-bottom: 1px solid $link;
-	li:not(.x-topic-tab) {
-		display: flex;
-		align-items: center;
-		.delete {
-			height: 32px;
-			max-height: 32px;
-			max-width: 32px;
-			min-height: 32px;
-			min-width: 32px;
-			width: 32px;
+	.x-topics-list {
+		li {
+			display: flex;
+			align-items: center;
+			.delete {
+				height: 32px;
+				max-height: 32px;
+				max-width: 32px;
+				min-height: 32px;
+				min-width: 32px;
+				width: 32px;
+			}
 		}
 	}
 }

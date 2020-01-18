@@ -10,7 +10,7 @@ import classnames from 'classnames';
 const SubscriberList = ({ subscribers, className, active, onClick }) => {
 
 	return (
-		<div className={className} onClick={onClick}>
+		<div className={`x-subs-list ${className}`} onClick={onClick}>
 			<a
 				className="navbar-link"
 			>
