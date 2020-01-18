@@ -5,14 +5,17 @@
   "s": {
     "message": " < 30 s"
   },
-  "Acceptedtochat": {
-    "message": " Accepted to chat"
+  "Accepttochat": {
+    "message": " Accept to chat"
   },
   "Actionsmenu": {
     "message": " Actions menu"
   },
   "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
+  },
+  "Cannotremoveanadmin": {
+    "message": " Cannot remove an admin"
   },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"d-chat\", for example."
@@ -262,6 +265,9 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
+  },
+  "Youarenotthechanneladmin": {
+    "message": " You are not the channel admin"
   },
   "YourWalletSeed": {
     "message": " Your Wallet Seed"

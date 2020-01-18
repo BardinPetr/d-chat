@@ -194,7 +194,12 @@ const Textarea = ({
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', 'side-by-side', 'fullscreen'] : [{
+					}, '|', 'side-by-side', 'fullscreen', {
+						name: 'is-hidden-desktop',
+						action: editor => onEnterPress(editor.codemirror),
+						className: 'fa fa-paper-plane-o',
+						title: '',
+					}] : [{
 						name: 'emoji',
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',

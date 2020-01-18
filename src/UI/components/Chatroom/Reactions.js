@@ -50,13 +50,14 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 			return acc;
 		}
 
-		return acc[content] = {
-			content: content || 'x',
+		acc[content] = {
+			content: content || '?',
 			_isAck: isAck(reaction),
 			_haveReacted: haveReacted,
 			_count: 1,
 			_title: `${reaction.username}.${reaction.pubKey?.slice(0, 8)}`
 		};
+		return acc;
 	}, {
 		'👍': {
 			content: '👍',

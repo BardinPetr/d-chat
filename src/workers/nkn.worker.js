@@ -104,10 +104,7 @@ onmessage = async ({ data: action }) => {
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
 			data = await NKN.instance
-				.subscribe(topic, {
-					metadata: action.payload.options.metadata,
-					fee: action.payload.options.fee,
-				}).catch(() => false);
+				.subscribe(topic, payload.options).catch(() => false);
 
 			// Only yell out "Joined channel." once in a session.
 			if (!notified[topic] && data !== false) {
@@ -121,7 +118,7 @@ onmessage = async ({ data: action }) => {
 					// TODO should probably send this one without content, then display static content.
 					content: 'Joined channel.',
 				});
-				NKN.instance.publishMessage(topic, data);
+				postMessage(publishMessage(data));
 			}
 			break;
 

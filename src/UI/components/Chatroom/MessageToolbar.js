@@ -5,8 +5,7 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { getWhisperURL } from 'Approot/misc/util';
-import { isPermissionedTopic } from 'nkn-permissioned-pubsub';
+import { getWhisperURL, isPermissionedTopic } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import TipJar from 'Approot/UI/containers/TipJar';
 import AdminActsOn from 'Approot/UI/containers/Admin';

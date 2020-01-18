@@ -89,7 +89,7 @@ export const formatAddr = addr => {
 
 	pubkey = pubkey.slice(0, 8);
 	if (name) {
-		return [name, pubkey].join('.');
+		return name;
 	} else {
 		return pubkey;
 	}
