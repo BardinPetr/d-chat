@@ -10,12 +10,13 @@ const TopicLink = ({ topic, children, textWrapClassName = '', className = '', ac
 		className={className}
 		activeClassName={activeClassName}
 		isActive={() => getTopicFromPathname(location.hash) === topic}
+		draggable={false}
 	>
 		<span className={textWrapClassName}>
 			{!isWhisperTopic(topic) ? (
 				<span className="icon x-topic-icon"><IoIosPeople /></span>
 			): null}
-			<span>{getChatDisplayName(topic)}</span>
+			<span className="x-topic-name">{getChatDisplayName(topic)}</span>
 		</span>
 		{children}
 	</NavLink>

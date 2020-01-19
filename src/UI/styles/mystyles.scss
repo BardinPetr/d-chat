@@ -77,6 +77,12 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	white-space: pre-wrap;
 }
 .x-topic-link {
+	user-select: none;
+	&.is-active {
+		.x-topic-name {
+			user-select: all;
+		}
+	}
 	.x-is-hover-hidden {
 		display: none;
 	}
@@ -498,8 +504,10 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		.x-topic-link {
 			cursor: auto;
 			height: 100%;
-			&.is-active .delete {
-				display: none;
+			&.is-active {
+				.delete {
+					display: none;
+				}
 			}
 		}
 		&-ghost {
