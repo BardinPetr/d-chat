@@ -176,8 +176,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				font-family: $family-monospace;
 			}
 		}
-		/* First 4 will expand downwards. After that, last two expand up. */
-		&:not(:nth-child(-n+4)):nth-last-child(-n+2) .dropdown {
+		/* First 4 will expand downwards. After that, last four expand up. */
+		&:not(:nth-child(-n+4)):nth-last-child(-n+4) .dropdown {
 			&-menu {
 				bottom: 100%; 
 				padding-bottom: 4px; 
@@ -278,8 +278,9 @@ body, html, #root {
 	}
 }
 .x-address {
-	user-select: all;
-
+	&-pubkey {
+		user-select: all;
+	}
 	&-broken {
 		word-break: break-all;
 	}

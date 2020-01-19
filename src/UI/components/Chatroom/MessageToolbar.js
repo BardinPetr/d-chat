@@ -36,13 +36,15 @@ const Toolbar = ({ id, topic, addr }) => {
 					<div className="dropdown-menu" id={key} role="menu">
 						<div className="x-background" onClick={close}></div>
 						<div className="dropdown-content">
-							<TipJar
-								messageID={id}
-								topic={topic}
-								addr={addr}
-								value={5}
-								className="dropdown-item"
-							/>
+							<div onClick={close}>
+								<TipJar
+									messageID={id}
+									topic={topic}
+									addr={addr}
+									value={5}
+									className="dropdown-item"
+								/>
+							</div>
 							<Link
 								to={getWhisperURL(addr)}
 								className="dropdown-item"

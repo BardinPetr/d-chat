@@ -21,7 +21,6 @@ const TipJar = ({ className = '', title, value, topic, addr, dispatch, messageID
 		}));
 	};
 
-	// TODO need to i18n the data-tooltip. Should fix the placeholder feature b4 that.
 	return (
 		<a
 			className={className}

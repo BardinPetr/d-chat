@@ -40,7 +40,7 @@ const Chatroom = ({
 }) => {
 	const [lastReadId, setLastReadId] = useState(unreadMessages[0]);
 	const getSubs = () => getSubscribers(topic);
-	const { start, stop } = useInterval(getSubs, 5 * 1000);
+	const { start, stop } = useInterval(getSubs, 10 * 1000);
 	const mdeInstance = useRef();
 	const [placeholder] = useState(
 		__('Message #topic# as #user_identifier#...')
