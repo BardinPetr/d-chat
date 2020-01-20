@@ -284,9 +284,7 @@ body, html, #root {
 	}
 }
 .x-address {
-	&-pubkey {
-		user-select: all;
-	}
+	user-select: all;
 	&-broken {
 		word-break: break-all;
 	}
