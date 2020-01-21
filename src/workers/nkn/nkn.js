@@ -4,7 +4,7 @@ import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 // import permissionsMixin from './nkn-permissioned-pubsub-mixin';
-import { isPermissionedTopic } from 'nkn-permissioned-pubsub';
+import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 const FORBLOCKS = 400000;
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';

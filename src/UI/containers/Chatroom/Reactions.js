@@ -49,10 +49,10 @@ const Reactions = ({
 	useEffect(() => {
 		if (
 			!messageEvent.reaction
+			|| !mounted
 			|| !topic
 			|| topic !== messageEvent.topic
 			|| messageEvent.reaction.targetID !== messageID
-			|| !mounted
 		) {
 			return;
 		}

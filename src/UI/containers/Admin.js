@@ -3,11 +3,10 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { acceptPermission, removePermission } from 'Approot/redux/actions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { isAdmin } from 'nkn-permissioned-pubsub';
-// import { isAdmin } from 'Approot/workers/nkn/nkn-permissioned-pubsub';
+import { isTopicAdmin } from 'nkn-permissioned-pubsub/util';
 import Switch from 'Approot/UI/components/Switch';
 
-const Admin = ({ accept, amAdmin, isChannelAdmin, remove, isApproved }) => (
+const Admin = ({ accept, amAdmin, remove, isApproved }) => (
 	<div className={classnames('x-toolbar-admin', {
 		'has-text-grey': !amAdmin,
 	})}>
@@ -16,8 +15,8 @@ const Admin = ({ accept, amAdmin, isChannelAdmin, remove, isApproved }) => (
 			className="is-small"
 			onChange={isApproved ? remove : accept}
 			checked={!!isApproved}
-			disabled={!amAdmin || isChannelAdmin}
-			title={amAdmin ? (isChannelAdmin ? __('Cannot remove an admin') : '') : __('You are not the channel admin')}
+			disabled={!amAdmin}
+			title={amAdmin ? '' : __('You are not the channel admin')}
 		/>
 	</div>
 );
@@ -25,8 +24,7 @@ const Admin = ({ accept, amAdmin, isChannelAdmin, remove, isApproved }) => (
 const mapStateToProps = (state, ownProps) => ({
 	isApproved: (state.chatSettings[ownProps.topic]?.subscribers
 		|| []).includes(ownProps.addr),
-	amAdmin: isAdmin(ownProps.topic, state.clients.find(c => c.active).addr),
-	isChannelAdmin: isAdmin(ownProps.topic, ownProps.addr),
+	amAdmin: isTopicAdmin(ownProps.topic, state.clients.find(c => c.active).addr),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

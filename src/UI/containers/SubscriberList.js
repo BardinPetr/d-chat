@@ -8,7 +8,6 @@ import classnames from 'classnames';
 
 // Not the most reusable container.
 const SubscriberList = ({ subscribers, className, active, onClick }) => {
-
 	return (
 		<div className={`x-subs-list ${className}`} onClick={onClick}>
 			<a

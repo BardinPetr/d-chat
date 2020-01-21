@@ -14,9 +14,6 @@
   "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
   },
-  "Cannotremoveanadmin": {
-    "message": " Cannot remove an admin"
-  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"d-chat\", for example."
   },
