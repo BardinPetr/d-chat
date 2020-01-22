@@ -90,6 +90,8 @@ class NKN extends permissionsMixin(nkn) {
 		return this.wallet.unsubscribe(topicID, identifier, opts);
 	};
 
+	getNonce = () => this.wallet.getNonce();
+
 	// Only one suscription per address in the pool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
