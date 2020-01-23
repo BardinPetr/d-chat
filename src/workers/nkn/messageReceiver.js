@@ -5,7 +5,6 @@ let messagesWaitingForConfirmation = [];
 
 export default async function receivingMessage(message) {
 	if (!message.unreceivable) {
-		let posted = false;
 
 		storeMessageToDb(message);
 
@@ -13,15 +12,13 @@ export default async function receivingMessage(message) {
 			messagesWaitingForConfirmation.push(message.id);
 		} else if (messagesWaitingForConfirmation.includes(message.id)) {
 			postMessage(modifyMessage(message));
-			posted = true;
 			// Drop.
 			messagesWaitingForConfirmation = messagesWaitingForConfirmation.filter(
 				id => id !== message.id
 			);
+			return;
 		}
 
-		if (!posted) {
-			postMessage(receiveMessage(message));
-		}
+		postMessage(receiveMessage(message));
 	}
 }

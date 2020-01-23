@@ -5,6 +5,9 @@
   "s": {
     "message": " < 30 s"
   },
+  "Accepttochat": {
+    "message": " Accept to chat"
+  },
   "Actionsmenu": {
     "message": " Actions menu"
   },
@@ -158,6 +161,9 @@
   "OnerecommendedchannelperaddressIfyouhavealreadylistedachannelitwillbeoverwritten": {
     "message": " One recommended channel per address. If you have already listed a channel, it will be overwritten."
   },
+  "Open": {
+    "message": " Open"
+  },
   "Panel": {
     "message": " Panel"
   },
@@ -218,6 +224,9 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
+  "Tipvaluesats": {
+    "message": " Tip #value# sats"
+  },
   "Topic": {
     "message": " Topic"
   },
@@ -253,6 +262,9 @@
   },
   "Wrongpassword": {
     "message": " Wrong password."
+  },
+  "Youarenotthechanneladmin": {
+    "message": " You are not the channel admin"
   },
   "YourWalletSeed": {
     "message": " Your Wallet Seed"

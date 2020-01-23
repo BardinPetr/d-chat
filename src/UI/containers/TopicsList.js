@@ -37,7 +37,7 @@ const Element = ({ hide, chat }) => (
 
 const TopicsList = ({ hide, topics, whispers, labelClassName = '', wrapperClassName = '' }) => (
 	<React.Fragment key="topics-list">
-		<div className={wrapperClassName}>
+		<div className={`x-topics-list x-topics-list-public ${wrapperClassName}`}>
 			<p className={labelClassName}>{__('Channels')}</p>
 			<ul className="menu-list">
 				{topics.map((chat, key) => (
@@ -45,7 +45,7 @@ const TopicsList = ({ hide, topics, whispers, labelClassName = '', wrapperClassN
 				))}
 			</ul>
 		</div>
-		<div className={wrapperClassName}>
+		<div className={`x-topics-list x-topics-list-private ${wrapperClassName}`}>
 			<p className={labelClassName}>{__('Whispers')}</p>
 			<ul className="menu-list">
 				{whispers.map((chat, key) => (

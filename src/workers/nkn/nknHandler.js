@@ -6,6 +6,7 @@ import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN from 'Approot/workers/nkn/nkn';
 import nknWallet from 'nkn-wallet';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
+import { isNotice } from 'Approot/misc/util';
 import {
 	connected,
 } from 'Approot/redux/actions';
@@ -13,7 +14,7 @@ import receiveMessage from './messageReceiver';
 
 function addNKNListeners (client) {
 
-	client.on('ordered-message', (...args) => {
+	client.on('ordered-message', async (...args) => {
 		handleIncomingMessage(...args);
 	});
 	// Do not send ack-messages.
@@ -23,14 +24,19 @@ function addNKNListeners (client) {
 		postMessage(connected());
 		postMessage(getBalance(client.wallet.address));
 	});
-}
 
-async function handleIncomingMessage(src, payload, payloadType) {
-	if (payloadType === PayloadType.TEXT) {
-		const data = payload;
-		const message = new IncomingMessage(data).from(src);
+	async function handleIncomingMessage(src, payload, payloadType) {
+		if (payloadType === PayloadType.TEXT) {
+			const data = payload;
+			const message = new IncomingMessage(data).from(src);
 
-		receiveMessage(message);
+			const permitted =
+				isNotice(message) || await client.Permissions.check(message.topic, src);
+
+			if (permitted) {
+				receiveMessage(message);
+			}
+		}
 	}
 }
 

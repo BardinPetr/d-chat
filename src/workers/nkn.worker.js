@@ -104,10 +104,7 @@ onmessage = async ({ data: action }) => {
 		case 'SUBSCRIBE_TO_CHAT_ALIAS':
 			topic = payload.topic;
 			data = await NKN.instance
-				.subscribe(topic, {
-					metadata: action.payload.options.metadata,
-					fee: action.payload.options.fee,
-				}).catch(() => false);
+				.subscribe(topic, payload.options).catch(() => false);
 
 			// Only yell out "Joined channel." once in a session.
 			if (!notified[topic] && data !== false) {
@@ -121,7 +118,7 @@ onmessage = async ({ data: action }) => {
 					// TODO should probably send this one without content, then display static content.
 					content: 'Joined channel.',
 				});
-				NKN.instance.publishMessage(topic, data);
+				postMessage(publishMessage(data));
 			}
 			break;
 
@@ -133,17 +130,13 @@ onmessage = async ({ data: action }) => {
 		case 'chat/GET_SUBSCRIBERS_ALIAS':
 			topic = payload.topic;
 			NKN.instance
-				.getSubs(topic)
-				.then(({ subscribers, subscribersInTxPool }) => {
-					subscribers = subscribers.concat(subscribersInTxPool);
+				.Permissions.getSubscribers(topic)
+				.then(subscribers => {
 					postMessage(setSubscribers(topic, subscribers));
 				});
 			break;
 
 		case 'nkn/GET_BALANCE_ALIAS':
-			if (!NKN.instance) {
-				return;
-			}
 			NKN.instance.wallet
 				.getBalance()
 				.then(balance => postMessage(setBalance(payload.address, balance)));
@@ -153,6 +146,32 @@ onmessage = async ({ data: action }) => {
 			topic = payload.topic;
 			data = await NKN.instance.fetchSubscriptions(topic);
 			postMessage(setSubscriptionInfos(topic, data));
+			break;
+
+		case 'chat/ACCEPT_TO_CHATROOM_ALIAS':
+			topic = payload.topic;
+			NKN.instance.Permissions.accept(topic, payload.addr)
+				.then(() => {
+					const message = new OutgoingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						content: `Accepted user ${payload.addr}.`,
+					});
+					postMessage(publishMessage(message));
+				});
+			break;
+
+		case 'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS':
+			topic = payload.topic;
+			NKN.instance.Permissions.remove(topic, payload.addr)
+				.then(() => {
+					const message = new OutgoingMessage({
+						contentType: 'dchat/subscribe',
+						topic,
+						content: `Kicked user ${payload.addr}.`,
+					});
+					postMessage(publishMessage(message));
+				});
 			break;
 
 		default:

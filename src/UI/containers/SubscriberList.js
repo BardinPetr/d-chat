@@ -8,13 +8,12 @@ import classnames from 'classnames';
 
 // Not the most reusable container.
 const SubscriberList = ({ subscribers, className, active, onClick }) => {
-
 	return (
-		<div className={className} onClick={onClick}>
+		<div className={`x-subs-list ${className}`} onClick={onClick}>
 			<a
 				className="navbar-link"
 			>
-				{subscribers.length}<span className="is-hidden-touch">&nbsp;{__('people chatting')}</span>
+				{subscribers.length}<span className="is-hidden-tablet">&nbsp;{__('people chatting')}</span>
 			</a>
 			<div className={classnames('x-has-max-width x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !active,

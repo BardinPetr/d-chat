@@ -18,7 +18,8 @@ import uuidv4 from 'uuid/v4';
  *   contentType: 'text',
  *   content: 'some _markdown_ format text',
  *   id: '{123-321-3213-21435tr}', // uuidv4(). Do not use uuidv1, because it will create duplicates.
- *   topic: 'topic-name-without-hash',
+ *   // D-Chat has some issues with percentage signs in topic names, because of url encoding.
+ *   topic: 'topic name',
  *   // Older versions used .toUTCString(), so do take care before assuming it is integer.
  *   timestamp: ${Date.now()},
  * }
@@ -35,6 +36,10 @@ import uuidv4 from 'uuid/v4';
  * the message in the topic chatroom. It is not used in D-Chat for anything yet, -
  * and is mostly optional for now.
  * D-Chat adds it in nkn/nkn.js: `sendMessage()`.
+ *
+ * After receiving a message that wants confirmation that it was received  (ex. whisper), -
+ * you should send a receipt to the sender. Sames as text message, except no `content`, and -
+ * contentType is set to 'recepit'.
  *
  * Aside from 'text', 'reaction', and 'media', there are also contentTypes:
  * - 'dchat/subscribe', that is used when announcing -

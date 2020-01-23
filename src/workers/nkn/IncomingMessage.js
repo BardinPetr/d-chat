@@ -71,13 +71,13 @@ class IncomingMessage extends Message {
 	// Firefox with privacy.resistFingerprinting has reduced time precision -
 	// of 100ms, which makes Date.now() create dupes, -
 	// and then messages get shuffled on startup. Workaround.
-	static nonce = 0.0001;
+	static nonce = 0.001;
 
 	constructor(message) {
 		super(message);
 
 		this.createdAt = Date.now() + IncomingMessage.nonce;
-		IncomingMessage.nonce += 0.0001;
+		IncomingMessage.nonce += 0.001;
 
 		this.receivedAs = NKN.instance.addr;
 
@@ -107,11 +107,11 @@ class IncomingMessage extends Message {
 				}));
 
 				/**
-				 * Add space before to avoid bug where -
-				 * things like "https://example.org/![](data:LONG_LONG_LONG)" -
+				 * Add space to avoid bug like -
+				 * "https://example.org/![](data:LONG_LONG_LONG)" -
 				 * would prevent data url from getting parsed and removed, ruining chat history.
 				 */
-				this.content = this.content.replace('![]', ' ![]');
+				this.content = this.content.replace('![', ' ![');
 			}
 
 			// Sanitize first so we only use markdown stuff.

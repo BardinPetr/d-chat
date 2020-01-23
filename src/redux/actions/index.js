@@ -2,7 +2,6 @@
  * Contains almost all actions.
  */
 import {
-	getWhisperTopic,
 	getChatName,
 	getWhisperRecipient,
 } from 'Approot/misc/util';
@@ -51,9 +50,6 @@ export const setSubscribers = (topic, subscribers) => ({
 		subscribers,
 	},
 });
-
-export const enterPrivateChat = recipient =>
-	createChat(getWhisperTopic(recipient));
 
 // Join chat dispatches createChat and subscribeToChat.
 export const joinChat = topic => ({
@@ -196,6 +192,22 @@ export const muteChat = (topic, muted) => ({
 export const removeActiveTopic = topic => ({
 	type: 'ui/REMOVE_ACTIVE_TOPIC',
 	payload: {
+		topic,
+	},
+});
+
+// Permissioned pubsub.
+export const acceptPermission = (addr, topic) => ({
+	type: 'chat/ACCEPT_TO_CHATROOM_ALIAS',
+	payload: {
+		addr,
+		topic,
+	},
+});
+export const removePermission = (addr, topic) => ({
+	type: 'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS',
+	payload: {
+		addr,
 		topic,
 	},
 });

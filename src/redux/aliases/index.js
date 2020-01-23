@@ -2,6 +2,7 @@ import {
 	createChat,
 	subscribeToChat,
 } from '../actions';
+import { isPublicTopic } from 'Approot/misc/util';
 import passworder from 'browser-passworder';
 
 // TODO maybe remove auto-login?
@@ -54,7 +55,9 @@ const joinChat = originalAction => dispatch => {
 	const topic = originalAction.payload.topic;
 	if (topic) {
 		dispatch(createChat(topic));
-		dispatch(subscribeToChat(topic));
+		if (isPublicTopic(topic)) {
+			dispatch(subscribeToChat(topic));
+		}
 	}
 };
 
@@ -70,6 +73,8 @@ export default {
 	'chat/MAYBE_OFFER_SUBSCRIBE_ALIAS': delegateToWorker,
 	'chat/FETCH_SUBSCRIPTION_INFOS_ALIAS': delegateToWorker,
 	'chat/UNSUBSCRIBE_ALIAS': delegateToWorker,
+	'chat/ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
+	'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
 };

@@ -14,7 +14,11 @@ const DotDotDot = ({ className = '', children, ...props }) => {
 
 	return (
 		<>
-			<a {...props} className={className} onClick={() => setExpanded(true)}>
+			<a
+				{...props}
+				className={className}
+				onClick={() => setExpanded(true)}
+			>
 				<div className="icon">
 					<IoMdMore className="is-size-3" />
 				</div>
@@ -25,7 +29,9 @@ const DotDotDot = ({ className = '', children, ...props }) => {
 				contentLabel={__('Actions menu')}
 				className="x-modal x-dot-dot-dot-container"
 			>
-				<div className="x-dot-dot-dot">
+				<div
+					className="x-dot-dot-dot"
+				>
 					<div className="menu">
 						<ul className="menu-list" onClick={() => setExpanded(false)}>
 							{children}

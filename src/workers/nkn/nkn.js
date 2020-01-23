@@ -2,56 +2,60 @@ import nkn from 'nkn-ordered-multiclient';
 import nknWallet from 'nkn-wallet';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
 import rpcCall from 'nkn-client/lib/rpc';
+import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
+// import permissionsMixin from './nkn-permissioned-pubsub-mixin';
+import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 const FORBLOCKS = 400000;
+const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
 const SEED_ADDRESSES = [
-	'http://mainnet-seed-0001.nkn.org:30003',
-	'http://mainnet-seed-0002.nkn.org:30003',
-	'http://mainnet-seed-0003.nkn.org:30003',
-	'http://mainnet-seed-0004.nkn.org:30003',
-	'http://mainnet-seed-0005.nkn.org:30003',
-	'http://mainnet-seed-0006.nkn.org:30003',
-	'http://mainnet-seed-0007.nkn.org:30003',
-	'http://mainnet-seed-0008.nkn.org:30003',
-	'http://mainnet-seed-0009.nkn.org:30003',
-	'http://mainnet-seed-0010.nkn.org:30003',
-	'http://mainnet-seed-0011.nkn.org:30003',
-	'http://mainnet-seed-0012.nkn.org:30003',
-	'http://mainnet-seed-0013.nkn.org:30003',
-	'http://mainnet-seed-0014.nkn.org:30003',
-	'http://mainnet-seed-0015.nkn.org:30003',
-	'http://mainnet-seed-0016.nkn.org:30003',
-	'http://mainnet-seed-0017.nkn.org:30003',
-	'http://mainnet-seed-0018.nkn.org:30003',
-	'http://mainnet-seed-0019.nkn.org:30003',
-	'http://mainnet-seed-0020.nkn.org:30003',
-	'http://mainnet-seed-0021.nkn.org:30003',
-	'http://mainnet-seed-0022.nkn.org:30003',
-	'http://mainnet-seed-0023.nkn.org:30003',
-	'http://mainnet-seed-0024.nkn.org:30003',
-	'http://mainnet-seed-0025.nkn.org:30003',
-	'http://mainnet-seed-0026.nkn.org:30003',
-	'http://mainnet-seed-0027.nkn.org:30003',
-	'http://mainnet-seed-0028.nkn.org:30003',
-	'http://mainnet-seed-0029.nkn.org:30003',
-	'http://mainnet-seed-0030.nkn.org:30003',
-	'http://mainnet-seed-0031.nkn.org:30003',
-	'http://mainnet-seed-0032.nkn.org:30003',
-	'http://mainnet-seed-0033.nkn.org:30003',
-	'http://mainnet-seed-0034.nkn.org:30003',
-	'http://mainnet-seed-0035.nkn.org:30003',
-	'http://mainnet-seed-0036.nkn.org:30003',
-	'http://mainnet-seed-0037.nkn.org:30003',
-	'http://mainnet-seed-0038.nkn.org:30003',
-	'http://mainnet-seed-0039.nkn.org:30003',
-	'http://mainnet-seed-0040.nkn.org:30003',
-	'http://mainnet-seed-0041.nkn.org:30003',
-	'http://mainnet-seed-0042.nkn.org:30003',
-	'http://mainnet-seed-0043.nkn.org:30003',
-	'http://mainnet-seed-0044.nkn.org:30003',
+	'//mainnet-seed-0001.nkn.org:30003',
+	'//mainnet-seed-0002.nkn.org:30003',
+	'//mainnet-seed-0003.nkn.org:30003',
+	'//mainnet-seed-0004.nkn.org:30003',
+	'//mainnet-seed-0005.nkn.org:30003',
+	'//mainnet-seed-0006.nkn.org:30003',
+	'//mainnet-seed-0007.nkn.org:30003',
+	'//mainnet-seed-0008.nkn.org:30003',
+	'//mainnet-seed-0009.nkn.org:30003',
+	'//mainnet-seed-0010.nkn.org:30003',
+	'//mainnet-seed-0011.nkn.org:30003',
+	'//mainnet-seed-0012.nkn.org:30003',
+	'//mainnet-seed-0013.nkn.org:30003',
+	'//mainnet-seed-0014.nkn.org:30003',
+	'//mainnet-seed-0015.nkn.org:30003',
+	'//mainnet-seed-0016.nkn.org:30003',
+	'//mainnet-seed-0017.nkn.org:30003',
+	'//mainnet-seed-0018.nkn.org:30003',
+	'//mainnet-seed-0019.nkn.org:30003',
+	'//mainnet-seed-0020.nkn.org:30003',
+	'//mainnet-seed-0021.nkn.org:30003',
+	'//mainnet-seed-0022.nkn.org:30003',
+	'//mainnet-seed-0023.nkn.org:30003',
+	'//mainnet-seed-0024.nkn.org:30003',
+	'//mainnet-seed-0025.nkn.org:30003',
+	'//mainnet-seed-0026.nkn.org:30003',
+	'//mainnet-seed-0027.nkn.org:30003',
+	'//mainnet-seed-0028.nkn.org:30003',
+	'//mainnet-seed-0029.nkn.org:30003',
+	'//mainnet-seed-0030.nkn.org:30003',
+	'//mainnet-seed-0031.nkn.org:30003',
+	'//mainnet-seed-0032.nkn.org:30003',
+	'//mainnet-seed-0033.nkn.org:30003',
+	'//mainnet-seed-0034.nkn.org:30003',
+	'//mainnet-seed-0035.nkn.org:30003',
+	'//mainnet-seed-0036.nkn.org:30003',
+	'//mainnet-seed-0037.nkn.org:30003',
+	'//mainnet-seed-0038.nkn.org:30003',
+	'//mainnet-seed-0039.nkn.org:30003',
+	'//mainnet-seed-0040.nkn.org:30003',
+	'//mainnet-seed-0041.nkn.org:30003',
+	'//mainnet-seed-0042.nkn.org:30003',
+	'//mainnet-seed-0043.nkn.org:30003',
+	'//mainnet-seed-0044.nkn.org:30003',
 ];
 const getRandomSeed = () =>
-	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
+	PROTOCOL + SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
 const randomSeed = getRandomSeed();
 
 nknWallet.configure({
@@ -61,7 +65,7 @@ nknWallet.configure({
 /**
  * Couple of helpers for nkn module.
  */
-class NKN extends nkn {
+class NKN extends permissionsMixin(nkn) {
 	constructor({ wallet, username }) {
 		// TODO : connection fail here will majorly break things.
 		super({
@@ -70,26 +74,39 @@ class NKN extends nkn {
 			seed: wallet.getSeed(),
 			seedRpcServerAddr: randomSeed,
 			msgHoldingSeconds: 3999999999,
+		}, {
+			startTimeout: 4000,
+			timeout: 10,
 		});
 
 		this.wallet = wallet;
 	}
 
-	unsubscribe = async topic => {
+	unsubscribe = async (
+		topic,
+		{ identifier = this.identifier, ...opts } = {}
+	) => {
 		const topicID = genChatID(topic);
-		return this.wallet.unsubscribe(topicID, this.identifier, {
-			fee: 0,
-		});
+		return this.wallet.unsubscribe(topicID, identifier, opts);
 	};
+
+	getNonce = () => this.wallet.getNonce();
 
 	// Only one suscription per address in the pool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
-	subscribe = async (topic, options = {}) => {
+	subscribe = async (
+		topic,
+		{ settingPermissions, identifier = this.identifier, ...options } = {}
+	) => {
 		const metadata = options.metadata;
 		const topicID = genChatID(topic);
-		const isSubbed = await this.isSubscribed(topic);
+		let isSubbed;
+		if (!settingPermissions) {
+			isSubbed = await this.isSubscribed(topic);
+		}
 
+		// Always resub the public topic list when we're adding our thing.
 		if (isSubbed && topic !== DCHAT_PUBLIC_TOPICS) {
 			throw 'Too soon';
 		}
@@ -97,19 +114,17 @@ class NKN extends nkn {
 		return this.wallet.subscribe(
 			topicID,
 			FORBLOCKS,
-			this.identifier,
+			identifier,
 			JSON.stringify(metadata),
 			options
 		);
 	};
 
-	/**
-	 * There is no "memPool: true" argument for this one,
-	 * but we keep track of 'Joined channel.' messages on the other side.
-	 */
-	isSubscribed = topic => {
-		const topicID = genChatID(topic);
-		const subInfo = this.defaultClient.getSubscription(topicID, this.addr);
+	getSubscription = (topic, addr = this.addr) =>
+		this.defaultClient.getSubscription(genChatID(topic), addr);
+
+	isSubscribed = (topic, addr = this.addr) => {
+		const subInfo = this.getSubscription(topic, addr);
 		const latestBlockHeight = rpcCall(
 			this.defaultClient.options.seedRpcServerAddr,
 			'getlatestblockheight',
@@ -132,11 +147,12 @@ class NKN extends nkn {
 			txPool: true,
 			...options,
 		};
-		try {
-			return this.publish(genChatID(topic), JSON.stringify(message), options);
-		} catch (e) {
-			console.error('Error when publishing', e);
-			throw e;
+
+		if (isPermissionedTopic(topic)) {
+			const subs = await this.Permissions.getSubscribers(topic);
+			return this.sendMessage(subs, message);
+		} else {
+			return this.publish(genChatID(topic), JSON.stringify(message), options).catch(() => {});
 		}
 	};
 
@@ -144,13 +160,16 @@ class NKN extends nkn {
 		if (to === this.addr) {
 			return;
 		}
-		// Add this every time for now.
-		message.isPrivate = true;
-		// Ignore errors.
-		return this.send(to, JSON.stringify(message), options).catch(() => {});
+
+		if (!Array.isArray(to)) {
+			// Whisper
+			message.isPrivate = true;
+		}
+
+		return this.send(to, JSON.stringify(message), options).catch(() => { });
 	};
 
-	getSubs = (topic, options = {}) => {
+	getSubscribers = (topic, options = {}) => {
 		options = {
 			offset: 0,
 			limit: 1000,
@@ -168,7 +187,7 @@ class NKN extends nkn {
 	 * @return [{user, data}]
 	 */
 	fetchSubscriptions = async topic => {
-		const subs = await this.getSubs(topic, {
+		const subs = await this.getSubscribers(topic, {
 			meta: true,
 		});
 

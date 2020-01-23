@@ -7,8 +7,8 @@ import LoginBox from 'Approot/UI/containers/LoginBox';
 import Portals from 'Approot/UI/components/Portals';
 import 'Approot/UI/styles/mystyles.scss';
 import history from 'Approot/UI/history';
-import { joinChat, enterPrivateChat, navigated } from 'Approot/redux/actions';
-import { IS_SIDEBAR, getTopicFromPathname, isWhisperTopic } from 'Approot/misc/util';
+import { joinChat, navigated } from 'Approot/redux/actions';
+import { IS_SIDEBAR, getTopicFromPathname } from 'Approot/misc/util';
 
 const App = async (store) => {
 	/**
@@ -16,17 +16,13 @@ const App = async (store) => {
 	 * Very separated from other logic, but it's fine.
 	 */
 	const subscribeToChatOnNavigation = () => {
-		let topic = getTopicFromPathname(location.hash);
+		const topic = getTopicFromPathname(location.hash);
 
 		if (topic == null) {
 			return;
 		}
 
-		if (isWhisperTopic(topic)) {
-			store.dispatch(enterPrivateChat(topic));
-		} else {
-			store.dispatch(joinChat(topic));
-		}
+		store.dispatch(joinChat(topic));
 	};
 
 	history.listen(() => {

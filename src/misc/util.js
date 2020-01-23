@@ -89,7 +89,7 @@ export const formatAddr = addr => {
 
 	pubkey = pubkey.slice(0, 8);
 	if (name) {
-		return [name, pubkey].join('.');
+		return name;
 	} else {
 		return pubkey;
 	}
@@ -176,4 +176,16 @@ export function getTopicFromPathname(pathname) {
 		case '/whisper/':
 			return getWhisperTopic(topic);
 	}
+}
+
+export function isPermissionedTopic(topic) {
+	if (isWhisperTopic(topic)) {
+		return false;
+	}
+	topic = topic.slice(topic.lastIndexOf('.') + 1);
+	return topic.length === 64 && topic.slice(topic.lastIndexOf('.') + 1);
+}
+
+export function isPublicTopic(topic) {
+	return !isWhisperTopic(topic);
 }

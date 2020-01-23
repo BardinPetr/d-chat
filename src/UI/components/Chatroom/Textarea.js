@@ -97,7 +97,9 @@ const Textarea = ({
 					} else if (word.startsWith('@')) {
 						// Subs autocomplete.
 						const theWord = word.slice(1);
-						const things = subs.filter(sub => sub.startsWith(theWord)).map(sub => ({
+						const things = subs.filter(sub => sub.toLowerCase().startsWith(
+							theWord.toLowerCase())
+						).map(sub => ({
 							text: mention(sub) + ' ',
 							displayText: formatAddr(sub)
 						}));
@@ -192,7 +194,12 @@ const Textarea = ({
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',
 						title: '',
-					}, '|', 'side-by-side', 'fullscreen'] : [{
+					}, '|', 'side-by-side', 'fullscreen', {
+						name: 'is-hidden-desktop',
+						action: editor => onEnterPress(editor.codemirror),
+						className: 'fa fa-paper-plane-o',
+						title: '',
+					}] : [{
 						name: 'emoji',
 						action: () => setEmojiPickerVisible(true),
 						className: 'fa fa-smile-o',

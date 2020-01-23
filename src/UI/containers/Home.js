@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info-APP_TARGET';
-import { getChatURL, getWhisperURL, isWhisperTopic, getWhisperRecipient } from 'Approot/misc/util';
+import { parseAddr, getChatURL, getWhisperURL, isWhisperTopic, getWhisperRecipient } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import history from 'Approot/UI/history';
 import Version from 'Approot/UI/components/Version';
@@ -50,6 +50,17 @@ const NewTopicForm = ({ privateChat }) => {
 	);
 };
 
+const Address = ({ addr }) => {
+	const [name, key] = parseAddr(addr);
+	return (
+		<span className="x-address-broken x-address has-text-black">
+			<span className="x-address-identifier">{name}</span>
+			{name && '.'}
+			<span className="x-address-pubkey">{key}</span>
+		</span>
+	);
+};
+
 const Home = ({ client, getBalance }) => (
 	<div className="container">
 		<div className="">
@@ -68,7 +79,9 @@ const Home = ({ client, getBalance }) => (
 								</ModalOpener>
 							</span>
 						</div>
-						<p className="x-address-broken x-address has-text-black">{client.addr}</p>
+						<p>
+							<Address addr={client.addr} />
+						</p>
 					</div>
 
 					<hr className="is-divider" />
