@@ -210,6 +210,13 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				visibility: visible !important;
 			}
 		}
+		.level-left {
+			width: 100%;
+			.level-item {
+				max-width: 100%;
+				word-break: break-word;
+			}
+		}
 	}
 
 	.x-me {

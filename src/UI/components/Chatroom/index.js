@@ -1,12 +1,14 @@
 /**
  * Contains messages list + submit box.
+ *
+ * Handles unread messages stuff as well.
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import useInterval from '@rooks/use-interval';
 import truncate from 'truncate';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, getChatDisplayName, formatAddr } from 'Approot/misc/util';
+import { mention, getChatDisplayName } from 'Approot/misc/util';
 import Messages from 'Approot/UI/containers/Chatroom/Messages';
 import Textarea from 'Approot/UI/components/Chatroom/Textarea';
 
@@ -45,7 +47,7 @@ const Chatroom = ({
 	const [placeholder] = useState(
 		__('Message #topic# as #user_identifier#...')
 			.replace('#topic#', truncate(getChatDisplayName(topic), 8))
-			.replace('#user_identifier#', formatAddr(client.addr))
+			.replace('#user_identifier#', client.addr.slice(0, 8))
 	);
 
 	useEffect(() => {
@@ -164,7 +166,6 @@ const Chatroom = ({
 				subs={subs}
 				topic={topic}
 			/>
-
 		</div>
 	);
 };

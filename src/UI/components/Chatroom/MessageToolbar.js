@@ -21,6 +21,9 @@ const Toolbar = ({ id, topic, addr }) => {
 		<div className="x-toolbar-content x-is-padding-left">
 			<div className={classnames('dropdown x-toolbar-buttons', {
 				'is-active': open,
+				// When identifier is over 20 chars, expand the other way to avoid
+				// going over chat area. 64 chars for PK.
+				'is-right': addr.length > 64 + 20,
 			})}>
 				<div className="dropdown-trigger">
 					<a
