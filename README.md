@@ -30,7 +30,9 @@ D-Chat is free to use, you do not need coins for anything at this point.
 
 ## Installation
 
-`git submodule init --recursive`
+`git submodule init`
+
+`git submodule update`
 
 `npm install`
 
@@ -49,10 +51,6 @@ and for web version:
 Forked from https://github.com/web3infra/dchat .
 
 React boilerplate from https://github.com/kryptokinght/react-extension-boilerplate .
-
-## Contributing
-
-Send a merge request if you've got something nice. Make issues and so forth. All help is appreciated.
 
 ## Supporting
 

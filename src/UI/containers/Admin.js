@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { acceptPermission, removePermission } from 'Approot/redux/actions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { isTopicAdmin } from 'nkn-permissioned-pubsub/lib/util';
+import { isTopicAdmin } from 'nkn-permissioned-pubsub/util';
 import Switch from 'Approot/UI/components/Switch';
 
 const Admin = ({ accept, amAdmin, remove, isApproved }) => (
