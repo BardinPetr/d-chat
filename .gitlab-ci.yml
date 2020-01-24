@@ -23,7 +23,7 @@ stages:
 install:
   stage: build
   script:
-    - npm install --silent
+    - npm install
 
 build_zip:
   stage: build
