@@ -9,6 +9,43 @@ import classnames from 'classnames';
 import TimeAgo from './TimeAgo';
 import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
+import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
+import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+
+/**
+ * Message contents have been sanitized on arrival.
+ * See `workers/nkn/IncomingMessage.js`
+ */
+const MessageContent = ({ message }) => {
+	const isMedia = message.contentType === 'media';
+	const deleted = message.deleted && !message.isNotConfirmed;
+
+	if (deleted) {
+		return (
+			<div className="content">
+				<p>
+					<span className="has-text-danger is-italic">
+						&lt;&nbsp;{__('Deleted message.')}&nbsp;&gt;
+					</span>
+				</p>
+			</div>
+		);
+	} else if (isMedia) {
+		return (
+			<MediaMessage
+				content={message.content}
+				attachments={message.attachments || []}
+			/>
+		);
+	}
+
+	return (
+		<div
+			className="content"
+			dangerouslySetInnerHTML={{ __html: message.content || '' }}
+		></div>
+	);
+};
 
 const Nickname = ({
 	addr,
@@ -61,7 +98,7 @@ const Message = ({
 		message.contentType,
 	);
 
-	const isMedia = message.contentType === 'media';
+	const awaitsDeletion = message.deleted && message.isNotConfirmed;
 
 	return (
 		<div
@@ -97,22 +134,16 @@ const Message = ({
 				</div>
 			)}
 
-			<div className="message-body x-is-small-padding">
-				{/* Message contents are sanitized on arrival. See `workers/nkn/IncomingMessage.js` */}
-				{ isMedia ?
-					(
-						<MediaMessage
-							content={message.content}
-							attachments={message.attachments || []}
-						/>
-					) : (
-						<div
-							className="content"
-							dangerouslySetInnerHTML={{ __html: message.content }}
-						></div>
-					)
-				}
-				{children}
+			<div className={classnames('message-body x-is-small-padding', {
+				'has-text-danger': awaitsDeletion,
+			})}>
+				<MessageContent message={message} />
+				{children /* Reactions */}
+				<div className="x-message-toolbar-side x-is-hover">
+					<MessageActions
+						message={message}
+					/>
+				</div>
 			</div>
 		</div>
 	);

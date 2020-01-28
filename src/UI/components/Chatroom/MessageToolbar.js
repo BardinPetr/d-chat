@@ -43,8 +43,7 @@ const Toolbar = ({ id, topic, addr }) => {
 								<TipJar
 									messageID={id}
 									topic={topic}
-									addr={addr}
-									value={5}
+									recipientAddr={addr}
 									className="dropdown-item"
 								/>
 							</div>

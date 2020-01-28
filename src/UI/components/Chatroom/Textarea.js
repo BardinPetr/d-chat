@@ -144,6 +144,11 @@ const Textarea = ({
 	const setRef = i => mdeInstance.current = i;
 	const onSelect = emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native);
 
+	const onSubmit = editor => {
+		onEnterPress(editor.codemirror);
+		editor.codemirror.focus();
+	};
+
 	// Without key={topic}, things go wrong. No idea how to fix that.
 	return (
 		<React.Fragment>
@@ -177,8 +182,8 @@ const Textarea = ({
 						sbOnUploaded: __('Uploaded #image_name#.'),
 					},
 					autosave: {
-						enabled: true,
-						// TODO maybe manually save instead? Have to experiment.
+						// Only autosave in the popup, since it is not too reliable.
+						enabled: !IS_SIDEBAR,
 						delay: 1500,
 						uniqueId: 'main-textarea',
 					},
@@ -196,7 +201,7 @@ const Textarea = ({
 						title: '',
 					}, '|', 'side-by-side', 'fullscreen', {
 						name: 'is-hidden-desktop',
-						action: editor => onEnterPress(editor.codemirror),
+						action: onSubmit,
 						className: 'fa fa-paper-plane-o',
 						title: '',
 					}] : [{
@@ -206,7 +211,7 @@ const Textarea = ({
 						title: '',
 					}, {
 						name: 'submit',
-						action: editor => onEnterPress(editor.codemirror),
+						action: onSubmit,
 						className: 'fa fa-paper-plane-o',
 						title: '',
 					}]

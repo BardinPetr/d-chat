@@ -86,6 +86,12 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
+		if (message.contentType === 'message/delete') {
+			this.modifications = {
+				deleted: true
+			};
+		}
+
 		// Handling receipts as reactions.
 		if (this.contentType === 'receipt') {
 			this.contentType = 'reaction';

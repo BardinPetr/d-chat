@@ -4,16 +4,16 @@ import { connect } from 'react-redux';
 import { newTransaction } from 'Approot/redux/actions/client';
 import { FaDollarSign } from 'react-icons/fa';
 
-const TipJar = ({ className = '', title, value, topic, addr, dispatch, messageID }) => {
+const TipJar = ({ className = '', title, value = 5, topic, recipientAddr, dispatch, messageID }) => {
 
 	const send = () => {
-		if (!addr) {
+		if (!recipientAddr) {
 			return;
 		}
 		// A nice way would be to get `.then()` working, and send a regular reaction.
 		// However, with the worker setup, it's not so feasible.
 		dispatch(newTransaction({
-			recipient: addr,
+			recipient: recipientAddr,
 			content: '🏴‍☠️',
 			targetID: messageID,
 			value,

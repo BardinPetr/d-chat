@@ -1,5 +1,6 @@
 $primary: #1791f2;
 $secondary: #233a9a;
+$danger: hsl(347.9, 46%, 48.6%);
 $info: rgba(29,155,209,.1);
 $tablet: 680px;
 $desktop: 1024px;
@@ -19,7 +20,7 @@ $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 30%;
-$message-content-width: 98%;
+$message-content-width: 90%;
 /**
  * Added stuff after sans-serif for emojis.
  */
@@ -161,14 +162,23 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		img, video {
 			height: 300px;
 		}
+		.x-message-toolbar-side {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+		}
 		.x-reactions {
 			display: flex;
 			user-select: none;
 			.x-is-first-reaction {
-				right: 0.5em;
-				bottom: 0.25em;
+				right: 2.15rem;
+				bottom: 1px;
+				height: 1.75rem !important;
+				line-height: 1;
 				position: absolute;
-				box-sizing: content-box !important;
+				&:hover {
+					background-color: $grey-lighter;
+				}
 			}
 			&-reacted {
 				cursor: default;
@@ -482,6 +492,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 				min-height: 32px;
 				min-width: 32px;
 				width: 32px;
+			}
+			a {
+				width: 100%;
 			}
 		}
 	}

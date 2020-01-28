@@ -4,6 +4,7 @@
 import {
 	getChatName,
 	getWhisperRecipient,
+	isWhisper,
 } from 'Approot/misc/util';
 
 // So that next time you open popup, it continues where you left off.
@@ -91,6 +92,14 @@ export const publishMessage = message => ({
 	},
 });
 
+// Creates message based on the topic.
+// Flipside is that topics like `/whisper/x` will be treated as whispers instead, -
+// but ehh, kind of an edge case.
+export const createMessage = message =>
+	isWhisper(message)
+		? sendPrivateMessage(message)
+		: publishMessage(message);
+
 export const receiveMessage = message => {
 	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';
@@ -170,14 +179,6 @@ export const setSubscriptionInfos = (topic, data) => ({
 	payload: {
 		topic,
 		data,
-	},
-});
-
-export const removeMessageById = (topic, id) => ({
-	type: 'chat/REMOVE_MESSAGE_BY_ID',
-	payload: {
-		topic,
-		id,
 	},
 });
 

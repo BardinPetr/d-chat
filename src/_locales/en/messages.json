@@ -50,6 +50,12 @@
   "DChatversion": {
     "message": " D-Chat version"
   },
+  "Deletemessage": {
+    "message": " Delete message"
+  },
+  "Deletedmessage": {
+    "message": " Deleted message."
+  },
   "Description": {
     "message": " Description"
   },

@@ -35,6 +35,10 @@ const getUnreadMessages = state => {
 };
 
 const shouldNotify = message => !(isNotice(message) || message.isMe || message.isSeen);
+const wantsAck = msg =>
+	!isNotice(msg)
+	&& !['message/delete'].includes(msg.contentType)
+	&& isWhisper(msg);
 
 const notifier = store => next => action => {
 	const message = action.payload?.message;
@@ -52,7 +56,7 @@ const notifier = store => next => action => {
 			) {
 				store.dispatch(markUnread(message.topic, message));
 			}
-			if (isWhisper(message) && !isNotice(message)) {
+			if (wantsAck(message)) {
 				sendAck(message);
 			}
 			break;

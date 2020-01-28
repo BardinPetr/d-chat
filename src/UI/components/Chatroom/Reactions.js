@@ -10,13 +10,18 @@ const Reaction = ({ reaction, addReaction }) => (
 			'x-reactions-reacted': reaction._haveReacted,
 			'x-is-first-reaction': reaction._count === 0,
 			'is-rounded': reaction._count === 0,
+			'is-large': reaction._count === 0,
+			'is-light': reaction._count === 0,
+			'is-hovered': reaction._count === 0,
 			'x-is-hover': reaction._count === 0,
 		})}
 		disabled={reaction._haveReacted}
 		onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
 		type="button"
 	>
-		<span>
+		<span className={classnames('', {
+			'is-size-5': reaction._count === 0,
+		})}>
 			{reaction.content}
 		</span>
 		{reaction._count > 0 && (
