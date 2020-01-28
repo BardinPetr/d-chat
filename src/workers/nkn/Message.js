@@ -39,15 +39,29 @@ import uuidv4 from 'uuid/v4';
  *
  * After receiving a message that wants confirmation that it was received  (ex. whisper), -
  * you should send a receipt to the sender. Sames as text message, except no `content`, and -
- * contentType is set to 'recepit'.
+ * contentType is set to 'receipt'.
  *
- * Aside from 'text', 'reaction', and 'media', there are also contentTypes:
+ * Summing up a list of contentTypes used by D-Chat:
+ * - dchat/subscribe
+ * - media
+ * - message/delete
+ * - reaction
+ * - receipt
+ * - text
+ *
+ * And on pause:
+ * - nkn/tip
+ * - background
+ * - heartbeat
+ *
+ * About the use of each contentType:
  * - 'dchat/subscribe', that is used when announcing -
  *   joining the chat. In D-Chat, receiving one triggers a "getSubscribers".
  * - 'receipt', that is is like reaction without content.
- *   Receipt is used for notifying "message received".
+ *   It is used for notifying "message received".
  * - 'nkn/tip': was used before but not currently, but might make a -
  *   comeback at some point in time.
+ * - 'message/delete': Deletes (hides, actually) a message by targetID.
  *
  * For messages that don't want user reaction, you might use `contentType: 'background'`.
  *

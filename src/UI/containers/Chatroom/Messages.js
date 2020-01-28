@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useCallback, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
 import { loadMessagesFromDb, PAGE_SIZE } from 'Approot/database/messages';
@@ -37,7 +37,7 @@ const Messages = ({
 	const [messages, dispatch] = useReducer(reducer, []);
 	const [hasMore, setHasMore] = useState(true);
 
-	const loadMore = () => {
+	const loadMore = useCallback(() => {
 		if (!topic) {
 			return;
 		}
@@ -55,7 +55,7 @@ const Messages = ({
 			}
 			dispatch({ type: 'old', payload: prevMessages });
 		});
-	};
+	}, [topic, messages[0]]);
 
 	useEffect(() => {
 		if (

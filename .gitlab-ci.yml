@@ -23,12 +23,13 @@ stages:
 install:
   stage: build
   script:
+    - npm --version
+    - node --version
     - npm install
 
 build_zip:
   stage: build
   script:
-    - npm rebuild node-sass
     - npm run build:pack
   artifacts:
     expire_in: '1 hour'

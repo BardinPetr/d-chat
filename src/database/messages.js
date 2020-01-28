@@ -33,6 +33,16 @@ export async function storeMessageToDb(message) {
 	}
 }
 
+export async function modifyMesssageInDb(primaryKey, mods) {
+	const existing = await db.messages.get(primaryKey);
+	if (existing) {
+		return _storeMessage({
+			...existing,
+			...mods
+		});
+	}
+}
+
 function storeToReactionDb(message) {
 	return db.reactions.put(message)
 		.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
@@ -49,7 +59,7 @@ async function _storeMessage(message) {
 	if (existing) {
 		message.createdAt = existing.createdAt;
 	}
-	return db.messages.put(message)
+	return db.messages.put(message).then(() => message)
 		.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
 }
 

@@ -51,3 +51,7 @@ const clients = (state = [], action) => {
 };
 
 export default clients;
+
+export function activeClient(clients) {
+	return clients.find(c => c.active);
+}
