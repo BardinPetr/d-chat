@@ -183,7 +183,7 @@ export function isPermissionedTopic(topic) {
 		return false;
 	}
 	topic = topic.slice(topic.lastIndexOf('.') + 1);
-	return topic.length === 64 && topic.slice(topic.lastIndexOf('.') + 1);
+	return topic.length === 64 && topic;
 }
 
 export function isPublicTopic(topic) {

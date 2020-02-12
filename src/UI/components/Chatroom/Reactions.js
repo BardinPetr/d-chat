@@ -34,7 +34,7 @@ const Ack = () => (
 	<div className="x-is-ack has-text-grey">✔</div>
 );
 
-const Reactions = ({ reactions, addReaction, myAddr }) => {
+const Reactions = ({ reactions, initialReaction, addReaction, myAddr }) => {
 	const countedReactions = reactions.reduce((acc, reaction) => {
 		if (!reaction.content) {
 			return acc;
@@ -66,8 +66,8 @@ const Reactions = ({ reactions, addReaction, myAddr }) => {
 		};
 		return acc;
 	}, {
-		'👍': {
-			content: '👍',
+		[initialReaction]: {
+			content: initialReaction,
 			_isAck: false,
 			_count: 0,
 			_title: '',

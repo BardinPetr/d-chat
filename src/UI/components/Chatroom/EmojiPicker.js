@@ -6,10 +6,12 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 Modal.setAppElement('.dashboard');
 
-const EmojiPicker = ({ onSelect, visible, setVisible }) => (
+function noop() {}
+
+const EmojiPicker = ({ onSelect, onClose }) => (
 	<Modal
-		isOpen={visible}
-		onRequestClose={() => setVisible(false)}
+		isOpen={true}
+		onRequestClose={onClose}
 		contentLabel={__('Emoji picker dialog')}
 		className="x-modal"
 	>
@@ -17,7 +19,7 @@ const EmojiPicker = ({ onSelect, visible, setVisible }) => (
 			<Picker
 				title={__('Emojis')}
 				native={true}
-				backgroundImageFn={() => {}}
+				backgroundImageFn={noop}
 				onSelect={onSelect}
 				emoji="droplet"
 			/>

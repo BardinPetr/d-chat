@@ -3,9 +3,29 @@ import useTimeout from '@rooks/use-timeout';
 import { connect } from 'react-redux';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb } from 'Approot/database/reactions';
+import { emojiIndex } from 'emoji-mart';
+
+function getMostUsedReaction() {
+	let mostUsed = '+1';
+	try {
+		// This is an object like `{ "reaction_code": noOfUses }`.
+		const reactions = JSON.parse(localStorage.getItem('emoji-mart.frequently'));
+		let n;
+		for (const reaction in reactions) {
+			const count = reactions[reaction];
+			if (!n || count > reactions[n]) {
+				n = reaction;
+			}
+		}
+
+		mostUsed = n;
+	} catch(e) {}
+
+	const e = emojiIndex.emojis[mostUsed];
+	return e?.native || e?.['1']?.native || '👍';
+}
 
 function reducer(state, action) {
-
 	const changes = action.payload;
 	switch(action.type) {
 		case 'new':
@@ -26,6 +46,7 @@ const Reactions = ({
 	const [mounted, setMounted] = useState(false);
 	const [reactions, dispatch] = useReducer(reducer, []);
 	const { start } = useTimeout(() => mounted && stayScrolled(), 0, [mounted]);
+	const [initialReaction] = useState(getMostUsedReaction());
 
 	useEffect(() => {
 		setMounted(true);
@@ -67,6 +88,7 @@ const Reactions = ({
 	return (
 		<ReactionsComponent
 			reactions={reactions}
+			initialReaction={initialReaction}
 			{...rest}
 		/>
 	);

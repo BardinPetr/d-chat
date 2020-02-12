@@ -6,7 +6,14 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
-const Dropdown = ({ closeOnClick = true, id, triggerIcon, isRight, children, triggerClassName = 'is-text' }) => {
+const Dropdown = ({
+	closeOnClick = true,
+	id,
+	triggerIcon,
+	isRight = false,
+	children,
+	triggerClassName = 'is-text'
+}) => {
 	const [open, setOpen] = useState(false);
 	const openModal = () => setOpen(true);
 	const close = () => setOpen(false);

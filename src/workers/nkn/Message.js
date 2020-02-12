@@ -11,6 +11,9 @@ import uuidv4 from 'uuid/v4';
  *
  * `targetID` is like "reply to message that has this ID".
  *
+ * {id,topic,addr,targetID} each have max length of 128 characters.
+ * That means you should set max length of NKN identifier at 63.
+ *
  * Example of a text message that is sent out:
  *
  * ```json
@@ -25,10 +28,10 @@ import uuidv4 from 'uuid/v4';
  * }
  * ```
  *
- * Topic is omitted in whispers, and `isPrivate: true` is added.
  * Media messages are the same except `contentType: 'media'`, -
  * the media is sent with `content: "![](base64datastring)".`
  * Reactions are `contentType: 'reaction'` and include `targetID`.
+ * Topic is omitted in whispers, and `isPrivate: true` is added.
  *
  * Whispers have field `isPrivate: true` set, so that -
  * in the future, you can whisper to people inside a topic -
@@ -77,6 +80,7 @@ class Message {
 		this.id = message.id || uuidv4();
 
 		this.topic = message.topic;
+
 		this.timestamp = message.timestamp || Date.now();
 
 		// Another message's ID.

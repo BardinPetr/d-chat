@@ -6,6 +6,8 @@ import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 const FORBLOCKS = 400000;
+// Resub if less than 20k blocks (~5 days) are left before subscription ends.
+const RESUB_HEIGHT = 20 * 1000;
 // TODO make issue about "window.location" usage in nkn-client-js. `window` doesn't exist in workers.
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
 const SEED_ADDRESSES = PROTOCOL === 'https:'
@@ -138,7 +140,7 @@ class NKN extends permissionsMixin(nkn) {
 				if (blockHeight === 0) {
 					return false;
 				}
-				if (info.expiresAt - blockHeight > 5000) {
+				if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
 					return info;
 				}
 				return null;

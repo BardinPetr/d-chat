@@ -79,6 +79,18 @@ class IncomingMessage extends Message {
 		this.createdAt = Date.now() + IncomingMessage.nonce;
 		IncomingMessage.nonce += 0.001;
 
+		// Ignore topics and ids over 128 chars in length.
+		// We don't want to get 50k chars as database index field.
+		if (this.topic?.length > 128) {
+			this.unreceivable = true;
+		}
+		if (this.targetID?.length > 128) {
+			this.id = this.targetID.slice(0, 128);
+		}
+		if (this.id?.length > 128) {
+			this.id = this.id.slice(0, 128);
+		}
+
 		this.receivedAs = NKN.instance.addr;
 
 		// Heartbeats should not be received as messages.
@@ -165,6 +177,11 @@ class IncomingMessage extends Message {
 		this.username = name;
 		this.pubKey = pubKey;
 		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
+
+		// We'll just ignore every addr that has an identifier that is too long.
+		if (this.addr.length > 128) {
+			this.unreceivable = true;
+		}
 
 		return this;
 	}

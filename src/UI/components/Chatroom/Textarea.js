@@ -149,14 +149,15 @@ const Textarea = ({
 		editor.codemirror.focus();
 	};
 
+	const closeEmojiPicker = () => setEmojiPickerVisible(false);
+
 	// Without key={topic}, things go wrong. No idea how to fix that.
 	return (
 		<React.Fragment>
 			{visible && (
 				<Suspense fallback={<div className="is-hidden" />}>
 					<LazyEmojiPicker
-						visible={visible}
-						setVisible={setEmojiPickerVisible}
+						onClose={closeEmojiPicker}
 						onSelect={onSelect}
 					/>
 				</Suspense>
