@@ -116,6 +116,12 @@ class IncomingMessage extends Message {
 			allowedAttributes: {},
 		}) || '';
 
+		// We'll just tag these for media.
+		// https://docs.nkn.org/docs/d-chat-message-scheme uses those.
+		if (['audio','image', 'video'].includes(this.contentType)) {
+			this.contentType = 'media';
+		}
+
 		if (this.contentType !== 'reaction') {
 			if (this.contentType === 'media') {
 				const dataURLs = this.content.match(dataUrl) || [];

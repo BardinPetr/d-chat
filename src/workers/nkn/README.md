@@ -1,8 +1,7 @@
 # Details about Messages
 
-> Almost copy pasted from Message.js.
-
-Here lies the D-Chat NKN message schema.
+> Kinda copy pasted from `Message.js`.
+> Also see https://docs.nkn.org/docs/d-chat-message-scheme
 
 * Topic is chatroom topic.
   * Omit `topic` in whispers.
@@ -19,7 +18,7 @@ Example of a text message that is sent out:
   contentType: 'text',
   content: 'some _markdown_ format text',
   id: '{123-321-3213-21435tr}', // uuidv4(). Do not use uuidv1, because it will create duplicates.
-  // Note: D-Chat has some issues with percentage signs in topic names, because of url encoding.
+  // Note: D-Chat has some issues with percentage signs (%) in topic names.
   topic: 'topic name',
   // Older versions used .toUTCString(), so do take care before assuming it is integer.
   timestamp: ${Date.now()},
@@ -78,6 +77,6 @@ The `topic` that you *subscribe to* should be `'dchat' + shasum(topic)`, and `to
 
 That is sha1sum.
 
-### Differences with Permissioned Topic Rules (NKP-14)
+### Differences with Permissioned Topic Rules (NKP-0016)
 
 We will show `contentType: 'dchat/subscribe'` messages with complete disregard for the rules, for now. Makes it a lot easier to add people to topic when you have "Joined channel." messages showing.
