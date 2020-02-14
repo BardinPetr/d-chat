@@ -1,6 +1,5 @@
 # Details about Messages
 
-> Kinda copy pasted from `Message.js`.
 > Also see https://docs.nkn.org/docs/d-chat-message-scheme
 
 * Topic is chatroom topic.
