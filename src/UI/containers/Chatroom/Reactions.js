@@ -45,7 +45,7 @@ const Reactions = ({
 }) => {
 	const [mounted, setMounted] = useState(false);
 	const [reactions, dispatch] = useReducer(reducer, []);
-	const { start } = useTimeout(() => mounted && stayScrolled(), 0, [mounted]);
+	const { start } = useTimeout(() => mounted && stayScrolled(), 10, [mounted]);
 	const [initialReaction] = useState(getMostUsedReaction());
 
 	useEffect(() => {
@@ -83,6 +83,7 @@ const Reactions = ({
 			payload: messageEvent.reaction,
 		});
 		start();
+		stayScrolled();
 	}, [messageEvent, topic, messageID, mounted]);
 
 	return (
