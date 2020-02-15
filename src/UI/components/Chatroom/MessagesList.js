@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import useTimeout from '@rooks/use-timeout';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
@@ -10,8 +11,9 @@ const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
 
 const LastRead = () => {
 	const lastReadRef = useRef();
+	const { start } = useTimeout(() => lastReadRef.current.scrollIntoView(), 100, []);
 	useEffect(() => {
-		lastReadRef.current.scrollIntoView();
+		start();
 	}, []);
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (

@@ -1,6 +1,7 @@
 import {
 	getSubscribers
 } from '../actions';
+import { isNotice } from 'Approot/misc/util';
 
 /**
  * Fetches subscribers whenever someone joins the channel.
@@ -14,7 +15,7 @@ const subscribersFetcher = store => next => action => {
 	const message = action.payload?.message;
 	const type = action.type;
 	if (type === 'chat/RECEIVE_MESSAGE') {
-		if (message.contentType === 'dchat/subscribe' && message.topic) {
+		if (isNotice(message.contentType) && message.topic) {
 			store.dispatch(getSubscribers(
 				message.topic
 			));

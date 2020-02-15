@@ -219,6 +219,7 @@ class LoginBox extends React.Component {
 														className="input"
 														placeholder="McAfee"
 														autoComplete="current-user"
+														maxLength="63"
 													/>
 												</div>
 											</div>

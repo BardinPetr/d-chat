@@ -11,6 +11,7 @@ import {
 	getChatDisplayName,
 	isNotice,
 	isWhisper,
+	isDelete,
 } from 'Approot/misc/util';
 import {
 	setBadgeText,
@@ -37,7 +38,7 @@ const getUnreadMessages = state => {
 const shouldNotify = message => !(isNotice(message) || message.isMe || message.isSeen);
 const wantsAck = msg =>
 	!isNotice(msg)
-	&& !['message/delete'].includes(msg.contentType)
+	&& !isDelete(msg)
 	&& isWhisper(msg);
 
 const notifier = store => next => action => {

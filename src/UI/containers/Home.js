@@ -44,6 +44,7 @@ const NewTopicForm = ({ privateChat }) => {
 					type="text"
 					className="input is-small"
 					onChange={e => setTarget(e.target.value)}
+					maxLength="128"
 				/>
 			</div>
 		</form>

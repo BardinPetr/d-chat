@@ -1,5 +1,5 @@
 import { saveAttachment } from 'Approot/database/attachments';
-import { getWhisperTopic, parseAddr, formatAddr } from 'Approot/misc/util';
+import { getWhisperTopic, parseAddr, formatAddr, isDelete } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
@@ -12,7 +12,7 @@ renderer.image = (href, title, text) => {
 	if (href.startsWith('data')) {
 		return '';
 	} else {
-		return `<img src="${href}" alt=${text}>`;
+		return `<img src="${href}" alt="${text}" title="${title}">`;
 	}
 };
 // Tried settings links like 'wikipedia.org', but that makes '@someone.12345678' a link too.
@@ -79,6 +79,18 @@ class IncomingMessage extends Message {
 		this.createdAt = Date.now() + IncomingMessage.nonce;
 		IncomingMessage.nonce += 0.001;
 
+		// Ignore topics and ids over 128 chars in length.
+		// We don't want to get 50k chars as database index field.
+		if (this.topic?.length > 128) {
+			this.unreceivable = true;
+		}
+		if (this.targetID?.length > 128) {
+			this.targetID = this.targetID.slice(0, 128);
+		}
+		if (this.id?.length > 128) {
+			this.id = this.id.slice(0, 128);
+		}
+
 		this.receivedAs = NKN.instance.addr;
 
 		// Heartbeats should not be received as messages.
@@ -86,10 +98,16 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
-		if (message.contentType === 'message/delete') {
+		if (isDelete(message)) {
 			this.modifications = {
 				deleted: true
 			};
+		}
+
+		// Due to change contentType 'receipt' to 'event:receipt' at some point.
+		// TODO
+		if (this.contentType === 'event:receipt') {
+			this.contentType = 'receipt';
 		}
 
 		// Handling receipts as reactions.
@@ -103,6 +121,12 @@ class IncomingMessage extends Message {
 			allowedTags: [],
 			allowedAttributes: {},
 		}) || '';
+
+		// We'll just tag these for media.
+		// https://docs.nkn.org/docs/d-chat-message-scheme
+		if (['audio','image', 'video'].includes(this.contentType)) {
+			this.contentType = 'media';
+		}
 
 		if (this.contentType !== 'reaction') {
 			if (this.contentType === 'media') {
@@ -165,6 +189,11 @@ class IncomingMessage extends Message {
 		this.username = name;
 		this.pubKey = pubKey;
 		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
+
+		// We'll just ignore every addr that has an identifier that is too long.
+		if (this.addr.length > 128) {
+			this.unreceivable = true;
+		}
 
 		return this;
 	}

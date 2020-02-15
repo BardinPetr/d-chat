@@ -93,18 +93,12 @@ const Message = ({
 	isNotice,
 }) => {
 	const unsubscribed = !isSubscribed;
-
-	const isGreyed = ['dchat/subscribe', 'nkn/tip'].includes(
-		message.contentType,
-	);
-
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
-
 	return (
 		<div
 			className={classnames(`message ${className}`, {
-				'has-background-grey-lighter': isGreyed,
-				'x-notice': isGreyed,
+				'has-background-grey-lighter': isNotice,
+				'x-notice': isNotice,
 				'x-not-confirmed': message.isNotConfirmed,
 			})}
 		>
