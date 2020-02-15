@@ -129,8 +129,15 @@ export const importWallet = file => {
 	});
 };
 
-// nkn/tip was used once, but is gone now.
-export const isNotice = msg => ['dchat/subscribe', 'nkn/tip'].includes(msg.contentType);
+// If you change this, then probably touch on subFetcher middleware.
+export const isNotice = msg => [
+	'event:subscribe',
+	'dchat/subscribe'
+].includes(msg.contentType);
+export const isDelete = msg => [
+	'event:message/delete',
+	'message/delete'
+].includes(msg.contentType);
 
 // This is the topic for the list of public topics.
 export const DCHAT_PUBLIC_TOPICS = '__dchat';

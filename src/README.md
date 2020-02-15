@@ -6,7 +6,7 @@ IndexedDB (Dexie.js), NKN (nkn-ordered-multiclient), Redux (and webext-redux), R
 
 ## Message schema
 
-Plenty of comments in `workers/nkn/Message.js`.
+Plenty of comments in [./workers/nkn/readme](./workers/nkn/README.md).
 
 ## Redux
 

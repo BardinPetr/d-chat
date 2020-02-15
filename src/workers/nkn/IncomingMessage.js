@@ -1,5 +1,5 @@
 import { saveAttachment } from 'Approot/database/attachments';
-import { getWhisperTopic, parseAddr, formatAddr } from 'Approot/misc/util';
+import { getWhisperTopic, parseAddr, formatAddr, isDelete } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
@@ -12,7 +12,7 @@ renderer.image = (href, title, text) => {
 	if (href.startsWith('data')) {
 		return '';
 	} else {
-		return `<img src="${href}" alt=${text}>`;
+		return `<img src="${href}" alt="${text}" title="${title}">`;
 	}
 };
 // Tried settings links like 'wikipedia.org', but that makes '@someone.12345678' a link too.
@@ -85,7 +85,7 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 		if (this.targetID?.length > 128) {
-			this.id = this.targetID.slice(0, 128);
+			this.targetID = this.targetID.slice(0, 128);
 		}
 		if (this.id?.length > 128) {
 			this.id = this.id.slice(0, 128);
@@ -98,10 +98,16 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
-		if (message.contentType === 'message/delete') {
+		if (isDelete(msg)) {
 			this.modifications = {
 				deleted: true
 			};
+		}
+
+		// Due to change contentType 'receipt' to 'event:receipt' at some point.
+		// TODO
+		if (this.contentType === 'event:receipt') {
+			this.contentType = 'receipt';
 		}
 
 		// Handling receipts as reactions.
@@ -117,7 +123,7 @@ class IncomingMessage extends Message {
 		}) || '';
 
 		// We'll just tag these for media.
-		// https://docs.nkn.org/docs/d-chat-message-scheme uses those.
+		// https://docs.nkn.org/docs/d-chat-message-scheme
 		if (['audio','image', 'video'].includes(this.contentType)) {
 			this.contentType = 'media';
 		}

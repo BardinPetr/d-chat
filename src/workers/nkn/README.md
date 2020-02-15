@@ -43,11 +43,11 @@ you should send a receipt to the sender. Sames as text message, except no `conte
 
 Summing up a list of contentTypes used by D-Chat:
 
-- dchat/subscribe
+- dchat/subscribe (-> 'event:subscribe' soon)
 - media
-- message/delete
+- message/delete (-> 'event:message/delete' soon)
 - reaction
-- receipt
+- receipt (-> 'event:receipt' soon)
 - text
 
 And on hiatus:
@@ -76,6 +76,6 @@ The `topic` that you *subscribe to* should be `'dchat' + shasum(topic)`, and `to
 
 That is sha1sum.
 
-### Differences with Permissioned Topic Rules (NKP-0016)
+## Differences with Permissioned Topic Rules (NKP-0016)
 
 We will show `contentType: 'dchat/subscribe'` messages with complete disregard for the rules, for now. Makes it a lot easier to add people to topic when you have "Joined channel." messages showing.

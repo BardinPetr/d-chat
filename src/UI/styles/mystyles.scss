@@ -19,7 +19,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $pre-background: hsla(0, 0%, 0%, 0.05);
-$toolbar-width: 30%;
+$toolbar-width: 20%;
 $message-content-width: 90%;
 /**
  * Added stuff after sans-serif for emojis.
@@ -379,6 +379,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		border-radius: 0 !important;
 		padding-bottom: 5px;
 		min-height: 3.4rem;
+		&-selected {
+			max-width: 100% !important;
+		}
 		&-scroll {
 			max-height: 150px;
 		}
@@ -425,16 +428,21 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			}
 			top: 0;
 			right: 0;
-			transition: height 1s ease;
 			opacity: 0.8;
 			background-color: white;
 			position: absolute;
 			z-index: $z-index;
 			overflow: hidden;
 			height: 3rem;
+			padding: 0;
+			padding-right: 3px;
+			button {
+				height: 100%;
+				width: 100%;
+				border-radius: 0;
+			}
 			&:hover {
 				opacity: 1;
-				transition: height 0.2s ease;
 				& ~ .editor-statusbar {
 					display: inherit !important;
 				}
