@@ -98,7 +98,7 @@ class IncomingMessage extends Message {
 			this.unreceivable = true;
 		}
 
-		if (isDelete(msg)) {
+		if (isDelete(message)) {
 			this.modifications = {
 				deleted: true
 			};
