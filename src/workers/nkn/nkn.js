@@ -171,7 +171,7 @@ class NKN extends permissionsMixin(nkn) {
 			message.isPrivate = true;
 		}
 
-		return this.send(to, JSON.stringify(message), options).catch(() => { });
+		return this.send(to, JSON.stringify(message), options).catch(() => {});
 	};
 
 	getSubscribers = (topic, options = {}) => {
