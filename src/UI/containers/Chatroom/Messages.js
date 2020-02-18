@@ -32,6 +32,7 @@ const Messages = ({
 	topic,
 	messageEvent,
 	unreadCount,
+	mutedUsers,
 	...rest
 }) => {
 	const [messages, dispatch] = useReducer(reducer, []);
@@ -53,6 +54,9 @@ const Messages = ({
 			if (prevMessages.length < PAGE_SIZE) {
 				setHasMore(false);
 			}
+			prevMessages = prevMessages.filter(msg =>
+				!mutedUsers.includes(msg.addr)
+			);
 			dispatch({ type: 'old', payload: prevMessages });
 		});
 	}, [topic, messages[0]]);
@@ -83,7 +87,13 @@ const Messages = ({
 			topic,
 			extra: unreadCount,
 		})
-			.then(prevMessages => dispatch({ type: 'next', payload: prevMessages }))
+			.then(prevMessages => {
+				prevMessages = prevMessages.filter(msg =>
+					!mutedUsers.includes(msg.addr)
+				);
+
+				dispatch({ type: 'next', payload: prevMessages });
+			})
 			// New chat -> assume has messages.
 			.then(() => setHasMore(true));
 	}, [topic]);
@@ -102,6 +112,7 @@ const Messages = ({
 const mapStateToProps = (state, ownProps) => ({
 	messageEvent: state.messageEvent,
 	unreadCount: state.chatSettings[ownProps.topic]?.unread?.length || 0,
+	mutedUsers: state.globalSettings.muted,
 });
 
 export default connect(mapStateToProps)(Messages);

@@ -100,21 +100,13 @@ export const createMessage = message =>
 		? sendPrivateMessage(message)
 		: publishMessage(message);
 
-export const receiveMessage = message => {
-	// Receive tips as messages.
-	let type = 'chat/RECEIVE_MESSAGE';
-	if (message.contentType === 'reaction') {
-		type = 'chat/RECEIVE_REACTION';
-	}
-
-	return {
-		type,
-		payload: {
-			message,
-			topic: getChatName(message.topic),
-		},
-	};
-};
+export const receiveMessage = message => ({
+	type: 'chat/RECEIVE_MESSAGE_ALIAS',
+	payload: {
+		message,
+		topic: getChatName(message.topic),
+	},
+});
 
 // The modified message's ID will be used for matching.
 export const modifyMessage = (modified) => ({

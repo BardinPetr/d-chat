@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { activeClient } from 'Approot/redux/reducers/client';
 import { createMessage } from 'Approot/redux/actions';
+import { toggleUserMute } from 'Approot/redux/actions/settings';
 import TipJar from 'Approot/UI/containers/TipJar';
 import Dropdown from 'Approot/UI/components/Dropdown';
-import { IoIosMore, IoIosEyeOff } from 'react-icons/io';
+import { IoIosMore, IoIosEyeOff, IoMdChatboxes } from 'react-icons/io';
+import { FaBan } from 'react-icons/fa';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import EmojiPicker from 'Approot/UI/components/Chatroom/EmojiPicker';
+import { getWhisperURL } from 'Approot/misc/util';
 
 const Actions = ({
 	addr,
@@ -15,6 +19,8 @@ const Actions = ({
 	deleteMessage,
 	id,
 	isMyMessage,
+	muted,
+	toggleUserMute,
 	topic,
 }) => {
 	const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
@@ -25,6 +31,7 @@ const Actions = ({
 		addReaction(emoji);
 		closeEmojiPicker();
 	};
+	const toggleMute = () => toggleUserMute(addr);
 
 	return (
 		<>
@@ -47,12 +54,29 @@ const Actions = ({
 						</span>
 						<span>{__('Add reaction')}</span>
 					</a>
+					<Link
+						to={getWhisperURL(addr)}
+						className="dropdown-item"
+					>
+						<span className="icon">
+							<IoMdChatboxes />
+						</span>
+						<span>{__('Start a private conversation')}</span>
+					</Link>
 					<TipJar
 						messageID={id}
 						topic={topic}
 						recipientAddr={addr}
 						className="dropdown-item"
 					/>
+					{!isMyMessage && (
+						<a className="dropdown-item" onClick={toggleMute}>
+							<span className="icon">
+								<FaBan />
+							</span>
+							<span>{muted ? __('Unignore user') : __('Ignore user')}</span>
+						</a>
+					)}
 					{isMyMessage && !deleted && (
 						<a className="dropdown-item has-text-danger" onClick={deleteMessage}>
 							<span className="icon">
@@ -76,6 +100,7 @@ const mapStateToProps = (state, ownProps) => {
 		topic: message.topic,
 		addr: message.addr,
 		deleted: message.deleted,
+		muted: state.globalSettings.muted.includes(message.addr),
 	};
 };
 
@@ -91,6 +116,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 		targetID: ownProps.message.id,
 		content: emoji.native,
 	})),
+	toggleUserMute: addr => dispatch(toggleUserMute(addr)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Actions);

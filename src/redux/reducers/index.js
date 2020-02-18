@@ -90,6 +90,34 @@ const login = (state = {}, action) => {
 	return newState;
 };
 
+const globalSettings = (state = {
+	muted: [],
+}, action) => {
+	let newState;
+
+	switch (action.type) {
+		case 'settings/TOGGLE_USER_MUTE':
+			if (state.muted.includes(action.payload.addr)) {
+				newState = {
+					...state,
+					muted: state.muted.filter(user => user !== action.payload.addr),
+				};
+			} else {
+				newState = {
+					...state,
+					muted: [...state.muted, action.payload.addr],
+				};
+			}
+			configs.globalSettings = newState;
+			break;
+
+		default:
+			newState = state;
+	}
+
+	return newState;
+};
+
 /**
  * Handles individual chat (topic) settings.
  *
@@ -222,6 +250,8 @@ export default combineReducers({
 	chatSettings,
 
 	messageEvent,
+
+	globalSettings,
 
 	// UI
 	navigation,

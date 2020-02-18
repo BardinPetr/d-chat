@@ -41,7 +41,6 @@ const MessagesList = ({
 			acc.push(<LastRead key={'lastRead'} />);
 		}
 
-		// TODO fix the toolbar reaction button.
 		const addReaction = msg =>
 			createReaction({
 				...msg,
