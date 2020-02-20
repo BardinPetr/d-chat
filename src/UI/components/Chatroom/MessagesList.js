@@ -81,6 +81,7 @@ const MessagesList = ({
 				key={message.id}
 				topic={message.topic}
 				addReaction={addReaction}
+				stayScrolled={stayScrolled}
 			>
 				<Reactions
 					stayScrolled={stayScrolled}

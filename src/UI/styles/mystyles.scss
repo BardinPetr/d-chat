@@ -124,6 +124,9 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 }
 .x-is-hover {
 	visibility: hidden;
+	.is-active, &.is-active {
+		visibility: visible;
+	}
 }
 
 .x-is-align-start {

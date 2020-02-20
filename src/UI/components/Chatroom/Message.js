@@ -16,7 +16,7 @@ import { __ } from 'Approot/misc/browser-util-APP_TARGET';
  * Message contents have been sanitized on arrival.
  * See `workers/nkn/IncomingMessage.js`
  */
-const MessageContent = ({ message }) => {
+const MessageContent = ({ message, stayScrolled }) => {
 	const isMedia = message.contentType === 'media';
 	const deleted = message.deleted && !message.isNotConfirmed;
 
@@ -34,6 +34,7 @@ const MessageContent = ({ message }) => {
 		return (
 			<MediaMessage
 				content={message.content}
+				stayScrolled={stayScrolled}
 				attachments={message.attachments || []}
 			/>
 		);
@@ -65,6 +66,7 @@ const Nickname = ({
 		<span>
 			<span
 				onMouseDown={onMouseDown}
+				title={__('Click to @mention')}
 				onClick={onClick}
 				className={classnames('x-avatar', {
 					'has-text-grey': unsubscribed,
@@ -84,13 +86,14 @@ const Nickname = ({
 };
 
 const Message = ({
-	refer,
-	message,
-	isSubscribed,
+	children,
 	className,
 	includeHeader,
-	children,
 	isNotice,
+	isSubscribed,
+	message,
+	refer,
+	stayScrolled,
 }) => {
 	const unsubscribed = !isSubscribed;
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
@@ -131,7 +134,7 @@ const Message = ({
 			<div className={classnames('message-body x-is-small-padding', {
 				'has-text-danger': awaitsDeletion,
 			})}>
-				<MessageContent message={message} />
+				<MessageContent message={message} stayScrolled={stayScrolled} />
 				{children /* Reactions */}
 				<div className="x-message-toolbar-side x-is-hover">
 					<MessageActions
