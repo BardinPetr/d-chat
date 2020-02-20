@@ -7,32 +7,38 @@ import uniqBy from 'lodash.uniqby';
 function reducer(state, action) {
 
 	const changes = action.payload;
+	let next = [];
 	switch(action.type) {
 		case 'modify':
-			return state.map(msg => {
+			next = state.map(msg => {
 				if (msg.id === changes.id) {
 					return changes;
 				}
 				return msg;
 			});
+			break;
 
 		case 'new':
 			// TODO instead of checking uniq, maybe add index to the react key prop.
-			return uniqBy([...state, changes], 'id');
+			next = uniqBy([...state, changes], 'id');
+			break;
 
 		case 'old':
-			return [...changes, ...state];
+			next = [...changes, ...state];
+			break;
 
 		case 'next':
-			return [...changes];
+			next = [...changes];
+			break;
 	}
+
+	return next.filter(msg => msg && !msg.ignored);
 }
 
 const Messages = ({
 	topic,
 	messageEvent,
 	unreadCount,
-	mutedUsers,
 	...rest
 }) => {
 	const [messages, dispatch] = useReducer(reducer, []);
@@ -54,9 +60,7 @@ const Messages = ({
 			if (prevMessages.length < PAGE_SIZE) {
 				setHasMore(false);
 			}
-			prevMessages = prevMessages.filter(msg =>
-				!mutedUsers.includes(msg.addr)
-			);
+
 			dispatch({ type: 'old', payload: prevMessages });
 		});
 	}, [topic, messages[0]]);
@@ -88,10 +92,6 @@ const Messages = ({
 			extra: unreadCount,
 		})
 			.then(prevMessages => {
-				prevMessages = prevMessages.filter(msg =>
-					!mutedUsers.includes(msg.addr)
-				);
-
 				dispatch({ type: 'next', payload: prevMessages });
 			})
 			// New chat -> assume has messages.
@@ -112,7 +112,6 @@ const Messages = ({
 const mapStateToProps = (state, ownProps) => ({
 	messageEvent: state.messageEvent,
 	unreadCount: state.chatSettings[ownProps.topic]?.unread?.length || 0,
-	mutedUsers: state.globalSettings.muted,
 });
 
 export default connect(mapStateToProps)(Messages);

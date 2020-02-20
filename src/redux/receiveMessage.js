@@ -1,38 +1,43 @@
-import { storeMessageToDb, modifyMesssageInDb } from 'Approot/database/messages';
-import { receiveMessage, modifyMessage } from 'Approot/redux/actions';
+import { storeMessageToDb, modifyMessageInDb } from 'Approot/database/messages';
+import { saveAttachment } from 'Approot/database/attachments';
+import { modifyMessage } from 'Approot/redux/actions';
 
 let messagesWaitingForConfirmation = [];
 
+/**
+ * Stores message, returns new actions to dispatch.
+ */
 export default async function receivingMessage(message) {
 	if (!message.unreceivable) {
 
 		if (message.modifications) {
-			modifyMesssageInDb({
+			return modifyMessageInDb({
 				topic: message.topic,
 				id: message.targetID,
 				addr: message.addr
 			}, {
 				isNotConfirmed: message.isNotConfirmed,
 				...message.modifications
-			}).then(message => message && postMessage(modifyMessage(message)));
-			return;
+			}).then(message => message && [modifyMessage(message)]);
+		}
+
+		if (message.contentType === 'media') {
+			message.attachments = message.attachments.map(data => saveAttachment(data));
 		}
 
 		storeMessageToDb(message);
 
 		if (messagesWaitingForConfirmation.includes(message.id)) {
-			postMessage(modifyMessage(message));
 			// Drop.
 			messagesWaitingForConfirmation = messagesWaitingForConfirmation.filter(
 				id => id !== message.id
 			);
-			return;
+			return [modifyMessage(message)];
 		}
 
 		if (message.isNotConfirmed) {
 			messagesWaitingForConfirmation.push(message.id);
 		}
-
-		postMessage(receiveMessage(message));
 	}
+	return [];
 }

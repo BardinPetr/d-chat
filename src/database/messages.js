@@ -33,8 +33,8 @@ export async function storeMessageToDb(message) {
 	}
 }
 
-export async function modifyMesssageInDb(primaryKey, mods) {
-	const existing = await db.messages.get(primaryKey);
+export async function modifyMessageInDb(message, mods) {
+	const existing = await db.messages.get(getMessagePK(message));
 	if (existing) {
 		return _storeMessage({
 			...existing,

@@ -11,6 +11,7 @@ import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
 import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { parseAddr } from 'Approot/misc/util';
 
 /**
  * Message contents have been sanitized on arrival.
@@ -52,10 +53,9 @@ const Nickname = ({
 	addr,
 	refer,
 	timestamp,
-	username,
 	unsubscribed,
-	pubKey,
 }) => {
+	const [username, pubKey] = parseAddr(addr);
 	// Use selected text for quoting.
 	const [text, setText] = useState('');
 	const onMouseDown = () => setText(window.getSelection().toString());
@@ -113,10 +113,8 @@ const Message = ({
 								<Nickname
 									refer={refer}
 									addr={message.addr}
-									username={message.username}
 									timestamp={message.timestamp}
 									unsubscribed={unsubscribed}
-									pubKey={message.pubKey || ''}
 								/>
 								<span className="x-is-margin-left x-toolbar">
 									<MessageToolbar

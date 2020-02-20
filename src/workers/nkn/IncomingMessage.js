@@ -1,11 +1,9 @@
-import { saveAttachment } from 'Approot/database/attachments';
-import { getWhisperTopic, parseAddr, formatAddr, isDelete } from 'Approot/misc/util';
+import { getWhisperTopic, formatAddr, isDelete } from 'Approot/misc/util';
 import NKN from 'Approot/workers/nkn/nknHandler';
 import sanitize from 'sanitize-html';
 import marked from 'marked';
 import Message from './Message';
 import highlight from 'highlight.js';
-import shasum from 'shasum';
 
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
@@ -16,7 +14,7 @@ renderer.image = (href, title, text) => {
 	}
 };
 // Tried settings links like 'wikipedia.org', but that makes '@someone.12345678' a link too.
-// The canonical markdown way is '<wikipedia.org>'.
+// The canonical markdown way is '<wikipedia.org>', but that doesn't work for us.
 renderer.link = (href, title, text) =>
 	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
 marked.setOptions({
@@ -131,10 +129,7 @@ class IncomingMessage extends Message {
 		if (this.contentType !== 'reaction') {
 			if (this.contentType === 'media') {
 				const dataURLs = this.content.match(dataUrl) || [];
-				this.attachments = dataURLs.map(data => saveAttachment({
-					data,
-					hash: shasum(data),
-				}));
+				this.attachments = dataURLs;
 
 				/**
 				 * Add space to avoid bug like -
@@ -184,10 +179,7 @@ class IncomingMessage extends Message {
 			this.topic = opts.overrideTopic || getWhisperTopic(src);
 		}
 
-		const [name, pubKey] = parseAddr(src);
 		this.addr = src;
-		this.username = name;
-		this.pubKey = pubKey;
 		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
 
 		// We'll just ignore every addr that has an identifier that is too long.

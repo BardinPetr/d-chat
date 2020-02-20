@@ -9,8 +9,8 @@ import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import { isNotice } from 'Approot/misc/util';
 import {
 	connected,
+	receiveMessage,
 } from 'Approot/redux/actions';
-import receiveMessage from './messageReceiver';
 
 function addNKNListeners (client) {
 
@@ -33,8 +33,9 @@ function addNKNListeners (client) {
 			const permitted =
 				isNotice(message) || await client.Permissions.check(message.topic, src);
 
-			if (permitted) {
-				receiveMessage(message);
+			if (permitted && !message.unreceivable) {
+				postMessage(receiveMessage(message));
+				// receiveMessage(message);
 			}
 		}
 	}

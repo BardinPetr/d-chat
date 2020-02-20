@@ -61,25 +61,6 @@ const joinChat = originalAction => dispatch => {
 	}
 };
 
-const checkAgainstMuted = originalAction => (dispatch, getState) => {
-	const muted = getState().globalSettings.muted;
-	const message = originalAction.payload.message;
-	if (muted.includes(message.addr)) {
-		return;
-	}
-
-	// Receive tips as messages.
-	let type = 'chat/RECEIVE_MESSAGE';
-	if (message.contentType === 'reaction') {
-		type = 'chat/RECEIVE_REACTION';
-	}
-
-	dispatch({
-		...originalAction,
-		type,
-	});
-};
-
 export default {
 	'PUBLISH_MESSAGE_ALIAS': delegateToWorker,
 	'LOGIN_ALIAS': delegateToWorker,
@@ -96,6 +77,4 @@ export default {
 	'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
-
-	'chat/RECEIVE_MESSAGE_ALIAS': checkAgainstMuted,
 };
