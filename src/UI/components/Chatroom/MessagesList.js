@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
 import Message from 'Approot/UI/containers/Chatroom/Message';
-import { isNotice, formatAddr } from 'Approot/misc/util';
+import { isNotice, mention, formatAddr } from 'Approot/misc/util';
 
 // 1min 30seconds seconds.
 const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
@@ -78,7 +78,9 @@ const MessagesList = ({
 				const isSubscribed = subs.includes(message.addr);
 				// Check dynamically, otherwise changing accounts makes them go wrong.
 				const isMe = message.addr === myAddr;
-				const refersToMe = !isMe && message.content?.includes(formatAddr(myAddr));
+				const refersToMe = !isMe && message.content?.includes(
+					messageIsNotice ? formatAddr(myAddr) : mention(myAddr)
+				);
 
 				messagesPack.push(
 					<Message
