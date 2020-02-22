@@ -25,7 +25,7 @@ const activeTopics = (state = [], action) => {
 };
 
 // Used for detecting changes in database from UI.
-const messageEvent = (state = {}, action) => {
+const messageEvent = (_, action) => {
 	let newState = {};
 	switch (action.type) {
 		case 'chat/MODIFY_MESSAGE':
@@ -53,7 +53,7 @@ const messageEvent = (state = {}, action) => {
 			break;
 
 		default:
-			newState = state;
+			newState = {};
 	}
 	return newState;
 };
