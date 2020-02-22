@@ -3,7 +3,7 @@
  *
  * Handles unread messages stuff as well.
  */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import useInterval from '@rooks/use-interval';
 import truncate from 'truncate';
 
@@ -44,18 +44,19 @@ const Chatroom = ({
 	const getSubs = () => getSubscribers(topic);
 	const { start, stop } = useInterval(getSubs, 10 * 1000);
 	const mdeInstance = useRef();
-	const [placeholder] = useState(
+	const placeholder = useMemo(() =>
 		__('Message #topic# as #user_identifier#...')
 			.replace('#topic#', truncate(getChatDisplayName(topic), 8))
 			.replace('#user_identifier#', client.addr.slice(0, 8))
+	, [topic, client.addr]
 	);
 
 	useEffect(() => {
 		const displayTopic = getChatDisplayName(topic);
-		document.title = `(${unreadMessages.length}) ${displayTopic} - D-Chat`;
+		document.title = `(${unreadMessages.length}) ${displayTopic} - ${__('D-Chat')}`;
 
 		return () => {
-			document.title = 'D-Chat';
+			document.title = __('D-Chat');
 		};
 	}, [unreadMessages.length, topic]);
 

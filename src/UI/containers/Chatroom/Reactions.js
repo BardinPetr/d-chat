@@ -70,6 +70,8 @@ const Reactions = ({
 	useEffect(() => {
 		if (
 			!messageEvent.reaction
+			|| messageEvent.type !== 'new'
+			|| messageEvent.reaction.isNotConfirmed
 			|| !mounted
 			|| !topic
 			|| topic !== messageEvent.topic

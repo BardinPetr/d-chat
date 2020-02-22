@@ -36,10 +36,11 @@ export async function storeMessageToDb(message) {
 export async function modifyMessageInDb(message, mods) {
 	const existing = await db.messages.get(getMessagePK(message));
 	if (existing) {
-		return _storeMessage({
+		return db.messages.put({
 			...existing,
 			...mods
-		});
+		}).then(() => message)
+			.catch(e => console.error('D-CHAT: HUGE RED FLAG, DB STORAGE', e));
 	}
 }
 

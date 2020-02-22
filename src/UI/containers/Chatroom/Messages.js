@@ -7,32 +7,26 @@ import uniqBy from 'lodash.uniqby';
 function reducer(state, action) {
 
 	const changes = action.payload;
-	let next = [];
+
 	switch(action.type) {
 		case 'modify':
-			next = state.map(msg => {
+			return state.map(msg => {
 				if (msg.id === changes.id) {
 					return changes;
 				}
 				return msg;
 			});
-			break;
 
 		case 'new':
 			// TODO instead of checking uniq, maybe add index to the react key prop.
-			next = uniqBy([...state, changes], 'id');
-			break;
+			return uniqBy([...state, changes], 'id');
 
 		case 'old':
-			next = [...changes, ...state];
-			break;
+			return [...changes, ...state];
 
 		case 'next':
-			next = [...changes];
-			break;
+			return [...changes];
 	}
-
-	return next.filter(msg => msg && !msg.ignored);
 }
 
 const Messages = ({

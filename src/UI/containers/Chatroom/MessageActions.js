@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { activeClient } from 'Approot/redux/reducers/client';
 import { createMessage } from 'Approot/redux/actions';
@@ -70,11 +71,13 @@ const Actions = ({
 						className="dropdown-item"
 					/>
 					{!isMyMessage && (
-						<a className="dropdown-item" onClick={toggleMute}>
+						<a className={classnames('dropdown-item', {
+							'has-text-danger': !muted,
+						})} onClick={toggleMute}>
 							<span className="icon">
 								<FaBan />
 							</span>
-							<span>{muted ? __('Unignore user') : __('Ignore user')}</span>
+							<span>{muted ? __('Unmute user') : __('Mute user')}</span>
 						</a>
 					)}
 					{isMyMessage && !deleted && (

@@ -29,6 +29,9 @@
   "Clicktomention": {
     "message": " Click to @mention"
   },
+  "Clicktodisplay": {
+    "message": " Click to display"
+  },
   "Close": {
     "message": " Close"
   },
@@ -101,9 +104,6 @@
   "Home": {
     "message": " Home"
   },
-  "Ignoreuser": {
-    "message": " Ignore user"
-  },
   "Importwallet": {
     "message": " Import wallet"
   },
@@ -145,6 +145,9 @@
   },
   "Mutechat": {
     "message": " Mute chat"
+  },
+  "Muteuser": {
+    "message": " Mute user"
   },
   "Name": {
     "message": " Name"
@@ -236,11 +239,11 @@
   "Topic": {
     "message": " Topic"
   },
-  "Unignoreuser": {
-    "message": " Unignore user"
-  },
   "Unmutechat": {
     "message": " Unmute chat"
+  },
+  "Unmuteuser": {
+    "message": " Unmute user"
   },
   "Uploadedimage_name": {
     "message": " Uploaded #image_name#."

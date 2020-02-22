@@ -7,11 +7,9 @@ import storeMessage from 'Approot/redux/receiveMessage';
 /**
  * Messages to be ignored.
  * Delete messages are events, so ignore.
- * Ignored messages are obviously skipped.
  */
 const shouldSkip = message =>
-	isDelete(message)
-	|| message.ignored;
+	isDelete(message);
 
 const databaser = store => next => action => {
 	let message, skip = false;
