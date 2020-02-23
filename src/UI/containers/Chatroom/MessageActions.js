@@ -48,6 +48,7 @@ const Actions = ({
 					triggerIcon={<IoIosMore className="is-size-5" />}
 					id={`actions-${id}`}
 					isRight={true}
+					isUp={true}
 				>
 					<a className="dropdown-item" onClick={openEmojiPicker}>
 						<span className="icon">

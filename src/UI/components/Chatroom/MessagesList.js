@@ -47,15 +47,6 @@ const MessagesList = ({
 				const message = messages[i];
 				const messageIsNotice = isNotice(message);
 
-				if (message.id === lastReadId) {
-					messagesPack.push(<LastRead key={'lastRead'} />);
-				}
-
-				const addReaction = msg =>
-					createReaction({
-						...msg,
-						targetID: message.id,
-					});
 
 				if (previousMessage) {
 					// Same sender, max n minutes apart.
@@ -71,6 +62,16 @@ const MessagesList = ({
 						i--;
 						break;
 					}
+				}
+
+				const addReaction = msg =>
+					createReaction({
+						...msg,
+						targetID: message.id,
+					});
+
+				if (message.id === lastReadId) {
+					messagesPack.push(<LastRead key={'lastRead'} />);
 				}
 
 				previousMessage = message;

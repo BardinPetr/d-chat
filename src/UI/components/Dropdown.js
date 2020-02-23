@@ -11,6 +11,7 @@ const Dropdown = ({
 	id,
 	triggerIcon,
 	isRight = false,
+	isUp = false,
 	children,
 	triggerClassName = 'is-text'
 }) => {
@@ -26,6 +27,7 @@ const Dropdown = ({
 				// When identifier is over 20 chars, expand the other way to avoid
 				// going over chat area. 64 chars for PK.
 				'is-right': isRight,
+				'is-up': isUp,
 			})}>
 				<div className="dropdown-trigger">
 					<a
