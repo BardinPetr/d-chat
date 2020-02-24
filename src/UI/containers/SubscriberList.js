@@ -6,21 +6,28 @@ import { connect } from 'react-redux';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import classnames from 'classnames';
 
-// Not the most reusable container.
-const SubscriberList = ({ subscribers, className, active, onClick }) => {
+const SubscriberList = ({
+	active,
+	className,
+	onClick,
+	subscribers,
+}) => {
 	return (
 		<div className={`x-subs-list ${className}`} onClick={onClick}>
 			<a
 				className="navbar-link"
 			>
-				{subscribers.length}<span className="is-hidden-tablet">&nbsp;{__('people chatting')}</span>
+				{subscribers.length}<span className="is-hidden-tablet-only">&nbsp;{__('people chatting')}</span>
 			</a>
-			<div className={classnames('x-has-max-width x-has-max-height has-background-grey-lighter navbar-dropdown is-clipped is-right', {
+			<div className={classnames('x-has-max-width x-has-max-height navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !active,
 			})}>
-				{subscribers.sort().map((sub, key) => (
-					<a className="navbar-item" key={key}>
-						{sub}
+				{subscribers.sort().map(sub => (
+					<a
+						className={'navbar-item'}
+						key={sub}
+					>
+						<span>{sub}</span>
 					</a>
 				))}
 			</div>

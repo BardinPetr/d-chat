@@ -5,9 +5,6 @@
   "s": {
     "message": " < 30 s"
   },
-  "Accepttochat": {
-    "message": " Accept to chat"
-  },
   "Actionsmenu": {
     "message": " Actions menu"
   },
@@ -16,6 +13,9 @@
   },
   "AnyonewiththisseedcanrecoveryouraccountDonotmishandleit": {
     "message": " Anyone with this seed can recover your account. Do not mishandle it."
+  },
+  "Approvetogroup": {
+    "message": " Approve to group"
   },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"d-chat\", for example."
@@ -26,8 +26,11 @@
   "Chatsettings": {
     "message": " Chat settings"
   },
-  "Clearyourbrowsercacheifyoukeepgettingredirected": {
-    "message": " Clear your browser cache if you keep getting redirected."
+  "Clicktomention": {
+    "message": " Click to @mention"
+  },
+  "Clicktodisplay": {
+    "message": " Click to display"
   },
   "Close": {
     "message": " Close"
@@ -92,9 +95,6 @@
   "Givethemobileappatry": {
     "message": " Give the mobile app a try!"
   },
-  "HTTPSiscentralizedandthisappmightnotworkonitbecauseofmixedcontentrestrictionsYoushouldconnecttoHTTPversionofthissiteinstead": {
-    "message": " HTTPS is centralized, and this app might not work on it because of mixed content restrictions. You should connect to HTTP version of this site, instead."
-  },
   "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
     "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
@@ -104,23 +104,20 @@
   "Home": {
     "message": " Home"
   },
-  "IfyouareusingHTTPSEverywhereyoucandisableitonthissiteviathebrowseraction": {
-    "message": " If you are using HTTPS Everywhere, you can disable it on this site via the browser action."
-  },
   "Importwallet": {
     "message": " Import wallet"
   },
   "Infewwordsexplainwhatyourchannelisabout": {
     "message": " In few words, explain what your channel is about."
   },
+  "InstallChromeextensionsinEdgewinaerocom": {
+    "message": " Install Chrome extensions in Edge, winaero.com"
+  },
   "Invalidseed": {
     "message": " Invalid seed."
   },
   "Joinachatroom": {
     "message": " Join a chatroom"
-  },
-  "Joinchannel": {
-    "message": " Join channel"
   },
   "Keepitshort": {
     "message": " Keep it short."
@@ -148,6 +145,9 @@
   },
   "Mutechat": {
     "message": " Mute chat"
+  },
+  "Muteuser": {
+    "message": " Mute user"
   },
   "Name": {
     "message": " Name"
@@ -242,6 +242,9 @@
   "Unmutechat": {
     "message": " Unmute chat"
   },
+  "Unmuteuser": {
+    "message": " Unmute user"
+  },
   "Uploadedimage_name": {
     "message": " Uploaded #image_name#."
   },
@@ -253,6 +256,9 @@
   },
   "UsethisseedforexportingimportingyourDChataccountbetweendevices": {
     "message": " Use this seed for exporting/importing your D-Chat account between devices."
+  },
+  "UsingMSEdgeSeeinstructions": {
+    "message": " Using MS Edge? See instructions"
   },
   "Walletaddress": {
     "message": " Wallet address"
@@ -277,12 +283,6 @@
   },
   "YourWalletSeed": {
     "message": " Your Wallet Seed"
-  },
-  "Yourmessageswillbeencryptedanyways": {
-    "message": " Your messages will be encrypted, anyways."
-  },
-  "andsayhi": {
-    "message": " and say hi!"
   },
   "menunavigation": {
     "message": " menu navigation"

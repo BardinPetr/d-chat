@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import classnames from 'classnames';
 import { loadAttachment } from 'Approot/database/attachments';
 
-const MediaMessage = ({ content, attachments }) => {
+const MediaMessage = ({ content, attachments, stayScrolled }) => {
 	const [attaches, setAttaches] = useState([]);
 	const displayContent = content.includes('blob:') ? '' : content;
 
@@ -31,8 +30,7 @@ const MediaMessage = ({ content, attachments }) => {
 		<div
 			className=""
 		>
-			<div className={classnames('x-media-container is-flex', {
-			})}>
+			<div className={'x-media-container is-flex'}>
 				{attaches.map((attach, i) => (
 					<p key={i}>
 						{(attach.type.includes('audio') &&
@@ -40,12 +38,14 @@ const MediaMessage = ({ content, attachments }) => {
 								className="x-oc-content"
 								controls
 								loop
+								onLoadedData={stayScrolled}
 								src={attach.src}
 							/>)
 						|| (attach.type.includes('image') &&
 							<img
 								className="x-oc-content"
 								src={attach.src}
+								onLoad={stayScrolled}
 							/>)
 						|| (attach.type.includes('video') &&
 							<video
@@ -53,6 +53,7 @@ const MediaMessage = ({ content, attachments }) => {
 								controls
 								playsInline
 								loop
+								onLoadedData={stayScrolled}
 								src={attach.src}
 							/>)}
 					</p>

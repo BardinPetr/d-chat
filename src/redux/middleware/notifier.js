@@ -1,9 +1,6 @@
 /**
  * 1. Creates notifications and changes badge text.
  * 2. Sends back 'received' acknowledgements for private messages.
- *
- * TODO: when browser is restarted, some messages are received a second time.
- *  Need to figure out a way to not create a notification for these messages.
  */
 
 import sanitize from 'striptags';
@@ -12,6 +9,7 @@ import {
 	isNotice,
 	isWhisper,
 	isDelete,
+	formatAddr,
 } from 'Approot/misc/util';
 import {
 	setBadgeText,
@@ -35,11 +33,15 @@ const getUnreadMessages = state => {
 	}, 0);
 };
 
-const shouldNotify = message => !(isNotice(message) || message.isMe || message.isSeen);
+const shouldNotify = message =>
+	!isNotice(message)
+	&& !message.isMe
+	&& !message.ignored;
 const wantsAck = msg =>
 	!isNotice(msg)
 	&& !isDelete(msg)
-	&& isWhisper(msg);
+	&& isWhisper(msg)
+	&& !msg.ignored;
 
 const notifier = store => next => action => {
 	const message = action.payload?.message;
@@ -71,7 +73,7 @@ const notifier = store => next => action => {
 			if (!state.chatSettings[topic]?.muted || message.refersToMe) {
 				createNotification({
 					message: content,
-					title: message.title || `D-Chat ${getChatDisplayName(message.topic)}, ${message.username}.${message.pubKey?.slice?.(0, 8)}:`,
+					title: message.title || `${__('D-Chat')} ${getChatDisplayName(message.topic)}, ${formatAddr(message.addr)}:`,
 				});
 				setBadgeText(getUnreadMessages(state) + 1);
 			}

@@ -11,12 +11,14 @@ import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
 import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
+import { parseAddr } from 'Approot/misc/util';
+import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
 
 /**
  * Message contents have been sanitized on arrival.
  * See `workers/nkn/IncomingMessage.js`
  */
-const MessageContent = ({ message }) => {
+const MessageContent = ({ message, stayScrolled }) => {
 	const isMedia = message.contentType === 'media';
 	const deleted = message.deleted && !message.isNotConfirmed;
 
@@ -34,6 +36,7 @@ const MessageContent = ({ message }) => {
 		return (
 			<MediaMessage
 				content={message.content}
+				stayScrolled={stayScrolled}
 				attachments={message.attachments || []}
 			/>
 		);
@@ -49,25 +52,27 @@ const MessageContent = ({ message }) => {
 
 const Nickname = ({
 	addr,
+	ignored,
 	refer,
 	timestamp,
-	username,
 	unsubscribed,
-	pubKey,
 }) => {
+	const [username, pubKey] = parseAddr(addr);
 	// Use selected text for quoting.
 	const [text, setText] = useState('');
 	const onMouseDown = () => setText(window.getSelection().toString());
-	const onClick= useCallback(() => {
+	const onMention = useCallback(() => {
 		refer(addr, text);
 	}, [addr, text]);
 	return (
 		<span>
 			<span
 				onMouseDown={onMouseDown}
-				onClick={onClick}
+				title={__('Click to @mention')}
+				onClick={onMention}
 				className={classnames('x-avatar', {
 					'has-text-grey': unsubscribed,
+					'x-is-opaque': ignored,
 				})}
 			>
 				<span className="">{username}</span>
@@ -84,36 +89,65 @@ const Nickname = ({
 };
 
 const Message = ({
-	refer,
-	message,
-	isSubscribed,
+	children,
 	className,
 	includeHeader,
-	children,
 	isNotice,
+	isSubscribed,
+	message,
+	refer,
+	stayScrolled,
+	mutedUsers,
 }) => {
+	const [showIgnored, setShowIgnored] = useState(false);
 	const unsubscribed = !isSubscribed;
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
+
+	const toggleShowingIgnored = () => {
+		setShowIgnored(showIgnored => !showIgnored);
+		setTimeout(stayScrolled, 0);
+	};
+
+	const showHeader = includeHeader || isNotice;
+	const ignored = mutedUsers.includes(message.addr);
+
 	return (
 		<div
 			className={classnames(`message ${className}`, {
 				'has-background-grey-lighter': isNotice,
 				'x-notice': isNotice,
 				'x-not-confirmed': message.isNotConfirmed,
+				'x-message-ignored': ignored,
+				'x-show-ignored': showIgnored,
+				'x-has-header': showHeader,
 			})}
 		>
-			{(includeHeader || isNotice) && (
+			{showHeader && (
 				<div className="message-header is-paddingless has-text-weight-light">
 					<div className="level is-mobile is-marginless is-paddingless">
 						<div className="level-left">
 							<div className="level-item">
+								{ignored && (
+									<a
+										className="button is-small is-text"
+										title={__('Click to display')}
+										onClick={toggleShowingIgnored}
+									>
+										<span className="icon has-text-grey x-is-opaque">
+											{!showIgnored ? (
+												<FaRegPlusSquare />
+											) : (
+												<FaRegMinusSquare />
+											)}
+										</span>
+									</a>
+								)}
 								<Nickname
 									refer={refer}
 									addr={message.addr}
-									username={message.username}
 									timestamp={message.timestamp}
 									unsubscribed={unsubscribed}
-									pubKey={message.pubKey || ''}
+									ignored={ignored}
 								/>
 								<span className="x-is-margin-left x-toolbar">
 									<MessageToolbar
@@ -131,7 +165,7 @@ const Message = ({
 			<div className={classnames('message-body x-is-small-padding', {
 				'has-text-danger': awaitsDeletion,
 			})}>
-				<MessageContent message={message} />
+				<MessageContent message={message} stayScrolled={stayScrolled} />
 				{children /* Reactions */}
 				<div className="x-message-toolbar-side x-is-hover">
 					<MessageActions

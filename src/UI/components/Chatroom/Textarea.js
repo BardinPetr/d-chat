@@ -132,9 +132,6 @@ const Textarea = ({
 		}, errCb), 30);
 	};
 
-	/**
-	 * Makes enter submit, shift enter insert newline.
-	 */
 	const onEnterPress = (cm) => {
 		submitText(cm.getValue());
 		cm.setValue('');

@@ -124,6 +124,9 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 }
 .x-is-hover {
 	visibility: hidden;
+	.is-active, &.is-active {
+		visibility: visible;
+	}
 }
 
 .x-is-align-start {
@@ -197,13 +200,39 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				font-family: $family-monospace;
 			}
 		}
+
+		&.x-message-ignored {
+			&.x-has-header .message-body {
+				display: none;
+			}
+			&:not(.x-has-header) {
+				display: none;
+			}
+			&.x-show-ignored {
+				& ~ .message,
+				&.x-has-header .message-body {
+					display: inherit;
+				}
+				
+			}
+		}
+	}
+	.x-message-bundle {
 		/* First 4 will expand downwards. After that, last four expand up. */
+		/*
 		&:not(:nth-child(-n+4)):nth-last-child(-n+4) .dropdown {
 			&-menu {
 				bottom: 100%; 
 				padding-bottom: 4px; 
 				padding-top: initial; 
 				top: auto;
+			}
+		}
+		*/
+		&:nth-child(-n+3) .message:not(:nth-child(n+4)) {
+			.dropdown-menu {
+				top: 100%; 
+				padding-top: 4px; 
 			}
 		}
 	}
@@ -539,7 +568,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			}
 		}
 		&-ghost {
-			width: 4rem;
+			width: 3rem;
 		}
 	}
 	.tabs.is-toggle a.is-active {
@@ -554,7 +583,6 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	height: 100%;
 }
 .x-has-unread {
-	text-decoration: underline tan 3px;
 	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
 }
 .x-has-margin-top-bottom {
@@ -637,4 +665,16 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	height: 100%;
 	top: 0;
 	left: 0;
+}
+.x-is-opaque {
+	opacity: 0.5;
+}
+.x-is-delayed {
+	animation: 0s linear 0.5s forwards makeVisible;
+	visibility: hidden;
+}
+@keyframes makeVisible {
+	to {
+		visibility: visible;
+	}
 }

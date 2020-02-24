@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import { isAck } from 'Approot/misc/util';
+import { isAck, formatAddr } from 'Approot/misc/util';
 
 const Reaction = ({ reaction, addReaction }) => (
 	<button
@@ -42,7 +42,7 @@ const Reactions = ({ reactions, initialReaction, addReaction, myAddr }) => {
 
 		const haveReacted = reaction.addr === myAddr;
 		const content = reaction.content;
-		const title = `${reaction.username}.${reaction.pubKey?.slice(0, 8)}`;
+		const title = formatAddr(reaction.addr);
 
 		const same = acc[content];
 		if (same) {

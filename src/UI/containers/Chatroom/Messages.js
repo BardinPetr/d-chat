@@ -7,6 +7,7 @@ import uniqBy from 'lodash.uniqby';
 function reducer(state, action) {
 
 	const changes = action.payload;
+
 	switch(action.type) {
 		case 'modify':
 			return state.map(msg => {
@@ -53,6 +54,7 @@ const Messages = ({
 			if (prevMessages.length < PAGE_SIZE) {
 				setHasMore(false);
 			}
+
 			dispatch({ type: 'old', payload: prevMessages });
 		});
 	}, [topic, messages[0]]);
@@ -83,7 +85,9 @@ const Messages = ({
 			topic,
 			extra: unreadCount,
 		})
-			.then(prevMessages => dispatch({ type: 'next', payload: prevMessages }))
+			.then(prevMessages => {
+				dispatch({ type: 'next', payload: prevMessages });
+			})
 			// New chat -> assume has messages.
 			.then(() => setHasMore(true));
 	}, [topic]);

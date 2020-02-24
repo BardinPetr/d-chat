@@ -12,7 +12,7 @@ https://chrome.google.com/webstore/detail/d-chat/glnmkakdjcognfgonjfcklpmjiobiji
 
 ## Screenshot
 
-![](https://gitlab.com/losnappas/d-chat/uploads/589fa1127ad1ac20260c263252c9cff7/d-chatpic.png)
+![Screenshot of D-Chat 5.5.0](https://gitlab.com/losnappas/d-chat/uploads/ac8e1b9e5a4976200595b6a25e29f411/d-chat-5.5.0.png)
 
 More: https://forum.nkn.org/t/introducing-d-chat-a-server-less-secure-and-private-chat-for-individuals-and-groups/1861
 

@@ -11,6 +11,8 @@ import { login } from '../redux/actions';
 import passworder from 'browser-passworder';
 import NKNWorker from 'Approot/workers/nkn.worker.js';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
+import databaser from 'Approot/redux/middleware/databaser';
+import globalSettingsMiddleware from 'Approot/redux/middleware/globalSettings';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
 
@@ -37,6 +39,7 @@ const creatingStore = configs.$loaded.then(async () => {
 	const persistedState = {
 		clients: configs.clientsMeta,
 		chatSettings: configs.chatSettings,
+		globalSettings: configs.globalSettings,
 	};
 
 	const store = createStore(
@@ -46,6 +49,8 @@ const creatingStore = configs.$loaded.then(async () => {
 			applyMiddleware(
 				workerMiddleware,
 				alias(aliases),
+				globalSettingsMiddleware,
+				databaser,
 				notifierMiddleware,
 				subscribersFetcher,
 				thunkMiddleware

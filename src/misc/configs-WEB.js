@@ -7,6 +7,9 @@ export default {
 	// Wallets. 1-to-1 client:wallet.
 	clientsMeta: configs ? [configs] : [],
 
+	globalSettings: {
+		muted: []
+	},
 	chatSettings: {},
 	showNotifications: true,
 };

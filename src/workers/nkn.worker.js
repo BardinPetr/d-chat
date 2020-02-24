@@ -6,13 +6,13 @@ import {
 	getWhisperTopic,
 	isWhisper,
 } from 'Approot/misc/util';
-import receiveMessage from 'Approot/workers/nkn/messageReceiver';
 import {
 	setLoginStatus,
 	setSubscribers,
 	setSubscriptionInfos,
 	sendPrivateMessage,
 	publishMessage,
+	receiveMessage,
 } from 'Approot/redux/actions';
 import {
 	setBalance,
@@ -62,7 +62,7 @@ onmessage = async ({ data: action }) => {
 
 			// Will display message as greyed out. Removed once it is received.
 			data.isNotConfirmed = true;
-			receiveMessage(data);
+			postMessage(receiveMessage(data));
 			break;
 
 		case 'SEND_PRIVATE_MESSAGE_ALIAS':
@@ -76,7 +76,7 @@ onmessage = async ({ data: action }) => {
 			data = data.from('me', {
 				overrideTopic: getWhisperTopic(payload.recipient),
 			});
-			receiveMessage(data);
+			postMessage(receiveMessage(data));
 			break;
 
 		// TODO may want some "insufficient funds" check in place.
