@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -10,8 +10,10 @@ import Dropdown from 'Approot/UI/components/Dropdown';
 import { IoIosMore, IoIosEyeOff, IoMdChatboxes } from 'react-icons/io';
 import { FaBan } from 'react-icons/fa';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import EmojiPicker from 'Approot/UI/components/Chatroom/EmojiPicker';
 import { getWhisperURL } from 'Approot/misc/util';
+
+// I don't think lazy loading it has any performance improvement, but here we go anyways.
+const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 
 const Actions = ({
 	addr,
@@ -37,10 +39,12 @@ const Actions = ({
 	return (
 		<>
 			{emojiPickerVisible && (
-				<EmojiPicker
-					onSelect={onSelect}
-					onClose={closeEmojiPicker}
-				/>
+				<Suspense fallback={<div className="is-hidden" />}>
+					<LazyEmojiPicker
+						onSelect={onSelect}
+						onClose={closeEmojiPicker}
+					/>
+				</Suspense>
 			)}
 			<div className="x-message-actions x-is-hover">
 				<Dropdown
