@@ -9,6 +9,7 @@
 	Things get included twice in either popup or sidebar.
 	This is workaround. -->
 	<link rel="stylesheet" href="popup.css">
+	<link rel="stylesheet" href="vendors~popup.css">
 </head>
 <body>
 	<noscript>Enable JavaScript, Web Workers, and XHR.</noscript>
@@ -27,7 +28,10 @@
 			</section>
 		</main>
 	</div>
-	<script src="popup.js"></script>
+	<script src="vendors~background~popup.js"></script>
+	<script src="vendors~popup.js"></script>
+	<script src="background~popup.js"></script>
+	<script src="popup.js" defer=""></script>
 </body>
 </html>
 

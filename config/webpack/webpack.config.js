@@ -65,11 +65,14 @@ module.exports = function (webpackEnv) {
         (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
 		},
 		optimization: {
-			minimize: isEnvProduction,
+			minimize: false,
+			splitChunks: {
+				chunks: 'all',
+			},
 			minimizer: [
 				plugins.terserPlugin,
 				plugins.optimizeCSSAssetsPlugin,
-			]
+			],
 		},
 		resolve: {
 			alias: {
