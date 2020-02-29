@@ -6,7 +6,6 @@ const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiP
 import { Pos } from 'codemirror';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/show-hint.css';
-import { emojiIndex } from 'emoji-mart';
 
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
@@ -69,7 +68,7 @@ const Textarea = ({
 			// Subs + emoji autocomplete.
 			cm.showHint({
 				completeSingle: false,
-				hint: () => {
+				hint: async () => {
 					const cur = cm.getCursor();
 					const end = cur.ch;
 					let line = cur.line;
@@ -83,6 +82,7 @@ const Textarea = ({
 					if (word.startsWith(':')) {
 						// Emoji autocomplete.
 						const theWord = word.slice(1);
+						const { emojiIndex } = await import('emoji-mart');
 						const filteredList = emojiIndex.search(theWord || 'smile').map(e => ({
 							text: e.native,
 							displayText: `${e.native} ${e.colons}`
@@ -90,7 +90,7 @@ const Textarea = ({
 						if (filteredList.length >= 1) {
 							return {
 								list: filteredList,
-								from: anchor,
+								from: theWord ? anchor : foundWord.anchor,
 								to: Pos(line, end)
 							};
 						}

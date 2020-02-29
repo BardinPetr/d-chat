@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import useTimeout from '@rooks/use-timeout';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
@@ -11,9 +10,8 @@ const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
 
 const LastRead = () => {
 	const lastReadRef = useRef();
-	const { start } = useTimeout(() => lastReadRef.current.scrollIntoView(), 100, []);
 	useEffect(() => {
-		start();
+		lastReadRef.current?.scrollIntoView();
 	}, []);
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (
@@ -33,6 +31,7 @@ const MessagesList = ({
 	createReaction,
 	stayScrolled,
 }) => {
+	const [originalLastReadId] = useState(lastReadId);
 	const messagesList = useMemo(() => {
 		const messagesList = [];
 
@@ -40,13 +39,13 @@ const MessagesList = ({
 		for (let i = 0; i < messages.length; i++) {
 			let includeHeader = true;
 			let previousMessage;
+			const messagePackKey = messages[i].id || i;
 			const messagesPack = [];
 
 			// Gather the messages that belong to this bundle.
 			while (i < messages.length) {
 				const message = messages[i];
 				const messageIsNotice = isNotice(message);
-
 
 				if (previousMessage) {
 					// Same sender, max n minutes apart.
@@ -64,15 +63,17 @@ const MessagesList = ({
 					}
 				}
 
+				// Don't want to lose the "last read" indicator after new messages arrive.
+				const lrId = lastReadId || originalLastReadId;
+				if (message.id === lrId) {
+					messagesPack.push(<LastRead key={'lastRead'} />);
+				}
+
 				const addReaction = msg =>
 					createReaction({
 						...msg,
 						targetID: message.id,
 					});
-
-				if (message.id === lastReadId) {
-					messagesPack.push(<LastRead key={'lastRead'} />);
-				}
 
 				previousMessage = message;
 
@@ -111,7 +112,7 @@ const MessagesList = ({
 				i++;
 			}
 			messagesList.push(
-				<div key={'pack-' + (previousMessage.id || i)} className="x-message-bundle">
+				<div key={'pack-' + messagePackKey} className="x-message-bundle">
 					{messagesPack}
 				</div>
 			);
