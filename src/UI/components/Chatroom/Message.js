@@ -75,11 +75,11 @@ const Nickname = ({
 					'x-is-opaque': ignored,
 				})}
 			>
-				<span className="">{username}</span>
+				<span className="x-avatar-username">{username}</span>
 				{username ? '.' : ''}
-				<i className="is-size-7 has-text-weight-normal">
-					{pubKey.slice(0, 8)}
-				</i>{' '}
+				<span className="is-size-7 has-text-weight-normal is-italic">
+					{pubKey?.slice(0, 8)}
+				</span>{' '}
 			</span>
 			<span className="has-text-grey is-size-7 x-is-padding-left">
 				<TimeAgo date={timestamp} />

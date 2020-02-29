@@ -82,7 +82,7 @@ const Actions = ({
 							<span className="icon">
 								<FaBan />
 							</span>
-							<span>{muted ? __('Unmute user') : __('Mute user')}</span>
+							<span>{muted ? __('Unignore user') : __('Ignore user')}</span>
 						</a>
 					)}
 					{isMyMessage && !deleted && (
