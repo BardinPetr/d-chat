@@ -68,11 +68,12 @@ module.exports = function (webpackEnv) {
 			minimize: false,
 			splitChunks: {
 				chunks: 'all',
+				automaticNameDelimiter: '-'
 			},
 			minimizer: [
 				plugins.terserPlugin,
 				plugins.optimizeCSSAssetsPlugin,
-			],
+			]
 		},
 		resolve: {
 			alias: {
