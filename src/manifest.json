@@ -11,6 +11,7 @@
 			"lib/js/webextensions-lib-configs/Configs.js",
 			"vendors-background.js",
 			"vendors-background-popup.js",
+			"background-popup.js",
 			"background.js"
 		]
 	},

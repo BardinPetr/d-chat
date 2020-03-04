@@ -22,6 +22,10 @@ export function loadMessagesFromDb({
 		.then(arr => arr.reverse());
 }
 
+export async function getMessageFromDb(message) {
+	return db.messages.get(getMessagePK(message));
+}
+
 /**
  * Adds a message or reaction to relevant db table.
  */
@@ -34,7 +38,7 @@ export async function storeMessageToDb(message) {
 }
 
 export async function modifyMessageInDb(message, mods) {
-	const existing = await db.messages.get(getMessagePK(message));
+	const existing = await getMessageFromDb(message);
 	if (existing) {
 		message = {
 			...existing,
@@ -52,12 +56,10 @@ function storeToReactionDb(message) {
 
 /**
  * Adding key to database: let's first make sure a createdAt isn't -
- * being changed. Otherwise chat history will go wrong.
- *
- * TODO db.transaction ?
+ * being changed, because otherwise chat history will go wrong.
  */
 async function _storeMessage(message) {
-	const existing = await db.messages.get(getMessagePK(message));
+	const existing = await getMessageFromDb(message);
 	if (existing) {
 		message.createdAt = existing.createdAt;
 	}

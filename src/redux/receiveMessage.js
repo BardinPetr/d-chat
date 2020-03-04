@@ -5,7 +5,8 @@ import { modifyMessage } from 'Approot/redux/actions';
 let messagesWaitingForConfirmation = [];
 
 /**
- * Stores message, returns new actions to dispatch.
+ * Stores message, returns array of actions to dispatch.
+ * Also stores attachments.
  */
 export default async function receivingMessage(message) {
 	if (!message.unreceivable) {
