@@ -65,8 +65,13 @@ allowedAttributes['*'] = ['class'];
 // Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}.
 const dataUrl = /data:[^\s)]*/gi;
 
-// 4 seconds.
-const DELAY_AFTER_CONNECT = 4000;
+const onConnect = debounce(
+	() => {
+		IncomingMessage.useTimestampForCreatedAt = false;
+	},
+	// After 4 seconds.
+	4000
+);
 
 class IncomingMessage extends Message {
 
@@ -79,22 +84,21 @@ class IncomingMessage extends Message {
 	// That way we get to keep message ordering closer to correct.
 	static useTimestampForCreatedAt = false;
 	static onConnect() {
-		debounce(
-			() => (IncomingMessage.useTimestampForCreatedAt = false),
-			DELAY_AFTER_CONNECT
-		);
+		onConnect();
 		IncomingMessage.useTimestampForCreatedAt = true;
 	}
 
 	constructor(message) {
 		super(message);
 
-		this.createdAt = Date.now() + IncomingMessage.nonce;
-		IncomingMessage.nonce += 0.001;
-
 		if (IncomingMessage.useTimestampForCreatedAt) {
 			this.createdAt = this.timestamp;
+		} else {
+			this.createdAt = Date.now();
 		}
+
+		this.createdAt += IncomingMessage.nonce;
+		IncomingMessage.nonce += 0.001;
 
 		// Ignore topics and ids over 128 chars in length.
 		// We don't want to get 50k chars as database index field.
