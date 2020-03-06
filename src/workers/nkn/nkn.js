@@ -1,9 +1,18 @@
-import nkn from 'nkn-ordered-multiclient';
-import nknWallet from 'nkn-wallet';
+import { MultiClient } from 'nkn-sdk';
 import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
-import rpcCall from 'nkn-client/lib/rpc';
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
+
+const guessLatestBlockHeight = (function() {
+	const inceptionTime = 1583501622400;
+	const blocksAtInception = 968971;
+	return function () {
+		const now = Date.now();
+		// Assume 1 block every 22 seconds since inception.
+		const blocksSinceInception = Math.floor((now - inceptionTime) / (1000 * 22));
+		return blocksAtInception + blocksSinceInception;
+	};
+}());
 
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
@@ -60,23 +69,19 @@ const SEED_ADDRESSES = PROTOCOL === 'https:'
 	];
 const getRandomSeed = () =>
 	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
-const randomSeed = getRandomSeed();
-
-nknWallet.configure({
-	rpcAddr: randomSeed,
-});
+export const rpcServerAddr = getRandomSeed();
 
 /**
  * Couple of helpers for nkn module.
  */
-class NKN extends permissionsMixin(nkn) {
+class NKN extends permissionsMixin(MultiClient) {
 	constructor({ wallet, username }) {
 		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
 			identifier: username?.trim() || undefined,
 			seed: wallet.getSeed(),
-			seedRpcServerAddr: randomSeed,
+			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
 		}, {
@@ -128,23 +133,14 @@ class NKN extends permissionsMixin(nkn) {
 	getSubscription = (topic, addr = this.addr) =>
 		this.defaultClient.getSubscription(genChatID(topic), addr);
 
-	isSubscribed = (topic, addr = this.addr) => {
-		const subInfo = this.getSubscription(topic, addr);
-		const latestBlockHeight = rpcCall(
-			this.defaultClient.options.seedRpcServerAddr,
-			'getlatestblockheight',
-		);
+	isSubscribed = async (topic, addr = this.addr) => {
+		const info = await this.getSubscription(topic, addr);
+		const blockHeight = guessLatestBlockHeight();
 
-		return Promise.all([ subInfo, latestBlockHeight ])
-			.then(async ([ info, blockHeight ]) => {
-				if (blockHeight === 0) {
-					return false;
-				}
-				if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
-					return info;
-				}
-				return null;
-			});
+		if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
+			return info;
+		}
+		return null;
 	};
 
 	publishMessage = async (topic, message, options = {}) => {

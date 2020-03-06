@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import nknWallet from 'nkn-wallet';
+import { Wallet } from 'nkn-sdk';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
@@ -25,7 +25,7 @@ const WalletPasswordVerifier = ({ wallet, onSuccess }) => {
 					<a className="button" onClick={() => {
 						setError('');
 						try {
-							const loadedWallet = nknWallet.loadJsonWallet(JSON.stringify(wallet), password);
+							const loadedWallet = Wallet.fromJSON(JSON.stringify(wallet), password);
 							onSuccess(loadedWallet);
 						} catch(e) {
 							setTimeout(() => setError('Wrong password.'), 0);

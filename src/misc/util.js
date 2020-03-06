@@ -4,7 +4,7 @@
  * They are all over the place. TODO make some sense of these.
  */
 import shasum from 'shasum';
-import protocol from 'nkn-wallet/lib/crypto/protocol';
+import { Wallet } from 'nkn-sdk';
 
 export const isWhisperTopic = topic => !!topic?.startsWith('/whisper/');
 export const isWhisper = message => isWhisperTopic(message.topic);
@@ -102,12 +102,8 @@ export const formatAddr = addr => {
  */
 export const getAddressFromAddr = theAddr => {
 	const [, pubkey] = parseAddr(theAddr);
-	const nknAddress = protocol.programHashStringToAddress(
-		protocol.hexStringToProgramHash(
-			protocol.publicKeyToSignatureRedeem(pubkey),
-		),
-	);
-	return nknAddress;
+	const address = Wallet.publicKeyToAddress(pubkey);
+	return address;
 };
 
 export function getWhisperURL(topic) {

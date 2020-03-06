@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // NOTE: Loader `include` paths are relative to this module
 const paths = require('../paths');
 
-const nknClientJsLibProtocolRegex = /(messages|payloads|transaction|sigchain)_pb\.js/;
+const nknClientJsLibProtocolRegex = /(.*)_pb\.js$/;
 const cssRegex = /\.s?css$/;
 const cssModuleRegex = /\.module\.s?css$/;
 const workerRegex = /\.worker\.js$/;
@@ -169,7 +169,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		loader: require.resolve('string-replace-loader'),
 		options: {
 			search: 'Function(\'return this\')()',
-			replace: 'function() { return this }.call(null)'
+			replace: `(function(){return this || globalThis || window || self;}())`
 		}
 	};
 

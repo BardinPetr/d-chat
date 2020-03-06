@@ -1,10 +1,10 @@
 /**
  * Keeps track of active client and has startup logic.
  */
-import { PayloadType } from 'nkn-client';
+import { pb } from 'nkn-sdk';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
-import NKN from 'Approot/workers/nkn/nkn';
-import nknWallet from 'nkn-wallet';
+import NKN, { rpcServerAddr } from 'Approot/workers/nkn/nkn';
+import { Wallet as NknWallet } from 'nkn-sdk';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import { isNotice } from 'Approot/misc/util';
 import {
@@ -12,36 +12,43 @@ import {
 	receiveMessage,
 } from 'Approot/redux/actions';
 
+const { PayloadType } = pb.payloads;
+
 function addNKNListeners (client) {
 
-	client.on('ordered-message', async (...args) => {
-		handleIncomingMessage(...args);
+	client.onMessage(({ src, payload, payloadType }) => {
+		handleIncomingMessage(src, payload, payloadType);
+		// Do not send ack-messages.
+		return false;
 	});
-	// Do not send ack-messages.
-	client.on('message', () => false);
 
-	client.on('connect', async () => {
+	client.onConnect(() => {
+		IncomingMessage.onConnect();
 		postMessage(connected());
 		postMessage(getBalance(client.wallet.address));
 	});
 
 	async function handleIncomingMessage(src, payload, payloadType) {
 		if (payloadType === PayloadType.TEXT) {
-			const data = payload;
+			const data = JSON.parse(payload);
 			const message = new IncomingMessage(data).from(src);
 
-			const permitted =
-				isNotice(message) || await client.Permissions.check(message.topic, src);
+			const permitted = (
+				isNotice(message)
+				|| await client.Permissions.check(message.topic, src)
+			);
 
 			if (permitted && !message.unreceivable) {
 				postMessage(receiveMessage(message));
-				// receiveMessage(message);
 			}
 		}
 	}
 }
 
-// Singleton.
+/**
+ * Singleton.
+ * This used to make sense, now it's redundant.
+ */
 class NKNHandler {
 	// Static private.
 	static #instance;
@@ -59,14 +66,28 @@ class NKNHandler {
 		const isNewWallet = !wallet;
 
 		if (seed) {
-			wallet = nknWallet.restoreWalletBySeed(seed, password);
+			wallet = new NknWallet({
+				seed,
+				password,
+				rpcServerAddr,
+			});
 		} else if (!isNewWallet) {
-			wallet = nknWallet.loadJsonWallet(JSON.stringify(wallet), password);
-			if (!wallet || !wallet.getPrivateKey) {
+			const jsonString = wallet.toJSON?.() || JSON.stringify(wallet);
+			wallet = NknWallet.fromJSON(
+				jsonString,
+				{
+					password,
+					rpcServerAddr,
+				}
+			);
+			if (!wallet || !wallet.getPublicKey) {
 				throw 'Invalid credentials.';
 			}
 		} else {
-			wallet = nknWallet.newWallet(password);
+			wallet = new NknWallet({
+				password,
+				rpcServerAddr,
+			});
 		}
 
 		const realClient = new NKN({

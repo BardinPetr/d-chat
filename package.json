@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "5.7.2",
+  "version": "5.8.0",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.8.3",
-    "@babel/preset-env": "^7.8.6",
+    "@babel/preset-env": "^7.8.7",
     "@babel/preset-react": "^7.8.3",
     "@storybook/addon-actions": "^4.1.18",
     "@storybook/addon-links": "^4.1.18",
@@ -58,9 +58,9 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.8.6",
+    "@babel/core": "^7.8.7",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@babel/runtime": "^7.8.4",
+    "@babel/runtime": "^7.8.7",
     "@rooks/use-interval": "^3.6.0",
     "@rooks/use-timeout": "^3.6.0",
     "@sharyn/react-router.privateroute": "^1.0.3",
@@ -116,11 +116,8 @@
     "lodash.uniqby": "^4.7.0",
     "marked": "^0.8.0",
     "mini-css-extract-plugin": "0.4.3",
-    "nkn-client": "^0.7.3",
-    "nkn-multiclient": "^0.1.2",
-    "nkn-ordered-multiclient": "git+https://gitlab.com/losnappas/nkn-ordered-multiclient.git",
     "nkn-permissioned-pubsub": "git+https://gitlab.com/losnappas/nkn-permissioned-pubsub.git",
-    "nkn-wallet": "^0.4.9",
+    "nkn-sdk": "^1.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "ora": "^3.4.0",
     "pnp-webpack-plugin": "1.1.0",
