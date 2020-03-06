@@ -34,11 +34,14 @@ function addNKNListeners (client) {
 			const message = new IncomingMessage(data).from(src);
 
 			const permitted = (
-				isNotice(message)
-				|| await client.Permissions.check(message.topic, src)
+				!message.unreceivable
+				&& (
+					isNotice(message)
+					|| await client.Permissions.check(message.topic, src)
+				)
 			);
 
-			if (permitted && !message.unreceivable) {
+			if (permitted) {
 				postMessage(receiveMessage(message));
 			}
 		}
