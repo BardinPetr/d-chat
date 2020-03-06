@@ -13,7 +13,7 @@ module.exports = function () {
 		watchContentBase: true,
 		hot: true,
 		publicPath: '/',
-		quiet: false,
+		quiet: true,
 		watchOptions: {
 			ignored: ignoredFiles(paths.appSrc),
 		},
