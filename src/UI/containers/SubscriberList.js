@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
+import { getWhisperRecipient, isWhisperTopic, getTopicFromPathname } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import classnames from 'classnames';
 
@@ -11,6 +12,7 @@ const SubscriberList = ({
 	className,
 	onClick,
 	subscribers,
+	topic,
 }) => {
 	return (
 		<div className={`x-subs-list ${className}`} onClick={onClick}>
@@ -22,6 +24,9 @@ const SubscriberList = ({
 			<div className={classnames('x-has-max-width x-has-max-height navbar-dropdown is-clipped is-right', {
 				'is-hidden-mobile': !active,
 			})}>
+				{isWhisperTopic(topic) && (
+					<p class="navbar-item is-italic">{__('Privately chatting with')}</p>
+				)}
 				{subscribers.sort().map(sub => (
 					<a
 						className={'navbar-item'}
@@ -36,7 +41,10 @@ const SubscriberList = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	subscribers: state.chatSettings[ownProps.topic]?.subscribers || [],
+	subscribers: state.chatSettings[ownProps.topic]?.subscribers
+		|| isWhisperTopic(ownProps.topic) ? [
+			getWhisperRecipient(getTopicFromPathname(location.hash)),
+		] : [],
 });
 
 export default connect(mapStateToProps)(SubscriberList);

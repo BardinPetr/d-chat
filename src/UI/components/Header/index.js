@@ -41,11 +41,10 @@ class Header extends React.Component {
 	}
 
 	render() {
-		// NOTE: we are using 'location.hash', instead of 'history.location.pathname',
+		// We are using 'location.hash', instead of 'history.location.pathname',
 		// because the latter does not work with topics like '#d-chat' (with hash).
 		const topic = getTopicFromPathname(location.hash);
 		const topicName = getChatDisplayName(topic);
-		const isPrivateChat = topic?.startsWith('/whisper/');
 		const notChat = !topic;
 
 		return (
@@ -101,7 +100,7 @@ class Header extends React.Component {
 					<div className="navbar-end">
 						<SubscriberList
 							className={classnames('navbar-item has-dropdown is-hoverable', {
-								'is-hidden': topic == null || isPrivateChat,
+								'is-hidden': topic == null,
 								'is-active': this.state.expanded,
 							})}
 							active={this.state.expanded}

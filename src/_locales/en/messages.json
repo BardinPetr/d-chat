@@ -194,6 +194,9 @@
   "Privatemessage": {
     "message": " Private message"
   },
+  "Privatelychattingwith": {
+    "message": " Privately chatting with"
+  },
   "Public": {
     "message": " Public"
   },
