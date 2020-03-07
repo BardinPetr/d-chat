@@ -192,3 +192,14 @@ export function isPermissionedTopic(topic) {
 export function isPublicTopic(topic) {
 	return !isWhisperTopic(topic);
 }
+
+export const guessLatestBlockHeight = (function() {
+	const inceptionTime = 1583501622400;
+	const blocksAtInception = 968971;
+	return function () {
+		const now = Date.now();
+		// Assume 1 block every 21.5 seconds since inception.
+		const blocksSinceInception = Math.floor((now - inceptionTime) / (1000 * 21.5));
+		return blocksAtInception + blocksSinceInception;
+	};
+}());

@@ -1,18 +1,7 @@
 import { MultiClient } from 'nkn-sdk';
-import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
+import { genChatID, DCHAT_PUBLIC_TOPICS, guessLatestBlockHeight } from 'Approot/misc/util';
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
-
-const guessLatestBlockHeight = (function() {
-	const inceptionTime = 1583501622400;
-	const blocksAtInception = 968971;
-	return function () {
-		const now = Date.now();
-		// Assume 1 block every 22 seconds since inception.
-		const blocksSinceInception = Math.floor((now - inceptionTime) / (1000 * 22));
-		return blocksAtInception + blocksSinceInception;
-	};
-}());
 
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
@@ -84,9 +73,6 @@ class NKN extends permissionsMixin(MultiClient) {
 			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
-		}, {
-			startTimeout: 4000,
-			timeout: 10,
 		});
 
 		this.wallet = wallet;
@@ -140,7 +126,7 @@ class NKN extends permissionsMixin(MultiClient) {
 		if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
 			return info;
 		}
-		return null;
+		return false;
 	};
 
 	publishMessage = async (topic, message, options = {}) => {
