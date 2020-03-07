@@ -2,12 +2,13 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb } from 'Approot/database/reactions';
+import uniqby from 'lodash.uniqby';
 
 function reducer(state, action) {
 	const changes = action.payload;
 	switch(action.type) {
 		case 'new':
-			return [...state, changes];
+			return uniqby([...state, changes], 'id');
 
 		case 'old':
 			return [...changes, ...state];
@@ -46,7 +47,6 @@ const Reactions = ({
 		if (
 			!messageEvent.reaction
 			|| messageEvent.type !== 'new'
-			|| messageEvent.reaction.isNotConfirmed
 			|| !mounted
 			|| !topic
 			|| topic !== messageEvent.topic

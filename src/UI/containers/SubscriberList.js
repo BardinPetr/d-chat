@@ -25,7 +25,7 @@ const SubscriberList = ({
 				'is-hidden-mobile': !active,
 			})}>
 				{isWhisperTopic(topic) && (
-					<p class="navbar-item is-italic">{__('Privately chatting with')}</p>
+					<p className="navbar-item is-italic">{__('Privately chatting with')}</p>
 				)}
 				{subscribers.sort().map(sub => (
 					<a
@@ -41,10 +41,9 @@ const SubscriberList = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-	subscribers: state.chatSettings[ownProps.topic]?.subscribers
-		|| isWhisperTopic(ownProps.topic) ? [
-			getWhisperRecipient(getTopicFromPathname(location.hash)),
-		] : [],
+	subscribers: isWhisperTopic(ownProps.topic) ? [
+		getWhisperRecipient(getTopicFromPathname(location.hash)),
+	] : (state.chatSettings[ownProps.topic]?.subscribers || []),
 });
 
 export default connect(mapStateToProps)(SubscriberList);
