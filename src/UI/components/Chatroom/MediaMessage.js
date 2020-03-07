@@ -76,9 +76,9 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 		<div>
 			<div className={'x-media-container is-flex'}>
 				{attaches.map((attach, i) => (
-					<p key={i}>
+					<div key={i}>
 						<Attachment attachment={attach} onLoad={stayScrolled} />
-					</p>
+					</div>
 				))}
 			</div>
 			<div className="content" dangerouslySetInnerHTML={{ __html: displayContent }} />
