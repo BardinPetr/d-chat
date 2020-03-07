@@ -587,8 +587,13 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-active-topics, .x-topic-tab {
 	height: 100%;
 }
-.x-has-unread {
+.x-has-unread:not(.is-active) {
 	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
+}
+.x-unread-count {
+	position: absolute;
+	right: 0;
+	color: #a812a6;
 }
 .x-has-margin-top-bottom {
 	margin-top: 1em;
@@ -674,8 +679,11 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-is-opaque {
 	opacity: 0.5;
 }
+.x-is-visible {
+	visibility: visible !important;
+}
 .x-is-delayed {
-	animation: 0s linear 0.5s forwards makeVisible;
+	animation: 0s linear 0.2s forwards makeVisible;
 	visibility: hidden;
 }
 @keyframes makeVisible {

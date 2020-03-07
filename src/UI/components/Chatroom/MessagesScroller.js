@@ -32,7 +32,9 @@ const MessagesScroller = ({
 		return () => {
 			document.removeEventListener('visibilitychange', onVisibilityChange);
 		};
-	}, []);
+		// Is this how it's supposed to be?
+		// Seems quite inefficient to re-attach all the time.
+	}, [markAllMessagesRead]);
 
 	useLayoutEffect(() => {
 		stayScrolled();

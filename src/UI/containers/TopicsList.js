@@ -27,7 +27,9 @@ const Element = ({ hide, chat }) => (
 				})}
 				activeClassName="is-active"
 			>
-				<span className="is-pulled-right">
+				<span className={classnames('x-unread-count', {
+					'x-is-delayed': !!chat.unread?.length,
+				})}>
 					{chat.unread?.length > 0 ? chat.unread.length : ''}
 				</span>
 			</TopicLink>
