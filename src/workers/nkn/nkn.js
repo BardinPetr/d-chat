@@ -214,7 +214,7 @@ class NKN extends permissionsMixin(MultiClient) {
 	};
 
 	toJSON() {
-		return JSON.stringify(this.neutered());
+		return this.neutered();
 	}
 
 	/**
@@ -222,7 +222,7 @@ class NKN extends permissionsMixin(MultiClient) {
 	 * it contains no sensitive information.
 	 */
 	neutered = () => {
-		const w = JSON.parse(this.wallet.toJSON());
+		const w = JSON.parse(JSON.stringify(this.wallet));
 		w.address = w.Address;
 		const c = {
 			...this,

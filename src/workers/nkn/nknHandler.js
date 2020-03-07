@@ -75,7 +75,7 @@ class NKNHandler {
 				rpcServerAddr,
 			});
 		} else if (!isNewWallet) {
-			const jsonString = wallet.toJSON?.() || JSON.stringify(wallet);
+			const jsonString = JSON.stringify(wallet);
 			wallet = NknWallet.fromJSON(
 				jsonString,
 				{
@@ -99,7 +99,7 @@ class NKNHandler {
 		});
 
 		if (isNewWallet) {
-			const c = realClient.neutered();
+			const c = JSON.stringify(realClient);
 			postMessage(createNewClient(c));
 		}
 		addNKNListeners(realClient);
