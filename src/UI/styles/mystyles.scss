@@ -23,8 +23,9 @@ $toolbar-width: 20%;
 $message-content-width: 90%;
 /**
  * Added stuff after sans-serif for emojis.
+ * Buggy?
  */
-$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+// $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -162,8 +163,13 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-color: white;
 		word-wrap: break-word;
 
-		img, video {
-			height: 300px;
+		.x-media-wrapper {
+			&:not(.x-media-expanded) {
+				img, video {
+					height: 300px;
+				}
+				max-width: 100%;
+			}
 		}
 		.x-message-toolbar-side {
 			position: absolute;
