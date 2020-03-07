@@ -22,10 +22,9 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 20%;
 $message-content-width: 90%;
 /**
- * Added stuff after sans-serif for emojis.
- * Buggy?
+ * Added sans-serif after stuff, for emojis.
  */
-// $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -350,9 +349,9 @@ body, html, #root {
 	}
 }
 .x-not-confirmed {
-    .message-body {
-	    opacity: 0.6;
-    }
+	.message-body {
+		animation: 1s linear 5s forwards messageErrors;
+	}
 }
 body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
     scrollbar-width: thin;
@@ -689,5 +688,12 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 @keyframes makeVisible {
 	to {
 		visibility: visible;
+	}
+}
+@keyframes messageErrors {
+	to {
+		opacity: 0.5;
+		transition: color 3s;
+		color: red;
 	}
 }
