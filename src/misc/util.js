@@ -20,7 +20,7 @@ export const getWhisperRecipient = topic =>
 /**
  * Turns chat name into subscription target.
  *
- * When you subscribe to '#d-chat', you actually sub to `'dchat'+shasum('d-chat')`.
+ * When you subscribe to 'd-chat', you actually sub to `'dchat'+shasum('d-chat')`.
  */
 export function genChatID(topic) {
 	if (!topic) {
@@ -87,11 +87,10 @@ export const formatAddr = addr => {
 	}
 	let [name, pubkey] = parseAddr(addr);
 
-	pubkey = pubkey.slice(0, 8);
 	if (name) {
 		return name;
 	} else {
-		return pubkey;
+		return pubkey.slice(0, 8);
 	}
 };
 
