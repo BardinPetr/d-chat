@@ -47,6 +47,9 @@
   "Continue": {
     "message": " Continue"
   },
+  "Contract": {
+    "message": " Contract"
+  },
   "DChat": {
     "message": " D-Chat"
   },
@@ -73,6 +76,9 @@
   },
   "Emojis": {
     "message": " Emojis"
+  },
+  "Expand": {
+    "message": " Expand"
   },
   "Expandsonclick": {
     "message": " Expands on click"
@@ -187,6 +193,9 @@
   },
   "Privatemessage": {
     "message": " Private message"
+  },
+  "Privatelychattingwith": {
+    "message": " Privately chatting with"
   },
   "Public": {
     "message": " Public"

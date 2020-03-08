@@ -20,7 +20,7 @@ const Messages = ({
 }) => (
 	<MessagesScroller
 		listClassname="x-is-fullwidth is-scrollable is-relative x-chatroom-messages"
-		scrollTriggers={[messages[0], messages.length]}
+		scrollTriggers={[topic, messages.length]}
 		markAllMessagesRead={markAllMessagesRead}
 		topic={topic}
 		loadMore={loadMore}

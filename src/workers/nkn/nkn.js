@@ -1,7 +1,5 @@
-import nkn from 'nkn-ordered-multiclient';
-import nknWallet from 'nkn-wallet';
-import { genChatID, DCHAT_PUBLIC_TOPICS } from 'Approot/misc/util';
-import rpcCall from 'nkn-client/lib/rpc';
+import { MultiClient } from 'nkn-sdk';
+import { genChatID, DCHAT_PUBLIC_TOPICS, guessLatestBlockHeight } from 'Approot/misc/util';
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
@@ -60,28 +58,21 @@ const SEED_ADDRESSES = PROTOCOL === 'https:'
 	];
 const getRandomSeed = () =>
 	SEED_ADDRESSES[Math.floor(Math.random() * SEED_ADDRESSES.length)];
-const randomSeed = getRandomSeed();
-
-nknWallet.configure({
-	rpcAddr: randomSeed,
-});
+export const rpcServerAddr = getRandomSeed();
 
 /**
  * Couple of helpers for nkn module.
  */
-class NKN extends permissionsMixin(nkn) {
+class NKN extends permissionsMixin(MultiClient) {
 	constructor({ wallet, username }) {
 		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
 			identifier: username?.trim() || undefined,
 			seed: wallet.getSeed(),
-			seedRpcServerAddr: randomSeed,
+			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
-		}, {
-			startTimeout: 4000,
-			timeout: 10,
 		});
 
 		this.wallet = wallet;
@@ -128,23 +119,14 @@ class NKN extends permissionsMixin(nkn) {
 	getSubscription = (topic, addr = this.addr) =>
 		this.defaultClient.getSubscription(genChatID(topic), addr);
 
-	isSubscribed = (topic, addr = this.addr) => {
-		const subInfo = this.getSubscription(topic, addr);
-		const latestBlockHeight = rpcCall(
-			this.defaultClient.options.seedRpcServerAddr,
-			'getlatestblockheight',
-		);
+	isSubscribed = async (topic, addr = this.addr) => {
+		const info = await this.getSubscription(topic, addr);
+		const blockHeight = guessLatestBlockHeight();
 
-		return Promise.all([ subInfo, latestBlockHeight ])
-			.then(async ([ info, blockHeight ]) => {
-				if (blockHeight === 0) {
-					return false;
-				}
-				if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
-					return info;
-				}
-				return null;
-			});
+		if (info.expiresAt - blockHeight > RESUB_HEIGHT) {
+			return info;
+		}
+		return false;
 	};
 
 	publishMessage = async (topic, message, options = {}) => {
@@ -232,7 +214,7 @@ class NKN extends permissionsMixin(nkn) {
 	};
 
 	toJSON() {
-		return JSON.stringify(this.neutered());
+		return this.neutered();
 	}
 
 	/**
@@ -240,7 +222,7 @@ class NKN extends permissionsMixin(nkn) {
 	 * it contains no sensitive information.
 	 */
 	neutered = () => {
-		const w = JSON.parse(this.wallet.toJSON());
+		const w = JSON.parse(JSON.stringify(this.wallet));
 		w.address = w.Address;
 		const c = {
 			...this,

@@ -22,9 +22,9 @@ $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 20%;
 $message-content-width: 90%;
 /**
- * Added stuff after sans-serif for emojis.
+ * Added sans-serif after stuff, for emojis.
  */
-$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji";
+$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -162,8 +162,12 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-color: white;
 		word-wrap: break-word;
 
-		img, video {
-			height: 300px;
+		.x-media-wrapper {
+			&:not(.x-media-expanded) {
+				img, video {
+					height: 300px;
+				}
+			}
 		}
 		.x-message-toolbar-side {
 			position: absolute;
@@ -345,9 +349,9 @@ body, html, #root {
 	}
 }
 .x-not-confirmed {
-    .message-body {
-	    opacity: 0.6;
-    }
+	.message-body {
+		animation: 1s linear 5s forwards messageErrors;
+	}
 }
 body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
     scrollbar-width: thin;
@@ -582,8 +586,13 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-active-topics, .x-topic-tab {
 	height: 100%;
 }
-.x-has-unread {
+.x-has-unread:not(.is-active) {
 	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
+}
+.x-unread-count {
+	position: absolute;
+	right: 0;
+	color: #a812a6;
 }
 .x-has-margin-top-bottom {
 	margin-top: 1em;
@@ -669,12 +678,22 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-is-opaque {
 	opacity: 0.5;
 }
+.x-is-visible {
+	visibility: visible !important;
+}
 .x-is-delayed {
-	animation: 0s linear 0.5s forwards makeVisible;
+	animation: 0s linear 0.2s forwards makeVisible;
 	visibility: hidden;
 }
 @keyframes makeVisible {
 	to {
 		visibility: visible;
+	}
+}
+@keyframes messageErrors {
+	to {
+		opacity: 0.5;
+		transition: color 3s;
+		color: red;
 	}
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import nknWallet from 'nkn-wallet';
+import { Wallet } from 'nkn-sdk';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
@@ -17,7 +17,7 @@ const WalletPasswordVerifier = ({ wallet, onSuccess }) => {
 							'x-has-opacity-1': !error,
 						})}>{error}</span>
 					</label>
-					<input placeholder={__('Password')} type="text" className="input text" onChange={e => setPassword(e.target.value)} value={password} />
+					<input placeholder={__('Password')} type="password" className="input text" onChange={e => setPassword(e.target.value)} value={password} />
 				</div>
 			</div>
 			<div className="field">
@@ -25,10 +25,11 @@ const WalletPasswordVerifier = ({ wallet, onSuccess }) => {
 					<a className="button" onClick={() => {
 						setError('');
 						try {
-							const loadedWallet = nknWallet.loadJsonWallet(JSON.stringify(wallet), password);
+							const jsonWallet = JSON.stringify(wallet);
+							const loadedWallet = Wallet.fromJSON(jsonWallet, { password });
 							onSuccess(loadedWallet);
 						} catch(e) {
-							setTimeout(() => setError('Wrong password.'), 0);
+							setTimeout(() => setError(__('Wrong password.')), 0);
 						}
 					}}
 					>

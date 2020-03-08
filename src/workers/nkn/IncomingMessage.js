@@ -4,6 +4,7 @@ import sanitize from 'sanitize-html';
 import marked from 'marked';
 import Message from './Message';
 import highlight from 'highlight.js';
+import debounce from 'debounce';
 
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
@@ -64,6 +65,14 @@ allowedAttributes['*'] = ['class'];
 // Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}.
 const dataUrl = /data:[^\s)]*/gi;
 
+const onConnect = debounce(
+	() => {
+		IncomingMessage.useTimestampForCreatedAt = false;
+	},
+	// After 4 seconds.
+	4000
+);
+
 class IncomingMessage extends Message {
 
 	// Firefox with privacy.resistFingerprinting has reduced time precision -
@@ -71,10 +80,24 @@ class IncomingMessage extends Message {
 	// and then messages get shuffled on startup. Workaround.
 	static nonce = 0.001;
 
+	// When connection starts, we want to use timestamps for messages we missed.
+	// That way we get to keep message ordering closer to correct.
+	static useTimestampForCreatedAt = false;
+	static onConnect() {
+		onConnect();
+		IncomingMessage.useTimestampForCreatedAt = true;
+	}
+
 	constructor(message) {
 		super(message);
 
-		this.createdAt = Date.now() + IncomingMessage.nonce;
+		if (IncomingMessage.useTimestampForCreatedAt) {
+			this.createdAt = this.timestamp;
+		} else {
+			this.createdAt = Date.now();
+		}
+
+		this.createdAt += IncomingMessage.nonce;
 		IncomingMessage.nonce += 0.001;
 
 		// Ignore topics and ids over 128 chars in length.

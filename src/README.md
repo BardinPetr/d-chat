@@ -2,7 +2,7 @@
 
 ## Key technologies and packages
 
-IndexedDB (Dexie.js), NKN (nkn-ordered-multiclient), Redux (and webext-redux), React (and Babel), Web Workers, Webpack, markdown parser, html sanitizer, and webext-lib-configs.
+IndexedDB (Dexie.js), NKN (nkn-sdk), Redux (and webext-redux), React (and Babel), Web Workers, Webpack, markdown parser, html sanitizer, and webext-lib-configs.
 
 ## Message schema
 

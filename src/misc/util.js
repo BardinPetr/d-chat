@@ -4,7 +4,7 @@
  * They are all over the place. TODO make some sense of these.
  */
 import shasum from 'shasum';
-import protocol from 'nkn-wallet/lib/crypto/protocol';
+import { Wallet } from 'nkn-sdk';
 
 export const isWhisperTopic = topic => !!topic?.startsWith('/whisper/');
 export const isWhisper = message => isWhisperTopic(message.topic);
@@ -20,7 +20,7 @@ export const getWhisperRecipient = topic =>
 /**
  * Turns chat name into subscription target.
  *
- * When you subscribe to '#d-chat', you actually sub to `'dchat'+shasum('d-chat')`.
+ * When you subscribe to 'd-chat', you actually sub to `'dchat'+shasum('d-chat')`.
  */
 export function genChatID(topic) {
 	if (!topic) {
@@ -87,11 +87,10 @@ export const formatAddr = addr => {
 	}
 	let [name, pubkey] = parseAddr(addr);
 
-	pubkey = pubkey.slice(0, 8);
 	if (name) {
 		return name;
 	} else {
-		return pubkey;
+		return pubkey.slice(0, 8);
 	}
 };
 
@@ -102,12 +101,8 @@ export const formatAddr = addr => {
  */
 export const getAddressFromAddr = theAddr => {
 	const [, pubkey] = parseAddr(theAddr);
-	const nknAddress = protocol.programHashStringToAddress(
-		protocol.hexStringToProgramHash(
-			protocol.publicKeyToSignatureRedeem(pubkey),
-		),
-	);
-	return nknAddress;
+	const address = Wallet.publicKeyToAddress(pubkey);
+	return address;
 };
 
 export function getWhisperURL(topic) {
@@ -196,3 +191,14 @@ export function isPermissionedTopic(topic) {
 export function isPublicTopic(topic) {
 	return !isWhisperTopic(topic);
 }
+
+export const guessLatestBlockHeight = (function() {
+	const inceptionTime = 1583501622400;
+	const blocksAtInception = 968971;
+	return function () {
+		const now = Date.now();
+		// Assume 1 block every 21.5 seconds since inception.
+		const blocksSinceInception = Math.floor((now - inceptionTime) / (1000 * 21.5));
+		return blocksAtInception + blocksSinceInception;
+	};
+}());
