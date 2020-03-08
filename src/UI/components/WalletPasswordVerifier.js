@@ -29,7 +29,7 @@ const WalletPasswordVerifier = ({ wallet, onSuccess }) => {
 							const loadedWallet = Wallet.fromJSON(jsonWallet, { password });
 							onSuccess(loadedWallet);
 						} catch(e) {
-							setTimeout(() => setError('Wrong password.'), 0);
+							setTimeout(() => setError(__('Wrong password.')), 0);
 						}
 					}}
 					>
