@@ -16,16 +16,6 @@ const ChatroomDots = ({ dispatch, topic, chatSettings, }) => (
 		>
 			{chatSettings.muted ? __('Unmute chat') : __('Mute chat')}
 		</a></li>
-		<li><a
-			onClick={() => {
-				// First navigate out of chat.
-				history.push('/');
-				// Then remove it from list.
-				dispatch(removeChat(topic));
-			}}
-		>
-			{__('Hide chat')}
-		</a></li>
 		{!isWhisperTopic(topic) && (
 			<li><a
 				onClick={() => {
