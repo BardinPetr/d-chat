@@ -350,7 +350,7 @@ body, html, #root {
 }
 .x-not-confirmed {
 	.message-body {
-		animation: 1s linear 5s forwards messageErrors;
+		animation: 1s linear 10s forwards messageErrors;
 	}
 }
 body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
