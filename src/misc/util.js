@@ -195,10 +195,11 @@ export function isPublicTopic(topic) {
 export const guessLatestBlockHeight = (function() {
 	const inceptionTime = 1583501622400;
 	const blocksAtInception = 968971;
+	const estimatedBlockTime = 1000 * 21.575;
 	return function () {
 		const now = Date.now();
 		// Assume 1 block every 21.5 seconds since inception.
-		const blocksSinceInception = Math.floor((now - inceptionTime) / (1000 * 21.5));
+		const blocksSinceInception = Math.floor((now - inceptionTime) / estimatedBlockTime);
 		return blocksAtInception + blocksSinceInception;
 	};
 }());

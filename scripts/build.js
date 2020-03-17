@@ -126,7 +126,8 @@ Promise.resolve(loadConfig({}))
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
 	console.log('Creating an optimized production build...');
-
+	// Since dev build creates this file, but production build doesn't, let's just add an empty file to production version.
+	fs.closeSync(fs.openSync('extension/background-popup.js', 'a'));
 	let compiler = webpack(config);
 	return new Promise((resolve, reject) => {
 		compiler.run((err, stats) => {

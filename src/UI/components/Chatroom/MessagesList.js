@@ -26,7 +26,6 @@ const MessagesList = ({
 	messages,
 	refer,
 	lastReadId,
-	subs,
 	myAddr,
 	createReaction,
 	stayScrolled,
@@ -77,7 +76,6 @@ const MessagesList = ({
 
 				previousMessage = message;
 
-				const isSubscribed = subs.includes(message.addr);
 				// Check dynamically, otherwise changing accounts makes them go wrong.
 				const isMe = message.addr === myAddr;
 				const refersToMe = !isMe && message.content?.includes(
@@ -86,7 +84,6 @@ const MessagesList = ({
 
 				messagesPack.push(
 					<Message
-						isNotice={messageIsNotice}
 						className={classnames('is-relative', {
 							'x-me': isMe,
 							'x-refers-to-me': refersToMe,
@@ -94,7 +91,6 @@ const MessagesList = ({
 						includeHeader={includeHeader}
 						refer={refer}
 						message={message}
-						isSubscribed={isSubscribed}
 						key={message.id}
 						topic={message.topic}
 						addReaction={addReaction}
@@ -118,7 +114,7 @@ const MessagesList = ({
 			);
 		}
 		return messagesList;
-	}, [messages, lastReadId, subs]);
+	}, [messages, lastReadId]);
 
 	return messagesList;
 };

@@ -73,6 +73,17 @@ const onConnect = debounce(
 	4000
 );
 
+/**
+ * We've been pretty liberal with incoming message attributes.
+ *
+ * For example, messages that aren't "permitted" will have `hidden` attribute set.
+ * Doesn't show here, though, since it is set in nknHandler.
+ *
+ * In essence, if something needs to be done on UI side, just add an attribute -
+ * on the IncomingMessage somewhere, and handle it from the UI side.
+ *
+ * Long term, this is definitely not such a fantastic plan, but it's easy now.
+ */
 class IncomingMessage extends Message {
 
 	// Firefox with privacy.resistFingerprinting has reduced time precision -

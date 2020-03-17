@@ -104,9 +104,6 @@
   "HerearechannelsthatpeoplehavelistedYoucansubmityourownchanneltothelistsootherscanfindyou": {
     "message": " Here are channels that people have listed. You can submit your own channel to the list, so others can find you."
   },
-  "Hidechat": {
-    "message": " Hide chat"
-  },
   "Home": {
     "message": " Home"
   },
@@ -148,6 +145,9 @@
   },
   "Messagetopicasuser_identifier": {
     "message": " Message #topic# as #user_identifier#..."
+  },
+  "Messagewasnotsent": {
+    "message": " Message was not sent."
   },
   "More": {
     "message": " More..."

@@ -6,7 +6,6 @@ import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN, { rpcServerAddr } from 'Approot/workers/nkn/nkn';
 import { Wallet as NknWallet } from 'nkn-sdk';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
-import { isNotice } from 'Approot/misc/util';
 import {
 	connected,
 	receiveMessage,
@@ -35,11 +34,13 @@ function addNKNListeners (client) {
 
 			const permitted = (
 				!message.unreceivable
-				&& (
-					isNotice(message)
-					|| await client.Permissions.check(message.topic, src)
-				)
 			);
+			// Let's ignore messages that come without permissions.
+			const check = await client.Permissions.check(message.topic, src);
+			if (!check) {
+				message.hidden = true;
+				message.ignored = true;
+			}
 
 			if (permitted) {
 				postMessage(receiveMessage(message));

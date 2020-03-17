@@ -93,9 +93,8 @@ class NKN extends permissionsMixin(MultiClient) {
 	// which explains the "Joined channel." spam that happens.
 	subscribe = async (
 		topic,
-		{ settingPermissions, identifier = this.identifier, ...options } = {}
+		{ settingPermissions, identifier = this.identifier, metadata, ...options } = {}
 	) => {
-		const metadata = options.metadata;
 		const topicID = genChatID(topic);
 		let isSubbed;
 		if (!settingPermissions) {

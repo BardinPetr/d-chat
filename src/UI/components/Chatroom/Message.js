@@ -11,7 +11,7 @@ import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
 import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { parseAddr } from 'Approot/misc/util';
+import { parseAddr, isNotice, isWhisper } from 'Approot/misc/util';
 import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
 
 /**
@@ -92,15 +92,13 @@ const Message = ({
 	children,
 	className,
 	includeHeader,
-	isNotice,
-	isSubscribed,
 	message,
 	refer,
+	subs,
 	stayScrolled,
 	mutedUsers,
 }) => {
 	const [showIgnored, setShowIgnored] = useState(false);
-	const unsubscribed = !isSubscribed;
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
 
 	const toggleShowingIgnored = () => {
@@ -108,19 +106,24 @@ const Message = ({
 		setTimeout(stayScrolled, 0);
 	};
 
-	const showHeader = includeHeader || isNotice;
-	const ignored = mutedUsers.includes(message.addr);
+	const subscribed = isWhisper(message) || subs.includes(message.addr);
+	const notice = isNotice(message);
+
+	const showHeader = includeHeader || notice;
+	// If message isn't permissioned, it is marked `hidden`, and then we hide it.
+	const ignored = mutedUsers.includes(message.addr) || message.hidden;
 
 	return (
 		<div
 			className={classnames(`message ${className}`, {
-				'has-background-grey-lighter': isNotice,
-				'x-notice': isNotice,
+				'has-background-grey-lighter': notice,
+				'x-notice': notice,
 				'x-not-confirmed': message.isNotConfirmed,
 				'x-message-ignored': ignored,
 				'x-show-ignored': showIgnored,
 				'x-has-header': showHeader,
 			})}
+			data-not-confirmed={__('Message was not sent.')}
 		>
 			{showHeader && (
 				<div className="message-header is-paddingless has-text-weight-light">
@@ -146,7 +149,7 @@ const Message = ({
 									refer={refer}
 									addr={message.addr}
 									timestamp={message.timestamp}
-									unsubscribed={unsubscribed}
+									unsubscribed={!subscribed}
 									ignored={ignored}
 								/>
 								<span className="x-is-margin-left x-toolbar">
