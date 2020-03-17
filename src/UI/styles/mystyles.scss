@@ -701,6 +701,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 @keyframes messageErrorMessage {
 	to {
+		font-size: 0.8em;
 		content: attr(data-not-confirmed);
 		color: $white;
 		background: $grey-dark;
