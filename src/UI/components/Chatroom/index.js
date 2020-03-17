@@ -153,7 +153,6 @@ const Chatroom = ({
 				topic={topic}
 				refer={refer}
 				lastReadId={lastReadId}
-				subs={subs}
 				markAllMessagesRead={markAllMessagesRead}
 				myAddr={client.addr}
 				createReaction={createReaction}

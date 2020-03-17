@@ -18,6 +18,7 @@ $message-header-color: hsl(222.2, 88.6%, 44.7%);
 $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
+$z-above-errors: 1;
 $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 20%;
 $message-content-width: 90%;
@@ -173,6 +174,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			position: absolute;
 			right: 0;
 			bottom: 0;
+			z-index: $z-above-errors;
 		}
 		.x-reactions {
 			display: flex;
@@ -202,6 +204,9 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				bottom: 0;
 				color: $grey-dark;
 				font-family: $family-monospace;
+			}
+			* {
+				z-index: $z-above-errors;
 			}
 		}
 
@@ -273,6 +278,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		border: 0;
 		padding: 0 0.3rem;
 		padding-right: 1rem;
+		position: relative;
 
 		.content {
 			margin-bottom: 0;
@@ -349,8 +355,13 @@ body, html, #root {
 	}
 }
 .x-not-confirmed {
-	.message-body {
-		animation: 1s linear 5s forwards messageErrors;
+	&::after {
+		animation: 1s linear 10s forwards messageErrorMessage;
+		content: "";
+		visibility: collapse;
+		position: absolute;
+		right: 0;
+		bottom: 0;
 	}
 }
 body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
@@ -604,6 +615,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	&-text {
 		text-decoration: underline;
 		user-select: all;
+		word-break: break-all;
 	}
 }
 .x-qr-code {
@@ -690,10 +702,13 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		visibility: visible;
 	}
 }
-@keyframes messageErrors {
+@keyframes messageErrorMessage {
 	to {
-		opacity: 0.5;
-		transition: color 3s;
-		color: red;
+		font-size: 0.8em;
+		content: attr(data-not-confirmed);
+		color: $white;
+		background: $grey-dark;
+		visibility: visible;
+		padding: 1px 5px;
 	}
 }
