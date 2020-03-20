@@ -8,7 +8,8 @@ import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login } from '../../redux/actions';
 import { deactivateClients } from 'Approot/redux/actions/client';
-import { IS_EXTENSION } from 'Approot/misc/util';
+import { IS_EXTENSION, importWallet } from 'Approot/misc/util';
+import { Wallet } from 'nkn-sdk';
 
 const Error = ({ err }) => (
 	<>
@@ -33,12 +34,26 @@ class LoginBox extends React.Component {
 			seed: '',
 			address: props.activeClient.wallet?.Address || '',
 			showError: true,
+			error: '',
+			importedWallet: '',
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 		this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
 		this.handleAccountSwitch = this.handleAccountSwitch.bind(this);
+		this.handleKeyStoreUpload = this.handleKeyStoreUpload.bind(this);
+	}
+
+	async handleKeyStoreUpload(e) {
+		e.preventDefault();
+		if (!e.target.files?.length) {
+			return;
+		}
+		const walletJSON = await importWallet(e.target.files[0]);
+		this.setState({
+			importedWallet: walletJSON,
+		});
 	}
 
 	handleChange(e) {
@@ -51,6 +66,19 @@ class LoginBox extends React.Component {
 
 	handleLoginSubmit(e) {
 		e?.preventDefault();
+		let seed = this.state.seed;
+		if (this.state.importedWallet) {
+			try {
+				const wallet = Wallet.fromJSON(this.state.importedWallet, { password: this.state.password });
+				seed = wallet.getSeed();
+			} catch(e) {
+				this.setState({
+					error: 'Wrong password.'
+				});
+				this.flashError();
+				return;
+			}
+		}
 		this.props.dispatch(
 			login(
 				{
@@ -59,17 +87,20 @@ class LoginBox extends React.Component {
 					rememberMe: this.state.rememberMe,
 				},
 				this.state.address,
-				this.state.seed
+				seed
 			)
 		);
+		this.flashError();
+	}
 
+	flashError() {
 		// Clunky message flash.
 		this.setState({
 			showError: true,
 		}, () => {
 			this.timeout = setTimeout(() => this.setState({
 				showError: false,
-			}), 10);
+			}), 100);
 		});
 	}
 
@@ -115,10 +146,10 @@ class LoginBox extends React.Component {
 			activeClient,
 			clients,
 			connecting,
-			error,
 			location,
 			loggedIn,
 		} = this.props;
+		const error = this.props.error || this.state.error;
 
 		const redir =
 			location?.search &&
@@ -188,22 +219,37 @@ class LoginBox extends React.Component {
 												</div>
 											</div>
 											{this.state.showSeedPrompt && (
-												<div className="field">
-													<label className="label">
-														{__('Wallet seed')}
-													</label>
-													<div className="control">
-														<input
-															className="input"
-															type="password"
-															onChange={this.handleChange}
-															placeholder={__('Quite a long string')}
-															name="seed"
-															autoComplete="off"
-															value={this.state.seed}
-														/>
+												<fieldset className="box is-shadowless x-bordered has-background-light">
+													<legend>{__('Seed or key store')}</legend>
+													<div className="field">
+														<label className="label">
+															{__('Wallet seed')}
+														</label>
+														<div className="control">
+															<input
+																className="input"
+																type="password"
+																disabled={!!this.state.importedWallet}
+																onChange={this.handleChange}
+																placeholder={__('Quite a long string')}
+																name="seed"
+																autoComplete="off"
+																value={this.state.seed}
+															/>
+														</div>
 													</div>
-												</div>
+													<div className="field">
+														<label className="label">{__('Key store')}</label>
+														<div className="control">
+															<input
+																type="file"
+																disabled={!!this.state.seed}
+																className="input file"
+																onChange={this.handleKeyStoreUpload}
+															/>
+														</div>
+													</div>
+												</fieldset>
 											)}
 
 											<div className="field">

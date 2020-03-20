@@ -34,7 +34,9 @@
 		"default_icon": "img/NKN_D-chat_blue-64cropped.png"
 	},
 	"icons": {
-		"64": "img/NKN_D-chat_blue-64cropped.png"
+		"16": "img/NKN_D-chat_blue-16.png",
+		"64": "img/NKN_D-chat_blue-64cropped.png",
+		"128": "img/NKN_D-chat_bluewhite-128.png"
 	},
 	"options_ui": {
 		"page": "./options.html"

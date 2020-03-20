@@ -128,6 +128,9 @@
   "Keepitshort": {
     "message": " Keep it short."
   },
+  "Keystore": {
+    "message": " Key store"
+  },
   "Leavechat": {
     "message": " Leave chat"
   },
@@ -208,6 +211,9 @@
   },
   "Reload": {
     "message": " Reload"
+  },
+  "Seedorkeystore": {
+    "message": " Seed or key store"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."

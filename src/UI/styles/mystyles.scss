@@ -416,6 +416,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	z-index: 99;
 	overflow-y: scroll;
 }
+.x-bordered {
+	border: 1px solid black;
+}
 .x-main-editor {
 	position: relative;
 	.CodeMirror {
