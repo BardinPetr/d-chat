@@ -10,6 +10,7 @@ import {
 	connected,
 	receiveMessage,
 } from 'Approot/redux/actions';
+import { isWhisper } from 'Approot/misc/util';
 
 const { PayloadType } = pb.payloads;
 
@@ -36,7 +37,7 @@ function addNKNListeners (client) {
 				!message.unreceivable
 			);
 			// Let's ignore messages that come without permissions.
-			const check = await client.Permissions.check(message.topic, src);
+			const check = isWhisper(message) || await client.Permissions.check(message.topic, src);
 			if (!check) {
 				message.hidden = true;
 				message.ignored = true;
