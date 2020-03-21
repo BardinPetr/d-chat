@@ -184,7 +184,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 	const workerLoader = {
 		test: workerRegex,
 		loader: require.resolve('worker-loader'),
-		options: { name: 'nkn.worker.js' }
+		options: { name: '[hash].nkn-dchat.worker.js' }
 	};
 
 	return {
