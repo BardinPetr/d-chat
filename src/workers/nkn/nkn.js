@@ -68,11 +68,10 @@ const getRandomSeed = () =>
 export const rpcServerAddr = getRandomSeed();
 
 /**
- * Couple of helpers for nkn module.
+ * Everything NKN related.
  */
 class NKN extends permissionsMixin(MultiClient) {
 	constructor({ wallet, username }) {
-		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
 			identifier: username?.trim() || undefined,
@@ -96,7 +95,7 @@ class NKN extends permissionsMixin(MultiClient) {
 
 	getNonce = () => this.wallet.getNonce();
 
-	// Only one suscription per address in the pool at a time.
+	// Only one suscription per address in mempool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
 	subscribe = async (
@@ -139,6 +138,7 @@ class NKN extends permissionsMixin(MultiClient) {
 	publishMessage = async (topic, message, options = {}) => {
 		options = {
 			txPool: true,
+			noReply: true,
 			...options,
 		};
 
@@ -151,6 +151,10 @@ class NKN extends permissionsMixin(MultiClient) {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
+		options = {
+			noReply: true,
+			...options
+		};
 		if (to === this.addr) {
 			return;
 		}
