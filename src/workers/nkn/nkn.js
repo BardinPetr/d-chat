@@ -6,12 +6,11 @@ import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
 const createWorker = () => new SigWorker();
 
-
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
 const RESUB_HEIGHT = 20 * 1000;
 
-// TODO make issue about "window.location" usage in nkn-client-js. `window` doesn't exist in workers.
+// nkn-sdk looks for `window.Worker`.
 self.window = self;
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
 
