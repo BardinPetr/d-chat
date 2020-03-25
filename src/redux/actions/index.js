@@ -101,7 +101,6 @@ export const createMessage = message =>
 		: publishMessage(message);
 
 export const receiveMessage = message => {
-	// Receive tips as messages.
 	let type = 'chat/RECEIVE_MESSAGE';
 	if (message.contentType === 'reaction') {
 		type = 'chat/RECEIVE_REACTION';

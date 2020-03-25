@@ -10,6 +10,7 @@ export default new Configs({
 	chatSettings: {},
 	// Extension options page setting.
 	showNotifications: true,
+	playNotificationSound: true,
 
 	/** Deprecated configs */
 	// message: { [topic]: [] }

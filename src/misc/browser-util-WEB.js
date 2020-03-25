@@ -1,3 +1,4 @@
+import { playNotificationSound } from './common';
 export function __(str) {
 	// TODO
 	return str;
@@ -5,7 +6,9 @@ export function __(str) {
 
 export const setBadgeText = () => {};
 
-export const createNotification = () => {};
+export const createNotification = () => {
+	playNotificationSound();
+};
 
 export const getPopupURL = () => '';
 

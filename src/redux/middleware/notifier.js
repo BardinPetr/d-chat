@@ -92,11 +92,6 @@ const notifier = store => next => action => {
 				contentType: 'receipt',
 				topic,
 				targetID: id,
-			}, {
-				// Do not receive an ACK for this one.
-				// This feature isn't implemented in nkn-client.
-				// Future-proofing.
-				noReply: true,
 			}));
 		}
 	}
