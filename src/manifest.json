@@ -2,6 +2,7 @@
 	"version": "1.0",
 	"manifest_version": 2,
 	"name": "__MSG_extensionName__",
+	"short_name": "__MSG_extensionName__",
 	"description": "__MSG_extensionDescription__",
 	"default_locale": "en",
 	"author": "losnappas",
@@ -36,7 +37,7 @@
 	"icons": {
 		"16": "img/NKN_D-chat_blue-16.png",
 		"64": "img/NKN_D-chat_blue-64cropped.png",
-		"128": "img/NKN_D-chat_bluewhite-128.png"
+		"128": "img/NKN_DCHAT-128-128-border16.png"
 	},
 	"options_ui": {
 		"page": "./options.html"
