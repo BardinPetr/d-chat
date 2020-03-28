@@ -149,8 +149,8 @@
   "Messagetopicasuser_identifier": {
     "message": " Message #topic# as #user_identifier#..."
   },
-  "Messagewasnotsent": {
-    "message": " Message was not sent."
+  "Messageunsettled": {
+    "message": " Message unsettled."
   },
   "More": {
     "message": " More..."

@@ -3,10 +3,11 @@ import { runtime, tabs, windows } from 'webextension-polyfill';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const popout = type => {
+	const openPage = 'sidebar.html' + location.hash;
 	switch (type) {
 		case 'panel':
 			windows.create({
-				url: runtime.getURL('sidebar.html'),
+				url: runtime.getURL(openPage),
 				type: 'popup',
 				height: 700,
 				width: 550,
@@ -15,7 +16,7 @@ const popout = type => {
 
 		case 'tab':
 			tabs.create({
-				url: runtime.getURL('sidebar.html'),
+				url: runtime.getURL(openPage),
 			});
 			break;
 	}

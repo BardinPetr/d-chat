@@ -2,6 +2,7 @@ import { windows, extension, i18n, runtime, browserAction, notifications } from 
 import isNumber from 'is-number';
 import throttle from 'lodash.throttle';
 import configs from 'Approot/misc/configs-APP_TARGET';
+import { playNotificationSound } from './common';
 
 export function __(str, ...placeholders) {
 	// The i18n generator has a bug with empty prefix, so trim.
@@ -22,6 +23,9 @@ export const setBadgeText = txt => {
 };
 
 export const createNotification = throttle((options) => {
+	if (configs.playNotificationSound) {
+		playNotificationSound();
+	}
 	if (configs.showNotifications) {
 		return notifications.create('d-chat', {
 			type: 'basic',

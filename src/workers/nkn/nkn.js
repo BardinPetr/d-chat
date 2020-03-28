@@ -3,11 +3,17 @@ import { genChatID, DCHAT_PUBLIC_TOPICS, guessLatestBlockHeight } from 'Approot/
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
+import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
+const createWorker = () => new SigWorker();
+
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
 const RESUB_HEIGHT = 20 * 1000;
-// TODO make issue about "window.location" usage in nkn-client-js. `window` doesn't exist in workers.
+
+// nkn-sdk looks for `window.Worker`.
+self.window = self;
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
+
 const SEED_ADDRESSES = PROTOCOL === 'https:'
 	? ['https://mainnet-rpc-node-0001.nkn.org/mainnet/api/wallet']
 	: [
@@ -61,11 +67,10 @@ const getRandomSeed = () =>
 export const rpcServerAddr = getRandomSeed();
 
 /**
- * Couple of helpers for nkn module.
+ * Everything NKN related.
  */
 class NKN extends permissionsMixin(MultiClient) {
 	constructor({ wallet, username }) {
-		// TODO : connection fail here will majorly break things.
 		super({
 			originalClient: true,
 			identifier: username?.trim() || undefined,
@@ -73,6 +78,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
+			worker: createWorker,
 		});
 
 		this.wallet = wallet;
@@ -88,7 +94,7 @@ class NKN extends permissionsMixin(MultiClient) {
 
 	getNonce = () => this.wallet.getNonce();
 
-	// Only one suscription per address in the pool at a time.
+	// Only one suscription per address in mempool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
 	subscribe = async (
@@ -131,6 +137,7 @@ class NKN extends permissionsMixin(MultiClient) {
 	publishMessage = async (topic, message, options = {}) => {
 		options = {
 			txPool: true,
+			noReply: true,
 			...options,
 		};
 
@@ -143,6 +150,10 @@ class NKN extends permissionsMixin(MultiClient) {
 	};
 
 	sendMessage = async (to, message, options = {}) => {
+		options = {
+			noReply: true,
+			...options
+		};
 		if (to === this.addr) {
 			return;
 		}
