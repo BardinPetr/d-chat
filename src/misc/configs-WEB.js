@@ -1,15 +1,43 @@
+let Options;
 let configs = localStorage.getItem('dchat');
 if (configs) {
 	configs = JSON.parse(configs);
-}
-export default {
-	$loaded: Promise.resolve(),
-	// Wallets. 1-to-1 client:wallet.
-	clientsMeta: configs ? [configs] : [],
+	Options = {
+		$loaded: Promise.resolve(),
+		// Wallets. 1-to-1 client:wallet.
+		clientsMeta: configs ? [configs] : [],
 
-	globalSettings: {
-		muted: []
-	},
-	chatSettings: {},
-	showNotifications: true,
+		globalSettings: {
+			muted: []
+		},
+		chatSettings: {},
+
+		notifications: false,
+		audioNotifications: true,
+	};
+}
+
+const c2 = localStorage.getItem('dchatv2');
+if (c2) {
+	Options = JSON.parse(c2);
+	Options.$loaded = Promise.resolve();
+}
+
+const handler = {
+	set: function(obj, prop, value) {
+		if (prop !== '$loaded') {
+			obj[prop] = value;
+			localStorage.setItem('dchatv2', JSON.stringify(obj));
+		}
+		return true;
+	}
 };
+
+let opts;
+if (Proxy) {
+	opts = new Proxy(Options, handler);
+} else {
+	opts = Options;
+}
+
+export default opts;

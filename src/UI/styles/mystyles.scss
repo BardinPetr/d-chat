@@ -33,6 +33,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 @import "../../../node_modules/bulma-divider/src/sass/index.sass";
 @import "../../../node_modules/bulma-dashboard/src/bulma-dashboard.sass";
 @import "../../../node_modules/bulma-switch/src/sass/index.sass";
+@import "../../fontello/css/fontello.css";
 
 .input::placeholder {
 	color: $grey;
@@ -659,30 +660,6 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	opacity: 0.8;
 	vertical-align: top;
 }
-.fa {
-	display: inline-block;
-	width: 13px;
-	height: 13px;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center center;
-	opacity: 0.6;
-	&-arrows-alt {
-		background-image: url(../../img/fa/font-awesome_4-7-0_arrows-alt_468_0_000000_none.png);
-	}
-	&-columns {
-		background-image: url(../../img/fa/font-awesome_4-7-0_columns_362_0_000000_none.png);
-	}
-	&-image {
-		background-image: url(../../img/fa/font-awesome_4-7-0_image_468_0_000000_none.png);
-	}
-	&-paper-plane-o {
-		background-image: url(../../img/fa/font-awesome_4-7-0_paper-plane-o_362_0_000000_none.png);
-	}
-	&-smile-o {
-		background-image: url(../../img/fa/font-awesome_4-7-0_smile-o_468_0_000000_none.png);
-	}
-}
 .x-background {
 	position: fixed;
 	width: 100%;
@@ -699,6 +676,34 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-is-delayed {
 	animation: 0s linear 0.2s forwards makeVisible;
 	visibility: hidden;
+}
+.editor-toolbar {
+	&:not(.fullscreen) {
+		.bold, .italic, .heading, .quote, .unordered-list,
+		.ordered-list, .image, .preview, .guide, .link, .separator {
+			display: none;
+		}
+	}
+	&.fullscreen {
+		.is-hidden-desktop {
+			display: inline-block !important;
+		}
+	}
+	// Colliding classname here.
+	.heading {
+		font-size: 13.3333px;
+		letter-spacing: normal;
+		text-transform: none;
+	}
+}
+.x-is-popup {
+	.editor-toolbar {
+		&:not(.fullscreen) {
+			.upload-image, .submit {
+				display: none;
+			}
+		}
+	}
 }
 @keyframes makeVisible {
 	to {

@@ -27,7 +27,8 @@
 			}
 		]
 	},
-	"permissions": ["storage", "unlimitedStorage", "notifications"],
+	"permissions": ["storage", "unlimitedStorage"],
+	"optional_permissions": ["notifications"],
 	"sidebar_action": {
 		"default_title": "__MSG_extensionName__",
 		"default_panel": "./sidebar.html",
@@ -38,9 +39,6 @@
 		"16": "img/NKN_D-chat_blue-16.png",
 		"64": "img/NKN_D-chat_blue-64cropped.png",
 		"128": "img/NKN_DCHAT-128-128-border16.png"
-	},
-	"options_ui": {
-		"page": "./options.html"
 	},
 	"browser_specific_settings": {
 		"gecko": {
