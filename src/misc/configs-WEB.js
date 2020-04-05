@@ -1,20 +1,21 @@
-let Options;
+let Options = {
+	$loaded: Promise.resolve(),
+	// Wallets. 1-to-1 client:wallet.
+	clientsMeta: [],
+
+	globalSettings: {
+		muted: []
+	},
+	chatSettings: {},
+
+	notifications: false,
+	audioNotifications: true,
+};
+
 let configs = localStorage.getItem('dchat');
 if (configs) {
 	configs = JSON.parse(configs);
-	Options = {
-		$loaded: Promise.resolve(),
-		// Wallets. 1-to-1 client:wallet.
-		clientsMeta: configs ? [configs] : [],
-
-		globalSettings: {
-			muted: []
-		},
-		chatSettings: {},
-
-		notifications: false,
-		audioNotifications: true,
-	};
+	Options.clientsMeta = configs ? [configs] : [];
 }
 
 const c2 = localStorage.getItem('dchatv2');

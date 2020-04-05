@@ -28,5 +28,13 @@ export const popout = () => {};
 export const reload = () => {};
 
 export const requestPermissions = async () => {
-	return Notification?.requestPermission();
+	if (!Notification) {
+		throw new Error('No Notifications');
+	}
+	const res = await Notification.requestPermission();
+	if (res === 'granted') {
+		return true;
+	} else {
+		return false;
+	}
 };
