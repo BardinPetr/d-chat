@@ -1,4 +1,4 @@
-import { windows, extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
+import { windows, permissions, extension, i18n, runtime, browserAction, notifications } from 'webextension-polyfill';
 import isNumber from 'is-number';
 import throttle from 'lodash.throttle';
 import configs from 'Approot/misc/configs-APP_TARGET';
@@ -23,11 +23,11 @@ export const setBadgeText = txt => {
 };
 
 export const createNotification = throttle((options) => {
-	if (configs.playNotificationSound) {
+	if (configs.audioNotifications) {
 		playNotificationSound();
 	}
-	if (configs.showNotifications) {
-		return notifications.create('d-chat', {
+	if (configs.notifications) {
+		return notifications.create('D-Chat', {
 			type: 'basic',
 			title: options.title || '',
 			message: options.message || '',
@@ -58,3 +58,9 @@ export const popout = url => windows.create({
 });
 
 export const reload = () => runtime.reload();
+
+export const requestPermissions = permission => {
+	return permissions.request({
+		permissions: permission
+	});
+};

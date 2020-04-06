@@ -123,7 +123,7 @@ const Message = ({
 				'x-show-ignored': showIgnored,
 				'x-has-header': showHeader,
 			})}
-			data-not-confirmed={__('Message unsettled.')}
+			data-not-confirmed={__('Message unconfirmed.')}
 		>
 			{showHeader && (
 				<div className="message-header is-paddingless has-text-weight-light">

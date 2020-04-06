@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "5.11.0",
+  "version": "5.12.0",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -116,7 +116,7 @@
     "marked": "^0.8.2",
     "mini-css-extract-plugin": "0.4.3",
     "nkn-permissioned-pubsub": "git+https://gitlab.com/losnappas/nkn-permissioned-pubsub.git",
-    "nkn-sdk": "^1.0.7",
+    "nkn-sdk": "^1.0.8",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "ora": "^3.4.0",
     "pnp-webpack-plugin": "1.1.0",

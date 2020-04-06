@@ -113,6 +113,7 @@ class Header extends React.Component {
 					<div className="navbar-start is-hidden-desktop is-hidden-tablet">
 						<Link className="navbar-item" to="/">{__('Home')}</Link>
 						<Link className="navbar-item" to="/topics">{__('Public')}</Link>
+						<Link className="navbar-item" to="/options">{__('Options')}</Link>
 
 						<TopicsList labelClassName="menu-label" wrapperClassName="navbar-item" />
 

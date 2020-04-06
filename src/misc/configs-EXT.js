@@ -8,9 +8,14 @@ export default new Configs({
 		muted: []
 	},
 	chatSettings: {},
+
+	notifications: false,
+	audioNotifications: true,
+
+	// These 2 were before optional_permissions
 	// Extension options page setting.
-	showNotifications: true,
-	playNotificationSound: true,
+	// showNotifications: true,
+	// playNotificationSound: true,
 
 	/** Deprecated configs */
 	// message: { [topic]: [] }

@@ -133,17 +133,30 @@ const Textarea = ({
 	};
 
 	const onEnterPress = (cm) => {
-		submitText(cm.getValue());
-		cm.setValue('');
-		localStorage['smde_main-textarea'] = '';
+		const mde = mdeInstance.current;
+		if (!mde?.isFullscreenActive()) {
+			onSubmit(mde);
+		} else {
+			const doc = cm.getDoc();
+			const cursor = doc.getCursor(); // Gets the line number in the cursor position.
+			const line = doc.getLine(cursor.line); // Get the line contents.
+			const pos = { // Create a new object to avoid mutation of the original selection.
+				line: cursor.line,
+				ch: line.length // Set the character position to the end of the line.
+			};
+			doc.replaceRange('\n', pos);
+		}
 	};
 
 	const setRef = i => mdeInstance.current = i;
 	const onSelect = emoji => mdeInstance.current.codemirror.replaceSelection(emoji.native);
 
 	const onSubmit = editor => {
-		onEnterPress(editor.codemirror);
-		editor.codemirror.focus();
+		const cm = editor.codemirror;
+		submitText(cm.getValue());
+		cm.setValue('');
+		localStorage['smde_main-textarea'] = '';
+		cm.focus();
 	};
 
 	const closeEmojiPicker = () => setEmojiPickerVisible(false);
@@ -172,6 +185,9 @@ const Textarea = ({
 					imageMaxSize: 4194304, // 4MB
 					status: ['upload-image'],
 					toolbarTips: false,
+					onToggleFullScreen() {
+						mdeInstance.current?.codemirror.focus();
+					},
 					imageTexts: {
 						sbInit: __('Post media by pasting or dropping it in the textarea.'),
 						sbOnDragEnter: __('Drop media to upload.'),
@@ -192,27 +208,31 @@ const Textarea = ({
 					promptURLs: IS_SIDEBAR,
 					spellChecker: false,
 					minHeight: 'auto',
-					toolbar: IS_SIDEBAR ? ['upload-image', {
-						name: 'emoji',
-						action: () => setEmojiPickerVisible(true),
-						className: 'fa fa-smile-o',
-						title: '',
-					}, '|', 'side-by-side', 'fullscreen', {
-						name: 'is-hidden-desktop',
-						action: onSubmit,
-						className: 'fa fa-paper-plane-o',
-						title: '',
-					}] : [{
-						name: 'emoji',
-						action: () => setEmojiPickerVisible(true),
-						className: 'fa fa-smile-o',
-						title: '',
-					}, {
-						name: 'submit',
-						action: onSubmit,
-						className: 'fa fa-paper-plane-o',
-						title: '',
-					}]
+					toolbar: [
+						{
+							name: 'emoji',
+							action: () => setEmojiPickerVisible(true),
+							className: 'fa fa-smile',
+							title: '',
+						},
+						'|',
+						'bold',
+						'italic',
+						'heading',
+						'quote',
+						'|',
+						'link',
+						'upload-image',
+						'|',
+						'side-by-side',
+						'fullscreen',
+						{
+							name: 'is-hidden-desktop submit',
+							action: onSubmit,
+							className: 'fa fa-paper-plane-empty',
+							title: '',
+						}
+					]
 				}}
 				extraKeys={{
 					Enter: onEnterPress,

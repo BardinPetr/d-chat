@@ -13,6 +13,9 @@ const Sidebar = () => (
 			<li>
 				<Link to="/topics">{__('Public')}</Link>
 			</li>
+			<li>
+				<Link to="/options">{__('Options')}</Link>
+			</li>
 		</ul>
 
 		<TopicsList labelClassName="menu-label" wrapperClassName="x-has-margin-top-bottom" />

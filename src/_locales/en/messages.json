@@ -17,6 +17,9 @@
   "Approvetogroup": {
     "message": " Approve to group"
   },
+  "Audionotifications": {
+    "message": " Audio notifications"
+  },
   "Channelnamelikedchatforexample": {
     "message": " Channel name, like \"d-chat\", for example."
   },
@@ -149,8 +152,8 @@
   "Messagetopicasuser_identifier": {
     "message": " Message #topic# as #user_identifier#..."
   },
-  "Messageunsettled": {
-    "message": " Message unsettled."
+  "Messageunconfirmed": {
+    "message": " Message unconfirmed."
   },
   "More": {
     "message": " More..."
@@ -173,6 +176,9 @@
   "Nickname": {
     "message": " Nickname"
   },
+  "Notifications": {
+    "message": " Notifications"
+  },
   "OK": {
     "message": " OK"
   },
@@ -181,6 +187,9 @@
   },
   "Open": {
     "message": " Open"
+  },
+  "Options": {
+    "message": " Options"
   },
   "Panel": {
     "message": " Panel"
