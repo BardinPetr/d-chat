@@ -28,7 +28,7 @@ const Options = () => {
 								checked={notifications}
 								onChange={async e => {
 									const v = e.target.checked;
-									const granted = await requestPermissions([ 'notifications' ]);
+									const granted = await requestPermissions([ 'notifications' ]).catch(() => false);
 									if (!granted) {
 										setNotifications(false);
 										configs.notifications = false;
@@ -38,7 +38,6 @@ const Options = () => {
 									}
 								}}
 								name="notifications"
-								className="checkbox"
 							/>
 						</div>
 					</div>
@@ -54,7 +53,6 @@ const Options = () => {
 									configs.audioNotifications = v;
 								}}
 								name="audioNotifications"
-								className="checkbox"
 							/>
 						</div>
 					</div>
