@@ -12,6 +12,7 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const WorkerInjectorGeneratorPlugin = require('worker-injector-generator-plugin');
 
 const paths = require('../paths');
 const staticFiles = require('./static-files');
@@ -130,6 +131,15 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		APP_TARGET: JSON.stringify(appTarget),
 	});
 
+	const workerInjectorGeneratorPlugin = new WorkerInjectorGeneratorPlugin({
+		name: 'worker-injector.js',
+		importScripts: [
+			'common.js',
+			'nkn-worker.js'
+		],
+		isAsync: false
+	});
+
 	return {
 		optionsHtmlPlugin,
 		popupHtmlPlugin,
@@ -148,6 +158,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		friendlyErrorsWebpackPlugin,
 		normalModuleReplacementPlugin,
 		appTargetPlugin,
+		workerInjectorGeneratorPlugin,
 	};
 };
 

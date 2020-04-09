@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "5.13.0",
+  "version": "5.13.1",
   "description": "Decentralized Chat on NKN",
   "repository": {
     "type": "git",
@@ -55,6 +55,7 @@
     "style-loader": "^0.23.1",
     "web-ext": "^2.9.3",
     "webpack-cli": "^3.3.11",
+    "worker-injector-generator-plugin": "^1.0.2",
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
@@ -143,7 +144,7 @@
     "redux-thunk": "^2.3.0",
     "redux-worker-middleware": "^1.0.0",
     "resolve": "1.8.1",
-    "sanitize-html": "^1.22.0",
+    "sanitize-html": "^1.23.0",
     "sass-loader": "7.1.0",
     "semver": "^6.3.0",
     "shasum": "^1.0.2",

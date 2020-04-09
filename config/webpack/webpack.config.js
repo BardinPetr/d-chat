@@ -65,10 +65,17 @@ module.exports = function (webpackEnv) {
         (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
 		},
 		optimization: {
-			minimize: false,
+			minimize: isEnvProduction && process.env.APP_TARGET === 'WEB',
 			splitChunks: {
-				chunks: 'all',
-				automaticNameDelimiter: '-'
+				automaticNameDelimiter: '-',
+				cacheGroups: {
+					backgroundWorkerCommons: {
+						test: /^(?!.*webpack\.worker\.js.*)/,
+						name: 'common',
+						minChunks: 2,
+						chunks: chunk => /(nkn-worker|background)/.test(chunk.name)
+					}
+				}
 			},
 			minimizer: [
 				plugins.terserPlugin,
@@ -134,6 +141,7 @@ module.exports = function (webpackEnv) {
 			plugins.copyPlugin,
 			plugins.normalModuleReplacementPlugin,
 			plugins.appTargetPlugin,
+			plugins.workerInjectorGeneratorPlugin,
 		].filter(Boolean),
 		node: {
 			dgram: 'empty',

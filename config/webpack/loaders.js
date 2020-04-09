@@ -7,7 +7,7 @@ const paths = require('../paths');
 const nknClientJsLibProtocolRegex = /(.*)_pb\.js$/;
 const cssRegex = /\.s?css$/;
 const cssModuleRegex = /\.module\.s?css$/;
-const workerRegex = /\.worker\.js$/;
+const workerRegex = /webpack\.worker\.js$/;
 
 
 
@@ -184,8 +184,10 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 	const workerLoader = {
 		test: workerRegex,
 		loader: require.resolve('worker-loader'),
-		options: { name: '[hash].nkn-dchat.worker.js' }
+		options: { name: '[hash].[name].js' }
 	};
+
+
 
 	return {
 		eslintLoader,

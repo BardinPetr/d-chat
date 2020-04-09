@@ -10,8 +10,7 @@
 		"scripts": [
 			"lib/js/browser-polyfill.js",
 			"lib/js/webextensions-lib-configs/Configs.js",
-			"vendors-background.js",
-			"vendors-background-popup.js",
+			"common.js",
 			"background-popup.js",
 			"background.js"
 		]
@@ -27,8 +26,8 @@
 			}
 		]
 	},
-	"permissions": ["storage"],
-	"optional_permissions": ["notifications","unlimitedStorage"],
+	"permissions": ["storage","unlimitedStorage"],
+	"optional_permissions": ["notifications"],
 	"sidebar_action": {
 		"default_title": "__MSG_extensionName__",
 		"default_panel": "./sidebar.html",
