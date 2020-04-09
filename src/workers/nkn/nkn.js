@@ -3,15 +3,10 @@ import { genChatID, DCHAT_PUBLIC_TOPICS, guessLatestBlockHeight } from 'Approot/
 import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
-import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
-const createWorker = () => new SigWorker();
-
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
 const RESUB_HEIGHT = 20 * 1000;
 
-// nkn-sdk looks for `window.Worker`.
-self.window = self;
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
 
 const SEED_ADDRESSES = PROTOCOL === 'https:'
@@ -78,7 +73,6 @@ class NKN extends permissionsMixin(MultiClient) {
 			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
-			worker: createWorker,
 		});
 
 		this.wallet = wallet;
