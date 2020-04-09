@@ -19,7 +19,7 @@ const Options = () => {
 				<h1 className="title">
 					{__('Options')}
 				</h1>
-				<form className="form">
+				<div className="">
 					<div className="field">
 						<label className="label">{__('Notifications')}</label>
 						<div className="control">
@@ -56,7 +56,22 @@ const Options = () => {
 							/>
 						</div>
 					</div>
-				</form>
+					<div className="field">
+						<label className="label">{__('Unlimited Storage space')}</label>
+						<div className="control">
+							<p className="is-italic">{__('This one might not do anything, depending on your browser and its version. Chrome Web Store gives a hard time over permissions, so tada.')}</p>
+							<a
+								onClick={() => {
+									// Chromium 80 doesn't support this. Firefox doesn't support this.
+									// Chrome Web Store reviewers don't want to see this as used permission.
+									// What is a person to do here?
+									requestPermissions([ 'unlimitedStorage' ]).catch(console.error);
+								}}
+								className="button"
+							>{__('Request permission')}</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

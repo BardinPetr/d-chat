@@ -27,8 +27,8 @@
 			}
 		]
 	},
-	"permissions": ["storage", "unlimitedStorage"],
-	"optional_permissions": ["notifications"],
+	"permissions": ["storage"],
+	"optional_permissions": ["notifications","unlimitedStorage"],
 	"sidebar_action": {
 		"default_title": "__MSG_extensionName__",
 		"default_panel": "./sidebar.html",
