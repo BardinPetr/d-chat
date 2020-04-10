@@ -16,6 +16,7 @@ const doesPopupExist = fs.existsSync(paths.appPopupJs);
 const doesPopupHtmlExist = fs.existsSync(paths.popupTemplate);
 const doesSidebarExist = fs.existsSync(paths.appSidebarJs);
 const doesSidebarHtmlExist = fs.existsSync(paths.sidebarTemplate);
+const doesBackgroundHtmlExist = fs.existsSync(paths.backgroundTemplate);
 const doesBackgroundExist = fs.existsSync(paths.appBackgroundJs);
 const doesContentExist = fs.existsSync(paths.appContentJs);
 const doesNknWorkerExist = fs.existsSync(paths.appNknWorkerJs);
@@ -65,10 +66,22 @@ module.exports = function (webpackEnv) {
         (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
 		},
 		optimization: {
-			minimize: false,
+			minimize: isEnvProduction && process.env.APP_TARGET === 'WEB',
 			splitChunks: {
-				chunks: 'all',
-				automaticNameDelimiter: '-'
+				automaticNameDelimiter: '-',
+				name: false,
+				cacheGroups: {
+					common: {
+						test: /^(?!.*webpack\.worker\.js.*)/,
+						name: 'common',
+						minChunks: 2,
+						chunks: chunk => /(nkn-worker|background)/.test(chunk.name)
+					},
+					popup: {
+						chunks: chunk => /(popup)/.test(chunk.name),
+						maxSize: 4 * 1024 * 1024,
+					}
+				}
 			},
 			minimizer: [
 				plugins.terserPlugin,
@@ -124,8 +137,9 @@ module.exports = function (webpackEnv) {
 			doesOptionsHtmlExist && plugins.optionsHtmlPlugin,
 			doesSidebarHtmlExist && plugins.sidebarHtmlPlugin,
 			doesPopupHtmlExist && plugins.popupHtmlPlugin,
+			doesBackgroundHtmlExist && plugins.backgroundHtmlPlugin,
 			plugins.htmlIncAssetsPlugin,
-			plugins.scriptExtHtmlPlugin,
+			// plugins.scriptExtHtmlPlugin,
 			plugins.moduleNotFoundPlugin,
 			isEnvDevelopment && plugins.CaseSensitivePathsPlugin,
 			isEnvDevelopment && plugins.watchMissingNodeModulesPlugin,
@@ -134,6 +148,7 @@ module.exports = function (webpackEnv) {
 			plugins.copyPlugin,
 			plugins.normalModuleReplacementPlugin,
 			plugins.appTargetPlugin,
+			plugins.workerInjectorGeneratorPlugin,
 		].filter(Boolean),
 		node: {
 			dgram: 'empty',

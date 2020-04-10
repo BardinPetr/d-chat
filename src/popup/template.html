@@ -10,7 +10,6 @@
 	This is workaround. -->
 	<script src="lib/js/browser-polyfill.js" defer></script>
 	<script src="lib/js/webextensions-lib-configs/Configs.js" defer></script>
-	<link rel="stylesheet" href="vendors-popup.css">
 	<style type="text/css">
 	html {
 		overflow: hidden;
@@ -27,7 +26,7 @@
 	}
 	</style>
 </head>
-<body>
+<body class="x-is-popup">
 	<div class="dashboard">
 		<div id="root"></div>
 		<div id="sidebar-root" class="dashboard-panel is-small is-medium-desktop is-scrollable is-hidden-mobile">
@@ -43,9 +42,6 @@
 			</section>
 		</main>
 	</div>
-	<script src="vendors-popup.js"></script>
-	<script src="vendors-background-popup.js"></script>
-	<script src="background-popup.js"></script>
 </body>
 </html>
 

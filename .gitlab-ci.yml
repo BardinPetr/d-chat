@@ -50,6 +50,7 @@ pages:
   stage: publish
   script:
     - npm run build:web
+    - rm -rf extension/lib/js/{webextensions-lib-configs,browser-polyfill.js}
     - mv extension/* public
   artifacts:
     paths:

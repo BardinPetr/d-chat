@@ -7,14 +7,7 @@
 	"default_locale": "en",
 	"author": "losnappas",
 	"background": {
-		"scripts": [
-			"lib/js/browser-polyfill.js",
-			"lib/js/webextensions-lib-configs/Configs.js",
-			"vendors-background.js",
-			"vendors-background-popup.js",
-			"background-popup.js",
-			"background.js"
-		]
+		"page": "./background.html"
 	},
 	"browser_action": {
 		"default_icon": "img/NKN_D-chat_blue-64cropped.png",
@@ -27,11 +20,11 @@
 			}
 		]
 	},
-	"permissions": ["storage", "unlimitedStorage"],
+	"permissions": ["storage"],
 	"optional_permissions": ["notifications"],
 	"sidebar_action": {
 		"default_title": "__MSG_extensionName__",
-		"default_panel": "./sidebar.html",
+		"default_panel": "./index.html",
 		"open_at_install": false,
 		"default_icon": "img/NKN_D-chat_blue-64cropped.png"
 	},

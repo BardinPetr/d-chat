@@ -3,7 +3,7 @@ import { runtime, tabs, windows } from 'webextension-polyfill';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const popout = type => {
-	const openPage = 'sidebar.html' + location.hash;
+	const openPage = 'index.html' + location.hash;
 	switch (type) {
 		case 'panel':
 			windows.create({

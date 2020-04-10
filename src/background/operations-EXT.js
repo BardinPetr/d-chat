@@ -30,7 +30,7 @@ export const onInstalled = storePromise =>
 			() =>
 				details.reason === 'install' &&
 				browser.tabs.create({
-					url: browser.runtime.getURL('sidebar.html?register'),
+					url: browser.runtime.getURL('index.html?register'),
 				}),
 			250,
 		); // Sometimes the register screen would bug out.

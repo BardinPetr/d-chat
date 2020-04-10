@@ -10,10 +10,6 @@ import history from 'Approot/UI/history';
 import { joinChat, navigated } from 'Approot/redux/actions';
 import { IS_SIDEBAR, getTopicFromPathname } from 'Approot/misc/util';
 
-if (!IS_SIDEBAR) {
-	document.body.classList.add('x-is-popup');
-}
-
 const App = async (store) => {
 	/**
 	 * Subscribes to chats when they're opened.

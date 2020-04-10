@@ -11,7 +11,7 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const WorkerInjectorGeneratorPlugin = require('worker-injector-generator-plugin');
 
 const paths = require('../paths');
 const staticFiles = require('./static-files');
@@ -34,10 +34,6 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		)
 	);
 
-	const scriptExtHtmlPlugin = new ScriptExtHtmlWebpackPlugin({
-		defaultAttribute: 'defer',
-	});
-
 	const popupHtmlPlugin = new HtmlWebpackPlugin(
 		Object.assign(
 			{},
@@ -46,6 +42,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 				chunks: ['popup'],
 				filename: 'popup.html',
 				template: paths.popupTemplate,
+				scriptLoading: 'defer',
 			}
 		)
 	);
@@ -55,12 +52,21 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			{},
 			{
 				title: 'Sidebar',
-				chunks: ['sidebar'],
-				filename: 'sidebar.html',
+				chunks: process.env.APP_TARGET === 'EXT' ? ['popup'] : ['popup', 'background', 'common'],
+				filename: 'index.html',
 				template: paths.sidebarTemplate,
+				scriptLoading: 'defer',
 			}
 		)
 	);
+
+	const backgroundHtmlPlugin = new HtmlWebpackPlugin({
+		title: 'Background',
+		chunks: ['background', 'common'],
+		filename: 'background.html',
+		template: paths.backgroundTemplate,
+		scriptLoading: 'defer',
+	});
 
 	const moduleNotFoundPlugin = new ModuleNotFoundPlugin(paths.appPath);
 	const caseSensitivePathsPlugin = new CaseSensitivePathsPlugin();
@@ -130,9 +136,19 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		APP_TARGET: JSON.stringify(appTarget),
 	});
 
+	const workerInjectorGeneratorPlugin = new WorkerInjectorGeneratorPlugin({
+		name: 'dchat-nkn-worker-injector.js',
+		importScripts: [
+			'common.js',
+			'nkn-worker.js'
+		],
+		isAsync: false
+	});
+
 	return {
 		optionsHtmlPlugin,
 		popupHtmlPlugin,
+		backgroundHtmlPlugin,
 		sidebarHtmlPlugin,
 		moduleNotFoundPlugin,
 		caseSensitivePathsPlugin,
@@ -144,10 +160,10 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		moduleScopePlugin,
 		copyPlugin,
 		htmlIncAssetsPlugin,
-		scriptExtHtmlPlugin,
 		friendlyErrorsWebpackPlugin,
 		normalModuleReplacementPlugin,
 		appTargetPlugin,
+		workerInjectorGeneratorPlugin,
 	};
 };
 

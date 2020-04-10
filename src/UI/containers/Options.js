@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __, requestPermissions } from 'Approot/misc/browser-util-APP_TARGET';
 import configs from 'Approot/misc/configs-APP_TARGET';
+import { playNotificationSound } from 'Approot/misc/common';
 import Switch from 'Approot/UI/components/Switch';
 
 const Options = () => {
@@ -19,7 +20,7 @@ const Options = () => {
 				<h1 className="title">
 					{__('Options')}
 				</h1>
-				<form className="form">
+				<div className="">
 					<div className="field">
 						<label className="label">{__('Notifications')}</label>
 						<div className="control">
@@ -51,12 +52,15 @@ const Options = () => {
 									const v = e.target.checked;
 									setAudioNotifications(v);
 									configs.audioNotifications = v;
+									if (v) {
+										playNotificationSound();
+									}
 								}}
 								name="audioNotifications"
 							/>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	);

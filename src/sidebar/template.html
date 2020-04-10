@@ -8,10 +8,8 @@
 	<!-- There is something wrong with the webpack configs.
 	Things get included twice in either popup or sidebar.
 	This is workaround. -->
-	<script src="../lib/js/browser-polyfill.js" defer></script>
-	<script src="../lib/js/webextensions-lib-configs/Configs.js" defer></script>
-	<link rel="stylesheet" href="popup.css">
-	<link rel="stylesheet" href="vendors-popup.css">
+	<script src="/lib/js/browser-polyfill.js" defer></script>
+	<script src="/lib/js/webextensions-lib-configs/Configs.js" defer></script>
 	<style type="text/css">
 	body, html {
 		width: 100%;
@@ -23,7 +21,7 @@
 	}
 	</style>
 </head>
-<body>
+<body class="x-is-page">
 	<div class="dashboard">
 		<div id="root"></div>
 		<div id="sidebar-root" class="dashboard-panel is-small is-medium-desktop is-scrollable is-hidden-mobile">
@@ -39,10 +37,6 @@
 			</section>
 		</main>
 	</div>
-	<script src="vendors-popup.js"></script>
-	<script src="vendors-background-popup.js"></script>
-	<script src="background-popup.js"></script>
-	<script src="popup.js" defer=""></script>
 </body>
 </html>
 

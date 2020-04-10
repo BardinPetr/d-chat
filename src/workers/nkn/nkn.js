@@ -10,8 +10,6 @@ const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
 const RESUB_HEIGHT = 20 * 1000;
 
-// nkn-sdk looks for `window.Worker`.
-self.window = self;
 const PROTOCOL = location?.protocol === 'https:' ? 'https:' : 'http:';
 
 const SEED_ADDRESSES = PROTOCOL === 'https:'
@@ -78,7 +76,8 @@ class NKN extends permissionsMixin(MultiClient) {
 			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
-			worker: createWorker,
+			// Only use workers if wasm is disabled. Better performance like that.
+			worker: typeof WebAssembly !== 'undefined' ? false : createWorker,
 		});
 
 		this.wallet = wallet;
