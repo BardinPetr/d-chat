@@ -142,7 +142,8 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			'common.js',
 			'nkn-worker.js'
 		],
-		isAsync: false
+		isAsync: false,
+		publicPath: process.env.APP_TARGET === 'WEB' ? '/d-chat/' : undefined,
 	});
 
 	return {
