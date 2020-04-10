@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { __, requestPermissions } from 'Approot/misc/browser-util-APP_TARGET';
 import configs from 'Approot/misc/configs-APP_TARGET';
+import { playNotificationSound } from 'Approot/misc/common';
 import Switch from 'Approot/UI/components/Switch';
 
 const Options = () => {
@@ -51,24 +52,12 @@ const Options = () => {
 									const v = e.target.checked;
 									setAudioNotifications(v);
 									configs.audioNotifications = v;
+									if (v) {
+										playNotificationSound();
+									}
 								}}
 								name="audioNotifications"
 							/>
-						</div>
-					</div>
-					<div className="field">
-						<label className="label">{__('Unlimited Storage space')}</label>
-						<div className="control">
-							<p className="is-italic">{__('This one might not do anything, depending on your browser and its version. Chrome Web Store gives a hard time over permissions, so tada.')}</p>
-							<a
-								onClick={() => {
-									// Chromium 80 doesn't support this. Firefox doesn't support this.
-									// Chrome Web Store reviewers don't want to see this as used permission.
-									// What is a person to do here?
-									requestPermissions([ 'unlimitedStorage' ]).catch(console.error);
-								}}
-								className="button"
-							>{__('Request permission')}</a>
 						</div>
 					</div>
 				</div>
