@@ -123,8 +123,6 @@ const globalSettings = (state = {
  *
  * Have one type of action type like `chat/SET_OPTION` and derive actions from that,
  * or, like currently, have a distinct action type for each?
- *
- * TODO "remove chat", which unsubscribes.
  */
 const chatSettings = (state = {}, action) => {
 	let newState, initial;
@@ -143,6 +141,19 @@ const chatSettings = (state = {}, action) => {
 			configs.chatSettings = newState;
 			break;
 
+		case 'chat/RECEIVE_MESSAGE':
+			newState = {
+				...state,
+				[topic]: {
+					...state[topic],
+					receivedAt: Date.now(),
+					// New messages bring hidden topics back.
+					hidden: false,
+				},
+			};
+			configs.chatSettings = newState;
+			break;
+
 		case 'chat/MARK_UNREAD':
 			initial = state[topic]?.unread || [];
 			newState = {
@@ -151,9 +162,6 @@ const chatSettings = (state = {}, action) => {
 					name: topic,
 					...state[topic],
 					unread: [...initial, action.payload.message.id],
-					receivedAt: Date.now(),
-					// New messages bring hidden topics back.
-					hidden: false,
 				},
 			};
 			configs.chatSettings = newState;
