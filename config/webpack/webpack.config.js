@@ -69,6 +69,7 @@ module.exports = function (webpackEnv) {
 			minimize: isEnvProduction && process.env.APP_TARGET === 'WEB',
 			splitChunks: {
 				automaticNameDelimiter: '-',
+				name: false,
 				cacheGroups: {
 					common: {
 						test: /^(?!.*webpack\.worker\.js.*)/,
