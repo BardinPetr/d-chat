@@ -9,7 +9,6 @@ import configs from '../misc/configs-APP_TARGET';
 import { login } from '../redux/actions';
 // Even a bit of obfuscation is better than none for "remember me".
 import passworder from 'browser-passworder';
-// import NKNWorker from 'Approot/workers/nkn.worker.js';
 import notifierMiddleware from 'Approot/redux/middleware/notifier';
 import databaser from 'Approot/redux/middleware/databaser';
 import globalSettingsMiddleware from 'Approot/redux/middleware/globalSettings';
@@ -18,8 +17,7 @@ import { IS_EXTENSION } from 'Approot/misc/util';
 
 const password = 'd-chat!!!';
 
-// const nknWorker = new NKNWorker();
-const nknWorker = new Worker('worker-injector.js');
+const nknWorker = new Worker('dchat-nkn-worker-injector.js');
 
 const workerMiddleware = createWorkerMiddleware(nknWorker);
 

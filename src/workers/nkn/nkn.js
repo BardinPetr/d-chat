@@ -5,8 +5,6 @@ import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
 const createWorker = () => new SigWorker();
-// const createWorker = () => new Worker('nkn-sdk/lib/worker/webpack.worker.js');
-// const createWorker = () => {};
 
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
@@ -79,7 +77,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
 			// Only use workers if wasm is disabled. Better performance like that.
-			worker: WebAssembly ? false : createWorker,
+			worker: typeof WebAssembly !== 'undefined' ? false : createWorker,
 		});
 
 		this.wallet = wallet;

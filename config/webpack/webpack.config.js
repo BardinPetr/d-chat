@@ -69,7 +69,7 @@ module.exports = function (webpackEnv) {
 			splitChunks: {
 				automaticNameDelimiter: '-',
 				cacheGroups: {
-					backgroundWorkerCommons: {
+					backgroundAndWorker: {
 						test: /^(?!.*webpack\.worker\.js.*)/,
 						name: 'common',
 						minChunks: 2,

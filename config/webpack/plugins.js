@@ -132,7 +132,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 	});
 
 	const workerInjectorGeneratorPlugin = new WorkerInjectorGeneratorPlugin({
-		name: 'worker-injector.js',
+		name: 'dchat-nkn-worker-injector.js',
 		importScripts: [
 			'common.js',
 			'nkn-worker.js'

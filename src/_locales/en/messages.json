@@ -221,9 +221,6 @@
   "Reload": {
     "message": " Reload"
   },
-  "Requestpermission": {
-    "message": " Request permission"
-  },
   "Seedorkeystore": {
     "message": " Seed or key store"
   },
@@ -260,9 +257,6 @@
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
   },
-  "ThisonemightnotdoanythingdependingonyourbrowseranditsversionChromeWebStoregivesahardtimeoverpermissionssotada": {
-    "message": " This one might not do anything, depending on your browser and its version. Chrome Web Store gives a hard time over permissions, so tada."
-  },
   "Tipvaluesats": {
     "message": " Tip #value# sats"
   },
@@ -271,9 +265,6 @@
   },
   "Unignoreuser": {
     "message": " Unignore user"
-  },
-  "UnlimitedStoragespace": {
-    "message": " Unlimited Storage space"
   },
   "Unmutechat": {
     "message": " Unmute chat"

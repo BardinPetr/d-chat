@@ -11,7 +11,6 @@
 			"lib/js/browser-polyfill.js",
 			"lib/js/webextensions-lib-configs/Configs.js",
 			"common.js",
-			"background-popup.js",
 			"background.js"
 		]
 	},
@@ -26,7 +25,7 @@
 			}
 		]
 	},
-	"permissions": ["storage","unlimitedStorage"],
+	"permissions": ["storage"],
 	"optional_permissions": ["notifications"],
 	"sidebar_action": {
 		"default_title": "__MSG_extensionName__",
