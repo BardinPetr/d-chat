@@ -76,6 +76,7 @@ module.exports = {
 	optionsTemplate: resolveApp('src/options/template.html'),
 	sidebarTemplate: resolveApp('src/sidebar/template.html'),
 	popupTemplate: resolveApp('src/popup/template.html'),
+	backgroundTemplate: resolveApp('src/background/template.html'),
 	appOptionsJs: resolveModule(resolveApp, 'src/options/index'),
 	appPopupJs: resolveModule(resolveApp, 'src/popup/index'),
 	appSidebarJs: resolveModule(resolveApp, 'src/sidebar/index'),

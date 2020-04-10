@@ -51,7 +51,7 @@ export const getPopupURL = () => {
  * Pops out a window.
  */
 export const popout = url => windows.create({
-	url: runtime.getURL(`sidebar.html#/${url}`),
+	url: runtime.getURL(`index.html#/${url}`),
 	type: 'popup',
 	height: 860,
 	width: 680,
