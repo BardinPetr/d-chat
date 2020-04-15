@@ -99,6 +99,22 @@ class IncomingMessage extends Message {
 		IncomingMessage.useTimestampForCreatedAt = true;
 	}
 
+	static SUPPORTED_CONTENT_TYPES = [
+		'audio',
+		'dchat/subscribe',
+		'event:message/delete',
+		'event:receipt',
+		'event:subscribe',
+		'image',
+		'media',
+		'message/delete',
+		'nkn/tip',
+		'reaction',
+		'receipt',
+		'text',
+		'video',
+	];
+
 	constructor(message) {
 		super(message);
 
@@ -125,8 +141,7 @@ class IncomingMessage extends Message {
 
 		this.receivedAs = NKN.instance.addr;
 
-		// Heartbeats should not be received as messages.
-		if (['heartbeat', 'background'].includes(this.contentType)) {
+		if (!IncomingMessage.SUPPORTED_CONTENT_TYPES.includes(this.contentType)) {
 			this.unreceivable = true;
 		}
 
