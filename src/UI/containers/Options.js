@@ -53,7 +53,9 @@ const Options = () => {
 									setAudioNotifications(v);
 									configs.audioNotifications = v;
 									if (v) {
-										playNotificationSound();
+										// Using timeout, we set off Firefox's "autoplay disabled"
+										// permission toggler.
+										setTimeout(playNotificationSound, 100);
 									}
 								}}
 								name="audioNotifications"
