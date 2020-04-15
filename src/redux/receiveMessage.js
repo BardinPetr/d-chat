@@ -12,6 +12,17 @@ export default async function receivingMessage(message) {
 	if (!message.unreceivable) {
 
 		if (message.modifications) {
+
+			// For msg deletions, removes content and unlinks attachments -
+			// if message is confirmed.
+			if (!message.isNotConfirmed) {
+				message.modifications = {
+					...message.modifications,
+					...message.modifications._onConfirm
+				};
+			}
+			delete message.modifications._onConfirm;
+
 			return modifyMessageInDb({
 				topic: message.topic,
 				id: message.targetID,

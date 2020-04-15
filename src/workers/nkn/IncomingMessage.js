@@ -147,7 +147,11 @@ class IncomingMessage extends Message {
 
 		if (isDelete(message)) {
 			this.modifications = {
-				deleted: true
+				deleted: true,
+				_onConfirm: {
+					content: '',
+					attachments: []
+				}
 			};
 		}
 
