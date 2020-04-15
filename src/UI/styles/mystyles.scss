@@ -165,7 +165,9 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		word-wrap: break-word;
 
 		.x-media-wrapper {
+			cursor: zoom-out;
 			&:not(.x-media-expanded) {
+				cursor: zoom-in;
 				img, video {
 					height: 300px;
 				}
@@ -241,17 +243,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		}
 	}
 	.x-message-bundle {
-		/* First 4 will expand downwards. After that, last four expand up. */
-		/*
-		&:not(:nth-child(-n+4)):nth-last-child(-n+4) .dropdown {
-			&-menu {
-				bottom: 100%; 
-				padding-bottom: 4px; 
-				padding-top: initial; 
-				top: auto;
-			}
-		}
-		*/
+		/* First 3 dropdown menus will always expand downwards.
+		   After that, last four expand up. */
 		&:nth-child(-n+3) .message:not(:nth-child(n+4)) {
 			.dropdown-menu {
 				top: 100%; 

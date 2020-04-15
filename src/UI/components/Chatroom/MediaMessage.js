@@ -8,41 +8,37 @@ const Attachment = ({ attachment, onLoad }) => {
 	const toggleExpanded = () => setExpanded(expanded => !expanded);
 
 	return (
-		<div className={classnames('x-media-wrapper', {
-			'x-media-expanded': expanded,
-		})}>
-			<a
-				onClick={toggleExpanded}
-				className="button is-link is-small"
-			>
-				{expanded ? __('Contract') : __('Expand')}
-			</a>
-			<div>
-				{(attachment.type.includes('audio') &&
-					<audio
-						className="x-oc-content"
-						controls
-						loop
-						onLoadedData={onLoad}
-						src={attachment.src}
-					/>)
-				|| (attachment.type.includes('image') &&
-					<img
-						className="x-oc-content"
-						src={attachment.src}
-						onLoad={onLoad}
-					/>)
-				|| (attachment.type.includes('video') &&
-					<video
-						className="x-oc-content"
-						controls
-						playsInline
-						loop
-						onLoadedData={onLoad}
-						src={attachment.src}
-					/>)
-				}
-			</div>
+		<div
+			className={classnames('x-media-wrapper', {
+				'x-media-expanded': expanded,
+			})}
+			title={__('Click to expand or contract.')}
+			onClick={toggleExpanded}
+		>
+			{(attachment.type.includes('audio') &&
+				<audio
+					className="x-oc-content"
+					controls
+					loop
+					onLoadedData={onLoad}
+					src={attachment.src}
+				/>)
+			|| (attachment.type.includes('image') &&
+				<img
+					className="x-oc-content"
+					src={attachment.src}
+					onLoad={onLoad}
+				/>)
+			|| (attachment.type.includes('video') &&
+				<video
+					className="x-oc-content"
+					controls
+					playsInline
+					loop
+					onLoadedData={onLoad}
+					src={attachment.src}
+				/>)
+			}
 		</div>
 	);
 };
