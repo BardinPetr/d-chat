@@ -38,7 +38,7 @@ the message in the topic chatroom. It is not used in D-Chat for anything yet,
 and is mostly optional for now.
 D-Chat adds it in nkn/nkn.js: `sendMessage()`.
 After receiving a message that wants confirmation that it was received  (ex. whisper),
-you should send a receipt to the sender. Sames as text message, except no `content`, and
+you should send a receipt to the sender. Same as text message, except no `content`, and
 `contentType` is set to `'receipt'`.
 
 Summing up a list of contentTypes used by D-Chat:

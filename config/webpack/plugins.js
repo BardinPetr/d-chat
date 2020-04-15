@@ -143,7 +143,8 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			'nkn-worker.js'
 		],
 		isAsync: false,
-		publicPath: process.env.APP_TARGET === 'WEB' ? '/d-chat/' : undefined,
+		// Gitlab.io hosts at /d-chat/.
+		publicPath: (isEnvProduction && process.env.APP_TARGET === 'WEB') ? '/d-chat/' : undefined,
 	});
 
 	return {

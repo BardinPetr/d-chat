@@ -14,11 +14,8 @@ const Reaction = ({ reaction, stayScrolled, addReaction }) => {
 				'is-primary': reaction._haveReacted,
 				'x-reactions-reacted': reaction._haveReacted,
 				'x-is-first-reaction': reaction._count === 0,
-				'is-rounded': reaction._count === 0,
-				'is-large': reaction._count === 0,
-				'is-light': reaction._count === 0,
-				'is-hovered': reaction._count === 0,
 				'x-is-hover': reaction._count === 0,
+				'is-small': reaction._count === 0,
 			})}
 			disabled={reaction._haveReacted}
 			onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
