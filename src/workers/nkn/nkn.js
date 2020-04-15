@@ -76,8 +76,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
-			// Only use workers if wasm is disabled. Better performance like that.
-			worker: typeof WebAssembly !== 'undefined' ? false : createWorker,
+			worker: createWorker,
 		});
 
 		this.wallet = wallet;
