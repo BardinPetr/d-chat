@@ -8,7 +8,7 @@ import { toggleUserMute } from 'Approot/redux/actions/settings';
 import TipJar from 'Approot/UI/containers/TipJar';
 import Dropdown from 'Approot/UI/components/Dropdown';
 import { IoIosMore, IoIosEyeOff, IoMdChatboxes } from 'react-icons/io';
-import { FaBan } from 'react-icons/fa';
+import { FaBan, FaRegSmile } from 'react-icons/fa';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { getWhisperURL } from 'Approot/misc/util';
 
@@ -56,7 +56,7 @@ const Actions = ({
 				>
 					<a className="dropdown-item" onClick={openEmojiPicker}>
 						<span className="icon">
-							<i className="fa fa-smile-o" />
+							<FaRegSmile />
 						</span>
 						<span>{__('Add reaction')}</span>
 					</a>
