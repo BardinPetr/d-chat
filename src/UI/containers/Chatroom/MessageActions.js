@@ -48,7 +48,7 @@ const Actions = ({
 			)}
 			<div className="x-message-actions x-is-hover">
 				<Dropdown
-					triggerClassName="is-light is-hovered is-rounded"
+					triggerClassName="x-message-toolbar-side-dropdown"
 					triggerIcon={<IoIosMore className="is-size-5" />}
 					id={`actions-${id}`}
 					isRight={true}

@@ -21,7 +21,7 @@ $z-index: 30;
 $z-above-errors: 1;
 $pre-background: hsla(0, 0%, 0%, 0.05);
 $toolbar-width: 20%;
-$message-content-width: 90%;
+$message-content-width: 100%;
 /**
  * Added sans-serif after stuff, for emojis.
  */
@@ -171,21 +171,34 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				}
 			}
 		}
+
+		$x-top: 0;
+		$x-margin-top: -2rem;
+		$x-height: 2rem;
+		$x-border: 1px solid $grey;
+
 		.x-message-toolbar-side {
 			position: absolute;
 			right: 0;
-			bottom: 0;
 			z-index: $z-above-errors;
+			top: $x-top;
+			margin-top: $x-margin-top !important;
+			&-dropdown {
+				height: $x-height;
+				border: $x-border;
+			}
 		}
 		.x-reactions {
 			display: flex;
 			user-select: none;
 			.x-is-first-reaction {
-				right: 2.15rem;
-				bottom: 1px;
-				height: 1.75rem !important;
+				right: 2rem;
+				top: $x-top;
+				margin-top: $x-margin-top !important;
+				height: $x-height !important;
 				line-height: 1;
 				position: absolute;
+				border: $x-border;
 				&:hover {
 					background-color: $grey-lighter;
 				}
