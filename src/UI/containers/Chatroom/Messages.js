@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
 import { loadMessagesFromDb, PAGE_SIZE } from 'Approot/database/messages';
-import uniqBy from 'lodash.uniqby';
 
 function reducer(state, action) {
 
@@ -18,8 +17,7 @@ function reducer(state, action) {
 			});
 
 		case 'new':
-			// TODO instead of checking uniq, maybe add index to the react key prop.
-			return uniqBy([...state, changes], 'id');
+			return [...state, changes];
 
 		case 'old':
 			return [...changes, ...state];
