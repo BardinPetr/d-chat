@@ -108,6 +108,7 @@
     "html-webpack-include-assets-plugin": "^1.0.10",
     "identity-obj-proxy": "3.0.0",
     "is-number": "^7.0.0",
+    "is-only-emojis": "^1.0.1",
     "jest": "23.6.0",
     "jest-pnp-resolver": "1.0.1",
     "jest-resolve": "23.6.0",
@@ -155,7 +156,7 @@
     "uuid": "^3.4.0",
     "webext-redux": "^2.1.6",
     "webextension-polyfill": "^0.3.1",
-    "webpack": "4.19.1",
+    "webpack": "^4.42.1",
     "webpack-dev-server": "3.1.14",
     "webpack-manifest-plugin": "2.0.4",
     "yargs": "^12.0.5"

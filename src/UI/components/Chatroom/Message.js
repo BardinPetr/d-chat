@@ -32,21 +32,23 @@ const MessageContent = ({ message, stayScrolled }) => {
 				</p>
 			</div>
 		);
-	} else if (isMedia) {
-		return (
-			<MediaMessage
-				content={message.content}
-				stayScrolled={stayScrolled}
-				attachments={message.attachments || []}
-			/>
-		);
 	}
 
 	return (
-		<div
-			className="content"
-			dangerouslySetInnerHTML={{ __html: message.content || '' }}
-		></div>
+		<div>
+			{isMedia && (
+				<MediaMessage
+					attachments={message.attachments || []}
+					stayScrolled={stayScrolled}
+				/>
+			)}
+			<div
+				className={classnames('content x-message-content x-has-normal-scrollbar', {
+					'is-size-3': message.isOnlyEmojis,
+				})}
+				dangerouslySetInnerHTML={{ __html: message.content || '' }}
+			></div>
+		</div>
 	);
 };
 

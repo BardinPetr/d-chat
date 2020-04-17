@@ -43,9 +43,8 @@ const Attachment = ({ attachment, onLoad }) => {
 	);
 };
 
-const MediaMessage = ({ content, attachments, stayScrolled }) => {
+const MediaMessage = ({ attachments, stayScrolled }) => {
 	const [attaches, setAttaches] = useState([]);
-	const displayContent = content.includes('blob:') ? '' : content;
 
 	useEffect(() => {
 		attachments.forEach(attachment =>
@@ -77,7 +76,6 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 					</div>
 				))}
 			</div>
-			<div className="content" dangerouslySetInnerHTML={{ __html: displayContent }} />
 		</div>
 	);
 };

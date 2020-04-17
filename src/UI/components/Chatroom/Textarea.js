@@ -36,6 +36,12 @@ const startUpload = async (file, onUploaded, errCb) => {
 	}
 };
 
+/**
+ * TODO: codemirror likes to initiate styles recalculations on every keypress.
+ * Makes it input lag when there's a lot of DOM elements, like a 100k char message.
+ *
+ * Maybe put a character limit on chat messages.
+ */
 const Textarea = ({
 	submitText,
 	mdeInstance,

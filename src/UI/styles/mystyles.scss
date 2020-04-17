@@ -19,7 +19,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $z-above-errors: 1;
-$pre-background: hsla(0, 0%, 0%, 0.05);
+$pre-background: hsl(0, 5.7%, 89.6%); // grey
 $toolbar-width: 20%;
 $message-content-width: 100%;
 /**
@@ -152,6 +152,10 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	padding-bottom: 1em;
 
 	.message {
+		.x-message-content {
+			max-height: 700px;
+			overflow-y: auto;
+		}
 		margin: 0;
 		padding: 0 0.4rem 0.4rem;
 		&:hover {
