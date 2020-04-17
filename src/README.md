@@ -14,7 +14,7 @@ The code jumps around a lot, because we are using redux.
 
 The redux flow, if you don't already know, is like this:
 
-From UI (React) we dispatch an action: `dispatch(action())`. Action is just a function that returns an object. Because this is a web-extension (a browser add-on), the action has two directions: through middlewares, into to reducer or to background script (alias).
+From UI (React) we dispatch an action: `dispatch(action())`. Action is just a function that returns an object. Because this is a web-extension (a browser add-on), the action has two directions: through middlewares, either into reducer or background script (alias).
 
 Aliases are there to give access to background-script-only functions which, in our case, include all NKN functions, since NKN is active in the background script's web worker only.
 
@@ -38,7 +38,7 @@ background: the web extension background page. Creates nkn worker.
 
 img: some logos and other assets.
 
-lib/js: 2 web extension libraries: lib-configs & lib-options. Lib-configs is for `browser.storage`, lib-options is only used for options page.
+lib/js: web extension libraries: lib-configs. Lib-configs is for `browser.storage`.
 
 misc: 
 * browser-util.js: utilities that use web extension specific `browser.` functions. They have to be separated because web worker cannot use them, and importing the file throws errors in webpack. 
