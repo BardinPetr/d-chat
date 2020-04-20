@@ -9,6 +9,9 @@ import { Pos } from 'codemirror';
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
+const FILESIZE_LIMIT = 2;
+const FILESIZE_LIMIT_MB = FILESIZE_LIMIT * 1024 * 1024;
+
 const startUpload = async (file, onUploaded, errCb) => {
 	upload({ target: { files: [file] } });
 
@@ -26,10 +29,10 @@ const startUpload = async (file, onUploaded, errCb) => {
 				console.error('FileReader error:', e);
 				errCb('Error');
 			};
-			if (e.target.files[0].size <= 4194304) {
+			if (e.target.files[0].size <= FILESIZE_LIMIT_MB) {
 				reader.readAsDataURL(e.target.files[0]);
 			} else {
-				errCb('Error: > 4MB');
+				errCb(`Error: > ${FILESIZE_LIMIT}MB`);
 			}
 		}
 	}
@@ -211,7 +214,7 @@ const Textarea = ({
 					uploadImage: true,
 					imageUploadFunction,
 					imageAccept: 'image/*,audio/*,video/*',
-					imageMaxSize: 4194304, // 4MB
+					imageMaxSize: FILESIZE_LIMIT_MB,
 					status: ['upload-image'],
 					toolbarTips: false,
 					onToggleFullScreen() {
