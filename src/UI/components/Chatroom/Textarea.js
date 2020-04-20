@@ -1,11 +1,10 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
+import uniq from 'lodash.uniq';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 import { Pos } from 'codemirror';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/hint/show-hint.css';
 
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
@@ -50,6 +49,8 @@ const Textarea = ({
 	subs,
 	topic,
 }) => {
+	import('codemirror/addon/hint/show-hint');
+	import('codemirror/addon/hint/show-hint.css');
 	const [visible, setEmojiPickerVisible] = useState(false);
 	useEffect(() => {
 		const cm = mdeInstance.current?.codemirror;
@@ -103,13 +104,14 @@ const Textarea = ({
 					} else if (word.startsWith('@')) {
 						// Subs autocomplete.
 						const theWord = word.slice(1);
-						const things = subs.filter(sub => sub.toLowerCase().startsWith(
+						const things = uniq(subs.map(formatAddr)).filter(sub => sub.toLowerCase().startsWith(
 							theWord.toLowerCase())
 						).map(sub => ({
 							text: mention(sub) + ' ',
 							displayText: formatAddr(sub)
 						}));
 						if (things.length) {
+							// Some emojis still give troubles. Something to do with unicode, probs.
 							return ({
 								list: things,
 								// Without this, typing 'xx @' would cause autocomplete to 'xx@something.34...' -
@@ -164,6 +166,27 @@ const Textarea = ({
 		localStorage['smde_main-textarea'] = '';
 		cm.focus();
 	};
+
+	useEffect(() => {
+		const cm = mdeInstance.current?.codemirror;
+		if (!cm) {
+			return;
+		}
+		const onDragEnter = () => {
+			document.querySelector('.editor-statusbar').className = 'editor-statusbar is-not-hidden';
+		};
+		const onDrop = () => {
+			document.querySelector('.editor-statusbar').className = 'editor-statusbar';
+		};
+		cm.on('dragenter', onDragEnter);
+		// dragleave is worthless.
+		cm.on('drop', onDrop);
+
+		return () => {
+			cm.off('dragenter', onDragEnter);
+			cm.off('drop', onDrop);
+		};
+	}, [topic]);
 
 	const closeEmojiPicker = () => setEmojiPickerVisible(false);
 

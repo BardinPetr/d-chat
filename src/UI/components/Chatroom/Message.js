@@ -21,6 +21,7 @@ import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
 const MessageContent = ({ message, stayScrolled }) => {
 	const isMedia = message.contentType === 'media';
 	const deleted = message.deleted && !message.isNotConfirmed;
+	import('highlight.js/styles/github.css');
 
 	if (deleted) {
 		return (

@@ -79,6 +79,7 @@ module.exports = function (webpackEnv) {
 					},
 					popup: {
 						chunks: chunk => /(popup)/.test(chunk.name),
+						// AMO limit.
 						maxSize: 4 * 1024 * 1024,
 					}
 				}

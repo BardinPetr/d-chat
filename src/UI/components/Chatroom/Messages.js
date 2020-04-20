@@ -4,7 +4,6 @@
 import React from 'react';
 import MessagesList from 'Approot/UI/components/Chatroom/MessagesList';
 import MessagesScroller from 'Approot/UI/components/Chatroom/MessagesScroller';
-import 'highlight.js/styles/github.css';
 
 const Messages = ({
 	createReaction,

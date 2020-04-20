@@ -17,7 +17,7 @@ const { PayloadType } = pb.payloads;
 function addNKNListeners (client) {
 
 	client.onMessage(({ src, payload, payloadType }) => {
-		handleIncomingMessage(src, payload, payloadType);
+		handleIncomingMessage(src, payload, payloadType).catch(console.warn);
 		// Do not send ack-messages.
 		return false;
 	});

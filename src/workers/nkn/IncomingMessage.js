@@ -5,6 +5,7 @@ import marked from 'marked';
 import Message from './Message';
 import highlight from 'highlight.js';
 import debounce from 'debounce';
+import isOnlyEmojis from 'is-only-emojis';
 
 const renderer = new marked.Renderer();
 renderer.image = (href, title, text) => {
@@ -19,7 +20,7 @@ renderer.image = (href, title, text) => {
 renderer.link = (href, title, text) =>
 	(`<a href="${href}" target="_blank" title="${title || ''}" rel="noopener noreferrer">${text}</a>`);
 marked.setOptions({
-	highlight: (code, lang) => highlight.highlightAuto(code, [lang]).value,
+	highlight: (code, lang) => highlight.highlightAuto(code, lang ? [lang] : undefined).value,
 	renderer,
 });
 
@@ -115,8 +116,15 @@ class IncomingMessage extends Message {
 		'video',
 	];
 
+	/**
+	 * Throws if unsupported content type.
+	 */
 	constructor(message) {
 		super(message);
+
+		if (!IncomingMessage.SUPPORTED_CONTENT_TYPES.includes(this.contentType)) {
+			throw new Error('D-Chat: unsupported content type: ' + this.contentType);
+		}
 
 		if (IncomingMessage.useTimestampForCreatedAt) {
 			this.createdAt = this.timestamp;
@@ -127,9 +135,10 @@ class IncomingMessage extends Message {
 		this.createdAt += IncomingMessage.nonce;
 		IncomingMessage.nonce += 0.001;
 
-		// Ignore topics and ids over 128 chars in length.
+		// Topic can (locally) be over 128 with `/whisper/128lenaddr`, -
+		// so we'll use 137.
 		// We don't want to get 50k chars as database index field.
-		if (this.topic?.length > 128) {
+		if (this.topic?.length > 137) {
 			this.unreceivable = true;
 		}
 		if (this.targetID?.length > 128) {
@@ -141,8 +150,14 @@ class IncomingMessage extends Message {
 
 		this.receivedAs = NKN.instance.addr;
 
-		if (!IncomingMessage.SUPPORTED_CONTENT_TYPES.includes(this.contentType)) {
-			this.unreceivable = true;
+		// Due to change contentType 'receipt' to 'event:receipt' at some point.
+		// TODO
+		if (this.contentType === 'receipt') {
+			this.contentType = 'event:receipt';
+		} else if (this.contentType === 'message/delete') {
+			this.contentType = 'event:message/delete';
+		} else if (this.contentType === 'dchat/subscribe') {
+			this.contentType = 'event:subscribe';
 		}
 
 		if (isDelete(message)) {
@@ -155,23 +170,30 @@ class IncomingMessage extends Message {
 			};
 		}
 
-		// Due to change contentType 'receipt' to 'event:receipt' at some point.
-		// TODO
-		if (this.contentType === 'event:receipt') {
-			this.contentType = 'receipt';
-		}
-
 		// Handling receipts as reactions.
-		if (this.contentType === 'receipt') {
+		if (this.contentType === 'event:receipt') {
 			this.contentType = 'reaction';
 			// Override content so we don't get any smart stuff.
 			this.content = '✔';
 		}
 
+		if (typeof this.content === 'string') {
+			this._sanitizeContent();
+		}
+	}
+
+	/**
+	 * Sanitizes message content (string).
+	 */
+	_sanitizeContent() {
+		// Sanitize, so we only use markdown stuff.
 		this.content = sanitize(this.content, {
 			allowedTags: [],
 			allowedAttributes: {},
 		}) || '';
+		if (this.content && isOnlyEmojis(this.content)) {
+			this.isOnlyEmojis = true;
+		}
 
 		// We'll just tag these for media.
 		// https://docs.nkn.org/docs/d-chat-message-scheme
@@ -179,6 +201,7 @@ class IncomingMessage extends Message {
 			this.contentType = 'media';
 		}
 
+		// Don't want to insert <p> tags into reactions.
 		if (this.contentType !== 'reaction') {
 			if (this.contentType === 'media') {
 				const dataURLs = this.content.match(dataUrl) || [];
@@ -192,8 +215,8 @@ class IncomingMessage extends Message {
 				this.content = this.content.replace('![', ' ![');
 			}
 
-			// Sanitize first so we only use markdown stuff.
 			// Replace &gt; with > to make blockquotes work.
+			// Replacing &lt; would make '&lt;span class="section"&gt;' work, which is bad.
 			const sanitized = this.content.replace(/&gt;/g, '>');
 			const markdowned = marked(sanitized, {
 				breaks: true,
