@@ -133,6 +133,9 @@ export const isDelete = msg => [
 	'event:message/delete',
 	'message/delete'
 ].includes(msg.contentType);
+export const isContactRequest = msg => [
+	'contact',
+].includes(msg.contentType);
 
 // This is the topic for the list of public topics.
 export const DCHAT_PUBLIC_TOPICS = '__dchat';

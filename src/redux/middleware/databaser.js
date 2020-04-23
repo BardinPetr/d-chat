@@ -1,5 +1,6 @@
 import { isDelete } from 'Approot/misc/util';
 import { getMessageFromDb } from 'Approot/database/messages';
+import { storeContact } from 'Approot/database/contacts';
 import receiveMessage from 'Approot/redux/receiveMessage';
 /**
  * Saves messages to indexedDB.
@@ -29,6 +30,10 @@ const databaser = store => next => async action => {
 			await receiveMessage(message).then(actions => actions.forEach(
 				a => store.dispatch(a)
 			));
+			break;
+
+		case 'contact/RECEIVE_REQUEST':
+			storeContact(action.payload);
 			break;
 	}
 
