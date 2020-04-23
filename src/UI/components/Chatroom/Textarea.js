@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
+import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
 import uniq from 'lodash.uniq';
@@ -18,7 +19,7 @@ const startUpload = async (file, onUploaded, errCb) => {
 	function upload(e) {
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
-				errCb('Wrong filetype.');
+				errCb(__('Wrong filetype.'));
 				return;
 			}
 			const reader = new FileReader();
@@ -27,12 +28,14 @@ const startUpload = async (file, onUploaded, errCb) => {
 			};
 			reader.onerror = e => {
 				console.error('FileReader error:', e);
-				errCb('Error');
+				errCb(__('Error'));
 			};
 			if (e.target.files[0].size <= FILESIZE_LIMIT_MB) {
 				reader.readAsDataURL(e.target.files[0]);
 			} else {
-				errCb(`Error: > ${FILESIZE_LIMIT}MB`);
+				errCb(
+					__('Error, file is too large. Max #size# MB.').replace('#size#', FILESIZE_LIMIT)
+				);
 			}
 		}
 	}
@@ -242,7 +245,9 @@ const Textarea = ({
 					minHeight: 'auto',
 					toolbar: [
 						{
-							name: 'emoji',
+							name: classnames('emoji x-fullscreen-visible', {
+								'is-hidden-touch': IS_SIDEBAR
+							}),
 							action: () => setEmojiPickerVisible(true),
 							className: 'fa fa-smile',
 							title: '',
@@ -259,7 +264,7 @@ const Textarea = ({
 						'side-by-side',
 						'fullscreen',
 						{
-							name: 'is-hidden-desktop submit',
+							name: classnames('submit x-fullscreen-visible is-hidden-tablet'),
 							action: onSubmit,
 							className: 'fa fa-paper-plane-empty',
 							title: '',
