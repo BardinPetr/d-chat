@@ -4,6 +4,7 @@ import Dexie from 'dexie';
 // Possibly move some of the stuff from extension local.storage into indexedDB.
 const db = new Dexie('dchat');
 db.version(1).stores({
+	// TODO remove this table later.
 	attachments: '++id,&hash',
 });
 

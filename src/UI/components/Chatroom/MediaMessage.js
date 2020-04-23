@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
-import { loadAttachment } from 'Approot/database/attachments';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
 const Attachment = ({ attachment, onLoad }) => {
@@ -47,20 +46,20 @@ const MediaMessage = ({ attachments, stayScrolled }) => {
 	const [attaches, setAttaches] = useState([]);
 
 	useEffect(() => {
-		attachments.forEach(attachment =>
-			loadAttachment(attachment)
-				.then(fileInfo => {
-					if (!fileInfo) {
-						return;
-					}
-					const blob = fileInfo.data;
-					const src = URL.createObjectURL(blob);
-					setAttaches([...attaches, {
-						src,
-						type: blob.type,
-					}]);
-				})
-		);
+		attachments.forEach(blob => {
+			if (!blob) {
+				return;
+			}
+			// Old messages, bad times. TODO if message history is ever dropped, remove this.
+			if (typeof blob === 'string') {
+				return;
+			}
+			const src = URL.createObjectURL(blob);
+			setAttaches([...attaches, {
+				src,
+				type: blob.type,
+			}]);
+		});
 
 		return () => {
 			attaches.forEach(({ src }) => URL.revokeObjectURL(src));

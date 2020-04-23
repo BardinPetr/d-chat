@@ -103,6 +103,7 @@
     "history": "^4.10.1",
     "html-webpack-include-assets-plugin": "^1.0.10",
     "identity-obj-proxy": "3.0.0",
+    "is-blob": "^2.1.0",
     "is-number": "^7.0.0",
     "is-only-emojis": "^1.0.1",
     "lodash.throttle": "^4.1.1",

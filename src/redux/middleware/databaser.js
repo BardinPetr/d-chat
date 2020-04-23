@@ -1,6 +1,6 @@
 import { isDelete } from 'Approot/misc/util';
 import { getMessageFromDb } from 'Approot/database/messages';
-import storeMessage from 'Approot/redux/receiveMessage';
+import receiveMessage from 'Approot/redux/receiveMessage';
 /**
  * Saves messages to indexedDB.
  */
@@ -26,8 +26,7 @@ const databaser = store => next => async action => {
 		case 'chat/RECEIVE_REACTION':
 			message = action.payload.message;
 			skip = await shouldSkip(message);
-			// Maybe don't store messages that are ignored? Something to think about.
-			storeMessage(message).then(actions => actions.forEach(
+			await receiveMessage(message).then(actions => actions.forEach(
 				a => store.dispatch(a)
 			));
 			break;
