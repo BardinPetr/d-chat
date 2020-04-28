@@ -80,6 +80,12 @@
   "Emojis": {
     "message": " Emojis"
   },
+  "Error": {
+    "message": " Error"
+  },
+  "ErrorfileistoolargeMaxsizeMB": {
+    "message": " Error, file is too large. Max #size# MB."
+  },
   "Expandsonclick": {
     "message": " Expands on click"
   },
@@ -295,6 +301,9 @@
   },
   "Whispers": {
     "message": " Whispers"
+  },
+  "Wrongfiletype": {
+    "message": " Wrong filetype."
   },
   "Wrongpassword": {
     "message": " Wrong password."
