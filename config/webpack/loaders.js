@@ -109,7 +109,6 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 				],
 				'@babel/plugin-transform-runtime',
 				'@babel/plugin-proposal-optional-chaining',
-				'@babel/plugin-proposal-class-properties',
 			],
 			cacheCompression: isEnvProduction,
 			compact: isEnvProduction,

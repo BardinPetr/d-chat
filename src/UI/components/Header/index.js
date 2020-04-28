@@ -30,13 +30,14 @@ class Header extends React.Component {
 			active: false,
 			expanded: false,
 		}));
+		this.handleTopicChange = this.handleTopicChange.bind(this);
 	}
 
 	componentWillUnmount() {
 		this.unlisten();
 	}
 
-	handleTopicChange = (e) => {
+	handleTopicChange (e) {
 		this.setState({ topic: e.target.value });
 	}
 

@@ -26,6 +26,10 @@ export function genChatID(topic) {
 	if (!topic) {
 		return null;
 	}
+	// Already generated. Since nkn-sdk 1.1.3, it kinda is weird like that.
+	if (topic.startsWith('dchat') && topic.length === 45) {
+		return topic;
+	}
 	// Api/code somewhere does not like strings that start with numbers.
 	return 'dchat' + shasum(topic);
 }

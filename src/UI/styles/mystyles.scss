@@ -480,7 +480,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.fullscreen, .emoji {
+			.emoji {
 				@extend .is-hidden-mobile;
 			}
 			width: $toolbar-width;
@@ -687,12 +687,13 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	visibility: visible !important;
 }
 .x-is-delayed {
+	// Animation gets bugged (stuck).
 	animation: 0s linear 0.2s forwards makeVisible;
 	visibility: hidden;
 }
 .editor-toolbar {
 	&:not(.fullscreen) {
-		.bold, .italic, .heading, .quote, .unordered-list,
+		.submit, .bold, .italic, .heading, .quote, .unordered-list,
 		.ordered-list, .image, .preview, .guide, .link, .separator {
 			display: none;
 		}

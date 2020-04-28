@@ -50,21 +50,20 @@ function addNKNListeners (client) {
 	}
 }
 
+let instance;
 /**
  * Singleton.
  * This used to make sense, now it's redundant.
  */
 class NKNHandler {
-	// Static private.
-	static #instance;
 
 	static get instance() {
-		return this.#instance;
+		return instance;
 	}
 
 	static clear() {
-		this.#instance?.close();
-		this.#instance = null;
+		instance?.close();
+		instance = null;
 	}
 
 	static start({ username, password, wallet, seed }) {
@@ -106,9 +105,9 @@ class NKNHandler {
 		}
 		addNKNListeners(realClient);
 
-		this.#instance?.close();
+		instance?.close();
 
-		this.#instance = realClient;
+		instance = realClient;
 
 		return realClient;
 	}
