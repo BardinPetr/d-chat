@@ -150,10 +150,9 @@ class IncomingMessage extends Message {
 
 		this.receivedAs = NKN.instance.addr;
 
-		// Due to change contentType 'receipt' to 'event:receipt' at some point.
-		// TODO
-		if (this.contentType === 'receipt') {
-			this.contentType = 'event:receipt';
+		// Due to change contentType 'receipt' to 'event:receipt' at some point. Or not??
+		if (this.contentType === 'event:receipt') {
+			this.contentType = 'receipt';
 		} else if (this.contentType === 'message/delete') {
 			this.contentType = 'event:message/delete';
 		} else if (this.contentType === 'dchat/subscribe') {
@@ -171,7 +170,7 @@ class IncomingMessage extends Message {
 		}
 
 		// Handling receipts as reactions.
-		if (this.contentType === 'event:receipt') {
+		if (this.contentType === 'receipt') {
 			this.contentType = 'reaction';
 			// Override content so we don't get any smart stuff.
 			this.content = '✔';
