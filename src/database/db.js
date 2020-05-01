@@ -16,6 +16,11 @@ db.version(2).stores({
 	reactions: '[topic+id+addr], [topic+targetID]',
 });
 
+db.version(3).stores({
+	// Avatars, nicknames, etc. `data` field is not indexed, so not listed here.
+	contacts: 'addr',
+});
+
 export const maxKey = Dexie.maxKey;
 export const minKey = Dexie.minKey;
 

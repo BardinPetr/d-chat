@@ -10,7 +10,13 @@ import {
 	connected,
 	receiveMessage,
 } from 'Approot/redux/actions';
-import { isWhisper } from 'Approot/misc/util';
+import {
+	receiveContactRequest
+} from 'Approot/redux/actions/contacts';
+import {
+	isWhisper,
+	isContactRequest,
+} from 'Approot/misc/util';
 
 const { PayloadType } = pb.payloads;
 
@@ -33,9 +39,6 @@ function addNKNListeners (client) {
 			const data = JSON.parse(payload);
 			const message = new IncomingMessage(data).from(src);
 
-			const permitted = (
-				!message.unreceivable
-			);
 			// Let's ignore messages that come without permissions.
 			const check = isWhisper(message) || await client.Permissions.check(message.topic, src);
 			if (!check) {
@@ -43,7 +46,13 @@ function addNKNListeners (client) {
 				message.ignored = true;
 			}
 
-			if (permitted) {
+			// This got messy.
+			// If it's not a chat message, then we don't want it in our messages database.
+			if (isContactRequest(message)) {
+				postMessage(receiveContactRequest(message));
+			} else {
+				// Assume it's chat message.
+				// Could be one of 'text', 'media', 'reaction', 'event:subscribe',....etc.
 				postMessage(receiveMessage(message));
 			}
 		}
