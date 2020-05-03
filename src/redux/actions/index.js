@@ -32,6 +32,7 @@ export const sendPrivateMessage = (message, options) => ({
 		message: {
 			...message,
 			topic: undefined,
+			isPrivate: isWhisper(message) ? true : undefined,
 		},
 		options,
 	},

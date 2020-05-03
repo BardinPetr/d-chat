@@ -129,15 +129,15 @@ export const importWallet = file => {
 };
 
 // If you change this, then probably touch on subFetcher middleware.
-export const isNotice = msg => [
+export const isNotice = msg => msg && [
 	'event:subscribe',
 	'dchat/subscribe'
 ].includes(msg.contentType);
-export const isDelete = msg => [
+export const isDelete = msg => msg && [
 	'event:message/delete',
 	'message/delete'
 ].includes(msg.contentType);
-export const isContactRequest = msg => [
+export const isContact = msg => msg && [
 	'contact',
 ].includes(msg.contentType);
 

@@ -66,36 +66,14 @@ allowedAttributes['*'] = ['class'];
 // Match `data:` urls. data:something...{ends in NOT whitespace and NOT closing bracket}.
 const dataUrl = /data:[^\s)]*/gi;
 
-// When connection starts, we want to use timestamps for messages we missed.
-// That way we get to keep message ordering closer to correct.
-let useTimestampForCreatedAt = false;
 const onConnect = debounce(
 	() => {
-		useTimestampForCreatedAt = false;
+		IncomingMessage.useTimestampForCreatedAt = false;
 	},
 	// After 4 seconds.
 	4000
 );
 
-// Firefox with privacy.resistFingerprinting has reduced time precision -
-// of 100ms, which makes Date.now() create dupes, -
-// and then messages get shuffled on startup. Workaround.
-let nonce = 0.001;
-const SUPPORTED_CONTENT_TYPES = [
-	'audio',
-	'dchat/subscribe',
-	'event:message/delete',
-	'event:receipt',
-	'event:subscribe',
-	'image',
-	'media',
-	'message/delete',
-	'nkn/tip',
-	'reaction',
-	'receipt',
-	'text',
-	'video',
-];
 /**
  * We've been pretty liberal with incoming message attributes.
  *
@@ -109,12 +87,10 @@ const SUPPORTED_CONTENT_TYPES = [
  */
 class IncomingMessage extends Message {
 
-
 	static onConnect() {
 		onConnect();
-		useTimestampForCreatedAt = true;
+		IncomingMessage.useTimestampForCreatedAt = true;
 	}
-
 
 	/**
 	 * Throws if unsupported content type.
@@ -122,18 +98,18 @@ class IncomingMessage extends Message {
 	constructor(message) {
 		super(message);
 
-		if (!SUPPORTED_CONTENT_TYPES.includes(this.contentType)) {
+		if (!IncomingMessage.SUPPORTED_CONTENT_TYPES.includes(this.contentType)) {
 			throw new Error('D-Chat: unsupported content type: ' + this.contentType);
 		}
 
-		if (useTimestampForCreatedAt) {
+		if (IncomingMessage.useTimestampForCreatedAt) {
 			this.createdAt = this.timestamp;
 		} else {
 			this.createdAt = Date.now();
 		}
 
-		this.createdAt += nonce;
-		nonce += 0.001;
+		this.createdAt += IncomingMessage.nonce;
+		IncomingMessage.nonce += 0.001;
 
 		// Topic can (locally) be over 128 with `/whisper/128lenaddr`, -
 		// so we'll use 137.
@@ -265,5 +241,30 @@ class IncomingMessage extends Message {
 		return this;
 	}
 }
+
+// When connection starts, we want to use timestamps for messages we missed.
+// That way we get to keep message ordering closer to correct.
+IncomingMessage.useTimestampForCreatedAt = false;
+
+// Firefox with privacy.resistFingerprinting has reduced time precision -
+// of 100ms, which makes Date.now() create dupes, -
+// and then messages get shuffled on startup. Workaround.
+IncomingMessage.nonce = 0.001;
+
+IncomingMessage.SUPPORTED_CONTENT_TYPES = [
+	'audio',
+	'dchat/subscribe',
+	'event:message/delete',
+	'event:receipt',
+	'event:subscribe',
+	'image',
+	'media',
+	'message/delete',
+	'nkn/tip',
+	'reaction',
+	'receipt',
+	'text',
+	'video',
+];
 
 export default IncomingMessage;

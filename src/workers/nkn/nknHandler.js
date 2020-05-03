@@ -11,11 +11,11 @@ import {
 	receiveMessage,
 } from 'Approot/redux/actions';
 import {
-	receiveContactRequest
+	receiveContact
 } from 'Approot/redux/actions/contacts';
 import {
 	isWhisper,
-	isContactRequest,
+	isContact,
 } from 'Approot/misc/util';
 
 const { PayloadType } = pb.payloads;
@@ -48,8 +48,8 @@ function addNKNListeners (client) {
 
 			// This got messy.
 			// If it's not a chat message, then we don't want it in our messages database.
-			if (isContactRequest(message)) {
-				postMessage(receiveContactRequest(message));
+			if (isContact(message)) {
+				postMessage(receiveContact(NKN.instance.addr, message));
 			} else {
 				// Assume it's chat message.
 				// Could be one of 'text', 'media', 'reaction', 'event:subscribe',....etc.

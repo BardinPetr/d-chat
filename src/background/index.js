@@ -14,6 +14,7 @@ import databaser from 'Approot/redux/middleware/databaser';
 import globalSettingsMiddleware from 'Approot/redux/middleware/globalSettings';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
+import contactsMiddleware from 'Approot/redux/middleware/contacts';
 
 const password = 'd-chat!!!';
 
@@ -49,6 +50,7 @@ const creatingStore = configs.$loaded.then(async () => {
 				workerMiddleware,
 				alias(aliases),
 				globalSettingsMiddleware,
+				contactsMiddleware,
 				databaser,
 				notifierMiddleware,
 				subscribersFetcher,

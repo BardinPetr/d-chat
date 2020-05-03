@@ -157,11 +157,6 @@ class NKN extends permissionsMixin(MultiClient) {
 			return;
 		}
 
-		if (!Array.isArray(to)) {
-			// Whisper
-			message.isPrivate = true;
-		}
-
 		return super.send(to, JSON.stringify(message), options).catch(() => {});
 	}
 
