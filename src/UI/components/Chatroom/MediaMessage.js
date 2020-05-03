@@ -42,7 +42,7 @@ const Attachment = ({ attachment, onLoad }) => {
 	);
 };
 
-const MediaMessage = ({ attachments, stayScrolled }) => {
+const MediaMessage = ({ attachments }) => {
 	const [attaches, setAttaches] = useState([]);
 
 	useEffect(() => {
@@ -71,7 +71,7 @@ const MediaMessage = ({ attachments, stayScrolled }) => {
 			<div className={'x-media-container is-flex'}>
 				{attaches.map((attach, i) => (
 					<div key={i}>
-						<Attachment attachment={attach} onLoad={stayScrolled} />
+						<Attachment attachment={attach} onLoad={window.stayScrolled} />
 					</div>
 				))}
 			</div>

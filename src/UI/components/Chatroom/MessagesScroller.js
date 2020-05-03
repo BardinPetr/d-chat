@@ -19,8 +19,9 @@ const MessagesScroller = ({
 	const listRef = useRef();
 	const { stayScrolled, isScrolled, scrollBottom } = useStayScrolled(listRef, {
 		initialScroll: Infinity,
-		inaccuracy: 15,
+		// inaccuracy: 15,
 	});
+	window.stayScrolled = stayScrolled;
 
 	useEffect(() => {
 		const onVisibilityChange = () => {
@@ -71,9 +72,7 @@ const MessagesScroller = ({
 				threshold={100}
 				className="x-is-fullwidth"
 			>
-				<React.Fragment key="it-bugs-out-without-this-key">
-					{children(stayScrolled)}
-				</React.Fragment>
+				{children}
 			</InfiniteScroller>
 		</div>
 	);

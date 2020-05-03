@@ -2,9 +2,9 @@ import React, { useLayoutEffect, useMemo } from 'react';
 import classnames from 'classnames';
 import { isAck, formatAddr } from 'Approot/misc/util';
 
-const Reaction = ({ reaction, stayScrolled, addReaction }) => {
+const Reaction = ({ reaction, addReaction }) => {
 	useLayoutEffect(() => {
-		stayScrolled();
+		window.stayScrolled();
 	}, [reaction]);
 
 	const reactionBtn = (
@@ -51,7 +51,6 @@ const Reactions = ({
 	addReaction,
 	myAddr,
 	reactions,
-	stayScrolled,
 }) => {
 	const countedReactions = useMemo(() => reactions.reduce((acc, reaction) => {
 		if (!reaction.content) {
@@ -104,7 +103,6 @@ const Reactions = ({
 					reaction={reaction}
 					addReaction={addReaction}
 					key={reaction.content}
-					stayScrolled={stayScrolled}
 				/>
 			))}
 		</div>

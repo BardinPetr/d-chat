@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
-import MessagesComponent from 'Approot/UI/components/Chatroom/Messages';
+import MessagesList from 'Approot/UI/components/Chatroom/MessagesList';
+import MessagesScroller from 'Approot/UI/components/Chatroom/MessagesScroller';
 import { loadMessagesFromDb, PAGE_SIZE } from 'Approot/database/messages';
 
 function reducer(state, action) {
@@ -28,10 +29,16 @@ function reducer(state, action) {
 }
 
 const Messages = ({
-	topic,
+	createReaction,
+	lastReadId,
+	markAllMessagesRead,
 	messageEvent,
+	mutedUsers,
+	myAddr,
+	refer,
+	subs,
+	topic,
 	unreadCount,
-	...rest
 }) => {
 	const [messages, dispatch] = useReducer(reducer, []);
 	const [hasMore, setHasMore] = useState(true);
@@ -91,19 +98,33 @@ const Messages = ({
 	}, [topic]);
 
 	return (
-		<MessagesComponent
+		<MessagesScroller
+			listClassname="x-is-fullwidth is-scrollable is-relative x-chatroom-messages"
+			scrollTriggers={[topic, messages.length]}
+			markAllMessagesRead={markAllMessagesRead}
 			topic={topic}
-			messages={messages}
 			loadMore={loadMore}
 			hasMore={hasMore}
-			{...rest}
-		/>
+		>
+			<div className="x-chat">
+				<MessagesList
+					messages={messages}
+					refer={refer}
+					lastReadId={lastReadId}
+					subs={subs}
+					myAddr={myAddr}
+					createReaction={createReaction}
+					mutedUsers={mutedUsers}
+				/>
+			</div>
+		</MessagesScroller>
 	);
 };
 
 const mapStateToProps = (state, ownProps) => ({
 	messageEvent: state.messageEvent,
 	unreadCount: state.chatSettings[ownProps.topic]?.unread?.length || 0,
+	mutedUsers: state.globalSettings.muted,
 });
 
 export default connect(mapStateToProps)(Messages);

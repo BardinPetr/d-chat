@@ -11,14 +11,14 @@ import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
 import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { parseAddr, isNotice, isWhisper } from 'Approot/misc/util';
+import { parseAddr, isNotice } from 'Approot/misc/util';
 import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
 
 /**
  * Message contents have been sanitized on arrival.
  * See `workers/nkn/IncomingMessage.js`
  */
-const MessageContent = ({ message, stayScrolled }) => {
+const MessageContent = ({ message }) => {
 	const isMedia = message.contentType === 'media';
 	const deleted = message.deleted && !message.isNotConfirmed;
 	import('highlight.js/styles/github.css');
@@ -40,7 +40,6 @@ const MessageContent = ({ message, stayScrolled }) => {
 			{isMedia && (
 				<MediaMessage
 					attachments={message.attachments || []}
-					stayScrolled={stayScrolled}
 				/>
 			)}
 			<div
@@ -97,24 +96,19 @@ const Message = ({
 	includeHeader,
 	message,
 	refer,
-	subs,
-	stayScrolled,
-	mutedUsers,
+	subscribed,
+	ignored
 }) => {
 	const [showIgnored, setShowIgnored] = useState(false);
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
 
 	const toggleShowingIgnored = () => {
 		setShowIgnored(showIgnored => !showIgnored);
-		setTimeout(stayScrolled, 0);
+		setTimeout(window.stayScrolled, 0);
 	};
 
-	const subscribed = isWhisper(message) || subs.includes(message.addr);
 	const notice = isNotice(message);
-
 	const showHeader = includeHeader || notice;
-	// If message isn't permissioned, it is marked `hidden`, and then we hide it.
-	const ignored = mutedUsers.includes(message.addr) || message.hidden;
 
 	return (
 		<div
@@ -171,7 +165,7 @@ const Message = ({
 			<div className={classnames('message-body x-is-small-padding', {
 				'has-text-danger': awaitsDeletion,
 			})}>
-				<MessageContent message={message} stayScrolled={stayScrolled} />
+				<MessageContent message={message} />
 				{children /* Reactions */}
 				<div className="x-message-toolbar-side x-is-hover">
 					<MessageActions

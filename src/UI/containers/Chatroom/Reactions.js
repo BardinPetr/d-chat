@@ -18,7 +18,6 @@ function reducer(state, action) {
 const Reactions = ({
 	topic,
 	messageID,
-	stayScrolled,
 	messageEvent,
 	...rest
 }) => {
@@ -64,7 +63,6 @@ const Reactions = ({
 	return (
 		<ReactionsComponent
 			reactions={reactions}
-			stayScrolled={stayScrolled}
 			{...rest}
 		/>
 	);
