@@ -68,7 +68,6 @@ module.exports = function (webpackEnv) {
 		optimization: {
 			minimize: isEnvProduction && process.env.APP_TARGET === 'WEB',
 			splitChunks: {
-				maxInitialRequests: process.env.APP_TARGET === 'EXT' ? 15 : 4,
 				automaticNameDelimiter: '-',
 				name: false,
 				cacheGroups: {

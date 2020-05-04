@@ -4,7 +4,15 @@ import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
-const createWorker = () => new SigWorker();
+// 8 workers get created otherwise? Bug somewhere.
+const createWorker = (() => {
+	const workers = [new SigWorker(), new SigWorker(), new SigWorker(), new SigWorker()];
+	let i = 0;
+	return () => {
+		i++;
+		return workers[ i%workers.length ];
+	};
+})();
 
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
@@ -77,6 +85,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
 			worker: createWorker,
+			responseTimeout: 0,
 		});
 
 		this.wallet = wallet;
