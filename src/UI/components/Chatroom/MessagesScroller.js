@@ -72,7 +72,9 @@ const MessagesScroller = ({
 				threshold={100}
 				className="x-is-fullwidth"
 			>
-				{children}
+				<React.Fragment key="bugs-out">
+					{children}
+				</React.Fragment>
 			</InfiniteScroller>
 		</div>
 	);

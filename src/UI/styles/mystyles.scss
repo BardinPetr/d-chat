@@ -169,13 +169,28 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-color: white;
 		word-wrap: break-word;
 
+		.x-media-container {
+			margin-top: 0.5em;
+		}
+
 		.x-media-wrapper {
 			cursor: zoom-out;
+			min-height: 30px;
 			&:not(.x-media-expanded) {
 				cursor: zoom-in;
+				max-height: 260px;
 				img, video {
-					height: 300px;
+					max-height: 260px;
 				}
+			}
+			audio {
+				height: 30px;
+			}
+			audio, video {
+				min-width: 250px;
+			}
+			img, video {
+				height: 100%;
 			}
 		}
 
