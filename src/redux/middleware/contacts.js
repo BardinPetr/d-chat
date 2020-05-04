@@ -42,6 +42,10 @@ const contactsHandler = store => next => async action => {
 						contentType: 'contact',
 					}));
 					return;
+
+				default:
+					console.warn('Some odd type came up:', action);
+					return;
 			}
 		} else if (type === 'contacts/UPDATE_CONTACT') {
 			return storeContact(action.payload);
