@@ -237,7 +237,7 @@ const Textarea = ({
 						uniqueId: 'main-textarea',
 					},
 					errorCallback(err) {
-						mdeInstance.current?.setStatusbar('upload-image', err);
+						mdeInstance.current?.setStatusbar?.('upload-image', err);
 					},
 					previewClass: 'content editor-preview',
 					promptURLs: IS_SIDEBAR,
