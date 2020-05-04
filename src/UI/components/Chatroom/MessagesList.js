@@ -23,13 +23,13 @@ const LastRead = () => {
 };
 
 const MessagesList = ({
-	messages,
+	messages = [],
 	refer,
 	lastReadId,
 	myAddr,
 	createReaction,
-	mutedUsers,
-	subs,
+	mutedUsers = [],
+	subs = [],
 }) => {
 	const [originalLastReadId] = useState(lastReadId);
 	const messagesList = useMemo(() => {

@@ -175,16 +175,16 @@ onmessage = async ({ data: action }) => {
 			break;
 
 		case 'contacts/SEND':
-			data = new OutgoingMessage(payload.contact);
-			NKN.instance.sendMessage(payload.recipient, data);
+			// data = new OutgoingMessage(payload.contact);
+			// NKN.instance.sendMessage(payload.recipient, data);
 			break;
 
 		case 'contacts/REQUEST_HEADERS':
-			message = new ContactRequest('headers', { addr: payload.addr });
+			// message = new ContactRequest('headers', { addr: payload.addr });
 			break;
 
 		case 'contacts/REQUEST_PROFILE':
-			message = new ContactRequest('full', { addr: payload.addr });
+			// message = new ContactRequest('full', { addr: payload.addr });
 			break;
 
 		default:

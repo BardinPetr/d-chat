@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
@@ -10,10 +10,13 @@ import Version from 'Approot/UI/components/Version';
 import { FaQrcode } from 'react-icons/fa';
 import { getBalance } from 'Approot/redux/actions/client';
 import { updateContact } from 'Approot/redux/actions/contacts';
-import { getContact } from 'Approot/database/contacts';
+import useAvatar from 'Approot/UI/hooks/useAvatar';
 
 import ModalOpener from 'Approot/UI/components/ModalOpener';
 import QRCode from 'Approot/UI/components/QRCode';
+
+const MAX_AVATAR_SIZE = 10 * 1024; // 10kb.
+const MAX_AVATAR_SIZE_HUMAN = '10kb'; // 10kb.
 
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
@@ -65,17 +68,21 @@ const Address = ({ addr }) => {
 };
 
 const Home = ({ client, getBalance, updateContact }) => {
-	const [contact, setContact] = useState({});
-	const refreshContact = () => getContact(client.addr).then(
-		c => c && (console.log('contact',c) || setContact(c))
-	);
-	useEffect(() => {
-		refreshContact();
-	}, [client.addr]);
+	const { avatar, refresh } = useAvatar(client.addr);
+	const [error, setError] = useState(null);
 
 	const onUpload = async e => {
+		setError(null);
 		const file = e.target.files?.[0];
 		if (!file) {
+			return;
+		}
+		if (file.size > MAX_AVATAR_SIZE) {
+			setError(
+				<span className="help is-danger">
+					{__('File too large. Max size: #size#.').replace('#size#', MAX_AVATAR_SIZE_HUMAN)}
+				</span>
+			);
 			return;
 		}
 		const data = await new Promise((resolve, reject) => {
@@ -92,24 +99,24 @@ const Home = ({ client, getBalance, updateContact }) => {
 				type: 'base64',
 				data,
 			},
-			firstName: '',
-			lastName: '',
+			name: '',
 		});
-		refreshContact();
+		refresh();
 	};
 
 	return (
-		<div className="container">
+		<div className="container x-home">
 			<div className="">
 				<div className="">
 					<div className="section">
+						{error}
 
 						<div className="media">
 							<div className="media-left">
-								<label htmlFor="avatar-picker" className="label">
-									<img className="image is-128x128" src={contact?.content?.avatar?.data} alt={__('Profile picture')} />
+								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
+									<img src={avatar} className="x-avatar-image image is-128x128" />
+									<input type="file" id="avatar-picker" accept="image/*" className="is-overlay x-avatar-picker" onChange={onUpload} />
 								</label>
-								<input type="file" id="avatar-picker" accept="image/*" className="is-hidden" onChange={onUpload} />
 							</div>
 							<div className="media-content">
 								<div className="label has-text-weight-normal level is-mobile">
@@ -151,7 +158,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 
 					</div>
 
-					<div className="section">
+					<div className="section" style={{ paddingTop: 0, }}>
 						<div className="content">
 							<p><Link to="/topics">{__('Public chat index')}</Link></p>
 							<Info />

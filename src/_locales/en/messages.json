@@ -95,6 +95,9 @@
   "Exportwallet": {
     "message": " Export wallet"
   },
+  "FiletoolargeMaxsizesize": {
+    "message": " File too large. Max size: #size#."
+  },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
   },
