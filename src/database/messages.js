@@ -1,7 +1,4 @@
 import db, { maxKey, minKey } from 'Approot/database/db';
-import base64ToBlob from 'b64-to-blob';
-import base64Mime from 'base64mime';
-import isBlob from 'is-blob';
 
 export const PAGE_SIZE = 25;
 
@@ -33,27 +30,6 @@ export async function getMessageFromDb(message) {
  * Adds a message or reaction to relevant db table.
  */
 export async function storeMessageToDb(message) {
-	// Turn attachments into blobs and store.
-	if (Array.isArray(message.attachments)) {
-		message.attachments = message.attachments.map(
-			data => {
-
-				// If thingy's been handled already.
-				if (isBlob(data)) {
-					return data;
-				}
-
-				// Turn data string to blob, figure it out from there.
-				if (typeof data === 'string') {
-					const mime = base64Mime(data);
-					data = data.slice(data.indexOf(',') + 1);
-					data = base64ToBlob(data, mime);
-					return data;
-				}
-				// It's messed, get rid of it.
-				return null;
-			});
-	}
 	if (message.contentType === 'reaction') {
 		return storeToReactionDb(message);
 	} else {

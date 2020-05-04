@@ -1,4 +1,5 @@
 import { storeMessageToDb, modifyMessageInDb } from 'Approot/database/messages';
+import { saveAttachment } from 'Approot/database/attachments';
 import { modifyMessage } from 'Approot/redux/actions';
 
 let messagesWaitingForConfirmation = [];
@@ -30,6 +31,10 @@ export default async function receivingMessage(message) {
 				isNotConfirmed: message.isNotConfirmed,
 				...message.modifications
 			}).then(message => message && [modifyMessage(message)]);
+		}
+
+		if (message.contentType === 'media') {
+			message.attachments = message.attachments.map(data => saveAttachment(data));
 		}
 
 		storeMessageToDb(message);
