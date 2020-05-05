@@ -16,8 +16,8 @@ const LastRead = () => {
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (
 		<React.Fragment>
-			<div style={{ marginBottom: '1rem' }} ref={lastReadRef} />
-			<div className="is-divider" data-content={__('New messages below')} />
+			<div style={{ paddingBottom: '0.5rem' }} ref={lastReadRef} />
+			<div style={{ marginTop: '0.5rem' }} className="is-divider" data-content={__('New messages below')} />
 		</React.Fragment>
 	);
 };
@@ -30,8 +30,12 @@ const MessagesList = ({
 	createReaction,
 	mutedUsers = [],
 	subs = [],
+	topic,
 }) => {
-	const [originalLastReadId] = useState(lastReadId);
+	const [originalLastReadId, setOriginalLastReadId] = useState(lastReadId);
+	useEffect(() => {
+		setOriginalLastReadId(lastReadId);
+	}, [topic]);
 	const messagesList = useMemo(() => {
 		const messagesList = [];
 

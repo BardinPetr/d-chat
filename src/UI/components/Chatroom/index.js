@@ -72,11 +72,9 @@ const Chatroom = ({
 
 	const markAllMessagesRead = useCallback(() => {
 		if (unreadMessages.length > 0) {
-			if (unreadMessages.length < 4) {
-				setLastReadId(null);
-			}
 			markAsRead(topic, unreadMessages);
 		}
+		setLastReadId(null);
 	}, [topic, unreadMessages]);
 
 	const submitText = useCallback((inputValue) => {

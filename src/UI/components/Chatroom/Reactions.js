@@ -1,12 +1,8 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import { isAck, formatAddr } from 'Approot/misc/util';
 
 const Reaction = ({ reaction, addReaction }) => {
-	useLayoutEffect(() => {
-		window.stayScrolled();
-	}, [reaction]);
-
 	const reactionBtn = (
 		<button
 			title={reaction._title.slice(0, 100)}

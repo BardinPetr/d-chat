@@ -106,17 +106,16 @@ const Messages = ({
 			loadMore={loadMore}
 			hasMore={hasMore}
 		>
-			<div className="x-chat">
-				<MessagesList
-					messages={messages}
-					refer={refer}
-					lastReadId={lastReadId}
-					subs={subs}
-					myAddr={myAddr}
-					createReaction={createReaction}
-					mutedUsers={mutedUsers}
-				/>
-			</div>
+			<MessagesList
+				messages={messages}
+				refer={refer}
+				lastReadId={lastReadId}
+				subs={subs}
+				topic={topic}
+				myAddr={myAddr}
+				createReaction={createReaction}
+				mutedUsers={mutedUsers}
+			/>
 		</MessagesScroller>
 	);
 };

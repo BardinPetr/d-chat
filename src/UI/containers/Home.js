@@ -15,8 +15,8 @@ import useAvatar from 'Approot/UI/hooks/useAvatar';
 import ModalOpener from 'Approot/UI/components/ModalOpener';
 import QRCode from 'Approot/UI/components/QRCode';
 
+// Changing this? Change the tooltip too.
 const MAX_AVATAR_SIZE = 10 * 1024; // 10kb.
-const MAX_AVATAR_SIZE_HUMAN = '10kb'; // 10kb.
 
 const NewTopicForm = ({ privateChat }) => {
 	const [target, setTarget] = useState('');
@@ -71,7 +71,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 	const { avatar, refresh } = useAvatar(client.addr);
 	const [error, setError] = useState(null);
 
-	const onUpload = async e => {
+	const onAvatarUpload = async e => {
 		setError(null);
 		const file = e.target.files?.[0];
 		if (!file) {
@@ -80,7 +80,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 		if (file.size > MAX_AVATAR_SIZE) {
 			setError(
 				<span className="help is-danger">
-					{__('File too large. Max size: #size#.').replace('#size#', MAX_AVATAR_SIZE_HUMAN)}
+					{__('File too large. Max size is 10kb.')}
 				</span>
 			);
 			return;
@@ -99,7 +99,6 @@ const Home = ({ client, getBalance, updateContact }) => {
 				type: 'base64',
 				data,
 			},
-			name: '',
 		});
 		refresh();
 	};
@@ -115,7 +114,14 @@ const Home = ({ client, getBalance, updateContact }) => {
 							<div className="media-left">
 								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
 									<img src={avatar} className="x-avatar-image image is-128x128" />
-									<input type="file" id="avatar-picker" accept="image/*" className="is-overlay x-avatar-picker" onChange={onUpload} />
+									<input
+										title={__('Profile picture')}
+										type="file"
+										id="avatar-picker"
+										accept="image/*"
+										className="is-overlay x-avatar-picker"
+										onChange={onAvatarUpload}
+									/>
 								</label>
 							</div>
 							<div className="media-content">

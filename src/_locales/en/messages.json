@@ -95,8 +95,8 @@
   "Exportwallet": {
     "message": " Export wallet"
   },
-  "FiletoolargeMaxsizesize": {
-    "message": " File too large. Max size: #size#."
+  "FiletoolargeMaxsizeiskb": {
+    "message": " File too large. Max size is 10kb."
   },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
@@ -214,6 +214,9 @@
   },
   "Privatelychattingwith": {
     "message": " Privately chatting with"
+  },
+  "Profilepicture": {
+    "message": " Profile picture"
   },
   "Public": {
     "message": " Public"
