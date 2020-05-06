@@ -145,7 +145,7 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 		],
 		isAsync: false,
 		// Gitlab.io hosts at /d-chat/.
-		publicPath: (isEnvProduction && process.env.APP_TARGET === 'WEB') ? '/d-chat/' : undefined,
+		// publicPath: (isEnvProduction && process.env.APP_TARGET === 'WEB') ? '/d-chat/' : undefined,
 	});
 
 	return {
