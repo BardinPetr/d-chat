@@ -1,14 +1,17 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
+import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
+import uniq from 'lodash.uniq';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
 import { Pos } from 'codemirror';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/hint/show-hint.css';
 
 import MarkdownEditor from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
+
+const FILESIZE_LIMIT = 2;
+const FILESIZE_LIMIT_MB = FILESIZE_LIMIT * 1024 * 1024;
 
 const startUpload = async (file, onUploaded, errCb) => {
 	upload({ target: { files: [file] } });
@@ -16,7 +19,7 @@ const startUpload = async (file, onUploaded, errCb) => {
 	function upload(e) {
 		if (e.target.files.length) {
 			if (!['image/', 'video/', 'audio/'].some(f => e.target.files[0].type?.startsWith(f))) {
-				errCb('Wrong filetype.');
+				errCb(__('Wrong filetype.'));
 				return;
 			}
 			const reader = new FileReader();
@@ -25,17 +28,25 @@ const startUpload = async (file, onUploaded, errCb) => {
 			};
 			reader.onerror = e => {
 				console.error('FileReader error:', e);
-				errCb('Error');
+				errCb(__('Error'));
 			};
-			if (e.target.files[0].size <= 4194304) {
+			if (e.target.files[0].size <= FILESIZE_LIMIT_MB) {
 				reader.readAsDataURL(e.target.files[0]);
 			} else {
-				errCb('Error: > 4MB');
+				errCb(
+					__('Error, file is too large. Max #size# MB.').replace('#size#', FILESIZE_LIMIT)
+				);
 			}
 		}
 	}
 };
 
+/**
+ * TODO: codemirror likes to initiate styles recalculations on every keypress.
+ * Makes it input lag when there's a lot of DOM elements, like a 100k char message.
+ *
+ * Maybe put a character limit on chat messages.
+ */
 const Textarea = ({
 	submitText,
 	mdeInstance,
@@ -44,6 +55,8 @@ const Textarea = ({
 	subs,
 	topic,
 }) => {
+	import('codemirror/addon/hint/show-hint');
+	import('codemirror/addon/hint/show-hint.css');
 	const [visible, setEmojiPickerVisible] = useState(false);
 	useEffect(() => {
 		const cm = mdeInstance.current?.codemirror;
@@ -97,13 +110,14 @@ const Textarea = ({
 					} else if (word.startsWith('@')) {
 						// Subs autocomplete.
 						const theWord = word.slice(1);
-						const things = subs.filter(sub => sub.toLowerCase().startsWith(
+						const things = uniq(subs.map(formatAddr)).filter(sub => sub.toLowerCase().startsWith(
 							theWord.toLowerCase())
 						).map(sub => ({
 							text: mention(sub) + ' ',
 							displayText: formatAddr(sub)
 						}));
 						if (things.length) {
+							// Some emojis still give troubles. Something to do with unicode, probs.
 							return ({
 								list: things,
 								// Without this, typing 'xx @' would cause autocomplete to 'xx@something.34...' -
@@ -159,6 +173,27 @@ const Textarea = ({
 		cm.focus();
 	};
 
+	useEffect(() => {
+		const cm = mdeInstance.current?.codemirror;
+		if (!cm) {
+			return;
+		}
+		const onDragEnter = () => {
+			document.querySelector('.editor-statusbar').className = 'editor-statusbar is-not-hidden';
+		};
+		const onDrop = () => {
+			document.querySelector('.editor-statusbar').className = 'editor-statusbar';
+		};
+		cm.on('dragenter', onDragEnter);
+		// dragleave is worthless.
+		cm.on('drop', onDrop);
+
+		return () => {
+			cm.off('dragenter', onDragEnter);
+			cm.off('drop', onDrop);
+		};
+	}, [topic]);
+
 	const closeEmojiPicker = () => setEmojiPickerVisible(false);
 
 	// Without key={topic}, things go wrong. No idea how to fix that.
@@ -182,7 +217,7 @@ const Textarea = ({
 					uploadImage: true,
 					imageUploadFunction,
 					imageAccept: 'image/*,audio/*,video/*',
-					imageMaxSize: 4194304, // 4MB
+					imageMaxSize: FILESIZE_LIMIT_MB,
 					status: ['upload-image'],
 					toolbarTips: false,
 					onToggleFullScreen() {
@@ -202,7 +237,7 @@ const Textarea = ({
 						uniqueId: 'main-textarea',
 					},
 					errorCallback(err) {
-						mdeInstance.current?.setStatusbar('upload-image', err);
+						mdeInstance.current?.setStatusbar?.('upload-image', err);
 					},
 					previewClass: 'content editor-preview',
 					promptURLs: IS_SIDEBAR,
@@ -210,7 +245,9 @@ const Textarea = ({
 					minHeight: 'auto',
 					toolbar: [
 						{
-							name: 'emoji',
+							name: classnames('emoji x-fullscreen-visible', {
+								'is-hidden-touch': IS_SIDEBAR
+							}),
 							action: () => setEmojiPickerVisible(true),
 							className: 'fa fa-smile',
 							title: '',
@@ -227,7 +264,7 @@ const Textarea = ({
 						'side-by-side',
 						'fullscreen',
 						{
-							name: 'is-hidden-desktop submit',
+							name: classnames('submit x-fullscreen-visible is-hidden-tablet'),
 							action: onSubmit,
 							className: 'fa fa-paper-plane-empty',
 							title: '',

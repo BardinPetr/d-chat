@@ -1,20 +1,16 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import { isAck, formatAddr } from 'Approot/misc/util';
 
-const Reaction = ({ reaction, stayScrolled, addReaction }) => {
-	useLayoutEffect(() => {
-		stayScrolled();
-	}, [reaction]);
-
-	return (
+const Reaction = ({ reaction, addReaction }) => {
+	const reactionBtn = (
 		<button
 			title={reaction._title.slice(0, 100)}
 			className={classnames('button x-has-opacity-1 button', {
 				'is-primary': reaction._haveReacted,
 				'x-reactions-reacted': reaction._haveReacted,
 				'x-is-first-reaction': reaction._count === 0,
-				'x-is-hover': reaction._count === 0,
+				// 'x-is-hover': reaction._count === 0,
 				'is-small': reaction._count === 0,
 			})}
 			disabled={reaction._haveReacted}
@@ -31,17 +27,26 @@ const Reaction = ({ reaction, stayScrolled, addReaction }) => {
 			)}
 		</button>
 	);
+
+	if (reaction._count === 0) {
+		return (
+			<span className="x-is-first-reaction-wrapper x-is-hover">
+				{reactionBtn}
+			</span>
+		);
+	} else {
+		return reactionBtn;
+	}
 };
 
 const Ack = () => (
-	<div className="x-is-ack has-text-grey">✔</div>
+	<div className="x-is-ack has-text-grey is-family-monospace">✔</div>
 );
 
 const Reactions = ({
 	addReaction,
 	myAddr,
 	reactions,
-	stayScrolled,
 }) => {
 	const countedReactions = useMemo(() => reactions.reduce((acc, reaction) => {
 		if (!reaction.content) {
@@ -94,7 +99,6 @@ const Reactions = ({
 					reaction={reaction}
 					addReaction={addReaction}
 					key={reaction.content}
-					stayScrolled={stayScrolled}
 				/>
 			))}
 		</div>

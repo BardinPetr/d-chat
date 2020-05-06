@@ -72,11 +72,9 @@ const Chatroom = ({
 
 	const markAllMessagesRead = useCallback(() => {
 		if (unreadMessages.length > 0) {
-			if (unreadMessages.length < 4) {
-				setLastReadId(null);
-			}
 			markAsRead(topic, unreadMessages);
 		}
+		setLastReadId(null);
 	}, [topic, unreadMessages]);
 
 	const submitText = useCallback((inputValue) => {
@@ -89,10 +87,6 @@ const Chatroom = ({
 		const message = {
 			content: inputValue,
 			contentType: 'text',
-			// About transmitting the hashed topic: that will make UI between different apps bad.
-			// One app will get messages to "topichash" and have "hash -> topic clearname" -
-			// map internally, -
-			// but other apps will not have the mapping, and so it will break interop.
 			topic,
 		};
 
@@ -152,6 +146,7 @@ const Chatroom = ({
 			<Messages
 				topic={topic}
 				refer={refer}
+				subs={subs}
 				lastReadId={lastReadId}
 				markAllMessagesRead={markAllMessagesRead}
 				myAddr={client.addr}

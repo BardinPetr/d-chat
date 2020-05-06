@@ -10,14 +10,20 @@ import {
 	connected,
 	receiveMessage,
 } from 'Approot/redux/actions';
-import { isWhisper } from 'Approot/misc/util';
+import {
+	receiveContact
+} from 'Approot/redux/actions/contacts';
+import {
+	isWhisper,
+	isContact,
+} from 'Approot/misc/util';
 
 const { PayloadType } = pb.payloads;
 
 function addNKNListeners (client) {
 
 	client.onMessage(({ src, payload, payloadType }) => {
-		handleIncomingMessage(src, payload, payloadType);
+		handleIncomingMessage(src, payload, payloadType).catch(console.warn);
 		// Do not send ack-messages.
 		return false;
 	});
@@ -33,9 +39,6 @@ function addNKNListeners (client) {
 			const data = JSON.parse(payload);
 			const message = new IncomingMessage(data).from(src);
 
-			const permitted = (
-				!message.unreceivable
-			);
 			// Let's ignore messages that come without permissions.
 			const check = isWhisper(message) || await client.Permissions.check(message.topic, src);
 			if (!check) {
@@ -43,28 +46,33 @@ function addNKNListeners (client) {
 				message.ignored = true;
 			}
 
-			if (permitted) {
+			// This got messy.
+			// If it's not a chat message, then we don't want it in our messages database.
+			if (isContact(message)) {
+				postMessage(receiveContact(NKN.instance.addr, message));
+			} else {
+				// Assume it's chat message.
+				// Could be one of 'text', 'media', 'reaction', 'event:subscribe',....etc.
 				postMessage(receiveMessage(message));
 			}
 		}
 	}
 }
 
+let instance;
 /**
  * Singleton.
  * This used to make sense, now it's redundant.
  */
 class NKNHandler {
-	// Static private.
-	static #instance;
 
 	static get instance() {
-		return this.#instance;
+		return instance;
 	}
 
 	static clear() {
-		this.#instance?.close();
-		this.#instance = null;
+		instance?.close();
+		instance = null;
 	}
 
 	static start({ username, password, wallet, seed }) {
@@ -106,9 +114,9 @@ class NKNHandler {
 		}
 		addNKNListeners(realClient);
 
-		this.#instance?.close();
+		instance?.close();
 
-		this.#instance = realClient;
+		instance = realClient;
 
 		return realClient;
 	}

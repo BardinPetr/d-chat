@@ -80,6 +80,12 @@
   "Emojis": {
     "message": " Emojis"
   },
+  "Error": {
+    "message": " Error"
+  },
+  "ErrorfileistoolargeMaxsizeMB": {
+    "message": " Error, file is too large. Max #size# MB."
+  },
   "Expandsonclick": {
     "message": " Expands on click"
   },
@@ -88,6 +94,9 @@
   },
   "Exportwallet": {
     "message": " Export wallet"
+  },
+  "FiletoolargeMaxsizeiskb": {
+    "message": " File too large. Max size is 10kb."
   },
   "ForChromiumbasedbrowsersChromewebstore": {
     "message": " For Chromium based browsers, Chrome webstore"
@@ -206,6 +215,9 @@
   "Privatelychattingwith": {
     "message": " Privately chatting with"
   },
+  "Profilepicture": {
+    "message": " Profile picture"
+  },
   "Public": {
     "message": " Public"
   },
@@ -295,6 +307,9 @@
   },
   "Whispers": {
     "message": " Whispers"
+  },
+  "Wrongfiletype": {
+    "message": " Wrong filetype."
   },
   "Wrongpassword": {
     "message": " Wrong password."

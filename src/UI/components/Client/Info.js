@@ -10,6 +10,7 @@ import ModalOpener from 'Approot/UI/components/ModalOpener';
 import QRCode from 'Approot/UI/components/QRCode';
 import { FaQrcode } from 'react-icons/fa';
 import useInterval from '@rooks/use-interval';
+import 'bulma-tooltip/dist/css/bulma-tooltip.min.css';
 
 const ClientInfo = ({ client, children, getBalance }) => {
 	const [expanded, setExpanded] = useState(false);

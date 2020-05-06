@@ -11,16 +11,18 @@ import MediaMessage from './MediaMessage';
 import MessageToolbar from './MessageToolbar';
 import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { parseAddr, isNotice, isWhisper } from 'Approot/misc/util';
+import { parseAddr, isNotice } from 'Approot/misc/util';
 import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
+import useAvatar from 'Approot/UI/hooks/useAvatar';
 
 /**
  * Message contents have been sanitized on arrival.
  * See `workers/nkn/IncomingMessage.js`
  */
-const MessageContent = ({ message, stayScrolled }) => {
+const MessageContent = ({ message }) => {
 	const isMedia = message.contentType === 'media';
 	const deleted = message.deleted && !message.isNotConfirmed;
+	import('highlight.js/styles/github.css');
 
 	if (deleted) {
 		return (
@@ -32,21 +34,22 @@ const MessageContent = ({ message, stayScrolled }) => {
 				</p>
 			</div>
 		);
-	} else if (isMedia) {
-		return (
-			<MediaMessage
-				content={message.content}
-				stayScrolled={stayScrolled}
-				attachments={message.attachments || []}
-			/>
-		);
 	}
 
 	return (
-		<div
-			className="content"
-			dangerouslySetInnerHTML={{ __html: message.content || '' }}
-		></div>
+		<div>
+			{isMedia && (
+				<MediaMessage
+					attachments={message.attachments || []}
+				/>
+			)}
+			<div
+				className={classnames('content x-message-content x-has-normal-scrollbar', {
+					'is-size-3': message.isOnlyEmojis,
+				})}
+				dangerouslySetInnerHTML={{ __html: message.content || '' }}
+			></div>
+		</div>
 	);
 };
 
@@ -88,30 +91,30 @@ const Nickname = ({
 	);
 };
 
+const Avatar = ({ addr }) => {
+	const { avatar } = useAvatar(addr);
+	return (<img src={avatar} className="x-avatar-image image is-24x24" />);
+};
+
 const Message = ({
 	children,
 	className,
 	includeHeader,
 	message,
 	refer,
-	subs,
-	stayScrolled,
-	mutedUsers,
+	subscribed,
+	ignored
 }) => {
 	const [showIgnored, setShowIgnored] = useState(false);
 	const awaitsDeletion = message.deleted && message.isNotConfirmed;
 
 	const toggleShowingIgnored = () => {
 		setShowIgnored(showIgnored => !showIgnored);
-		setTimeout(stayScrolled, 0);
+		setTimeout(window.stayScrolled, 0);
 	};
 
-	const subscribed = isWhisper(message) || subs.includes(message.addr);
 	const notice = isNotice(message);
-
 	const showHeader = includeHeader || notice;
-	// If message isn't permissioned, it is marked `hidden`, and then we hide it.
-	const ignored = mutedUsers.includes(message.addr) || message.hidden;
 
 	return (
 		<div
@@ -129,6 +132,9 @@ const Message = ({
 				<div className="message-header is-paddingless has-text-weight-light">
 					<div className="level is-mobile is-marginless is-paddingless">
 						<div className="level-left">
+							<div className="level-item x-avatar-image">
+								<Avatar addr={message.addr} />
+							</div>
 							<div className="level-item">
 								{ignored && (
 									<a
@@ -168,7 +174,7 @@ const Message = ({
 			<div className={classnames('message-body x-is-small-padding', {
 				'has-text-danger': awaitsDeletion,
 			})}>
-				<MessageContent message={message} stayScrolled={stayScrolled} />
+				<MessageContent message={message} />
 				{children /* Reactions */}
 				<div className="x-message-toolbar-side x-is-hover">
 					<MessageActions

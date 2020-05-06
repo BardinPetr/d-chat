@@ -26,6 +26,10 @@ export function genChatID(topic) {
 	if (!topic) {
 		return null;
 	}
+	// Already generated. Since nkn-sdk 1.1.3, it kinda is weird like that.
+	if (topic.startsWith('dchat') && topic.length === 45) {
+		return topic;
+	}
 	// Api/code somewhere does not like strings that start with numbers.
 	return 'dchat' + shasum(topic);
 }
@@ -125,13 +129,16 @@ export const importWallet = file => {
 };
 
 // If you change this, then probably touch on subFetcher middleware.
-export const isNotice = msg => [
+export const isNotice = msg => msg && [
 	'event:subscribe',
 	'dchat/subscribe'
 ].includes(msg.contentType);
-export const isDelete = msg => [
+export const isDelete = msg => msg && [
 	'event:message/delete',
 	'message/delete'
+].includes(msg.contentType);
+export const isContact = msg => msg && [
+	'contact',
 ].includes(msg.contentType);
 
 // This is the topic for the list of public topics.

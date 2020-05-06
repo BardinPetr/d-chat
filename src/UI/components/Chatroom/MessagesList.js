@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
-import Message from 'Approot/UI/containers/Chatroom/Message';
-import { isNotice, mention, formatAddr } from 'Approot/misc/util';
+import Message from 'Approot/UI/components/Chatroom/Message';
+import { isNotice, isWhisper, mention, formatAddr } from 'Approot/misc/util';
 
 // 1min 30seconds seconds.
 const SEPARATE_MESSAGE_TIME = (60 + 30) * 1000;
@@ -16,21 +16,26 @@ const LastRead = () => {
 	// The extra div makes the divider be fully in view when it is scrolledIntoView.
 	return (
 		<React.Fragment>
-			<div style={{ marginBottom: '1rem' }} ref={lastReadRef} />
-			<div className="is-divider" data-content={__('New messages below')} />
+			<div style={{ paddingBottom: '0.5rem' }} ref={lastReadRef} />
+			<div style={{ marginTop: '0.5rem' }} className="is-divider" data-content={__('New messages below')} />
 		</React.Fragment>
 	);
 };
 
 const MessagesList = ({
-	messages,
+	messages = [],
 	refer,
 	lastReadId,
 	myAddr,
 	createReaction,
-	stayScrolled,
+	mutedUsers = [],
+	subs = [],
+	topic,
 }) => {
-	const [originalLastReadId] = useState(lastReadId);
+	const [originalLastReadId, setOriginalLastReadId] = useState(lastReadId);
+	useEffect(() => {
+		setOriginalLastReadId(lastReadId);
+	}, [topic]);
 	const messagesList = useMemo(() => {
 		const messagesList = [];
 
@@ -81,6 +86,9 @@ const MessagesList = ({
 				const refersToMe = !isMe && message.content?.includes(
 					messageIsNotice ? formatAddr(myAddr) : mention(myAddr)
 				);
+				// If message isn't permissioned, it is marked `hidden`, and then we hide it.
+				const isIgnored = mutedUsers.includes(message.addr) || message.hidden;
+				const isSubscribed = isWhisper(message) || subs.includes(message.addr);
 
 				messagesPack.push(
 					<Message
@@ -94,10 +102,10 @@ const MessagesList = ({
 						key={message.id}
 						topic={message.topic}
 						addReaction={addReaction}
-						stayScrolled={stayScrolled}
+						subscribed={isSubscribed}
+						ignored={isIgnored}
 					>
 						<Reactions
-							stayScrolled={stayScrolled}
 							addReaction={addReaction}
 							myAddr={myAddr}
 							messageID={message.id}

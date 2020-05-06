@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { connect } from 'react-redux';
 import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb } from 'Approot/database/reactions';
@@ -18,21 +18,13 @@ function reducer(state, action) {
 const Reactions = ({
 	topic,
 	messageID,
-	stayScrolled,
 	messageEvent,
 	...rest
 }) => {
-	const [mounted, setMounted] = useState(false);
 	const [reactions, dispatch] = useReducer(reducer, []);
 
 	useEffect(() => {
-		setMounted(true);
-		return () => {
-			setMounted(false);
-		};
-	}, []);
-
-	useEffect(() => {
+		let mounted = true;
 		loadReactionsFromDb({
 			topic,
 			targetID: messageID,
@@ -41,13 +33,16 @@ const Reactions = ({
 				dispatch({ type: 'old', payload: prevMessages });
 			}
 		});
-	}, [messageID, mounted]);
+
+		return () => {
+			mounted = false;
+		};
+	}, [messageID]);
 
 	useEffect(() => {
 		if (
 			!messageEvent.reaction
 			|| messageEvent.type !== 'new'
-			|| !mounted
 			|| !topic
 			|| topic !== messageEvent.topic
 			|| messageEvent.reaction.targetID !== messageID
@@ -59,12 +54,11 @@ const Reactions = ({
 			type: 'new',
 			payload: messageEvent.reaction,
 		});
-	}, [messageEvent, topic, messageID, mounted]);
+	}, [messageEvent, topic, messageID]);
 
 	return (
 		<ReactionsComponent
 			reactions={reactions}
-			stayScrolled={stayScrolled}
 			{...rest}
 		/>
 	);

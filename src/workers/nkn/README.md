@@ -20,7 +20,7 @@ Example of a text message that is sent out:
   // Note: D-Chat has some issues with percentage signs (%) in topic names.
   topic: 'topic name',
   // Older versions used .toUTCString(), so do take care before assuming it is integer.
-  timestamp: ${Date.now()},
+  timestamp: Date.now(),
 }
 ```
 
@@ -36,8 +36,8 @@ in the future, you can whisper to people inside a topic
 and not create a new private chatroom, but just display
 the message in the topic chatroom. It is not used in D-Chat for anything yet,
 and is mostly optional for now.
-D-Chat adds it in nkn/nkn.js: `sendMessage()`.
-After receiving a message that wants confirmation that it was received  (ex. whisper),
+
+After receiving a message that wants confirmation that it was received  (e.g. whisper),
 you should send a receipt to the sender. Same as text message, except no `content`, and
 `contentType` is set to `'receipt'`.
 
@@ -49,6 +49,7 @@ Summing up a list of contentTypes used by D-Chat:
 - reaction
 - receipt (-> 'event:receipt' soon)
 - text
+- contact (see the nMobile NKN.org thread linked at the bottom of this doc)
 
 And on hiatus:
 
@@ -63,7 +64,7 @@ About the use of each contentType,
 - 'receipt', is like reaction without content.
   - It is used for notifying "message received".
 - 'nkn/tip': was used before but not currently. Might, however, make a comeback at some point.
-- 'message/delete': Deletes (hides, actually) a message by targetID.
+- 'message/delete': Deletes your message by targetID.
 
 For messages that don't want user reaction, you might use `contentType: 'background'`.
 Rest of stuff is internal or old stuff, didn't have the presence of mind to underscore them.
@@ -76,6 +77,6 @@ The `topic` that you *subscribe to* should be `'dchat' + shasum(topic)`, and `to
 
 That is sha1sum.
 
-## Differences with Permissioned Topic Rules (NKP-0016)
+## Relevant NKN.org thread
 
-We will show `contentType: 'dchat/subscribe'` messages with complete disregard for the rules, for now. Makes it a lot easier to add people to topic when you have "Joined channel." messages showing.
+https://forum.nkn.org/t/nmobile-message-protocol/2203

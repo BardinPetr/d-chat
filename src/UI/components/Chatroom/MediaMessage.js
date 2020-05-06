@@ -3,13 +3,13 @@ import classnames from 'classnames';
 import { loadAttachment } from 'Approot/database/attachments';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 
-const Attachment = ({ attachment, onLoad }) => {
+const Attachment = ({ attachment }) => {
 	const [expanded, setExpanded] = useState(false);
 	const toggleExpanded = () => setExpanded(expanded => !expanded);
 
 	return (
 		<div
-			className={classnames('x-media-wrapper', {
+			className={classnames('x-media-wrapper is-flex', {
 				'x-media-expanded': expanded,
 			})}
 			title={__('Click to expand or contract.')}
@@ -20,14 +20,12 @@ const Attachment = ({ attachment, onLoad }) => {
 					className="x-oc-content"
 					controls
 					loop
-					onLoadedData={onLoad}
 					src={attachment.src}
 				/>)
 			|| (attachment.type.includes('image') &&
 				<img
 					className="x-oc-content"
 					src={attachment.src}
-					onLoad={onLoad}
 				/>)
 			|| (attachment.type.includes('video') &&
 				<video
@@ -35,7 +33,6 @@ const Attachment = ({ attachment, onLoad }) => {
 					controls
 					playsInline
 					loop
-					onLoadedData={onLoad}
 					src={attachment.src}
 				/>)
 			}
@@ -43,9 +40,8 @@ const Attachment = ({ attachment, onLoad }) => {
 	);
 };
 
-const MediaMessage = ({ content, attachments, stayScrolled }) => {
+const MediaMessage = ({ attachments }) => {
 	const [attaches, setAttaches] = useState([]);
-	const displayContent = content.includes('blob:') ? '' : content;
 
 	useEffect(() => {
 		attachments.forEach(attachment =>
@@ -73,11 +69,10 @@ const MediaMessage = ({ content, attachments, stayScrolled }) => {
 			<div className={'x-media-container is-flex'}>
 				{attaches.map((attach, i) => (
 					<div key={i}>
-						<Attachment attachment={attach} onLoad={stayScrolled} />
+						<Attachment attachment={attach} />
 					</div>
 				))}
 			</div>
-			<div className="content" dangerouslySetInnerHTML={{ __html: displayContent }} />
 		</div>
 	);
 };

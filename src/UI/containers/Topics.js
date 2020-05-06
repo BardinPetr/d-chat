@@ -47,8 +47,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 			title: __('Name'),
 			key: 'name',
 			dataIndex: 'name',
-			// Due to historical reasons, we have to remove any leading hash here.
-			render: value => <TopicLink topic={value.replace(/^#/, '')} />,
+			render: value => <TopicLink topic={value} />,
 		},
 		{
 			title: __('Subscribers'),
@@ -84,7 +83,13 @@ const TopicInfoList = ({ dispatch, topics }) => {
 								</p>
 							</div>
 							<div className="table-container">
-								<Table data={data} columns={columns} className="table" />
+								<Table data={data} columns={columns} className="table"
+									emptyText={(
+										<div className="section">
+											<div className="icon is-large loader" />
+										</div>
+									)}
+								/>
 							</div>
 						</div>
 

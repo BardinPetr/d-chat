@@ -52,7 +52,8 @@ const getPlugins = (isEnvProduction = false, shouldUseSourceMap = false) => {
 			{},
 			{
 				title: 'Sidebar',
-				chunks: process.env.APP_TARGET === 'EXT' ? ['popup'] : ['popup', 'background', 'common'],
+				// Not sure where "background" goes in WEB version.
+				chunks: process.env.APP_TARGET === 'EXT' ? ['popup'] : ['popup', 'common'],
 				filename: 'index.html',
 				template: paths.sidebarTemplate,
 				scriptLoading: 'defer',

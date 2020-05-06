@@ -4,7 +4,15 @@ import permissionsMixin from 'nkn-permissioned-pubsub/mixin';
 import { isPermissionedTopic } from 'nkn-permissioned-pubsub/util';
 
 import SigWorker from 'nkn-sdk/lib/worker/webpack.worker.js';
-const createWorker = () => new SigWorker();
+// 8 workers get created otherwise? Bug somewhere.
+const createWorker = (() => {
+	const workers = [new SigWorker(), new SigWorker(), new SigWorker(), new SigWorker()];
+	let i = 0;
+	return () => {
+		i++;
+		return workers[ i%workers.length ];
+	};
+})();
 
 const FORBLOCKS = 400000;
 // Resub if less than 20k blocks (~5 days) are left before subscription ends.
@@ -77,28 +85,29 @@ class NKN extends permissionsMixin(MultiClient) {
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
 			worker: createWorker,
+			responseTimeout: 0,
 		});
 
 		this.wallet = wallet;
 	}
 
-	unsubscribe = async (
+	async unsubscribe (
 		topic,
 		{ identifier = this.identifier, ...opts } = {}
-	) => {
+	) {
 		const topicID = genChatID(topic);
-		return this.wallet.unsubscribe(topicID, identifier, opts);
-	};
+		return super.unsubscribe(topicID, identifier, opts);
+	}
 
-	getNonce = () => this.wallet.getNonce();
+	// getNonce = () => this.getNonce();
 
 	// Only one suscription per address in mempool at a time.
 	// That means that changing channels rapidly keeps re-subbing,
 	// which explains the "Joined channel." spam that happens.
-	subscribe = async (
+	async subscribe (
 		topic,
 		{ settingPermissions, identifier = this.identifier, metadata, ...options } = {}
-	) => {
+	) {
 		const topicID = genChatID(topic);
 		let isSubbed;
 		if (!settingPermissions) {
@@ -110,19 +119,20 @@ class NKN extends permissionsMixin(MultiClient) {
 			throw 'Too soon';
 		}
 
-		return this.wallet.subscribe(
+		return super.subscribe(
 			topicID,
 			FORBLOCKS,
 			identifier,
 			JSON.stringify(metadata),
 			options
 		);
-	};
+	}
 
-	getSubscription = (topic, addr = this.addr) =>
-		this.defaultClient.getSubscription(genChatID(topic), addr);
+	getSubscription(topic, addr = this.addr){
+		return super.getSubscription(genChatID(topic), addr);
+	}
 
-	isSubscribed = async (topic, addr = this.addr) => {
+	async isSubscribed (topic, addr = this.addr) {
 		const info = await this.getSubscription(topic, addr);
 		const blockHeight = guessLatestBlockHeight();
 
@@ -130,9 +140,9 @@ class NKN extends permissionsMixin(MultiClient) {
 			return info;
 		}
 		return false;
-	};
+	}
 
-	publishMessage = async (topic, message, options = {}) => {
+	async publishMessage (topic, message, options = {}) {
 		options = {
 			txPool: true,
 			noReply: true,
@@ -143,11 +153,11 @@ class NKN extends permissionsMixin(MultiClient) {
 			const subs = await this.Permissions.getSubscribers(topic);
 			return this.sendMessage(subs, message);
 		} else {
-			return this.publish(genChatID(topic), JSON.stringify(message), options).catch(() => {});
+			return super.publish(genChatID(topic), JSON.stringify(message), options).catch(() => {});
 		}
-	};
+	}
 
-	sendMessage = async (to, message, options = {}) => {
+	async sendMessage (to, message, options = {}) {
 		options = {
 			noReply: true,
 			...options
@@ -156,15 +166,10 @@ class NKN extends permissionsMixin(MultiClient) {
 			return;
 		}
 
-		if (!Array.isArray(to)) {
-			// Whisper
-			message.isPrivate = true;
-		}
+		return super.send(to, JSON.stringify(message), options).catch(() => {});
+	}
 
-		return this.send(to, JSON.stringify(message), options).catch(() => {});
-	};
-
-	getSubscribers = (topic, options = {}) => {
+	getSubscribers (topic, options = {}) {
 		options = {
 			offset: 0,
 			limit: 1000,
@@ -173,15 +178,15 @@ class NKN extends permissionsMixin(MultiClient) {
 			...options,
 		};
 		topic = genChatID(topic);
-		return this.defaultClient.getSubscribers(topic, options);
-	};
+		return super.getSubscribers(topic, options);
+	}
 
 	/**
 	 * Gets subscription metadata for all subscribers in a channel.
 	 *
 	 * @return [{user, data}]
 	 */
-	fetchSubscriptions = async topic => {
+	async fetchSubscriptions (topic) {
 		const subs = await this.getSubscribers(topic, {
 			meta: true,
 		});
@@ -203,8 +208,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			// If this is for the list of public chats, then get sub counts.
 			if (topic === DCHAT_PUBLIC_TOPICS && subscriberData.name) {
 				promises.push(
-					this.defaultClient
-						.getSubscribersCount(genChatID(subscriberData.name))
+					super.getSubscribersCount(genChatID(subscriberData.name))
 						.then(count => {
 							subscriberData.subscribersCount = count;
 						})
@@ -219,7 +223,7 @@ class NKN extends permissionsMixin(MultiClient) {
 		await Promise.all(promises);
 
 		return data;
-	};
+	}
 
 	toJSON() {
 		return this.neutered();
@@ -229,7 +233,7 @@ class NKN extends permissionsMixin(MultiClient) {
 	 * Returns a version that is fine to store, -
 	 * it contains no sensitive information.
 	 */
-	neutered = () => {
+	neutered () {
 		const w = JSON.parse(JSON.stringify(this.wallet));
 		w.address = w.Address;
 		const c = {
@@ -242,7 +246,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			preservedKeys.includes(key) || delete c[key];
 		}
 		return c;
-	};
+	}
 }
 
 export default NKN;
