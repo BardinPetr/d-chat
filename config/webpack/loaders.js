@@ -148,6 +148,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		use: getStyleLoaders({
 			importLoaders: 1,
 			sourceMap: isEnvProduction && shouldUseSourceMap,
+			url: false,
 		}),
 		sideEffects: true,
 	};
