@@ -346,7 +346,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-size: contain;
 
 		&:not([src]), &[src=""] {
-			background-image: url(img/no-photo.png);
+			background-image: url(/img/no-photo.png);
 		}
 	}
 }
