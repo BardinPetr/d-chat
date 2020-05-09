@@ -122,7 +122,7 @@ const MessagesList = ({
 			);
 		}
 		return messagesList;
-	}, [messages, lastReadId]);
+	}, [messages, lastReadId, subs]);
 
 	return messagesList;
 };
