@@ -2,49 +2,38 @@
  * Actions for contact profiles.
  * Prefix actions with 'contacts/', so the middleware picks them up.
  */
-import shasum from 'shasum';
 
 /**
- * Receive contact request.
+ * Receive contact request. myAddr is passed because it's a pain otherwise.
  */
-export const receiveContact = (myAddr, message) => ({
-	type: 'contacts/RECEIVE_REQUEST',
+export const receiveContactRequest = (myAddr, contact) => ({
+	type: 'contacts/RECEIVE_CONTACT_REQUEST',
 	payload: {
 		addr: myAddr,
-		message,
+		contact,
 	},
 });
 
+// contact should have addr field.
 export const updateContact = contact => ({
 	type: 'contacts/UPDATE_CONTACT',
 	payload: {
-		...contact,
-		version: shasum(contact),
-		addr: contact.addr,
+		contact,
 	},
 });
 
-export const requestContactHeaders = addr => ({
-	type: 'contacts/REQUEST_HEADERS',
+export const requestContact = (addr, requestType = 'full') => ({
+	type: 'contacts/REQUEST_CONTACT',
 	payload: {
 		addr,
+		requestType,
 	},
 });
 
-export const requestContactProfile = addr => ({
-	type: 'contacts/REQUEST_PROFILE',
+export const sendContactInfo = (addr, contact) => ({
+	type: 'contacts/SEND_CONTACT_INFO',
 	payload: {
+		contact,
 		addr,
-	},
-});
-
-export const sendContactInfo = contact => ({
-	type: 'contacts/SEND',
-	payload: {
-		contact: {
-			...contact,
-			topic: undefined,
-		},
-		recipient: contact.topic,
 	},
 });

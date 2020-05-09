@@ -1,17 +1,17 @@
 /**
  * Keeps track of active client and has startup logic.
  */
-import { pb } from 'nkn-sdk';
 import IncomingMessage from 'Approot/workers/nkn/IncomingMessage';
 import NKN, { rpcServerAddr } from 'Approot/workers/nkn/nkn';
-import { Wallet as NknWallet } from 'nkn-sdk';
+import { Wallet as NknWallet, pb } from 'nkn-sdk';
 import { createNewClient, getBalance } from 'Approot/redux/actions/client';
 import {
 	connected,
 	receiveMessage,
 } from 'Approot/redux/actions';
 import {
-	receiveContact
+	receiveContactRequest,
+	updateContact,
 } from 'Approot/redux/actions/contacts';
 import {
 	isWhisper,
@@ -34,9 +34,13 @@ function addNKNListeners (client) {
 		postMessage(getBalance(client.wallet.address));
 	});
 
+	/**
+	 * All incoming messages go through here.
+	 */
 	async function handleIncomingMessage(src, payload, payloadType) {
 		if (payloadType === PayloadType.TEXT) {
 			const data = JSON.parse(payload);
+			// Throws if contentType is bad.
 			const message = new IncomingMessage(data).from(src);
 
 			// Let's ignore messages that come without permissions.
@@ -46,13 +50,19 @@ function addNKNListeners (client) {
 				message.ignored = true;
 			}
 
-			// This got messy.
-			// If it's not a chat message, then we don't want it in our messages database.
 			if (isContact(message)) {
-				postMessage(receiveContact(NKN.instance.addr, message));
+				if (data.requestType) {
+					message.requestType = data.requestType;
+					postMessage(receiveContactRequest(client.addr, message));
+				} else {
+					if (message.content) {
+						message.requestType = 'response/full';
+					} else {
+						message.requestType = 'response/header';
+					}
+					postMessage(updateContact(message));
+				}
 			} else {
-				// Assume it's chat message.
-				// Could be one of 'text', 'media', 'reaction', 'event:subscribe',....etc.
 				postMessage(receiveMessage(message));
 			}
 		}
@@ -108,15 +118,15 @@ class NKNHandler {
 			wallet,
 		});
 
+		instance?.close();
+		instance = realClient;
+
 		if (isNewWallet) {
 			const c = JSON.stringify(realClient);
 			postMessage(createNewClient(c));
 		}
+
 		addNKNListeners(realClient);
-
-		instance?.close();
-
-		instance = realClient;
 
 		return realClient;
 	}

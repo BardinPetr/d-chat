@@ -231,7 +231,7 @@ class IncomingMessage extends Message {
 		}
 
 		this.addr = src;
-		this.refersToMe = this.content?.includes(formatAddr(NKN.instance.addr));
+		this.refersToMe = this.content?.includes?.(formatAddr(NKN.instance.addr));
 
 		// We'll just ignore every addr that has an identifier that is too long.
 		if (this.addr.length > 128) {
@@ -253,6 +253,7 @@ IncomingMessage.nonce = 0.001;
 
 IncomingMessage.SUPPORTED_CONTENT_TYPES = [
 	'audio',
+	'contact',
 	'dchat/subscribe',
 	'event:message/delete',
 	'event:receipt',

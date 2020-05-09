@@ -75,6 +75,8 @@ export default {
 	'chat/UNSUBSCRIBE_ALIAS': delegateToWorker,
 	'chat/ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 	'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
+	'contacts/REQUEST_CONTACT': delegateToWorker,
+	'contacts/SEND_CONTACT_INFO': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
 };

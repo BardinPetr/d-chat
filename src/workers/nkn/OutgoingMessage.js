@@ -4,7 +4,7 @@ class OutgoingMessage extends Message {
 	constructor(message) {
 		super(message);
 
-		// Let's delete some useless, internal, data.
+		// Let's delete some useless, internal data.
 		this.isMe = undefined;
 		this.addr = undefined;
 		this.pubKey = undefined;
@@ -16,6 +16,8 @@ class OutgoingMessage extends Message {
 		this.messageClass = undefined;
 		this.createdAt = undefined;
 		this.receivedAs = undefined;
+		this.hidden = undefined;
+		this.ignored = undefined;
 	}
 }
 

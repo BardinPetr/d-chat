@@ -18,6 +18,10 @@ import {
 	setBalance,
 	activateClient,
 } from 'Approot/redux/actions/client';
+import {
+	ContactRequest,
+	ContactResponse,
+} from 'Approot/workers/nkn/ContactRequest';
 
 const notified = {};
 
@@ -174,17 +178,17 @@ onmessage = async ({ data: action }) => {
 				});
 			break;
 
-		case 'contacts/SEND':
-			// data = new OutgoingMessage(payload.contact);
-			// NKN.instance.sendMessage(payload.recipient, data);
+		case 'contacts/REQUEST_CONTACT':
+			console.log('doing something at least! request', payload, NKN.instance);
+			data = new ContactRequest(payload.requestType);
+			console.log('SENDING REQUEST DATA!', data);
+			NKN.instance.sendMessage(payload.addr, data);
 			break;
 
-		case 'contacts/REQUEST_HEADERS':
-			// message = new ContactRequest('headers', { addr: payload.addr });
-			break;
-
-		case 'contacts/REQUEST_PROFILE':
-			// message = new ContactRequest('full', { addr: payload.addr });
+		case 'contacts/SEND_CONTACT_INFO':
+			console.log('doing something at least! send', payload);
+			data = new ContactResponse(payload.contact);
+			NKN.instance.sendMessage(payload.addr, data);
 			break;
 
 		default:
