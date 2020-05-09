@@ -114,7 +114,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	deleteMessage: () => dispatch(createMessage({
-		contentType: 'message/delete',
+		contentType: 'event:message/delete',
 		topic: ownProps.message.topic,
 		targetID: ownProps.message.id,
 	})),

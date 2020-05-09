@@ -7,7 +7,7 @@ import { isNotice } from 'Approot/misc/util';
  * Fetches subscribers whenever someone joins the channel.
  *
  * Joining the channel is marked by the 'Joined channel.' message,
- * which has contentType 'dchat/subscribe'.
+ * which has contentType 'event:subscribe'.
  * Fetching the sub when it is announced makes seeing new users as subscribed faster,
  * meaning no grey nickname.
  */

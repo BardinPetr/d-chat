@@ -116,7 +116,7 @@ onmessage = async ({ data: action }) => {
 				notified[topic] = true;
 
 				data = new OutgoingMessage({
-					contentType: 'dchat/subscribe',
+					contentType: 'event:subscribe',
 					topic,
 					// No i18n here.
 					// TODO should probably send this one without content, then display static content.
@@ -157,7 +157,7 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.accept(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'dchat/subscribe',
+						contentType: 'event:subscribe',
 						topic,
 						content: `Accepted user ${payload.addr}.`,
 					});
@@ -170,7 +170,7 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.remove(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'dchat/subscribe',
+						contentType: 'event:subscribe',
 						topic,
 						content: `Kicked user ${payload.addr}.`,
 					});

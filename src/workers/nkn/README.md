@@ -43,11 +43,11 @@ you should send a receipt to the sender. Same as text message, except no `conten
 
 Summing up a list of contentTypes used by D-Chat:
 
-- dchat/subscribe (-> 'event:subscribe' soon)
+- event:subscribe
 - media
-- message/delete (-> 'event:message/delete' soon)
+- event:message/delete
 - reaction
-- receipt (-> 'event:receipt' soon)
+- receipt
 - text
 - contact (see the nMobile NKN.org thread linked at the bottom of this doc)
 
@@ -59,12 +59,12 @@ And on hiatus:
 
 About the use of each contentType,
 
-- 'dchat/subscribe', is used when announcing joining the chat. 
+- 'event:subscribe', is used when announcing joining the chat. 
   - In D-Chat, receiving one of these triggers a "getSubscribers".
 - 'receipt', is like reaction without content.
   - It is used for notifying "message received".
 - 'nkn/tip': was used before but not currently. Might, however, make a comeback at some point.
-- 'message/delete': Deletes your message by targetID.
+- 'event:message/delete': Deletes your message by targetID.
 
 For messages that don't want user reaction, you might use `contentType: 'background'`.
 Rest of stuff is internal or old stuff, didn't have the presence of mind to underscore them.
