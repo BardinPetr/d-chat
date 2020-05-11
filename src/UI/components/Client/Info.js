@@ -34,7 +34,7 @@ const ClientInfo = ({ client, children, getBalance }) => {
 								title={__('Expands on click')}
 								onClick={() => setExpanded(true)}
 							>
-								{__('More...')}
+								{__('Show more account information')}
 							</a>
 						)}
 					</div>
