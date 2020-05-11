@@ -181,14 +181,11 @@ onmessage = async ({ data: action }) => {
 			break;
 
 		case 'contacts/REQUEST_CONTACT':
-			console.log('doing something at least! request', payload, NKN.instance);
 			data = new ContactRequest(payload.requestType);
-			console.log('SENDING REQUEST DATA!', data);
 			NKN.instance.sendMessage(payload.addr, data);
 			break;
 
 		case 'contacts/SEND_CONTACT_INFO':
-			console.log('doing something at least! send', payload);
 			data = new ContactResponse(payload.contact);
 			NKN.instance.sendMessage(payload.addr, data);
 			break;

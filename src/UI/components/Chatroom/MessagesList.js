@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Reactions from 'Approot/UI/containers/Chatroom/Reactions';
@@ -30,12 +30,7 @@ const MessagesList = ({
 	createReaction,
 	mutedUsers = [],
 	subs = [],
-	topic,
 }) => {
-	const [originalLastReadId, setOriginalLastReadId] = useState(lastReadId);
-	useEffect(() => {
-		setOriginalLastReadId(lastReadId);
-	}, [topic]);
 	const messagesList = useMemo(() => {
 		const messagesList = [];
 
@@ -68,7 +63,7 @@ const MessagesList = ({
 				}
 
 				// Don't want to lose the "last read" indicator after new messages arrive.
-				const lrId = lastReadId || originalLastReadId;
+				const lrId = lastReadId;
 				if (message.id === lrId) {
 					messagesPack.push(<LastRead key={'lastRead'} />);
 				}
@@ -122,7 +117,7 @@ const MessagesList = ({
 			);
 		}
 		return messagesList;
-	}, [messages, lastReadId, subs]);
+	}, [messages, subs, lastReadId]);
 
 	return messagesList;
 };
