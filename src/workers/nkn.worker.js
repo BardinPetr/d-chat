@@ -44,7 +44,9 @@ onmessage = async ({ data: action }) => {
 				status = { addr: client.addr };
 			} catch (e) {
 				console.log('Failed login.', e);
-				status = { error: e.message || 'Error' };
+				// Adding math.random at the end to make it more obvious,
+				// that this _attempt_ failed.
+				status = { error: (e.message || 'Error') + Math.random() };
 			}
 			postMessage(setLoginStatus(status));
 			break;
