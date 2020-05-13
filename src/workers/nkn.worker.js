@@ -18,6 +18,10 @@ import {
 	setBalance,
 	activateClient,
 } from 'Approot/redux/actions/client';
+import {
+	ContactRequest,
+	ContactResponse,
+} from 'Approot/workers/nkn/ContactRequest';
 
 const notified = {};
 
@@ -40,7 +44,9 @@ onmessage = async ({ data: action }) => {
 				status = { addr: client.addr };
 			} catch (e) {
 				console.log('Failed login.', e);
-				status = { error: e.message || 'Error' };
+				// Adding math.random at the end to make it more obvious,
+				// that this _attempt_ failed.
+				status = { error: (e.message || 'Error') + Math.random() };
 			}
 			postMessage(setLoginStatus(status));
 			break;
@@ -112,7 +118,7 @@ onmessage = async ({ data: action }) => {
 				notified[topic] = true;
 
 				data = new OutgoingMessage({
-					contentType: 'dchat/subscribe',
+					contentType: 'event:subscribe',
 					topic,
 					// No i18n here.
 					// TODO should probably send this one without content, then display static content.
@@ -153,7 +159,7 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.accept(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'dchat/subscribe',
+						contentType: 'event:subscribe',
 						topic,
 						content: `Accepted user ${payload.addr}.`,
 					});
@@ -166,7 +172,7 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.remove(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'dchat/subscribe',
+						contentType: 'event:subscribe',
 						topic,
 						content: `Kicked user ${payload.addr}.`,
 					});
@@ -174,17 +180,14 @@ onmessage = async ({ data: action }) => {
 				});
 			break;
 
-		case 'contacts/SEND':
-			// data = new OutgoingMessage(payload.contact);
-			// NKN.instance.sendMessage(payload.recipient, data);
+		case 'contacts/REQUEST_CONTACT':
+			data = new ContactRequest(payload.requestType);
+			NKN.instance.sendMessage(payload.addr, data);
 			break;
 
-		case 'contacts/REQUEST_HEADERS':
-			// message = new ContactRequest('headers', { addr: payload.addr });
-			break;
-
-		case 'contacts/REQUEST_PROFILE':
-			// message = new ContactRequest('full', { addr: payload.addr });
+		case 'contacts/SEND_CONTACT_INFO':
+			data = new ContactResponse(payload.contact);
+			NKN.instance.sendMessage(payload.addr, data);
 			break;
 
 		default:

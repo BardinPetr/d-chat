@@ -2,6 +2,20 @@ import { combineReducers } from 'redux';
 import configs from '../../misc/configs-APP_TARGET';
 import clients from './client';
 
+const contactEvent = (_, action) => {
+	let newState;
+
+	switch (action.type) {
+		case 'contacts/UPDATE_CONTACT':
+			newState = action.payload.contact;
+			break;
+
+		default:
+			newState = {};
+	}
+	return newState;
+};
+
 const activeTopics = (state = [], action) => {
 	let newState;
 	const topic = action.payload?.topic;
@@ -260,6 +274,8 @@ export default combineReducers({
 	messageEvent,
 
 	globalSettings,
+
+	contactEvent,
 
 	// UI
 	navigation,

@@ -13,7 +13,7 @@ import MessageActions from 'Approot/UI/containers/Chatroom/MessageActions';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import { parseAddr, isNotice } from 'Approot/misc/util';
 import { FaRegMinusSquare, FaRegPlusSquare } from 'react-icons/fa';
-import useAvatar from 'Approot/UI/hooks/useAvatar';
+import Avatar from 'Approot/UI/containers/Avatar';
 
 /**
  * Message contents have been sanitized on arrival.
@@ -91,11 +91,6 @@ const Nickname = ({
 	);
 };
 
-const Avatar = ({ addr }) => {
-	const { avatar } = useAvatar(addr);
-	return (<img src={avatar} className="x-avatar-image image is-24x24" />);
-};
-
 const Message = ({
 	children,
 	className,
@@ -110,7 +105,6 @@ const Message = ({
 
 	const toggleShowingIgnored = () => {
 		setShowIgnored(showIgnored => !showIgnored);
-		setTimeout(window.stayScrolled, 0);
 	};
 
 	const notice = isNotice(message);

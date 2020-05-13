@@ -10,7 +10,7 @@ import Version from 'Approot/UI/components/Version';
 import { FaQrcode } from 'react-icons/fa';
 import { getBalance } from 'Approot/redux/actions/client';
 import { updateContact } from 'Approot/redux/actions/contacts';
-import useAvatar from 'Approot/UI/hooks/useAvatar';
+import Avatar from 'Approot/UI/containers/Avatar';
 
 import ModalOpener from 'Approot/UI/components/ModalOpener';
 import QRCode from 'Approot/UI/components/QRCode';
@@ -68,7 +68,6 @@ const Address = ({ addr }) => {
 };
 
 const Home = ({ client, getBalance, updateContact }) => {
-	const { avatar, refresh } = useAvatar(client.addr);
 	const [error, setError] = useState(null);
 
 	const onAvatarUpload = async e => {
@@ -93,14 +92,17 @@ const Home = ({ client, getBalance, updateContact }) => {
 			reader.onerror = reject;
 			reader.readAsDataURL(file);
 		});
-		await updateContact({
+		updateContact({
 			addr: client.addr,
-			avatar: {
-				type: 'base64',
-				data,
+			// This type is for updating.
+			requestType: 'response/full',
+			content: {
+				avatar: {
+					type: 'base64',
+					data,
+				},
 			},
 		});
-		refresh();
 	};
 
 	return (
@@ -113,7 +115,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 						<div className="media">
 							<div className="media-left">
 								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
-									<img src={avatar} className="x-avatar-image image is-128x128" />
+									<Avatar className="is-128x128" addr={client.addr} />
 									<input
 										title={__('Profile picture')}
 										type="file"

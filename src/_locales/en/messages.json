@@ -161,9 +161,6 @@
   "Messageunconfirmed": {
     "message": " Message unconfirmed."
   },
-  "More": {
-    "message": " More..."
-  },
   "Mutechat": {
     "message": " Mute chat"
   },
@@ -235,6 +232,9 @@
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
+  },
+  "Showmoreaccountinformation": {
+    "message": " Show more account information"
   },
   "Showsecretseed": {
     "message": " Show secret seed"

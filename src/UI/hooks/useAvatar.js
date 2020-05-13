@@ -1,14 +1,14 @@
 /**
  * React hook for contact avatar.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getContact } from 'Approot/database/contacts';
 
 const cache = {};
 
 const getAvatar = addr => getContact(addr).then(
-	contact => contact?.content?.avatar.data
-).then(data => data && URL.createObjectURL(data));
+	contact => contact?.content?.avatar?.data
+).then(data => (data instanceof Blob) ? URL.createObjectURL(data) : undefined);
 
 /**
  * Loads avatars into cache from db, so they
@@ -19,11 +19,11 @@ const getAvatar = addr => getContact(addr).then(
  */
 const useAvatar = (addr) => {
 	const [avatar, setAvatar] = useState(null);
-	const refresh = () => {
+	const refresh = useCallback(() => {
 		const av = getAvatar(addr);
 		cache[addr] = av;
 		cache[addr].then(setAvatar);
-	};
+	}, [addr]);
 
 	useEffect(() => {
 		if (!addr) {

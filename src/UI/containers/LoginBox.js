@@ -27,6 +27,7 @@ class LoginBox extends React.Component {
 		const [username] = parseAddr(props.activeClient.addr);
 
 		this.state = {
+			loading: false,
 			username: username || '',
 			password: '',
 			rememberMe: false,
@@ -57,11 +58,11 @@ class LoginBox extends React.Component {
 	}
 
 	handleChange(e) {
-		this.setState({ [e.target.name]: e.target.value });
+		this.setState({ [e.target.name]: e.target.value, showError: false, error: '' });
 	}
 
 	handleCheckboxChange(e) {
-		this.setState({ [e.target.name]: e.target.checked });
+		this.setState({ [e.target.name]: e.target.checked, showError: false, error: '' });
 	}
 
 	handleLoginSubmit(e) {
@@ -73,7 +74,8 @@ class LoginBox extends React.Component {
 				seed = wallet.getSeed();
 			} catch(e) {
 				this.setState({
-					error: 'Wrong password.'
+					error: 'Wrong password.',
+					showError: true,
 				});
 				this.flashError();
 				return;
@@ -90,23 +92,29 @@ class LoginBox extends React.Component {
 				seed
 			)
 		);
+		this.setState({
+			loading: true,
+			showError: this.state.error !== this.props.error,
+		});
 		this.flashError();
 	}
 
 	flashError() {
+		clearTimeout(this.timeout);
+		clearTimeout(this.timeout2);
 		// Clunky message flash.
-		this.setState({
-			showError: true,
-		}, () => {
-			this.timeout = setTimeout(() => this.setState({
-				showError: false,
-			}), 100);
-		});
+		this.timeout = setTimeout(() => this.setState({
+			showError: false,
+		}), 1000);
+		this.timeout2 = setTimeout(() => this.setState({
+			error: '',
+		}), 2000);
 	}
 
 	// Is this somehow autobound?
 	componentWillUnmount() {
 		clearTimeout(this.timeout);
+		clearTimeout(this.timeout2);
 	}
 
 	/**
@@ -141,6 +149,19 @@ class LoginBox extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (
+			this.props.error !== prevProps.error
+			|| (this.state.error !== prevState.error && this.state.error)
+		) {
+			const error = this.props.error || this.state.error;
+			this.setState({
+				error,
+				loading: false,
+			});
+		}
+	}
+
 	render() {
 		const {
 			activeClient,
@@ -149,7 +170,7 @@ class LoginBox extends React.Component {
 			location,
 			loggedIn,
 		} = this.props;
-		const error = this.props.error || this.state.error;
+		const error = this.state.error;
 
 		const redir =
 			location?.search &&
@@ -309,7 +330,12 @@ class LoginBox extends React.Component {
 											)}
 											<div className="field">
 												<div className="control">
-													<button type="submit" className="button is-link">
+													<button
+														type="submit"
+														className={classnames('button is-link', {
+															'is-loading': this.state.loading,
+														})}
+													>
 														{__('Continue')}
 													</button>
 												</div>

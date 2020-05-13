@@ -8,7 +8,10 @@ import useInterval from '@rooks/use-interval';
 import truncate from 'truncate';
 
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, getChatDisplayName } from 'Approot/misc/util';
+import {
+	mention,
+	getChatDisplayName,
+} from 'Approot/misc/util';
 import Messages from 'Approot/UI/containers/Chatroom/Messages';
 import Textarea from 'Approot/UI/components/Chatroom/Textarea';
 
@@ -39,9 +42,10 @@ const Chatroom = ({
 	markAsRead,
 	unreadMessages,
 	getSubscribers,
+	chatType,
 }) => {
 	const [lastReadId, setLastReadId] = useState(unreadMessages[0]);
-	const getSubs = () => getSubscribers(topic);
+	const getSubs = () => getSubscribers(chatType, topic);
 	const { start, stop } = useInterval(getSubs, 10 * 1000);
 	const mdeInstance = useRef();
 	const placeholder = useMemo(() =>
@@ -74,7 +78,6 @@ const Chatroom = ({
 		if (unreadMessages.length > 0) {
 			markAsRead(topic, unreadMessages);
 		}
-		setLastReadId(null);
 	}, [topic, unreadMessages]);
 
 	const submitText = useCallback((inputValue) => {
@@ -90,8 +93,8 @@ const Chatroom = ({
 			topic,
 		};
 
-		createMessage(message);
-	}, [topic]);
+		createMessage(chatType, message);
+	}, [topic, chatType]);
 
 	const submitUpload = useCallback(() => {
 		const cm = mdeInstance.current?.codemirror;
@@ -111,9 +114,9 @@ const Chatroom = ({
 			contentType: 'media',
 			topic,
 		};
-		createMessage(message);
+		createMessage(chatType, message);
 		cm.setValue('');
-	}, [topic]);
+	}, [topic, chatType]);
 
 	/**
 	 * Add to textarea.
@@ -128,12 +131,12 @@ const Chatroom = ({
 	};
 
 	const createReaction = useCallback(msg => {
-		createMessage({
+		createMessage(chatType, {
 			...msg,
 			topic,
 			contentType: 'reaction',
 		});
-	}, [topic]);
+	}, [topic, chatType]);
 
 	const refer = (addr, text) =>
 		addToDraftMessage(quote(
