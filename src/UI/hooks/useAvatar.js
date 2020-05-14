@@ -32,7 +32,6 @@ const useAvatar = (addr) => {
 		let mounted = true;
 
 		if (!cache[addr]) {
-			cache[addr] = {};
 			cache[addr] = getAvatar(addr);
 		}
 		cache[addr].then(av => {
@@ -41,13 +40,8 @@ const useAvatar = (addr) => {
 			}
 		});
 
-		return async () => {
+		return () => {
 			mounted = false;
-			// No need for games. Clean out on unmount.
-			for (const key in cache) {
-				URL.revokeObjectURL(cache[key]);
-				cache[key] = null;
-			}
 		};
 	}, []);
 
