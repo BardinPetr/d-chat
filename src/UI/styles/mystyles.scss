@@ -22,7 +22,6 @@ $z-above-errors: 1;
 $pre-background: hsl(0, 5.7%, 89.6%); // grey
 $toolbar-width: 20%;
 $message-content-width: 98%;
-$avatar-width: 24px;
 /**
  * Added sans-serif after stuff, for emojis.
  */
@@ -95,6 +94,13 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	&-wrap {
 		display: inline-block;
 	}
+	.x-topic-name {
+		margin-left: 5px;
+		flex: 1;
+	}
+	&-text-wrap {
+		align-items: center;
+	}
 }
 .x-truncate {
 	text-overflow: ellipsis;
@@ -148,7 +154,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	width: 80%;
 }
 .x-chat {
-	$avatar-width: 24px;
 	padding: 0.4em;
 	padding-bottom: 1em;
 

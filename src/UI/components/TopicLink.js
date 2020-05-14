@@ -6,10 +6,19 @@ import {
 	isWhisperTopic,
 	isPermissionedTopic,
 	getTopicFromPathname,
+	getWhisperRecipient,
 } from 'Approot/misc/util';
 import { IoIosPeople, IoMdPeople } from 'react-icons/io';
+import Avatar from 'Approot/UI/containers/Avatar';
 
-const TopicLink = ({ topic, children, textWrapClassName = '', className = '', activeClassName = 'is-active' }) => (
+const TopicLink = ({
+	topic,
+	children,
+	textWrapClassName = '',
+	className = '',
+	activeClassName = 'is-active',
+	avatarClassName = 'is-32x32',
+}) => (
 	<NavLink
 		to={getChatURL(topic)}
 		className={className}
@@ -17,9 +26,12 @@ const TopicLink = ({ topic, children, textWrapClassName = '', className = '', ac
 		isActive={() => getTopicFromPathname(location.hash) === topic}
 		draggable={false}
 	>
-		<span className={textWrapClassName}>
+		<span className={`${textWrapClassName} is-flex x-topic-link-text-wrap`}>
 			{isWhisperTopic(topic) ? (
-				null
+				<Avatar
+					addr={getWhisperRecipient(topic)}
+					className={avatarClassName}
+				/>
 			) : (
 				isPermissionedTopic(topic) ? (
 					<span className="icon x-topic-icon"><IoMdPeople /></span>
@@ -27,9 +39,9 @@ const TopicLink = ({ topic, children, textWrapClassName = '', className = '', ac
 					<span className="icon x-topic-icon"><IoIosPeople /></span>
 				)
 			)}
-			<span className="x-topic-name">{getChatDisplayName(topic)}</span>
+			<span className="x-topic-name x-truncate">{getChatDisplayName(topic)}</span>
+			{children}
 		</span>
-		{children}
 	</NavLink>
 );
 
