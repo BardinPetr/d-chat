@@ -80,6 +80,7 @@ const contactsHandler = store => next => async action => {
 
 export default contactsHandler;
 
+// We use a cache so we don't spam people who don't respond with headers.
 const profileExpiryCache = {};
 async function shouldUpdateProfile(addr) {
 	if (profileExpiryCache[addr]) {
