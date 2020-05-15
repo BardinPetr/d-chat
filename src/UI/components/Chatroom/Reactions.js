@@ -9,17 +9,12 @@ const Reaction = ({ reaction, addReaction }) => {
 			className={classnames('button x-has-opacity-1 button', {
 				'is-primary': reaction._haveReacted,
 				'x-reactions-reacted': reaction._haveReacted,
-				'x-is-first-reaction': reaction._count === 0,
-				// 'x-is-hover': reaction._count === 0,
-				'is-small': reaction._count === 0,
 			})}
 			disabled={reaction._haveReacted}
 			onClick={() => !reaction._haveReacted && addReaction({content: reaction.content})}
 			type="button"
 		>
-			<span className={classnames('', {
-				'is-size-5': reaction._count === 0,
-			})}>
+			<span className="x-reaction-content">
 				{reaction.content}
 			</span>
 			{reaction._count > 0 && (
@@ -28,15 +23,7 @@ const Reaction = ({ reaction, addReaction }) => {
 		</button>
 	);
 
-	if (reaction._count === 0) {
-		return (
-			<span className="x-is-first-reaction-wrapper x-is-hover">
-				{reactionBtn}
-			</span>
-		);
-	} else {
-		return reactionBtn;
-	}
+	return reactionBtn;
 };
 
 const Ack = () => (
@@ -78,15 +65,7 @@ const Reactions = ({
 			_title: title,
 		};
 		return acc;
-	}, {
-		'👍': {
-			content: '👍',
-			_isAck: false,
-			_count: 0,
-			_title: '',
-			_haveReacted: false,
-		}
-	}),
+	}, {}),
 	[reactions, myAddr]
 	);
 

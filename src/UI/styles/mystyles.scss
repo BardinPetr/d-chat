@@ -200,7 +200,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			}
 		}
 
-		$x-top: 0;
 		$x-margin-top: -2rem;
 		$x-height: 2rem;
 		$x-border: 1px solid $grey;
@@ -209,7 +208,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			position: absolute;
 			right: 0;
 			z-index: $z-above-errors;
-			top: $x-top;
+			bottom: 0;
 			margin-top: $x-margin-top !important;
 			&-dropdown {
 				height: $x-height;
@@ -219,23 +218,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		.x-reactions {
 			display: flex;
 			user-select: none;
-			.x-is-first-reaction-wrapper {
-				right: 2rem;
-				top: $x-top;
-				height: $x-height !important;
-				position: absolute;
-				margin-top: $x-margin-top !important;
-				padding-right: 0.5rem;
-				padding-left: 2.5rem;
-			}
-			.x-is-first-reaction {
-				border: $x-border;
-				line-height: 1;
-				height: 100% !important;
-				&:hover {
-					background-color: $grey-lighter;
-				}
-			}
 			&-reacted {
 				cursor: default;
 			}
@@ -598,12 +580,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			display: flex;
 			align-items: center;
 			.delete {
-				height: 32px;
-				max-height: 32px;
-				max-width: 32px;
-				min-height: 32px;
-				min-width: 32px;
-				width: 32px;
+				@extend .is-large;
 			}
 			a {
 				width: 100%;
