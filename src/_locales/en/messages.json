@@ -164,6 +164,9 @@
   "Mutechat": {
     "message": " Mute chat"
   },
+  "NKNPeertransfer": {
+    "message": " NKN Peertransfer"
+  },
   "Name": {
     "message": " Name"
   },
@@ -229,6 +232,9 @@
   },
   "Seedorkeystore": {
     "message": " Seed or key store"
+  },
+  "SendfilesoverNKN": {
+    "message": " Send files over NKN!"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
