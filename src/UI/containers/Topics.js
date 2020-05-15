@@ -82,7 +82,7 @@ const TopicInfoList = ({ dispatch, topics }) => {
 									{__('Here are channels that people have listed. You can submit your own channel to the list, so others can find you.')}
 								</p>
 							</div>
-							<div className="table-container">
+							<div className="table-container x-topics-table">
 								<Table data={data} columns={columns} className="table"
 									emptyText={(
 										<div className="section">

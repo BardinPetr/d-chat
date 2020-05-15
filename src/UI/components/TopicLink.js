@@ -1,3 +1,6 @@
+/**
+ * Man, what a mess. All the classnames mess me up.
+ */
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
@@ -39,7 +42,7 @@ const TopicLink = ({
 					<span className="icon x-topic-icon"><IoIosPeople /></span>
 				)
 			)}
-			<span className="x-topic-name x-truncate">{getChatDisplayName(topic)}</span>
+			<span className="x-topic-name">{getChatDisplayName(topic)}</span>
 			{children}
 		</span>
 	</NavLink>

@@ -609,6 +609,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 				width: 100%;
 			}
 		}
+		.x-topic-name {
+			@extend .x-truncate;
+		}
 	}
 }
 .x-active-tabs-container {
@@ -711,6 +714,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	li:hover .delete {
 		display: block;
 	}
+	.x-topic-name {
+		@extend .x-truncate;
+	}
 }
 .x-topic-icon {
 	opacity: 0.8;
@@ -760,6 +766,11 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 				display: none;
 			}
 		}
+	}
+}
+.x-topics-table {
+	.x-topic-icon {
+		min-width: 24px;
 	}
 }
 @keyframes makeVisible {
