@@ -117,7 +117,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
 									<Avatar className="is-128x128" addr={client.addr} />
 									<input
-										title={__('Profile picture')}
+										title={__('Profile picture. Click to upload new.')}
 										type="file"
 										id="avatar-picker"
 										accept="image/*"
@@ -132,7 +132,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 									<span className="level-right">
 										<ModalOpener
 											openerButtonClassName="button level-item"
-											openerButtonContent={<span className="icon"><FaQrcode /></span>}
+											openerButtonContent={<span className="icon" title={__('QR Code')}><FaQrcode /></span>}
 										>
 											<QRCode value={client.addr} />
 										</ModalOpener>

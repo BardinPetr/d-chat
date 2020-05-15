@@ -215,14 +215,17 @@
   "Privatelychattingwith": {
     "message": " Privately chatting with"
   },
-  "Profilepicture": {
-    "message": " Profile picture"
+  "ProfilepictureClicktouploadnew": {
+    "message": " Profile picture. Click to upload new."
   },
   "Public": {
     "message": " Public"
   },
   "Publicchatindex": {
     "message": " Public chat index"
+  },
+  "QRCode": {
+    "message": " QR Code"
   },
   "Quitealongstring": {
     "message": " Quite a long string"
