@@ -180,22 +180,22 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			margin-top: 0.5em;
 			min-height: $media-height;
 		}
+		.x-media-container-loaded {
+			min-height: 0;
+		}
 
 		.x-media-wrapper {
 			align-items: center;
 			cursor: zoom-out;
 			min-height: 30px;
 			&:not(.x-media-expanded) {
-				cursor: zoom-in;
-				height: $media-height;
 				img, video {
-					max-height: 100%;
+					cursor: zoom-in;
+					max-height: $media-height;
 				}
 			}
 			audio {
 				height: 30px;
-			}
-			audio {
 				min-width: 250px;
 			}
 		}
@@ -260,7 +260,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		&:nth-child(-n+3) .message:not(:nth-child(n+4)) {
 			.dropdown-menu {
 				top: 100%; 
-				padding-top: 4px; 
 			}
 		}
 	}

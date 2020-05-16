@@ -66,7 +66,9 @@ const MediaMessage = ({ attachments }) => {
 
 	return (
 		<div>
-			<div className={'x-media-container is-flex'}>
+			<div className={classnames('x-media-container is-flex', {
+				'x-media-container-loaded': attaches.length > 0,
+			})}>
 				{attaches.map((attach, i) => (
 					<div key={i}>
 						<Attachment attachment={attach} />

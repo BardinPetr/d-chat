@@ -11,7 +11,7 @@ export function saveAttachment(data) {
 	db.attachments.add({
 		hash,
 		data,
-	});
+	}).catch(() => {});
 	return hash;
 }
 
