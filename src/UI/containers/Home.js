@@ -170,7 +170,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 						<div className="content" style={{ marginBottom: '0.5rem'}}>
 							<p><Link to="/topics">{__('Public chat index')}</Link></p>
 							<Info />
-							<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://forum.nkn.org/t/nmobile-pre-beta-community-testing-and-simple-guide/2012">{__('nMobile pre-beta')}</a>. {__('Send files over NKN!')} <a target="_blank" rel="noopener noreferrer" href="https://losnappas.gitlab.io/nkn-peertransfer">{__('NKN Peertransfer')}</a>.</p>
+							<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://www.nkn.org/nMobile/">{__('nMobile on nkn.org')}</a>. {__('Send files over NKN!')} <a target="_blank" rel="noopener noreferrer" href="https://losnappas.gitlab.io/nkn-peertransfer">{__('NKN Peertransfer')}</a>.</p>
 						</div>
 
 						{client && (
