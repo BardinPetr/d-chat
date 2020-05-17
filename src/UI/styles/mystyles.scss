@@ -601,6 +601,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	border-bottom: 1px solid $link;
 	.tabs {
 		a {
+			padding: 0em 1em;
 			justify-content: space-between;
 		}
 		&.is-toggle li:first-child a,
@@ -635,6 +636,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 .x-active-topics, .x-topic-tab {
 	height: 100%;
+	.x-topic-name {
+		@extend .x-truncate;
+	}
 }
 .x-has-unread:not(.is-active) {
 	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
