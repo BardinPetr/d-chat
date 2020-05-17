@@ -16,7 +16,7 @@ import {
 const Element = ({ hide, chat }) => (
 	!chat.hidden && (
 		<li title={getChatDisplayName(chat.topic)}>
-			<span className="delete" onClick={e => {
+			<span className="delete is-medium" onClick={e => {
 				e.preventDefault();
 				hide(chat.topic);
 			}} />
@@ -26,6 +26,7 @@ const Element = ({ hide, chat }) => (
 					'has-text-grey': chat.muted,
 				})}
 				activeClassName="is-active"
+				avatarClassName="is-24x24"
 			>
 				<span className={classnames('x-unread-count', {
 					'x-is-delayed': !!chat.unread?.length,
@@ -42,16 +43,16 @@ const TopicsList = ({ hide, topics, whispers, labelClassName = '', wrapperClassN
 		<div className={`x-topics-list x-topics-list-public ${wrapperClassName}`}>
 			<p className={labelClassName}>{__('Channels')}</p>
 			<ul className="menu-list">
-				{topics.map((chat, key) => (
-					<Element key={key} chat={chat} hide={hide} />
+				{topics.map(chat => (
+					<Element key={chat.topic} chat={chat} hide={hide} />
 				))}
 			</ul>
 		</div>
 		<div className={`x-topics-list x-topics-list-private ${wrapperClassName}`}>
 			<p className={labelClassName}>{__('Whispers')}</p>
 			<ul className="menu-list">
-				{whispers.map((chat, key) => (
-					<Element key={key} chat={chat} hide={hide} />
+				{whispers.map(chat => (
+					<Element key={chat.topic} chat={chat} hide={hide} />
 				))}
 			</ul>
 		</div>

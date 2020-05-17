@@ -31,10 +31,11 @@ const Actions = ({
 	const openEmojiPicker = () => setEmojiPickerVisible(true);
 
 	const onSelect = emoji => {
-		addReaction(emoji);
+		addReaction(emoji.native);
 		closeEmojiPicker();
 	};
 	const toggleMute = () => toggleUserMute(addr);
+	const quicksend = () => addReaction('👍');
 
 	return (
 		<>
@@ -59,6 +60,12 @@ const Actions = ({
 							<FaRegSmile />
 						</span>
 						<span>{__('Add reaction')}</span>
+					</a>
+					<a className="dropdown-item" onClick={quicksend}>
+						<span className="icon">
+							👍
+						</span>
+						<span>{__('Thumbs up')}</span>
 					</a>
 					<Link
 						to={getWhisperURL(addr)}
@@ -122,7 +129,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 		contentType: 'reaction',
 		topic: ownProps.message.topic,
 		targetID: ownProps.message.id,
-		content: emoji.native,
+		content: emoji,
 	})),
 	toggleUserMute: addr => dispatch(toggleUserMute(addr)),
 });

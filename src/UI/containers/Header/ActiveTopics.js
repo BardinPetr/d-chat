@@ -29,7 +29,7 @@ const Topic = ({ removeActiveTopic, isActive, topic }) => {
 				className={classnames('x-topic-link', {
 					'x-has-unread': topic.unread?.length,
 				})}
-				textWrapClassName="x-truncate x-truncate-limited-width x-topic-link-wrap"
+				textWrapClassName="x-is-fullwidth x-truncate x-truncate-limited-width x-topic-link-wrap"
 			>
 				<span className="delete" onClick={removeActiveTopic}></span>
 			</TopicLink>

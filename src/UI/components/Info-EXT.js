@@ -6,7 +6,7 @@ const Info = () => {
 	return (
 		<div className="container">
 			<p className="field" style={{wordBreak: 'keep-all'}}>
-				{__('Come and say hi on channel')} <TopicLink topic="d-chat" />.
+				{__('Come and say hi on channel')} <TopicLink textWrapClassName="is-inline" topic="d-chat" />.
 			</p>
 		</div>
 	);

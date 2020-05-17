@@ -117,7 +117,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
 									<Avatar className="is-128x128" addr={client.addr} />
 									<input
-										title={__('Profile picture')}
+										title={__('Profile picture. Click to upload new.')}
 										type="file"
 										id="avatar-picker"
 										accept="image/*"
@@ -132,7 +132,7 @@ const Home = ({ client, getBalance, updateContact }) => {
 									<span className="level-right">
 										<ModalOpener
 											openerButtonClassName="button level-item"
-											openerButtonContent={<span className="icon"><FaQrcode /></span>}
+											openerButtonContent={<span className="icon" title={__('QR Code')}><FaQrcode /></span>}
 										>
 											<QRCode value={client.addr} />
 										</ModalOpener>
@@ -163,14 +163,14 @@ const Home = ({ client, getBalance, updateContact }) => {
 								<NewTopicForm privateChat />
 							</div>
 						</div>
-
 					</div>
 
-					<div className="section" style={{ paddingTop: 0, }}>
-						<div className="content">
+					{/* Trying ma hardest to not make scrollbar appear in home screen. */}
+					<div className="section" style={{ paddingTop: 0 }}>
+						<div className="content" style={{ marginBottom: '0.5rem'}}>
 							<p><Link to="/topics">{__('Public chat index')}</Link></p>
 							<Info />
-							<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://forum.nkn.org/t/nmobile-pre-beta-community-testing-and-simple-guide/2012">{__('nMobile pre-beta')}</a>.</p>
+							<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://www.nkn.org/nMobile/">{__('nMobile on nkn.org')}</a>. {__('Send files over NKN!')} <a target="_blank" rel="noopener noreferrer" href="https://losnappas.gitlab.io/nkn-peertransfer">{__('NKN Peertransfer')}</a>.</p>
 						</div>
 
 						{client && (

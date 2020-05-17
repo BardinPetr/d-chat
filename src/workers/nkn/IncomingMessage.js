@@ -31,6 +31,7 @@ const allowedTags = [
 	'br',
 	'caption',
 	'code',
+	'del',
 	'em',
 	'h1',
 	'h2',

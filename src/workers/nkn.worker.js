@@ -161,7 +161,7 @@ onmessage = async ({ data: action }) => {
 					const message = new OutgoingMessage({
 						contentType: 'event:subscribe',
 						topic,
-						content: `Accepted user ${payload.addr}.`,
+						content: `Accepting user ${payload.addr}.`,
 					});
 					postMessage(publishMessage(message));
 				});
@@ -174,7 +174,7 @@ onmessage = async ({ data: action }) => {
 					const message = new OutgoingMessage({
 						contentType: 'event:subscribe',
 						topic,
-						content: `Kicked user ${payload.addr}.`,
+						content: `Kicking user ${payload.addr}.`,
 					});
 					postMessage(publishMessage(message));
 				});

@@ -22,7 +22,6 @@ $z-above-errors: 1;
 $pre-background: hsl(0, 5.7%, 89.6%); // grey
 $toolbar-width: 20%;
 $message-content-width: 98%;
-$avatar-width: 24px;
 /**
  * Added sans-serif after stuff, for emojis.
  */
@@ -95,6 +94,13 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	&-wrap {
 		display: inline-block;
 	}
+	.x-topic-name {
+		margin-left: 5px;
+		flex: 1;
+	}
+	&-text-wrap {
+		align-items: center;
+	}
 }
 .x-truncate {
 	text-overflow: ellipsis;
@@ -148,7 +154,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	width: 80%;
 }
 .x-chat {
-	$avatar-width: 24px;
 	padding: 0.4em;
 	padding-bottom: 1em;
 
@@ -189,13 +194,10 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			}
 			audio {
 				height: 30px;
-			}
-			audio {
 				min-width: 250px;
 			}
 		}
 
-		$x-top: 0;
 		$x-margin-top: -2rem;
 		$x-height: 2rem;
 		$x-border: 1px solid $grey;
@@ -204,7 +206,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			position: absolute;
 			right: 0;
 			z-index: $z-above-errors;
-			top: $x-top;
+			bottom: 0;
 			margin-top: $x-margin-top !important;
 			&-dropdown {
 				height: $x-height;
@@ -214,23 +216,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		.x-reactions {
 			display: flex;
 			user-select: none;
-			.x-is-first-reaction-wrapper {
-				right: 2rem;
-				top: $x-top;
-				height: $x-height !important;
-				position: absolute;
-				margin-top: $x-margin-top !important;
-				padding-right: 0.5rem;
-				padding-left: 2.5rem;
-			}
-			.x-is-first-reaction {
-				border: $x-border;
-				line-height: 1;
-				height: 100% !important;
-				&:hover {
-					background-color: $grey-lighter;
-				}
-			}
 			&-reacted {
 				cursor: default;
 			}
@@ -593,16 +578,14 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			display: flex;
 			align-items: center;
 			.delete {
-				height: 32px;
-				max-height: 32px;
-				max-width: 32px;
-				min-height: 32px;
-				min-width: 32px;
-				width: 32px;
+				@extend .is-large;
 			}
 			a {
 				width: 100%;
 			}
+		}
+		.x-topic-name {
+			@extend .x-truncate;
 		}
 	}
 }
@@ -617,6 +600,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	border-bottom: 1px solid $link;
 	.tabs {
 		a {
+			padding: 0em 1em;
 			justify-content: space-between;
 		}
 		&.is-toggle li:first-child a,
@@ -651,6 +635,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 .x-active-topics, .x-topic-tab {
 	height: 100%;
+	.x-topic-name {
+		@extend .x-truncate;
+	}
 }
 .x-has-unread:not(.is-active) {
 	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
@@ -706,6 +693,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	li:hover .delete {
 		display: block;
 	}
+	.x-topic-name {
+		@extend .x-truncate;
+	}
 }
 .x-topic-icon {
 	opacity: 0.8;
@@ -756,6 +746,14 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			}
 		}
 	}
+}
+.x-topics-table {
+	.x-topic-icon {
+		min-width: 24px;
+	}
+}
+#sidebar-root {
+	padding: 2rem 1.2rem;
 }
 @keyframes makeVisible {
 	to {

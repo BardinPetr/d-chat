@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { parseAddr, formatAddr } from 'Approot/misc/util';
+import { parseAddr } from 'Approot/misc/util';
 import LoadingScreen from '../components/LoadingScreen';
 import DchatLogo from 'Approot/UI/components/DchatLogo';
 import { login } from '../../redux/actions';
@@ -227,7 +227,7 @@ class LoginBox extends React.Component {
 																	key={client.wallet.Address}
 																	value={client.wallet.Address}
 																>
-																	{formatAddr(client.addr)}
+																	{client.addr}
 																</option>
 															))}
 															<option

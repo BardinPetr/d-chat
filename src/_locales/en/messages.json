@@ -164,6 +164,9 @@
   "Mutechat": {
     "message": " Mute chat"
   },
+  "NKNPeertransfer": {
+    "message": " NKN Peertransfer"
+  },
   "Name": {
     "message": " Name"
   },
@@ -212,14 +215,17 @@
   "Privatelychattingwith": {
     "message": " Privately chatting with"
   },
-  "Profilepicture": {
-    "message": " Profile picture"
+  "ProfilepictureClicktouploadnew": {
+    "message": " Profile picture. Click to upload new."
   },
   "Public": {
     "message": " Public"
   },
   "Publicchatindex": {
     "message": " Public chat index"
+  },
+  "QRCode": {
+    "message": " QR Code"
   },
   "Quitealongstring": {
     "message": " Quite a long string"
@@ -229,6 +235,9 @@
   },
   "Seedorkeystore": {
     "message": " Seed or key store"
+  },
+  "SendfilesoverNKN": {
+    "message": " Send files over NKN!"
   },
   "SharethisforreceivingNKNpayments": {
     "message": " Share this for receiving NKN payments."
@@ -265,6 +274,9 @@
   },
   "Thedecentralizedchatawaits": {
     "message": " The decentralized chat awaits."
+  },
+  "Thumbsup": {
+    "message": " Thumbs up"
   },
   "Tipvaluesats": {
     "message": " Tip #value# sats"
@@ -323,8 +335,8 @@
   "menunavigation": {
     "message": " menu navigation"
   },
-  "nMobileprebeta": {
-    "message": " nMobile pre-beta"
+  "nMobileonnknorg": {
+    "message": " nMobile on nkn.org"
   },
   "peoplechatting": {
     "message": " people chatting"

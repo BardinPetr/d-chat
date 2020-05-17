@@ -56,7 +56,7 @@ const ClientInfo = ({ client, children, getBalance }) => {
 									<span className="level-right">
 										<ModalOpener
 											openerButtonClassName="button level-item"
-											openerButtonContent={<span className="icon"><FaQrcode /></span>}
+											openerButtonContent={<span className="icon" title={__('QR Code')}><FaQrcode /></span>}
 										>
 											<QRCode value={client.wallet.Address} />
 										</ModalOpener>
