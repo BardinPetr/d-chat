@@ -4,14 +4,18 @@ import ReactionsComponent from 'Approot/UI/components/Chatroom/Reactions';
 import { loadReactionsFromDb } from 'Approot/database/reactions';
 import uniqby from 'lodash.uniqby';
 
+function uniqByReactions (reaction) {
+	return '' + reaction.addr + reaction.content;
+}
+
 function reducer(state, action) {
 	const changes = action.payload;
 	switch(action.type) {
 		case 'new':
-			return uniqby([...state, changes], 'id');
+			return uniqby([...state, changes], uniqByReactions);
 
 		case 'old':
-			return [...changes, ...state];
+			return uniqby([...changes, ...state], uniqByReactions);
 	}
 }
 
