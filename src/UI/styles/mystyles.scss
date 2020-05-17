@@ -753,6 +753,9 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		min-width: 24px;
 	}
 }
+#sidebar-root {
+	padding: 2rem 1.2rem;
+}
 @keyframes makeVisible {
 	to {
 		visibility: visible;

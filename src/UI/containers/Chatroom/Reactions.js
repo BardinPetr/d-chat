@@ -31,6 +31,7 @@ const Reactions = ({
 		}).then(prevMessages => {
 			if (mounted) {
 				dispatch({ type: 'old', payload: prevMessages });
+				window.stayScrolled();
 			}
 		});
 
