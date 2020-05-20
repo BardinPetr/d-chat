@@ -44,6 +44,8 @@ you should send a receipt to the sender. Same as text message, except no `conten
 Summing up a list of contentTypes used by D-Chat:
 
 - event:subscribe
+- event:add-permission
+- event:remove-permission
 - media
 - event:message/delete
 - reaction

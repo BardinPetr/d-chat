@@ -136,6 +136,25 @@ class IncomingMessage extends Message {
 			this.contentType = 'event:subscribe';
 		}
 
+		// TODO should move these to UI side, probably.
+		switch(this.contentType) {
+			case 'event:subscribe':
+				this.content = 'Joined channel.';
+				break;
+
+			case 'event:add-permission':
+				this.content = `Accepting ${this.content?.addr}.`;
+				// Trigger getSubscribers by using this event type.
+				this.contentType = 'event:subscribe';
+				break;
+
+			case 'event:remove-permission':
+				this.content = `Kicking ${this.content?.addr}.`;
+				// Trigger getSubscribers by using this event type.
+				this.contentType = 'event:subscribe';
+				break;
+		}
+
 		if (isDelete(message)) {
 			this.modifications = {
 				deleted: true,
@@ -256,8 +275,10 @@ IncomingMessage.SUPPORTED_CONTENT_TYPES = [
 	'audio',
 	'contact',
 	'dchat/subscribe',
+	'event:add-permission',
 	'event:message/delete',
 	'event:receipt',
+	'event:remove-permission',
 	'event:subscribe',
 	'image',
 	'media',
