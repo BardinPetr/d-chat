@@ -16,7 +16,7 @@ export const createNotification = throttle(options => {
 	if (configs.notifications && options.message) {
 		return new Notification(options.title || 'D-Chat', {
 			body: options.message || '',
-			icon: '/img/NKN_D-chat_blue-16.png',
+			icon: '/img/NKN_DCHAT-128-128-border16.png',
 		});
 	}
 }, 250, { trailing: false });

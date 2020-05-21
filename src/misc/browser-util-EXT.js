@@ -31,7 +31,7 @@ export const createNotification = throttle((options) => {
 			type: 'basic',
 			title: options.title || '',
 			message: options.message || '',
-			iconUrl: '/img/NKN_D-chat_blue-16.png',
+			iconUrl: '/img/NKN_DCHAT-128-128-border16.png',
 		});
 	}
 }, 250, { trailing: false });
