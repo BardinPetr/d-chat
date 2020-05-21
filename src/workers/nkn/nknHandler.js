@@ -60,6 +60,7 @@ function addNKNListeners (client) {
 					} else {
 						message.requestType = 'response/header';
 					}
+					message.version = data.version;
 					postMessage(updateContact(message));
 				}
 			} else {

@@ -121,7 +121,7 @@ onmessage = async ({ data: action }) => {
 					contentType: 'event:subscribe',
 					topic,
 					// No i18n here.
-					// TODO should probably send this one without content, then display static content.
+					// TODO: remove this field
 					content: 'Joined channel.',
 				});
 				postMessage(publishMessage(data));
@@ -159,9 +159,9 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.accept(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'event:subscribe',
+						contentType: 'event:add-permission',
 						topic,
-						content: `Accepting user ${payload.addr}.`,
+						content: { addr: payload.addr },
 					});
 					postMessage(publishMessage(message));
 				});
@@ -172,9 +172,9 @@ onmessage = async ({ data: action }) => {
 			NKN.instance.Permissions.remove(topic, payload.addr)
 				.then(() => {
 					const message = new OutgoingMessage({
-						contentType: 'event:subscribe',
+						contentType: 'event:remove-permission',
 						topic,
-						content: `Kicking user ${payload.addr}.`,
+						content: { addr: payload.addr },
 					});
 					postMessage(publishMessage(message));
 				});

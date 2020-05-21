@@ -1,6 +1,6 @@
 {
   "name": "d-chat",
-  "version": "6.2.0",
+  "version": "6.3.0",
   "description": "Decentralized Chat on NKN",
   "homepage": "http://losnappas.gitlab.io/d-chat",
   "repository": {
@@ -82,7 +82,7 @@
     "chalk": "2.4.1",
     "chrome-launch": "^1.1.4",
     "classnames": "^2.2.6",
-    "codemirror": "^5.53.2",
+    "codemirror": "^5.54.0",
     "colors": "^1.4.0",
     "debounce": "^1.2.0",
     "dexie": "^3.0.1",
@@ -109,7 +109,7 @@
     "lodash.throttle": "^4.1.1",
     "lodash.uniq": "^4.5.0",
     "lodash.uniqby": "^4.7.0",
-    "marked": "^1.0.0",
+    "marked": "^1.1.0",
     "mini-css-extract-plugin": "0.4.3",
     "nkn-permissioned-pubsub": "git+https://gitlab.com/losnappas/nkn-permissioned-pubsub.git",
     "nkn-sdk": "^1.1.6",
