@@ -19,8 +19,7 @@ export class ContactResponse extends OutgoingMessage {
 	constructor(data = {}) {
 		super(data);
 		this.contentType = 'contact';
-		this.version = data.version || '0';
+		this.version = data.version || '';
 		this.expiresAt = undefined;
-		this.expires_at = undefined;
 	}
 }
