@@ -33,7 +33,7 @@ export async function storeContact(contact) {
 			...restOfContent,
 			avatar,
 		},
-		version: shasum(content || Math.random().toString()),
+		version: contact.version || shasum(content || Math.random().toString()),
 		expiresAt: Date.now() + ONE_WEEK,
 	};
 	return db.contacts.put(data);
