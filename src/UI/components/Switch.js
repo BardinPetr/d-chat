@@ -18,7 +18,7 @@ const Switch = ({
 				title={title}
 				htmlFor={id}
 			></label>
-	</>
+		</>
 	);
 };
 

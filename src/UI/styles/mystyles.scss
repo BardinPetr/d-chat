@@ -19,7 +19,7 @@ $message-header-color-me: hsl(103.8, 100%, 17.5%);
 $message-body-color: $text;
 $z-index: 30;
 $z-above-errors: 1;
-$pre-background: hsl(0, 5.7%, 89.6%); // grey
+$pre-background: hsl(0, 5.7%, 89.6%); /* grey */
 $toolbar-width: 20%;
 $message-content-width: 98%;
 /**
@@ -174,7 +174,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-color: white;
 		word-wrap: break-word;
 
-		// Minimum height on video/audio will prevent jumping of content.
+		/* Minimum height on video/audio will prevent jumping of content. */
 		$media-height: 260px;
 		.x-media-container {
 			margin-top: 0.5em;
@@ -248,7 +248,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 				&.x-has-header .message-body {
 					display: inherit;
 				}
-				
+
 			}
 		}
 	}
@@ -257,8 +257,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		   After that, last four expand up. */
 		&:nth-child(-n+3) .message:not(:nth-child(n+4)) {
 			.dropdown-menu {
-				top: 100%; 
-				padding-top: 4px; 
+				top: 100%;
+				padding-top: 4px;
 			}
 		}
 	}
@@ -475,7 +475,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			}
 		}
 		&-cursor {
-			// Fix cursor not appearing in chrome popup.
+			/* Fix cursor not appearing in chrome popup. */
 			padding-left: 1px;
 		}
 		&-hints * {
@@ -715,7 +715,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 	visibility: visible !important;
 }
 .x-is-delayed {
-	// Animation gets bugged (stuck).
+	/* Animation gets bugged (stuck). */
 	animation: 0s linear 0.2s forwards makeVisible;
 	visibility: hidden;
 }
@@ -731,7 +731,7 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 			display: inline-block !important;
 		}
 	}
-	// Colliding classname here.
+	/* Colliding classname here. */
 	.heading {
 		font-size: 13.3333px;
 		letter-spacing: normal;

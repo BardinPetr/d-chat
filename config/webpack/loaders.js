@@ -146,7 +146,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		test: cssRegex,
 		exclude: cssModuleRegex,
 		use: getStyleLoaders({
-			importLoaders: 1,
+			// importLoaders: 1,
 			sourceMap: isEnvProduction && shouldUseSourceMap,
 		}),
 		sideEffects: true,
@@ -183,7 +183,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 	const workerLoader = {
 		test: workerRegex,
 		loader: require.resolve('worker-loader'),
-		options: { name: '[hash].[name].js' }
+		options: { filename: '[hash].[name].js' }
 	};
 
 

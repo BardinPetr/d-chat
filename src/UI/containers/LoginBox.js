@@ -12,13 +12,13 @@ import { IS_EXTENSION, importWallet } from 'Approot/misc/util';
 import { Wallet } from 'nkn-sdk';
 
 const Error = ({ err }) => (
-	<>
+	<React.Fragment>
 		{err && (
 			err.includes('seed')
 				? __('Invalid seed.')
 				: __('Wrong password.')
 		)}
-	</>
+	</React.Fragment>
 );
 
 class LoginBox extends React.Component {
@@ -72,7 +72,7 @@ class LoginBox extends React.Component {
 			try {
 				const wallet = Wallet.fromJSON(this.state.importedWallet, { password: this.state.password });
 				seed = wallet.getSeed();
-			} catch(e) {
+			} catch (e) {
 				this.setState({
 					error: 'Wrong password.',
 					showError: true,
@@ -172,181 +172,183 @@ class LoginBox extends React.Component {
 		} = this.props;
 		const error = this.state.error;
 
-		const redir =
-			location?.search &&
-			new URL(`http://example.org/${location.search}`)?.searchParams?.get(
+		const redir = location?.search &&
+			new URL(`http://example.org/${location.search}`).searchParams.get(
 				'returnUrl',
 			);
 
 		return (
 			<div className="is-overlay x-is-login-overlay">
-				{loggedIn ? (
-					<LoadingScreen loading={connecting}>
-						<Redirect
-							to={{
-								pathname: redir || '/',
-							}}
-						/>
-					</LoadingScreen>
-				) : (
-					<div className="hero is-primary is-overlay">
-						<div className="hero-body has-background-primary">
-							<h1 className="title has-text-centered is-size-2">
-								{__('Welcome!')}
-							</h1>
-							<div className="columns is-centered">
-								<div className="column is-9 is-4-desktop">
-									<div className="notification is-light">
-										<figure className="image container is-64x64">
-											<DchatLogo />
-										</figure>
-										<p className="subtitle has-text-grey has-text-centered">
-											{__('The decentralized chat awaits.')}
-										</p>
+				{
+					loggedIn ?
+						(
+							<LoadingScreen loading={connecting}>
+								<Redirect
+									to={{
+										pathname: redir || '/',
+									}}
+								/>
+							</LoadingScreen>
+						) : (
+							<div className="hero is-primary is-overlay">
+								<div className="hero-body has-background-primary">
+									<h1 className="title has-text-centered is-size-2">
+										{__('Welcome!')}
+									</h1>
+									<div className="columns is-centered">
+										<div className="column is-9 is-4-desktop">
+											<div className="notification is-light">
+												<figure className="image container is-64x64">
+													<DchatLogo />
+												</figure>
+												<p className="subtitle has-text-grey has-text-centered">
+													{__('The decentralized chat awaits.')}
+												</p>
 
-										<form className="" onSubmit={this.handleLoginSubmit}>
-											<div className="field">
-												<label className="label">
-													{__('Log in as')}
-												</label>
-												<div className="control level">
-													<span className="select">
-														<select
-															name="client"
-															id="client"
-															defaultValue={activeClient.wallet?.Address || 'new'}
-															onChange={this.handleAccountSwitch}
-														>
-															<option
-																value="new"
-															>
-																-- {__('New wallet')} --
-															</option>
-															{clients.map(client => (
-																<option
-																	key={client.wallet.Address}
-																	value={client.wallet.Address}
-																>
-																	{client.addr}
-																</option>
-															))}
-															<option
-																value="seed"
-															>
-																-- {__('Import wallet')} --
-															</option>
-														</select>
-													</span>
-												</div>
-											</div>
-											{this.state.showSeedPrompt && (
-												<fieldset className="box is-shadowless x-bordered has-background-light">
-													<legend>{__('Seed or key store')}</legend>
+												<form className="" onSubmit={this.handleLoginSubmit}>
 													<div className="field">
 														<label className="label">
-															{__('Wallet seed')}
+															{__('Log in as')}
+														</label>
+														<div className="control level">
+															<span className="select">
+																<select
+																	name="client"
+																	id="client"
+																	defaultValue={activeClient.wallet?.Address || 'new'}
+																	onChange={this.handleAccountSwitch}
+																>
+																	<option
+																		value="new"
+																	>
+																		-- {__('New wallet')} --
+																	</option>
+																	{clients.map(client => (
+																		<option
+																			key={client.wallet.Address}
+																			value={client.wallet.Address}
+																		>
+																			{client.addr}
+																		</option>
+																	))}
+																	<option
+																		value="seed"
+																	>
+																		-- {__('Import wallet')} --
+																	</option>
+																</select>
+															</span>
+														</div>
+													</div>
+													{this.state.showSeedPrompt && (
+														<fieldset className="box is-shadowless x-bordered has-background-light">
+															<legend>{__('Seed or key store')}</legend>
+															<div className="field">
+																<label className="label">
+																	{__('Wallet seed')}
+																</label>
+																<div className="control">
+																	<input
+																		className="input"
+																		type="password"
+																		disabled={!!this.state.importedWallet}
+																		onChange={this.handleChange}
+																		placeholder={__('Quite a long string')}
+																		name="seed"
+																		autoComplete="off"
+																		value={this.state.seed}
+																	/>
+																</div>
+															</div>
+															<div className="field">
+																<label className="label">{__('Key store')}</label>
+																<div className="control">
+																	<input
+																		type="file"
+																		disabled={!!this.state.seed}
+																		className="input file"
+																		onChange={this.handleKeyStoreUpload}
+																	/>
+																</div>
+															</div>
+														</fieldset>
+													)}
+
+													<div className="field">
+														<label className="label">
+															{__('Nickname')}
 														</label>
 														<div className="control">
 															<input
-																className="input"
-																type="password"
-																disabled={!!this.state.importedWallet}
+																type="username"
+																name="username"
+																value={this.state.username}
 																onChange={this.handleChange}
-																placeholder={__('Quite a long string')}
-																name="seed"
-																autoComplete="off"
-																value={this.state.seed}
+																className="input"
+																placeholder="McAfee"
+																autoComplete="current-user"
+																maxLength="63"
 															/>
 														</div>
 													</div>
 													<div className="field">
-														<label className="label">{__('Key store')}</label>
+														<label className="label">
+															{__('Password')}
+															<span className={classnames('help is-danger is-inline x-visibility', {
+																'x-is-transparent': !this.state.showError,
+															})}>
+																{' '}<Error err={error} />
+															</span>
+														</label>
 														<div className="control">
 															<input
-																type="file"
-																disabled={!!this.state.seed}
-																className="input file"
-																onChange={this.handleKeyStoreUpload}
+																type="password"
+																name="password"
+																value={this.state.password}
+																onChange={this.handleChange}
+																className="input password"
+																placeholder="Password"
+																autoComplete="current-password"
 															/>
 														</div>
 													</div>
-												</fieldset>
-											)}
-
-											<div className="field">
-												<label className="label">
-													{__('Nickname')}
-												</label>
-												<div className="control">
-													<input
-														type="username"
-														name="username"
-														value={this.state.username}
-														onChange={this.handleChange}
-														className="input"
-														placeholder="McAfee"
-														autoComplete="current-user"
-														maxLength="63"
-													/>
-												</div>
-											</div>
-											<div className="field">
-												<label className="label">
-													{__('Password')}
-													<span className={classnames('help is-danger is-inline x-visibility', {
-														'x-is-transparent': !this.state.showError,
-													})}>
-														{' '}<Error err={error} />
-													</span>
-												</label>
-												<div className="control">
-													<input
-														type="password"
-														name="password"
-														value={this.state.password}
-														onChange={this.handleChange}
-														className="input password"
-														placeholder="Password"
-														autoComplete="current-password"
-													/>
-												</div>
-											</div>
-											{IS_EXTENSION && (
-												<div className="field">
-													<div className="control">
-														<label className="checkbox">
-															<input
-																type="checkbox"
-																checked={this.state.rememberMe}
-																onChange={this.handleCheckboxChange}
-																value="rememberMe"
-																name="rememberMe"
-																id="rememberMe"
-															/>
-															{__('Store password')}
-														</label>
+													{IS_EXTENSION && (
+														<div className="field">
+															<div className="control">
+																<label className="checkbox">
+																	<input
+																		type="checkbox"
+																		checked={this.state.rememberMe}
+																		onChange={this.handleCheckboxChange}
+																		value="rememberMe"
+																		name="rememberMe"
+																		id="rememberMe"
+																	/>
+																	{__('Store password')}
+																</label>
+															</div>
+														</div>
+													)}
+													<div className="field">
+														<div className="control">
+															<button
+																type="submit"
+																className={classnames('button is-link', {
+																	'is-loading': this.state.loading,
+																})}
+																disabled={this.state.loading}
+															>
+																{__('Continue')}
+															</button>
+														</div>
 													</div>
-												</div>
-											)}
-											<div className="field">
-												<div className="control">
-													<button
-														type="submit"
-														className={classnames('button is-link', {
-															'is-loading': this.state.loading,
-														})}
-													>
-														{__('Continue')}
-													</button>
-												</div>
+												</form>
 											</div>
-										</form>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-				)}
+						)}
 			</div>
 		);
 	}
