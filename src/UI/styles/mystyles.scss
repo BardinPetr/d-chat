@@ -136,6 +136,11 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		visibility: visible;
 	}
 }
+.x-has-hover {
+	&:hover .x-is-hover {
+		visibility: visible;
+	}
+}
 
 .x-is-align-start {
 	align-items: flex-start !important;
@@ -323,6 +328,12 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		opacity: 0;
 		width: 100%;
 		cursor: pointer;
+		&-opener {
+			position: absolute;
+			/* The no-photo is 128, this is 96, and then we center. */
+			top: calc( ( 128px - 96px ) / 2 );
+			left: calc( ( 128px - 96px ) / 2 );
+		}
 	}
 	&:hover {
 		color: blueviolet;
@@ -331,7 +342,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		background-size: contain;
 
 		&:not([src]), &[src=""] {
-			background-image: url(/img/no-photo.png);
+			background-image: url(../../img/no-photo.png);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import { parseAddr, getChatURL, getWhisperURL, isWhisperTopic, getWhisperRecipie
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
 import Version from 'Approot/UI/components/Version';
 import { FaQrcode } from 'react-icons/fa';
+import { BiImageAdd } from 'react-icons/bi';
 import { getBalance } from 'Approot/redux/actions/client';
 import { updateContact } from 'Approot/redux/actions/contacts';
 import Avatar from 'Approot/UI/containers/Avatar';
@@ -114,8 +115,15 @@ const Home = ({ client, getBalance, updateContact }) => {
 
 						<div className="media">
 							<div className="media-left">
-								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
+								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label x-has-hover">
 									<Avatar className="is-128x128" addr={client.addr} />
+									{/* So this is why we don't mix css and js? It gets
+										difficult to know what is going on.
+										This element shows up on mouse over. */}
+									<BiImageAdd
+										className="x-is-hover is-96x96 image x-avatar-picker-opener has-text-primary-dark"
+										aria-label={__('Open image picker.')}
+									/>
 									<input
 										title={__('Profile picture. Click to upload new.')}
 										type="file"
