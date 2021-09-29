@@ -201,7 +201,7 @@ onmessage = async ({ data: action, ports }) => {
 			break;
 
 		case 'videosession/END':
-			currentSession && currentSession.end();
+			if(currentSession) currentSession.end();
 			break;
 
 		default:

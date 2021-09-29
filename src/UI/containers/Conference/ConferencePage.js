@@ -17,6 +17,8 @@ const UserCheck = ({isOk, children}) => (
 	</div>
 );
 
+const VIDEO_TYPE = 'video/webm;codecs=vp8';
+
 export default class ConferencePage extends Component {
 	constructor(props) {
 		super(props);
@@ -25,59 +27,78 @@ export default class ConferencePage extends Component {
 		this.workerport = channel.port1;
 
 		this.props.beginSession(channel.port2, this.props.users);
-	
-		var a = 'a.0e7997f5d0f00c3753baae3e38c2f6db840dca1b856af5ee6ba8f858bdc68e4b';
-		var b = 'a.0e7997f5d0f00c3753baae3e38c2f6db840dca1b856af5ee6ba8f858bdc68e4b';
-	
-		if(this.props.sessions[a]) {
-			this.props.sessions[a].onmessage = (x) => console.log('RECV', x);
-		}	
-		if(this.props.sessions[b]) {
-			this.props.sessions[b].onmessage = (x) => console.log('RECV', x);
-		}	
-	
-		console.log('$', this.props.sessions);
-	
-		// setInterval(() => {
-		// channel.port1.postMessage(Uint8Array.from([1, 2, 3, 4, 5]));
-		// }, 1000);
-
+		
 		this.state = {
-			activeStreams: []
+			activeStreams: {}
 		};
 	}
 
 	componentDidMount() {
 		navigator.mediaDevices
-			.getUserMedia({ audio: false, video: { width: 100, height: 80, frameRate: { ideal: 1, max: 2 } }})
+			.getUserMedia({ audio: false, video: { width: 100, height: 80, frameRate: { ideal: 5, max: 5 } }})
 			.then(this.gotSelfMedia);
+		
+		this.updatePeers({}, this.props.sessions);
 	}
 	
 	componentWillUnmount() {
+		this.selfstream && this.selfstream.getTracks().forEach((track) => track.stop());
 		if(this.recorder) this.recorder.stop();
 		this.props.endSession();
 	}
 
 	componentDidUpdate(oldProps) {
-		if(oldProps.sessions != this.props.sessions) {
-			let toInit = Object.keys(this.props.sessions).filter(x => oldProps.sessions.hasOwnProperty(x));
-			console.log(toInit);
+		this.updatePeers(oldProps.sessions, this.props.sessions);
+	}
+
+	updatePeers(oldSess, newSess) {
+		if(oldSess != newSess) {
+			Object.keys(newSess)
+				.filter(x => !oldSess.hasOwnProperty(x))
+				.forEach(i => this.initPeerVideo(i));
 		}
 	}
 
+	initPeerVideo = (peer) => {
+		let mediaSource = new MediaSource();
+		let sourceBuffer = null;
+
+		let chunks = [];
+
+		this.setState({
+			activeStreams: {
+				...this.state.activeStreams,
+				[peer]: window.URL.createObjectURL(mediaSource)		
+			}
+		});
+		
+		this.props.sessions[peer].onmessage = (x) => {
+			if (sourceBuffer.updating || chunks.length > 0) {
+				chunks.push(x.data);
+			} else {
+				sourceBuffer.appendBuffer(x.data);
+			}
+		};
+
+		mediaSource.addEventListener('sourceopen', ({currentTarget: ms}) => {
+			sourceBuffer = ms.addSourceBuffer(VIDEO_TYPE);
+			sourceBuffer.addEventListener('update', () => {
+				if (chunks.length > 0 && !sourceBuffer.updating) sourceBuffer.appendBuffer(chunks.shift());
+			});
+		});
+	}
+
 	gotSelfMedia = (stream) => {
-		this.recorder = new MediaRecorder(stream, {
-			mimeType: 'video/webm;codecs=vp9',
-			bitsPerSecond: 800,
+		this.selfstream = stream;
+		this.recorder = new MediaRecorder(this.selfstream, {
+			mimeType: VIDEO_TYPE,
+			bitsPerSecond: 100000,
 		});
 
 		this.recorder.ondataavailable = ({data}) => {
-			data.arrayBuffer().then(buffer => {
-				buffer;
-				this.workerport.postMessage(new Int8Array(buffer));
-			});
+			data.arrayBuffer().then(buffer => this.workerport.postMessage(new Int8Array(buffer)));
 		};
-		this.recorder.start({timeSlice: 2000});
+		this.recorder.start({timeSlice: 500});
 	};
 
 	render() {
@@ -85,9 +106,9 @@ export default class ConferencePage extends Component {
 			<div>
 				<UserCheck isOk={this.props.users.includes(this.props.me)}>
 					<div className="container x-home">
-						{/* {
-							for(let i of this.state.activeStreams)
-						} */}
+						{
+							Object.entries(this.state.activeStreams).map(([peer, stream]) => <video src={stream} key={peer} autoPlay></video>)
+						}
 					</div>
 				</UserCheck>
 			</div>

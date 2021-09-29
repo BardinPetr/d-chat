@@ -1,6 +1,7 @@
 
 class VideoSession {
 	constructor(nkn) {
+		this.videostore = []; 
 		this.notconnected = [];
 		this.peers = {}; // for connected peers
 		this.nkn = nkn;
@@ -20,17 +21,17 @@ class VideoSession {
 		console.log('got session:', session); 
 		let peer = session.remoteAddr;
 
-		// if(this.peers[peer]) session.close();
-
 		let channel = new MessageChannel();
 		this.onsessionestablished(channel.port1, peer);
 		this.peers[peer] = {
 			port: channel.port2,
 			session
 		};
+
+		for (const chunk of this.videostore) session.write(chunk).then();
+
 		const readall = () => session.read().then((data) => {
 			channel.port2.postMessage(data);
-			console.log(data);
 			this.isactive && readall();
 		});
 		readall();
@@ -57,7 +58,10 @@ class VideoSession {
 
 	setSelfPort(port) {
 		this.port = port;
-		this.port.onmessage = ({data}) => this.broadcast(data);
+		this.port.onmessage = ({data}) => {
+			this.videostore.push(data);
+			this.broadcast(data);
+		};
 	}
 
 	end() {
