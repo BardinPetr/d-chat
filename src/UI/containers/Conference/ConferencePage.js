@@ -9,7 +9,7 @@ const Video = ({ stream }) => {
 	}, [stream, localVideo]);
   
 	return (
-		<video style={{ height: 100, width: 200 }} ref={localVideo} autoPlay />
+		<video style={{ height: 100, width: 200 }} ref={localVideo} autoPlay muted/>
 	);
 };
 
