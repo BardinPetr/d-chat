@@ -73,7 +73,7 @@ class NKN extends permissionsMixin(MultiClient) {
 			originalClient: true,
 			identifier: username?.trim() || undefined,
 			seed: wallet.getSeed(),
-			rpcServerAddr,
+			// rpcServerAddr,
 			msgHoldingSeconds: 3999999999,
 			tls: PROTOCOL === 'https:',
 			worker: createWorker,

@@ -6,10 +6,12 @@ import Chatroom from 'Approot/UI/containers/Chatroom';
 const LazyHome = lazy(() => import('Approot/UI/containers/Home'));
 const LazyTopicInfoList = lazy(() => import('Approot/UI/containers/Topics'));
 const LazyOptions = lazy(() => import('Approot/UI/containers/Options'));
+const LazyConferencePage = lazy(() => import('Approot/UI/containers/Conference'));
 
 const MainRoutes = () => (
 	<Suspense fallback={Loader}>
 		<Switch>
+			<Route path="/conference/:topic" component={LazyConferencePage} />
 			<Route path="/(chat|whisper)/*" component={Chatroom} />
 			<Route path="/topics" component={LazyTopicInfoList} />
 			<Route path="/options" component={LazyOptions} />

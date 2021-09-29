@@ -22,13 +22,15 @@ import {
 	ContactRequest,
 	ContactResponse,
 } from 'Approot/workers/nkn/ContactRequest';
+import VideoSession from './nkn/videoSession';
+import { gotPeerSession } from '../redux/actions';
 
 const notified = {};
 
-onmessage = async ({ data: action }) => {
+onmessage = async ({ data: action, ports }) => {
 	const payload = action.payload;
 
-	let status, client, topic, message, data;
+	let status, client, topic, message, data, currentSession;
 	// postMessage works like dispatch.
 	switch (action.type) {
 		case 'LOGIN_ALIAS':
@@ -188,6 +190,18 @@ onmessage = async ({ data: action }) => {
 		case 'contacts/SEND_CONTACT_INFO':
 			data = new ContactResponse(payload.contact);
 			NKN.instance.sendMessage(payload.addr, data);
+			break;
+
+		case 'videosession/BEGIN':
+			if(currentSession) currentSession.end();
+			currentSession = new VideoSession(NKN.instance);
+			currentSession.onSessionEstablished = (port, addr) => postMessage(gotPeerSession(port, addr), [port]);
+			currentSession.setSelfPort(ports[0]);
+			currentSession.dial(payload.peers);
+			break;
+
+		case 'videosession/END':
+			currentSession && currentSession.end();
 			break;
 
 		default:

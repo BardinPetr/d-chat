@@ -162,6 +162,13 @@ class LoginBox extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.setState({
+			password: 'a'
+		});
+		setTimeout(() => this.handleLoginSubmit(), 10);
+	}
+
 	render() {
 		const {
 			activeClient,
