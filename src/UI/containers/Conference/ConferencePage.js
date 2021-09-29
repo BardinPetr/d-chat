@@ -1,4 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, createRef, useEffect } from 'react';
+
+
+const Video = ({ stream }) => {
+	const localVideo = createRef();
+  
+	useEffect(() => {
+		if (localVideo.current) localVideo.current.srcObject = stream;
+	}, [stream, localVideo]);
+  
+	return (
+		<video style={{ height: 100, width: 200 }} ref={localVideo} autoPlay />
+	);
+};
 
 const UserCheck = ({isOk, children}) => (
 	<div>
@@ -17,7 +30,7 @@ const UserCheck = ({isOk, children}) => (
 	</div>
 );
 
-const VIDEO_TYPE = 'video/webm;codecs=vp8';
+const VIDEO_TYPE = 'video/webm;codecs=vp8,opus';
 
 export default class ConferencePage extends Component {
 	constructor(props) {
@@ -35,7 +48,7 @@ export default class ConferencePage extends Component {
 
 	componentDidMount() {
 		navigator.mediaDevices
-			.getUserMedia({ audio: false, video: { width: 100, height: 80, frameRate: { ideal: 5, max: 5 } }})
+			.getUserMedia({ audio: true, video: { width: 100, height: 80, frameRate: { ideal: 3, max: 3 } }})
 			.then(this.gotSelfMedia);
 		
 		this.updatePeers({}, this.props.sessions);
@@ -82,6 +95,10 @@ export default class ConferencePage extends Component {
 
 		mediaSource.addEventListener('sourceopen', ({currentTarget: ms}) => {
 			sourceBuffer = ms.addSourceBuffer(VIDEO_TYPE);
+			sourceBuffer.addEventListener('error', () => {
+				sourceBuffer.remove();
+				this.initPeerVideo(peer);
+			});
 			sourceBuffer.addEventListener('update', () => {
 				if (chunks.length > 0 && !sourceBuffer.updating) sourceBuffer.appendBuffer(chunks.shift());
 			});
@@ -90,6 +107,9 @@ export default class ConferencePage extends Component {
 
 	gotSelfMedia = (stream) => {
 		this.selfstream = stream;
+		this.setState({
+			selfstream: stream
+		});
 		this.recorder = new MediaRecorder(this.selfstream, {
 			mimeType: VIDEO_TYPE,
 			bitsPerSecond: 100000,
@@ -106,8 +126,23 @@ export default class ConferencePage extends Component {
 			<div>
 				<UserCheck isOk={this.props.users.includes(this.props.me)}>
 					<div className="container x-home">
+						{this.state.selfstream && <div>ME<Video stream={this.state.selfstream}></Video></div>}
 						{
-							Object.entries(this.state.activeStreams).map(([peer, stream]) => <video src={stream} key={peer} autoPlay></video>)
+							Object.entries(this.state.activeStreams)
+								.map(([peer, stream]) => 
+									<div key={peer}>
+										{peer}
+										<video 
+											src={stream} 
+											key={peer} 
+											onError={(e) => {
+												e.preventDefault();
+												console.warn(e);
+												this.initPeerVideo(peer);
+											}}
+											autoPlay></video>
+									</div>
+								)
 						}
 					</div>
 				</UserCheck>
