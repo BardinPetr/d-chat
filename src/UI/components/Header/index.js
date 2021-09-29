@@ -109,6 +109,13 @@ class Header extends React.Component {
 							onClick={() => this.setState({ expanded: !this.state.expanded })}
 						/>
 
+						<div className={classnames('navbar-item has-dropdown is-hoverable', {
+							'is-hidden': topic == null
+						})}>
+							<div className="buttons">
+								<Link className="button" to={`/conference/${getChatDisplayName(topic)}`}>Join Conference</Link>
+							</div>
+						</div>
 					</div>
 
 					<div className="navbar-start is-hidden-desktop is-hidden-tablet">

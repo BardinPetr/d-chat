@@ -212,3 +212,26 @@ export const removePermission = (addr, topic) => ({
 		topic,
 	},
 });
+
+
+// Video conferencing
+export const beginVideoSession = (port, peers) => ({
+	type: 'videosession/BEGIN',
+	payload: {peers},
+	meta: {
+		workertransfer: [port]
+	}
+});
+
+export const endVideoSession = () => ({
+	type: 'videosession/END',
+	payload: {},
+});
+
+export const gotPeerSession = (port, peer) => ({
+	type: 'videosession/ESTABLISHED',
+	payload: {peer, port},
+	meta: {
+		workertransfer: [port]
+	}
+});
