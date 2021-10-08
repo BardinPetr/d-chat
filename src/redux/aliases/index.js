@@ -76,7 +76,8 @@ export default {
 	'chat/ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 	'chat/REMOVE_ACCEPT_TO_CHATROOM_ALIAS': delegateToWorker,
 	'contacts/REQUEST_CONTACT': delegateToWorker,
-	'contacts/SEND_CONTACT_INFO': delegateToWorker,
+	'videosession/END': delegateToWorker,
+	'videosession/BEGIN': delegateToWorker,
 
 	'JOIN_CHAT_ALIAS': joinChat,
 };

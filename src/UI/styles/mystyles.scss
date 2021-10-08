@@ -1,7 +1,7 @@
 $primary: #1791f2;
 $secondary: #233a9a;
 $danger: hsl(347.9, 46%, 48.6%);
-$info: rgba(29,155,209,.1);
+$info: rgba(29, 155, 209, 0.1);
 $tablet: 680px;
 $desktop: 1024px;
 $navbar-breakpoint: $tablet;
@@ -25,7 +25,11 @@ $message-content-width: 98%;
 /**
  * Added sans-serif after stuff, for emojis.
  */
-$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji", sans-serif;
+$family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto",
+	"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	"Helvetica", "Arial", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji",
+	"Twemoji Mozilla", "Noto Color Emoji", "EmojiOne Color", "Android Emoji",
+	sans-serif;
 
 @charset "utf-8";
 @import "../../../node_modules/bulma/bulma";
@@ -41,7 +45,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	opacity: 1 !important;
 	transition: opacity 0ms !important;
 }
-.emoji-mart-emoji-native, .CodeMirror-hints {
+.emoji-mart-emoji-native,
+.CodeMirror-hints {
 	font-family: $family-primary !important;
 }
 .textarea:not([rows]) {
@@ -53,7 +58,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	box-shadow: none !important;
 }
 .x-emoji-mart-container {
-	position:absolute;
+	position: absolute;
 	bottom: 1.8rem;
 	right: 0;
 	z-index: $z-index;
@@ -132,7 +137,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 }
 .x-is-hover {
 	visibility: hidden;
-	.is-active, &.is-active {
+	.is-active,
+	&.is-active {
 		visibility: visible;
 	}
 }
@@ -193,7 +199,8 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			&:not(.x-media-expanded) {
 				cursor: zoom-in;
 				height: $media-height;
-				img, video {
+				img,
+				video {
 					max-height: 100%;
 				}
 			}
@@ -260,7 +267,7 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 	.x-message-bundle {
 		/* First 3 dropdown menus will always expand downwards.
 		   After that, last four expand up. */
-		&:nth-child(-n+3) .message:not(:nth-child(n+4)) {
+		&:nth-child(-n + 3) .message:not(:nth-child(n + 4)) {
 			.dropdown-menu {
 				top: 100%;
 				padding-top: 4px;
@@ -295,7 +302,6 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		}
 	}
 
-
 	.message-body {
 		border: 0;
 		padding: 0 0.3rem;
@@ -307,14 +313,15 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 			font-size: 0.9375rem;
 			white-space: initial;
 			width: $message-content-width;
-			pre, code {
+			pre,
+			code {
 				background-color: $pre-background;
 			}
 		}
 	}
 
 	.x-refers-to-me .message-body {
-		background-color: rgba(242,199,68,.2);
+		background-color: rgba(242, 199, 68, 0.2);
 	}
 }
 .x-main {
@@ -367,7 +374,9 @@ $family-primary: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxyge
 		overflow-x: hidden;
 	}
 }
-body, html, #root {
+body,
+html,
+#root {
 	overflow-y: auto !important;
 }
 .x-navbar-height {
@@ -413,15 +422,15 @@ body, html, #root {
 	}
 }
 body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
-    scrollbar-width: thin;
-    &::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
-        background-color: $grey-light;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: $grey-lighter;
-    }
+	scrollbar-width: thin;
+	&::-webkit-scrollbar {
+		width: 5px;
+		height: 5px;
+		background-color: $grey-light;
+	}
+	&::-webkit-scrollbar-thumb {
+		background: $grey-lighter;
+	}
 }
 .x-is-padded-sides {
 	padding: 0 0.1rem;
@@ -644,14 +653,19 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 		border-color: $link;
 	}
 }
-.x-active-topics, .x-topic-tab {
+.x-active-topics,
+.x-topic-tab {
 	height: 100%;
 	.x-topic-name {
 		@extend .x-truncate;
 	}
 }
 .x-has-unread:not(.is-active) {
-	background-image: linear-gradient(to top left, hsla(0, 0%, 100%, 0) 60%, tan 100%);
+	background-image: linear-gradient(
+		to top left,
+		hsla(0, 0%, 100%, 0) 60%,
+		tan 100%
+	);
 }
 .x-unread-count {
 	position: absolute;
@@ -732,8 +746,18 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 }
 .editor-toolbar {
 	&:not(.fullscreen) {
-		.submit, .bold, .italic, .heading, .quote, .unordered-list,
-		.ordered-list, .image, .preview, .guide, .link, .separator {
+		.submit,
+		.bold,
+		.italic,
+		.heading,
+		.quote,
+		.unordered-list,
+		.ordered-list,
+		.image,
+		.preview,
+		.guide,
+		.link,
+		.separator {
 			display: none;
 		}
 	}
@@ -752,7 +776,8 @@ body *:not(.x-chatroom-messages):not(.x-main):not(.x-has-normal-scrollbar) {
 .x-is-popup {
 	.editor-toolbar {
 		&:not(.fullscreen) {
-			.upload-image, .submit {
+			.upload-image,
+			.submit {
 				display: none;
 			}
 		}

@@ -2,7 +2,6 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 import { wrapStore, alias, onInstalled } from './operations-APP_TARGET';
-import createWorkerMiddleware from 'redux-worker-middleware';
 import rootReducer from '../redux/reducers';
 import aliases from '../redux/aliases';
 import configs from '../misc/configs-APP_TARGET';
@@ -15,6 +14,7 @@ import globalSettingsMiddleware from 'Approot/redux/middleware/globalSettings';
 import subscribersFetcher from 'Approot/redux/middleware/subFetcher';
 import { IS_EXTENSION } from 'Approot/misc/util';
 import contactsMiddleware from 'Approot/redux/middleware/contacts';
+import createWorkerMiddleware from '../misc/reduxWorkerMiddleware';
 
 const password = 'd-chat!!!';
 

@@ -265,6 +265,28 @@ const navigation = (state = { mostRecentPage: '/' }, action) => {
 	return newState;
 };
 
+
+// Used for NKN sessions management
+const sessionEvent = (state = {sessions: {}}, action) => {
+	let newState = {};
+	switch (action.type) {
+		case 'videosession/ESTABLISHED':
+			newState = {
+				...state,
+				sessions: {
+					...state.sessions,
+					[action.payload.peer]: action.meta.workertransfer[0]
+				}
+			};
+			break;
+
+		default:
+			newState = state;
+	}
+	return newState;
+};
+
+
 export default combineReducers({
 	login,
 	clients,
@@ -280,4 +302,6 @@ export default combineReducers({
 	// UI
 	navigation,
 	activeTopics,
+
+	sessionEvent,
 });
