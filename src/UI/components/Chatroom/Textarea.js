@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import { mention, formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
+import { formatAddr, IS_SIDEBAR } from 'Approot/misc/util';
 import uniq from 'lodash.uniq';
 
 const LazyEmojiPicker = lazy(() => import('Approot/UI/components/Chatroom/EmojiPicker'));
@@ -113,8 +113,8 @@ const Textarea = ({
 						const things = uniq(subs.map(formatAddr)).filter(sub => sub.toLowerCase().startsWith(
 							theWord.toLowerCase())
 						).map(sub => ({
-							text: mention(sub) + ' ',
-							displayText: formatAddr(sub)
+							text: '@' + sub + ' ',
+							displayText: '' + sub
 						}));
 						if (things.length) {
 							// Some emojis still give troubles. Something to do with unicode, probs.

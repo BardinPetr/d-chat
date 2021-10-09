@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ClientInfo from 'Approot/UI/components/Client/Info';
 import Info from 'Approot/UI/components/Info-APP_TARGET';
 import { parseAddr, getChatURL, getWhisperURL, isWhisperTopic, getWhisperRecipient } from 'Approot/misc/util';
 import { __ } from 'Approot/misc/browser-util-APP_TARGET';
-import history from 'Approot/UI/history';
 import Version from 'Approot/UI/components/Version';
 import { FaQrcode } from 'react-icons/fa';
+import { BiImageAdd } from 'react-icons/bi';
 import { getBalance } from 'Approot/redux/actions/client';
 import { updateContact } from 'Approot/redux/actions/contacts';
 import Avatar from 'Approot/UI/containers/Avatar';
@@ -19,6 +19,7 @@ import QRCode from 'Approot/UI/components/QRCode';
 const MAX_AVATAR_SIZE = 10 * 1024; // 10kb.
 
 const NewTopicForm = ({ privateChat }) => {
+	const history = useHistory();
 	const [target, setTarget] = useState('');
 	const submit = e => {
 		e.preventDefault();
@@ -114,8 +115,15 @@ const Home = ({ client, getBalance, updateContact }) => {
 
 						<div className="media">
 							<div className="media-left">
-								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label">
+								<label htmlFor="avatar-picker" className="label is-relative x-avatar-picker-label x-has-hover">
 									<Avatar className="is-128x128" addr={client.addr} />
+									{/* So this is why we don't mix css and js? It gets
+										difficult to know what is going on.
+										This element shows up on mouse over. */}
+									<BiImageAdd
+										className="x-is-hover is-96x96 image x-avatar-picker-opener has-text-primary-dark"
+										aria-label={__('Open image picker.')}
+									/>
 									<input
 										title={__('Profile picture. Click to upload new.')}
 										type="file"
@@ -165,12 +173,10 @@ const Home = ({ client, getBalance, updateContact }) => {
 						</div>
 					</div>
 
-					{/* Trying ma hardest to not make scrollbar appear in home screen. */}
-					<div className="section" style={{ paddingTop: 0 }}>
-						<div className="content" style={{ marginBottom: '0.5rem'}}>
+					<div className="section">
+						<div className="content">
 							<p><Link to="/topics">{__('Public chat index')}</Link></p>
 							<Info />
-							<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://www.nkn.org/nMobile/">{__('nMobile on nkn.org')}</a>. {__('Send files over NKN!')} <a target="_blank" rel="noopener noreferrer" href="https://losnappas.gitlab.io/nkn-peertransfer">{__('NKN Peertransfer')}</a>.</p>
 						</div>
 
 						{client && (

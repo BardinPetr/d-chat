@@ -21,6 +21,5 @@ export class ContactResponse extends OutgoingMessage {
 		this.contentType = 'contact';
 		this.version = data.version;
 		this.expiresAt = undefined;
-		this.expires_at = undefined;
 	}
 }

@@ -67,7 +67,7 @@ export default class ConferencePage extends Component {
 	updatePeers(oldSess, newSess) {
 		if(oldSess != newSess) {
 			Object.keys(newSess)
-				.filter(x => !oldSess.hasOwnProperty(x))
+				.filter(x => !(x in oldSess))
 				.forEach(i => this.initPeerVideo(i));
 		}
 	}

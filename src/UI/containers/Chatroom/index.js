@@ -20,12 +20,15 @@ const mapStateToProps = (state, ownProps) => {
 	const topic = getTopicFromPathname(ownProps.location.pathname);
 	const recipient = isWhisperTopic(topic) ? getWhisperRecipient(topic) : null;
 
+	const type = isWhisperTopic(topic) ? 'whisper' : 'chat';
 	return {
 		client: state.clients.find(c => c.active),
-		subs: state.chatSettings[topic]?.subscribers || [recipient, state.login?.addr],
+		subs: type === 'chat' ?
+			state.chatSettings[topic]?.subscribers || [] :
+			[recipient, state.login?.addr],
 		topic,
 		unreadMessages: state.chatSettings[topic]?.unread || [],
-		chatType: isWhisperTopic(topic) ? 'whisper' : 'chat',
+		chatType: type,
 	};
 };
 

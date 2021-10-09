@@ -15,6 +15,9 @@ const workerRegex = /webpack\.worker\.js$/;
 const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseRelativeAssetPaths = true, shouldUseSourceMap = false) => {
 
 	const getStyleLoaders = (cssOptions, preProcessor) => {
+		const w = Object.assign({}, cssOptions);
+		delete w.importLoaders;
+		delete w.esModule;
 		const styleLoaders = [
 			isEnvDevelopment && require.resolve('style-loader'),
 			isEnvProduction && {
@@ -30,7 +33,7 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 			},
 			{
 				loader: 'sass-loader',
-				options: cssOptions,
+				options: w,
 			},
 			{
 				loader: require.resolve('postcss-loader'),
@@ -177,15 +180,15 @@ const getLoaders = (isEnvProduction = false, isEnvDevelopment = true, shouldUseR
 		exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
 		options: {
 			name: 'static/media/[name].[hash:8].[ext]',
+			esModule: false,
 		},
 	};
 
 	const workerLoader = {
 		test: workerRegex,
 		loader: require.resolve('worker-loader'),
-		options: { name: '[hash].[name].js' }
+		options: { filename: '[hash].[name].js' }
 	};
-
 
 
 	return {

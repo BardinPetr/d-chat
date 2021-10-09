@@ -15,52 +15,62 @@ const Options = () => {
 	}, []);
 
 	return (
-		<div className="section">
-			<div className="container">
-				<h1 className="title">
-					{__('Options')}
-				</h1>
-				<div className="">
-					<div className="field">
-						<label className="label">{__('Notifications')}</label>
-						<div className="control">
-							<Switch
-								id="notifications"
-								checked={notifications}
-								onChange={async e => {
-									const v = e.target.checked;
-									const granted = await requestPermissions([ 'notifications' ]).catch(() => false);
-									if (!granted) {
-										setNotifications(false);
-										configs.notifications = false;
-									} else {
-										setNotifications(v);
-										configs.notifications = v;
-									}
-								}}
-								name="notifications"
-							/>
+		<div>
+			<div className="section">
+				<div className="container">
+					<h1 className="title">
+						{__('Options')}
+					</h1>
+					<div className="">
+						<div className="field">
+							<label className="label">{__('Notifications')}</label>
+							<div className="control">
+								<Switch
+									id="notifications"
+									checked={notifications}
+									onChange={async e => {
+										const v = e.target.checked;
+										const granted = await requestPermissions([ 'notifications' ]).catch(() => false);
+										if (!granted) {
+											setNotifications(false);
+											configs.notifications = false;
+										} else {
+											setNotifications(v);
+											configs.notifications = v;
+										}
+									}}
+									name="notifications"
+								/>
+							</div>
+						</div>
+						<div className="field">
+							<label className="label">{__('Audio notifications')}</label>
+							<div className="control">
+								<Switch
+									id="audioNotifications"
+									checked={audioNotifications}
+									onChange={e => {
+										const v = e.target.checked;
+										setAudioNotifications(v);
+										configs.audioNotifications = v;
+										if (v) {
+											// Using timeout, we set off Firefox's "autoplay disabled"
+											// permission toggler.
+											setTimeout(playNotificationSound, 100);
+										}
+									}}
+									name="audioNotifications"
+								/>
+							</div>
 						</div>
 					</div>
-					<div className="field">
-						<label className="label">{__('Audio notifications')}</label>
-						<div className="control">
-							<Switch
-								id="audioNotifications"
-								checked={audioNotifications}
-								onChange={e => {
-									const v = e.target.checked;
-									setAudioNotifications(v);
-									configs.audioNotifications = v;
-									if (v) {
-										// Using timeout, we set off Firefox's "autoplay disabled"
-										// permission toggler.
-										setTimeout(playNotificationSound, 100);
-									}
-								}}
-								name="audioNotifications"
-							/>
-						</div>
+				</div>
+			</div>
+			<div class="section">
+				<div className="container">
+					<div className="content">
+						<p>{__('Give the mobile app a try!')} <a target="_blank" rel="noopener noreferrer" href="https://www.nkn.org/nMobile/">{__('nMobile on nkn.org')}</a>.</p>
+						<p>{__('Send files over NKN!')} <a target="_blank" rel="noopener noreferrer" href="https://losnappas.gitlab.io/nkn-peertransfer">{__('NKN Peertransfer')}</a>.</p>
 					</div>
 				</div>
 			</div>
