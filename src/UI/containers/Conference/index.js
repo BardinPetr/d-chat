@@ -7,6 +7,7 @@ const mapStateToProps = (state, ownProps) => {
 	let topic = ownProps.match.params.topic;
 	return ({
 		sessions: state.sessionEvent.sessions,
+		upstreamSessions: state.upstreamSessionEvent.upstreamSessions,
 		me: state.login.addr,
 		topic,
 		users: isWhisperTopic(topic) ? [

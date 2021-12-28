@@ -23,7 +23,7 @@ import {
 	ContactResponse,
 } from 'Approot/workers/nkn/ContactRequest';
 import VideoSession from './nkn/videoSession';
-import { gotPeerSession } from '../redux/actions';
+import { gotPeerSession, gotPeerUpstreamSession } from '../redux/actions';
 
 const notified = {};
 
@@ -196,6 +196,7 @@ onmessage = async ({ data: action, ports }) => {
 			if(currentSession) currentSession.end();
 			currentSession = new VideoSession(NKN.instance);
 			currentSession.onSessionEstablished = (port, addr) => postMessage(gotPeerSession(port, addr), [port]);
+			currentSession.onUpstreamSessionEstablished = (port, addr) => postMessage(gotPeerUpstreamSession(port, addr), [port]);
 			currentSession.setSelfPort(ports[0]);
 			currentSession.dial(payload.peers);
 			break;

@@ -235,3 +235,11 @@ export const gotPeerSession = (port, peer) => ({
 		workertransfer: [port]
 	}
 });
+
+export const gotPeerUpstreamSession = (port, peer) => ({
+	type: 'videosession/ESTABLISHED_UP',
+	payload: {peer, port},
+	meta: {
+		workertransfer: [port]
+	}
+});
