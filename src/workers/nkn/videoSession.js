@@ -10,6 +10,8 @@ class VideoSession {
 		this.downstream_peers = {}; 
 		this.nkn = nkn;
 		this.isactive = true;
+		this.output_queues = {}; 
+		this.is_sending = {};
         
 		this.nkn.listen();
 		this.nkn.onSession(this.onDownstreamSession);
@@ -66,26 +68,33 @@ class VideoSession {
 				port: port2,
 				connectedAt: Date.now()
 			};
+			this.output_queues[peer] = [];
+			this.is_sending[peer] = false;
 
-			port2.onmessage = ({data}) => session.write(data).then();
+			port2.onmessage = ({data}) => {
+				this.output_queues[peer].push(data);
+				this.checkSend(peer);
+			};
 		});
 	}
 
-	// broadcast(data) {
-	// 	for (const i in this.upstream_peers) {
-	// 		if((Date.now() - this.upstream_peers[i].connectedAt) > 10000)
-	// 			this.upstream_peers[i].session.write(data).then();
-	// 	}
-	// }
+	checkSend(peer) {
+		if(this.output_queues[peer].length > 0 && !this.is_sending[peer]) {
+			this.is_sending[peer] = true;
+			let next = this.output_queues[peer][0];
+			this.upstream_peers[peer].session
+				.write(next)
+				.then(() => {
+					this.is_sending[peer] = false;
+					this.output_queues[peer].shift();
+					this.checkSend(peer);
+				})
+				.catch(() => this.checkSend(peer));
+		}
+	}
 
 	setSelfPort(port) {
 		this.port = port;
-		// this.port.onmessage = ({data: msg}) => {
-		// 	// this.videostore.push(data);
-		// 	if(this.upstream_peers[msg.peer])
-		// 		this.upstream_peers[msg.peer].session.write(msg.data).then();
-		// 	// this.broadcast(data);
-		// };
 	}
 
 	end() {

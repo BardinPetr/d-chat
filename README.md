@@ -1,5 +1,7 @@
 # D-Chat
 
+> This is a fork of original [D-Chat](https://gitlab.com/losnappas/d-chat) devoted to providing users video conferencing feature. 
+
 A decentralized chat on NKN as an extension for Chrome and Firefox.
 
 Join channel *d-chat* on D-Chat!
