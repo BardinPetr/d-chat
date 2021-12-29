@@ -16,13 +16,13 @@ const crx = new ChromeExtension({
 crx.load('extension')
 	.then(() => crx.loadContents())
 	.then((archiveBuffer) => {
-		fs.writeFile(`${name}.zip`, archiveBuffer);
+		fs.writeFileSync(`${name}.zip`, archiveBuffer);
 
 		if (!argv.codebase || !existsKey) return;
 		crx.pack(archiveBuffer).then((crxBuffer) => {
 			const updateXML = crx.generateUpdateXML();
 
-			fs.writeFile('update.xml', updateXML);
-			fs.writeFile(`${name}.crx`, crxBuffer);
+			fs.writeFileSync('update.xml', updateXML);
+			fs.writeFileSync(`${name}.crx`, crxBuffer);
 		});
 	});
